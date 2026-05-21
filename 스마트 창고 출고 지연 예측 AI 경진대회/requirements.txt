@@ -1,0 +1,9 @@
+lightgbm==4.6.0
+catboost==1.2.8
+xgboost==3.0.1
+scikit-learn==1.6.1
+pandas==2.2.3
+numpy==2.2.6
+scipy==1.15.3
+pyarrow==20.0.0
+torch==2.7.1
