@@ -1,0 +1,26 @@
+# Data files (download separately)
+data/*.csv
+data/cache/
+
+# Model artifacts (regenerate via training)
+models/
+outputs/
+
+# Build/cache
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Logs
+logs_*.log
+*.log
+
+# Local environment
+.venv/
+venv/
+env/
+.env
+
+# OS
+.DS_Store
+Thumbs.db
