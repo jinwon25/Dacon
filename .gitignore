@@ -1,0 +1,74 @@
+# ---- Datasets / raw inputs ----
+모기 비행 궤적 예측 AI 경진대회/open/
+스마트 창고 출고 지연 예측 AI 경진대회/data/
+
+# ---- Heavy outputs / submissions / model checkpoints ----
+모기 비행 궤적 예측 AI 경진대회/outputs/
+모기 비행 궤적 예측 AI 경진대회/archive/
+스마트 창고 출고 지연 예측 AI 경진대회/models/
+스마트 창고 출고 지연 예측 AI 경진대회/submissions/
+
+# ---- Generic large/binary artifacts (defense in depth) ----
+*.csv
+*.parquet
+*.npy
+*.npz
+*.pt
+*.pth
+*.ckpt
+*.pkl
+*.joblib
+*.bin
+*.onnx
+*.h5
+*.feather
+*.zip
+*.tar
+*.tar.gz
+*.7z
+
+# Keep example/light reference CSVs if they exist at repo root (none expected)
+!**/sample_submission_template.csv
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+.venv/
+venv/
+env/
+ENV/
+
+# ---- Jupyter ----
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ---- IDE / OS ----
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- Logs / temp ----
+*.log
+logs/
+tmp/
+.cache/
+
+# ---- Secrets ----
+.env
+.env.*
+*.pem
+*.key
+
+# ---- Claude Code workspace ----
+.claude/
+
