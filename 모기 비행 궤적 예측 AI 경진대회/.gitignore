@@ -4,10 +4,13 @@ open/
 # Model states and generated submissions
 archive/
 outputs/
+cache/
+final_candidates/*.npz
 
 # Local experiment logs
 run_log.json
 *.log
+logs_*.txt
 
 # Python / notebook artifacts
 __pycache__/

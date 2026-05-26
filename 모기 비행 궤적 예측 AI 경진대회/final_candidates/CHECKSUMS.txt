@@ -1,0 +1,4 @@
+f4dafc3d17dbb2e4ffed83103dd4f893 *final_candidates/submission_v106_DE15w_oof0.6770.csv
+77982168f2acefbfeb4e64614dcc71cf *final_candidates/submission_v112_v107_diverse_oof0.6768.csv
+a2768b5c5b3e9d3b7cc38b95ad9d937f *final_candidates/submission_v117_K8sel_tau0.45_w0.15_oof0.6769.csv
+d5c54b5726dbf46e1b489bf3e0994aa5 *final_candidates/submission_v117_selector_tau0.60_w0.30_oof0.6773.csv

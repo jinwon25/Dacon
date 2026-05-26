@@ -1,0 +1,26 @@
+{
+  "base_hit": 0.6768,
+  "global3D": {
+    "delta_mm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "hit": 0.6768,
+    "lift": 0.0
+  },
+  "bodyAxis": {
+    "delta_mm": [
+      -1.1102230246251565e-16,
+      -0.10000000000000009,
+      -0.10000000000000009
+    ],
+    "hit": 0.677,
+    "lift": 0.000200000000000089
+  },
+  "speed_conditional_aggregate_hit": 0.6794,
+  "gate": 0.0008,
+  "best_name": "bodyAxis",
+  "best_lift": 0.000200000000000089,
+  "passed": false
+}
