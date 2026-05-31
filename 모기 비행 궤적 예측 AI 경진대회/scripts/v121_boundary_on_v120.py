@@ -142,6 +142,7 @@ def main():
     parser.add_argument("--hidden", type=int, default=64)
     parser.add_argument("--v120-tag", default="full", help="v120 state suffix (full/fast/smoke)")
     parser.add_argument("--out-tag", default="v121", help="output tag prefix")
+    parser.add_argument("--base-prefix", default="v120", help="cache file prefix, e.g. v120 or v126")
     args = parser.parse_args()
 
     torch.manual_seed(0); np.random.seed(0)
@@ -163,26 +164,40 @@ def main():
     kc = np.load(CACHE_DIR / "kalman.npz")
     kalman_train, kalman_test = kc["kalman_train"], kc["kalman_test"]
 
-    # v120 base
-    v120 = np.load(CACHE_DIR / f"v120_{args.v120_tag}_state.npz", allow_pickle=True)
+    # base model (v120 / v126 / others with same schema)
+    base_path = CACHE_DIR / f"{args.base_prefix}_{args.v120_tag}_state.npz"
+    v120 = np.load(base_path, allow_pickle=True)
     oof_base = v120["oof_global"].astype(np.float64)
     test_base = v120["test_global"].astype(np.float64)
     fold_mask = v120["fold_mask"]
     if not fold_mask.all():
         # smoke/fast: only partial OOF; can't run 5-fold boundary
-        print(f"[WARN] v120 only covers {fold_mask.sum()}/{len(fold_mask)} samples — boundary requires full")
+        print(f"[WARN] {args.base_prefix} only covers {fold_mask.sum()}/{len(fold_mask)} samples — boundary requires full")
     rh_base = float((np.linalg.norm(oof_base - y_train, axis=-1) <= 0.01).mean())
-    print(f"v120 base OOF: {rh_base:.4f}")
+    print(f"{args.base_prefix}_{args.v120_tag} base OOF: {rh_base:.4f}")
 
-    bo = np.load(BEST_OOF_PATH, allow_pickle=True)
-    best_ids = bo["ids"]; gate_oof = bo["gate_pred"].astype(np.float64)
-    if not np.array_equal(best_ids, train_ids):
-        idx_map = {i: k for k, i in enumerate(train_ids)}
-        perm = np.array([idx_map[i] for i in best_ids])
-        gate_oof = gate_oof[perm]
-    test_gate = pd.read_csv(BEST_TEST)[["x","y","z"]].values.astype(np.float64)
-    st16 = np.load(V16_PATH)
-    oof_v16 = st16["oof"].astype(np.float64); test_v16 = st16["test"].astype(np.float64)
+    # gate / v16 features — original outputs deleted in cleanup; fallback to v122c + v112
+    if BEST_OOF_PATH.exists():
+        bo = np.load(BEST_OOF_PATH, allow_pickle=True)
+        best_ids = bo["ids"]; gate_oof = bo["gate_pred"].astype(np.float64)
+        if not np.array_equal(best_ids, train_ids):
+            idx_map = {i: k for k, i in enumerate(train_ids)}
+            perm = np.array([idx_map[i] for i in best_ids])
+            gate_oof = gate_oof[perm]
+        test_gate = pd.read_csv(BEST_TEST)[["x","y","z"]].values.astype(np.float64)
+    else:
+        print("[fallback] gate features <- v122c OOF/test")
+        c22 = np.load(CACHE_DIR / "v122c_v121diverse_weights.npz", allow_pickle=True)
+        gate_oof = c22["oof_pred"].astype(np.float64)
+        test_gate = c22["test_pred"].astype(np.float64)
+    if V16_PATH.exists():
+        st16 = np.load(V16_PATH)
+        oof_v16 = st16["oof"].astype(np.float64); test_v16 = st16["test"].astype(np.float64)
+    else:
+        print("[fallback] v16 features <- v112_v107_diverse")
+        c12 = np.load(CACHE_DIR / "v112_v107_diverse_weights.npz", allow_pickle=True)
+        oof_v16 = c12["oof_pred"].astype(np.float64)
+        test_v16 = c12["test_pred"].astype(np.float64)
 
     d_base = np.linalg.norm(oof_base - y_train, axis=-1)
     boundary_mask = (d_base > 0.005) & (d_base <= 0.03)
