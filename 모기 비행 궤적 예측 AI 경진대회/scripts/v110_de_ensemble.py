@@ -72,6 +72,10 @@ def load_pool(include_mdn=True):
         ("v113c5", "v113_cap15_state.npz"),   # cap 1.5
         ("v121", "v121_cap10_state.npz"),     # boundary on v120 Neural ODE cap 1.0
         ("v121c5", "v121_cap15_state.npz"),   # boundary on v120 Neural ODE cap 1.5
+        ("v128", "v128_cap10_state.npz"),     # boundary on v126 FFT Neural ODE cap 1.0
+        ("v128c5", "v128_cap15_state.npz"),   # boundary on v126 FFT cap 1.5
+        ("v129", "v129_cap10_state.npz"),     # boundary on v120_big cap 1.0
+        ("v129c5", "v129_cap15_state.npz"),   # boundary on v120_big cap 1.5
     ]
     for name, fname in boundary_caches:
         p = CACHE / fname
