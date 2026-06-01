@@ -26,12 +26,13 @@
 ├── 스마트 창고 출고 지연 예측 AI 경진대회/
 │   ├── README.md                            # 솔루션 상세
 │   ├── src/, notebooks/, docs/              # 학습/블렌드 코드 + 작업 로그
-│   └── data/, models/, submissions/         # gitignore (원본/체크포인트/제출)
+│   ├── submissions/                         # 최종 제출 (submission.csv)
+│   └── data/, models/                       # gitignore (원본/체크포인트)
 │
 └── 식음업장 메뉴 수요 예측 AI 온라인 해커톤/
     ├── README.md                            # 솔루션 상세
-    ├── src/, notebooks/, docs/              # 베이스라인/지표 코드 + 작업 로그
-    └── data/, submissions/                  # gitignore (원본/제출)
+    ├── src/, notebooks/, docs/              # 베이스라인/블렌드/지표 코드 + 작업 로그
+    └── data/, submissions/                  # gitignore (원본/생성 제출)
 ```
 
 ## 공통 규칙
