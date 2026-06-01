@@ -1,173 +1,216 @@
 # 모기 비행 궤적 예측 AI 경진대회
 
-데이콘 **모기 비행 궤적 예측 AI 경진대회** 솔루션 정리.
-40ms 간격 11점의 3D 좌표를 입력으로, 마지막 관측 +80ms 좌표를 예측한다. 평가 지표 **R-Hit@1cm** (1cm 이내 = hit).
+데이콘에서 주최한 [**모기 비행 궤적 예측 AI 경진대회**](https://dacon.io/) 솔루션.
 
-> 진행 중 — 2026-05-26 시점 LB 0.6912, plateau 0.6888 돌파 (Neural ODE 도입). 마감 2026-06-01.
+## 최종 결과
 
-## 결과 (LB 진행)
+> **Private 리더보드 2위 (0.703151).** 단순 candidate-selection 베이스라인(LB 0.6306) 대비 **+0.073** 절대 상승.
 
-| 시점 | 후보 | OOF | LB | 비고 |
-|---|---|---:|---:|---|
-| 2026-05 초 | v10 단순 candidate-selection | - | 0.6306 | baseline 시작 |
-| 2026-05-20 | v77 BiGRU | 0.6633 | 0.6750~ | NN 패러다임 안착 |
-| 2026-05-23 | v98 5-way blend | 0.6760 | 0.6882 | 변환률 +0.0122 |
-| 2026-05-24 | v106 DE15w | 0.6770 | 0.6888 | plateau 진입 |
-| 2026-05-25 | v112_v107_diverse | 0.6768 | 0.6888 | 변환률 +0.0120 (당시 최고) |
-| **2026-05-26** | **v122c (Neural ODE blend)** | **0.6769** | **0.6912** ★ | **변환률 +0.0143, plateau 돌파** |
+| | OOF | LB | 비고 |
+|---|---:|---:|---|
+| 시작 베이스라인 (candidate-selection) | - | 0.6306 | 첫 제출 |
+| Kalman 잔차 NN 풀 (BiGRU 등) | 0.6770 | 0.6888 | plateau (멤버 corr ~0.99) |
+| Neural ODE 도입 | 0.6769 | 0.6912 | 1차 돌파 |
+| Frenet/control-head paradigm | 0.6805 | 0.697 | 2차 돌파 |
+| CREE 회전물리 멤버 주입 | 0.6808 | 0.7016 | 3차 돌파 |
+| **최종 3-CREE 앙상블 주입 (v157)** | — | **Public 0.7022 / Private 0.703151** | **2위** |
 
-핵심 — **kalman residual baseline에 묶인 framework는 모델간 corr~0.99 floor에 갇혀 LB 0.6888이 천장**이었다. v120(Neural ODE: position+velocity 6D state, RK4 단계 적분) family를 pool에 추가하면서 paradigm diversity (L2 distance ~2.2mm vs 기존 0.15mm) 확보 → 변환률 +0.0143로 plateau 정확히 돌파.
+평가 지표: **R-Hit@1cm** — 예측과 정답의 유클리드 거리가 1cm 이내인 샘플의 비율 (높을수록 좋음).
+
+최종 선택 2슬롯: `submissions/submission_v157_ens3a0.40_FINAL.csv`, `submissions/submission_v157_ens3a0.45_FINAL.csv` (둘 다 Public 0.7022 → Private 0.703151).
+
+---
 
 ## 문제 정의
 
-- 입력: `open/train/*.csv`, `open/test/*.csv` (각 10,000개, 11×(timestep_ms, x, y, z))
-- 정답: `open/train_labels.csv` — 마지막 관측 +80ms의 `(x, y, z)`
-- 제출: `sample_submission.csv` 형식
-- 지표: R-Hit@1cm — `‖pred - y‖ < 1cm` 비율
+- **입력**: 40ms 간격 11개 시점의 3D 좌표 `(x, y, z)` (구간 −400ms ~ 0ms).
+- **출력**: 마지막 관측 시점 **+80ms** 의 3D 좌표 `(x, y, z)`.
+- **데이터**: `data/train/` 10,000 궤적 + `data/train_labels.csv`, `data/test/` 10,000 궤적.
+- **지표**: R-Hit@1cm — 1cm 이내 hit 비율.
+- **핵심 성질**: 1cm 임계값의 **이진 hit 지표**라, 평균 오차(mm) 최소화보다 **1cm 경계에 걸친 샘플을 넘기는 것**이 점수를 좌우한다. 이것이 "단일 모델 정확도 < 앙상블 다양성" 전략을 결정했다.
 
-원본 데이터는 `open/` 아래 두고 Git에는 포함하지 않는다.
+---
 
-## 핵심 접근 — 두 paradigm pool + DE blend
+## 솔루션 아키텍처
 
-### Pool A — Kalman 잔차 framework (v77~v118)
-- canonical local frame (마지막 속도 벡터 yaw 정렬) + kalman residual을 target으로 학습
-- backbones: BiGRU(v77/v90/v94), TCN(v42), Transformer(v107), MDN-WTA(v109)
-- boundary refinement (v91/v94/v97/v101/v103/v104/v111): cap 적용 residual 보정
-- yaw aug + y-mirror로 회전 invariance
-- pool 안 멤버끼리 corr_3d ~0.99 floor (residual baseline 공유 영향)
+### 직교 메커니즘 다양성의 앙상블
 
-### Pool B — Neural ODE family (v120~v126, 2026-05-26 도입)
-- target = `y - last_obs` (kalman 미사용 → 완전히 다른 base)
-- 6D state (pos, vel) + learned damping + neural acceleration field
-- RK4 4-eval 단일 80ms step (v120) / 2-step (v120_n2) / 4-step
-- 변종: hidden=128/latent=128 (v120_big), rfft magnitude+phase scalar feature (v126)
-- boundary refinement (v121): v111 패턴 동일 — cap 1.0/1.5
-- 단독 OOF 0.66 수준이지만 pool에 합치면 **DE blender가 ~40% weight를 부여** → paradigm 진정성 검증
+이 대회의 본질적 난점은 **데이터 천장**이었다. 40여 개 모델이 전부 같은 **Kalman 잔차 base** 위에서 학습돼 서로의 예측이 **상관 ~0.99** 로 묶였고, LB 0.6888에서 막혔다. 점수를 움직인 모든 돌파는 **근본적으로 다른 예측 메커니즘(paradigm)을 새로 도입**한 순간이었다.
 
-### Blend layer
-- `v110_de_ensemble.py`: scipy.optimize.differential_evolution으로 softmax weights 학습 (전체 pool)
-- `v112_conservative_blend.py`: top-7 OOF + force-include 핵심 paradigm 멤버
-- **v122c**: v106 + v112 + v120 family conservative blend → OOF 0.6769, LB 0.6912
+```
+                  ┌─ Pool A: Kalman 잔차 프레임 (BiGRU/TCN/Transformer/MDN)
+   DE 블렌드 ─────┼─ Pool B: Neural ODE (위치+속도 6D 상태, RK4 적분)
+   (base, OOF      ├─ Pool C: Frenet 3D-프레임 ODE + control-head 적분
+    0.6831)        └─ (각 paradigm의 boundary refinement 변종)
+        │
+        │   v157 = (1−α)·base + α·CREE_ens3      ← 최종 수동 주입 (α=0.40, 0.45)
+        ▼
+   CREE 회전물리 3-앙상블 (Rodrigues 회전 turn-rate 물리, base와 2.82mm 직교)
+```
 
-## EDA 핵심 발견 (`reports/eda_post_v122c.md`)
+### 핵심 설계 결정
 
-- **Oracle min(v112, v120) = 0.6989** — per-sample 완벽 selector 천장
-- v122c가 oracle hit의 96.72% 캡처 (단순 selector 추가 lift 거의 0)
-- 메타특징만으로 only_v112 vs only_v120 식별 어려움 (Δz < 0.14) → **v125 disagreement selector AUC 0.5562 (dead)**
-- Neither subset (n=3011, 둘 다 miss) mean d=26mm — 새 paradigm 필요한 영역
-- Hard subset (speed top20% × turn top20%, n=246) hit=0.354 — NN 약점
+1. **paradigm diversity가 LB를 움직인다.** 같은 base의 변종은 corr ~0.99로 새 정보 없음. Kalman→ODE→Frenet→회전물리 순으로 **직교한 base를 추가**할 때마다 plateau를 넘었다.
+2. **Neural ODE (1차 돌파).** 타깃을 Kalman 무관 `y − last_obs`로 바꾸고 6D 상태(위치·속도)를 RK4로 적분 → base 풀과 L2 ~2.2mm 직교 → 0.6888 → 0.6912.
+3. **Frenet 3D-프레임 (2차 돌파).** tangent(속도)·normal(가속도)·binormal 직교 프레임에서 예측 → z 처리가 근본적으로 달라 decorrelation 최대 → 0.697.
+4. **CREE 회전물리 + 수동 α 주입 (3차 돌파).** 공개 Dacon baseline(HyperPhysics 회전물리)을 decorrelated 멤버로 포팅. DE가 OOF-greedy라 직교 멤버를 과소평가하므로, **수동 α로 over-convert** → 0.7016 → 0.7022.
+
+### 결정적 인사이트 — "OOF는 직교 멤버의 LB 프록시가 아니다"
+
+- OOF 최고 블렌드(`v148blend`, OOF **0.6831**, CREE weight 0.082) → LB 0.6996.
+- OOF가 **더 낮은** 블렌드(raw CREE 25% **수동 주입**, OOF 0.6808) → LB **0.7016**.
+- 즉 **더 낮은 OOF + 더 직교한 변종이 LB를 +0.0020 이긴다.** 1cm hit 지표는 OOF blend CV가 못 잡는 다양성을 보상한다. α를 0.25→0.30→0.40으로 키우며 Public이 0.7016→0.7020→0.7022 단조 상승.
+
+### 시도했지만 효과 없음
+
+| 기법 | 결과 |
+|---|---|
+| Disagreement selector (per-sample 모델 선택) | DEAD — route-acc 0.17 ≈ 무작위 |
+| Mode-seeking / geometric-median 집계 | Δ ≤ 0 (active 멤버 동질 군집) |
+| IMM / analytic Constant-Turn 필터 | 0.24~0.55 < naive linear 0.58 |
+| Neural CDE (torchcde) | DEAD — OOF 0.2768, 학습 실패 |
+| Flow/SONODE 추가 주입 (4-mechanism) | Public 0.6994 < 순수 CREE 0.7022, 폐기 |
+| 같은 frenet 프레임 encoder 변종 (Transformer/LRU/TCN) | DE weight 0 (포화) |
+| pseudo-label | OOF 과적합, LB 변환률 붕괴 |
+
+---
 
 ## 폴더 구조
 
 ```text
 .
-├── README.md
-├── requirements.txt
+├── README.md                     # 프로젝트 요약 (이 파일)
+├── requirements.txt              # Python 의존성 (버전 고정)
 ├── .gitignore
 │
-├── docs/
-│   └── NEXT_SESSION_BRIEF.md     # 다음 세션 인수인계, LB/OOF 현황
+├── src/                          # 학습/블렌딩/진단 코드
+│   ├── v23_train.py              # 공유 모듈 (load_data, kalman, scalar feats)
+│   ├── v120_neural_ode.py        # Neural ODE backbone (RK4)
+│   ├── v131_paradigm_variants.py # Frenet/GRU-encoder ODE
+│   ├── v135_control_head.py      # control-head analytic-integrator
+│   ├── v148_cree_xy2.py          # CREE 회전물리 멤버 (공개 baseline 포팅)
+│   ├── v148_reblend.py           # DE 블렌드 (base 생성)
+│   ├── v157_final_submission.py  # 최종 제출 생성 (base + 3-CREE → v157)
+│   └── legacy/                   # 옛 실험/탐색 스크립트
 │
-├── reports/                       # 분석 보고서
-│   ├── eda_post_v122c.md          # 이번 sprint EDA
-│   ├── sprint_d7_step_AB_summary.md  # ceiling/offset 진단
-│   ├── ceiling_diagnosis.md/.json   # 데이터 천장 분석
-│   ├── error_diagnosis.md          # 에러 분포/subset 진단
-│   ├── hit_offset.md/.json         # global/body/speed offset 진단
-│   ├── v118_*.md                   # STEP3 residual corr floor 진단
-│   ├── v120_v121_v122c_sprint.md   # Neural ODE 도입 sprint
-│   └── base_repr.md
+├── submissions/                  # 최종 제출 + 재현 패키지
+│   ├── submission_v157_ens3a0.40_FINAL.csv   # ★ Private 0.703151 후보
+│   ├── submission_v157_ens3a0.45_FINAL.csv   # ★ Private 0.703151 후보
+│   ├── rebuild.py                # 자급식 재현 (inputs/만으로 최종 재생성+검증)
+│   ├── inputs/                   # 재현 입력 (base + 3-CREE 예측)
+│   ├── CHECKSUMS.sha256          # 무결성
+│   └── historical/              # 과거 LB-실측 후보 (0.6770~0.697)
 │
-├── scripts/                       # 학습/추론 단일 스크립트
-│   ├── v23_train.py               # 핵심 공유 모듈 (load_data, kalman, scalar feats)
-│   ├── v77_bigru.py               # BiGRU 베이스 backbone
-│   ├── v90_yaw_mirror_aug.py      # yaw + y-mirror aug 패턴
-│   ├── v107_deep_transformer.py   # Transformer backbone
-│   ├── v109_mdn_wta.py            # MDN K-way WTA
-│   ├── v110_de_ensemble.py        # DE blend 메인
-│   ├── v111_boundary_on_v109.py   # MDN boundary refine
-│   ├── v112_conservative_blend.py # 보수 blend (force-include)
-│   ├── v118_aug_hit.py            # STEP3 residual corr 진단
-│   ├── v120_neural_ode.py         # Neural ODE backbone (RK4)
-│   ├── v121_boundary_on_v120.py   # v120 boundary refine
-│   ├── v125_disagreement_selector.py  # selector (dead, 학습 결과 보존)
-│   ├── v126_fft_neural_ode.py     # v120 + FFT scalar feature
-│   ├── v127_neural_cde.py         # Neural CDE (kidger 2020, 미실행)
-│   ├── v122d_blend_after_training.py  # 11-member full DE
-│   ├── v122d_blend_quick.py       # 11-member 경량 DE (n_starts=2)
-│   ├── eda_post_v122c.py          # 이번 sprint EDA
-│   ├── eda_selector_probe.py      # selector EDA
-│   ├── ceiling_diagnosis.py       # ceiling 진단
-│   ├── hit_offset.py / hit_offset_cv.py
-│   └── legacy/                    # 옛 보조 스크립트 (v5~v8 시절)
+├── docs/                         # 솔루션 문서 + 작업 로그
+│   ├── SOLUTION.md               # 솔루션 상세 (PDF 변환용)
+│   ├── WORK_LOG.md               # 시간순 작업 로그
+│   └── reports/                  # 분석 보고서 (EDA, ceiling 진단 등)
 │
-├── src/                           # 옛 selector/boundary 파이프라인 모듈
+├── notebooks/                    # 파이프라인/참조 노트북
 │
-├── notebooks/                     # pipeline/reference 노트북
-│
-├── open/                          # 원본 데이터 (gitignore)
-│   ├── train/, test/              # 각 10,000 CSV
-│   ├── train_labels.csv
-│   └── sample_submission.csv
-│
-├── cache/                         # 학습 중간 산출물 (gitignore) — *_state.npz, kalman.npz 등
-├── outputs/                       # 옛 실험 산출물 (gitignore)
-└── final_candidates/              # 락된 최고 제출 후보
-    ├── submission_v106_DE15w_oof0.6770.csv         # LB 0.6888
-    ├── submission_v112_v107_diverse_oof0.6768.csv  # LB 0.6888
-    ├── submission_v117_*                            # selector 후보 2종
-    └── submission_v122c_v121diverse_oof0.6769.csv  # LB 0.6912 ★
+└── data/                         # 대회 원본 데이터 + 캐시 (gitignore)
+    ├── train/  test/  train_labels.csv  sample_submission.csv
+    └── cache/                    # 학습 산출물 (*_state.npz 등)
 ```
 
-## 재현 — Neural ODE family 학습부터 v122c blend까지
+커밋 기준:
+- 포함: 코드(`src/`), README, `docs/`, requirements, `submissions/` 전체(최종 제출 + 재현 입력)
+- 제외: `data/`(대회 원본 데이터·캐시), `outputs/`(로그) — 재생성 가능하거나 라이선스 이슈
 
-Python 3.11 (Colab T4 권장, CPU도 가능, 1 모델당 15~30분).
+---
+
+## 재현 방법
+
+### 0. 환경 설치 (Python 3.11, CPU만으로 가능)
 
 ```bash
 pip install -r requirements.txt
 ```
 
+### 1. 빠른 재현 — 최종 제출 검증 (권장, <1초, GPU 불필요)
+
+`submissions/inputs/` 의 frozen 예측(base + 3-CREE)만으로 최종 제출 2개를 재생성하고 원본과 일치(오차 < 0.001mm)를 검증한다.
+
 ```bash
-# 1. 베이스 paradigm pool (kalman residual framework) — 시간 매우 김
-python scripts/v77_bigru.py --mode full
-python scripts/v90_yaw_mirror_aug.py --mode full
-python scripts/v94_boundary_on_v90.py        # boundary 변종
-python scripts/v107_deep_transformer.py --mode full
-python scripts/v109_mdn_wta.py --mode K8
-python scripts/v111_boundary_on_v109.py --tag wm_cap10/15
-
-# 2. Neural ODE paradigm
-python scripts/v120_neural_ode.py --mode full --tag full
-python scripts/v120_neural_ode.py --mode full --tag big_full --latent_dim 128 --hidden 128
-python scripts/v126_fft_neural_ode.py --mode full
-python scripts/v121_boundary_on_v120.py --cap 10
-python scripts/v121_boundary_on_v120.py --cap 15
-
-# 3. 11-member DE blend
-python scripts/v122d_blend_quick.py
-# → submission_v122d_quick_oof0.67xx.csv, submission_v122e_quick_oof0.67xx.csv
+cd submissions && python rebuild.py
+# -> rebuilt_*.csv 생성 + 원본과 MATCH 확인
 ```
 
-`final_candidates/` 안의 csv가 LB 실측된 후보. CHECKSUMS.txt로 무결성 확인.
+최종 레시피:
 
-## 다음 카드 (`docs/NEXT_SESSION_BRIEF.md` 상세)
+```
+cree_ens3 = mean(cree_xy2, cree_xy2s1, cree_xy2h3)            # CREE 회전물리 3-앙상블
+v157_a040 = 0.60 * base + 0.40 * cree_ens3                    # Public 0.7022
+v157_a045 = 0.55 * base + 0.45 * cree_ens3                    # Public 0.7022
+```
 
-| 우선 | 카드 | 잠재 LB lift |
+### 2. 전체 재현 — 학습부터 (CPU/GPU, 멤버당 15~30분)
+
+대회 데이터를 `data/` 에 배치 (`data/train/`, `data/test/`, `data/train_labels.csv`, `data/sample_submission.csv`).
+
+```bash
+# (a) base paradigm 풀 — Kalman 잔차 / Neural ODE / Frenet / control-head 멤버 학습
+#     (각 스크립트가 data/cache/*_state.npz 산출; 전체 목록은 docs/SOLUTION.md 참고)
+python src/v77_bigru.py --mode full
+python src/v107_deep_transformer.py --mode full
+python src/v109_mdn_wta.py --mode K8
+python src/v120_neural_ode.py --mode full --tag full
+python src/v131_paradigm_variants.py --frame frenet --encoder gru --mode full --tag frenet_gru
+python src/v135_control_head.py --frame frenet --order accel --mode full --tag ch_frenet
+#  ... + 각 paradigm의 boundary refinement 변종
+
+# (b) CREE 회전물리 3-앙상블 멤버 (공개 baseline 포팅)
+python src/v148_cree_xy2.py --mode full --tag xy2                    # dirnet, seed42
+python src/v148_cree_xy2.py --mode full --tag xy2s1 --seed 1         # dirnet, seed1
+python src/v148_cree_xy2.py --mode full --tag xy2h3 --heading 3step  # 3step-heading
+
+# (c) base DE 블렌드 (seed 고정 → 결정론적) → data/submission_v148blend_oof0.6831.csv
+python src/v148_reblend.py
+
+# (d) 최종 제출 생성 (base + 3-CREE → v157)
+python src/v157_final_submission.py
+```
+
+DE 블렌드(`scipy.differential_evolution`)와 멤버 학습은 모두 seed 고정으로 **결정론적**이다. 단계 (a)의 전체 멤버 목록과 역할은 `docs/SOLUTION.md` 참고.
+
+### 재현 자원 / 소요 시간
+
+| 경로 | 자원 | 시간 |
 |---|---|---|
-| 1 | v122d/e quick blend (현재 진행 중) | +0.001~+0.003 |
-| 2 | **v127 Neural CDE** (torchcde, kidger 2020) | +0.002~+0.005 (큰 paradigm) |
-| 3 | Frenet-frame coordinate transformation | +0.001~+0.003 |
-| 4 | per-axis (x/y/z) 분리 v120 변종 | +0.001~+0.003 |
-| ❌ | 메타 only selector | dead, AUC 0.5562 |
+| 빠른 재현 (`submissions/rebuild.py`) | CPU, RAM 2GB | < 1초 |
+| base 블렌드만 (`v148_reblend.py`, 캐시 사용) | CPU 16-thread | ~5–15분 |
+| 전체 재학습 (멤버 ~40개) | CPU 16-thread 또는 Colab T4/L4 | 약 15–20시간 (멤버당 15–30분, 순차) |
+
+> **공식 재현 코드** = 위 "재현 방법"에 문서화된 명령(`submissions/rebuild.py` 및 `src/v157_final_submission.py`·`v148_reblend.py`·멤버 학습 스크립트)이며, 모두 오류 없이 실행됨을 확인했다. `src/legacy/` 는 대회 중 탐색했던 보조·폐기 스크립트(연구 과정 보존용)로 공식 재현 경로에 포함되지 않는다.
+
+---
+
+## 대회 규칙 준수
+
+- **사전학습 모델**: 별도 사전학습 가중치 미사용. 모든 모델을 본 대회 train으로 from-scratch 학습. ✓
+- **회전물리 멤버 출처** (내부 코드네임 `CREE`, **동명의 본 대회 참가자와 무관**): 대회 기간 중 Dacon **코드 공유 게시판에 공개되었던** 한 회전물리 baseline(HyperPhysics 계열)의 모델 구조를 참고(규칙 8조 B항 공개 코드 공유 허용). 해당 게시물은 **현재 삭제되어 링크 제시 불가**하나, 메커니즘은 교과서적 물리(Rodrigues 회전 + EMA 필터). **공개 모델 구조 코드를 포팅(구조 보존)** 해 우리 CV·데이터에 연결, **가중치 차용 없이 train만으로 from-scratch 학습**. 앙상블·주입·전체 파이프라인은 독자 기여. ✓
+- **원격 API 모델** (OpenAI, Gemini 등): 미사용. 모두 로컬 실행. ✓
+- **test 데이터 학습 금지**: 학습 fit에 test 미포함, pseudo-label 미사용 (실험 후 폐기). ✓
+- **외부 데이터**: 미사용. ✓
+- **시드 고정 재현 가능**: 멤버 학습 + DE 블렌드 + 최종 주입 전부 결정론적. ✓
+
+---
+
+## 사용 라이브러리
+
+| 라이브러리 | 버전 | 라이선스 |
+|---|---|---|
+| PyTorch | 2.7.1+cpu | BSD |
+| NumPy | 2.2.6 | BSD-3 |
+| pandas | 2.2.3 | BSD-3 |
+| SciPy | 1.15.3 | BSD-3 |
+| scikit-learn | 1.6.1 | BSD-3 |
+| LightGBM | 4.6.0 | MIT |
+
+모두 오픈소스 + 상업적 이용 허용 라이선스.
 
 ## 환경
 
-- Python 3.11 (CPU 16 thread / Colab T4 GPU)
-- PyTorch 2.7+ (CPU 빌드 OK), NumPy 2.x, scipy, scikit-learn, lightgbm
-- Neural CDE 카드용: `pip install torchcde`
-
-## 커밋 정책
-
-- 포함: README, 코드, reports, NEXT_SESSION_BRIEF, final_candidates의 csv
-- 제외 (gitignore): `open/` 원본 데이터, `cache/`, `outputs/`, `archive/`, `.npz`, `logs_*.txt`
-- 노트북은 커밋 전 출력 셀 제거 권장
+- Python: 3.11.2
+- OS: Windows 11 (10.0.26200) — Linux/Mac 호환. 학습은 Colab T4/L4 GPU에서도 수행.
+- 최종 블렌드/제출 재현은 **CPU만으로 충분** (GPU 불필요).
