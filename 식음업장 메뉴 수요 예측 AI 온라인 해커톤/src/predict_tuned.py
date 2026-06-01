@@ -14,12 +14,13 @@ import pandas as pd
 
 from baselines import predictors
 from metric import make_holdout, score_long, store_of
-from tune_per_store import load_stacked, search
+from tune_per_store import load_stacked, search, COMP, GLOBAL
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 SUBM = ROOT / "submissions"
-GLOBAL_CFG = dict(wd=0.4, m28=0.6, nz=0.0, c=1.0)  # 미지 업장 fallback
+GLOBAL_CFG = GLOBAL  # 미지 업장 fallback
+PRED_KEY = {"wd": "weekday_mean", "m28": "mean28", "nz": "nz_mean", "wd_nz": "wd_nz"}
 
 
 def get_configs():
@@ -29,8 +30,7 @@ def get_configs():
 
 def blend_pred(input_g: pd.DataFrame, cfg: dict) -> np.ndarray:
     p = predictors(input_g)
-    base = (cfg["wd"] * p["weekday_mean"] + cfg["m28"] * p["mean28"]
-            + cfg["nz"] * p["nz_mean"])
+    base = sum(cfg.get(k, 0.0) * p[PRED_KEY[k]] for k in COMP)
     return np.clip(cfg["c"] * base, 0, None)
 
 
