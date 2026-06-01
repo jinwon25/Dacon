@@ -14,7 +14,8 @@ logs_*.log
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
-docs/SOLUTION.html   # build_solution_pdf.py 중간 산출물 (PDF는 커밋)
+# build_solution_pdf.py 중간 산출물 (PDF는 커밋)
+docs/SOLUTION.html
 
 # Local environment
 .venv/
