@@ -173,12 +173,22 @@ python src/v157_final_submission.py
 
 DE 블렌드(`scipy.differential_evolution`)와 멤버 학습은 모두 seed 고정으로 **결정론적**이다. 단계 (a)의 전체 멤버 목록과 역할은 `docs/SOLUTION.md` 참고.
 
+### 재현 자원 / 소요 시간
+
+| 경로 | 자원 | 시간 |
+|---|---|---|
+| 빠른 재현 (`submissions/rebuild.py`) | CPU, RAM 2GB | < 1초 |
+| base 블렌드만 (`v148_reblend.py`, 캐시 사용) | CPU 16-thread | ~5–15분 |
+| 전체 재학습 (멤버 ~40개) | CPU 16-thread 또는 Colab T4/L4 | 약 15–20시간 (멤버당 15–30분, 순차) |
+
+> **공식 재현 코드** = 위 "재현 방법"에 문서화된 명령(`submissions/rebuild.py` 및 `src/v157_final_submission.py`·`v148_reblend.py`·멤버 학습 스크립트)이며, 모두 오류 없이 실행됨을 확인했다. `src/legacy/` 는 대회 중 탐색했던 보조·폐기 스크립트(연구 과정 보존용)로 공식 재현 경로에 포함되지 않는다.
+
 ---
 
 ## 대회 규칙 준수
 
 - **사전학습 모델**: 별도 사전학습 가중치 미사용. 모든 모델을 본 대회 train으로 from-scratch 학습. ✓
-- **CREE 멤버 출처**: Dacon 플랫폼에 **공개 공유된** baseline(HyperPhysics 회전물리)의 모델 구조를 차용. 데이터는 본 대회 train만 연결했고 가중치는 새로 학습. **2차 평가 자료에 원 출처(공개 코드공유 게시물)를 명시한다.** ✓
+- **CREE 멤버 출처**: 대회 기간 중 Dacon **코드 공유 게시판에 공개되었던** baseline(HyperPhysics 회전물리)의 모델 구조를 참고(규칙 8조 B항 공개 코드 공유 허용). 해당 게시물은 **현재 삭제되어 링크 제시 불가**하나, 메커니즘은 교과서적 물리(Rodrigues 회전 + EMA 필터)이고 **구조는 재구현 + train만으로 from-scratch 학습**(가중치 차용 없음). ✓
 - **원격 API 모델** (OpenAI, Gemini 등): 미사용. 모두 로컬 실행. ✓
 - **test 데이터 학습 금지**: 학습 fit에 test 미포함, pseudo-label 미사용 (실험 후 폐기). ✓
 - **외부 데이터**: 미사용. ✓
