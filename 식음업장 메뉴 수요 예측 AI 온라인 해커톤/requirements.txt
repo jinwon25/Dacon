@@ -1,0 +1,7 @@
+lightgbm==4.6.0
+pandas==2.2.3
+numpy==2.2.6
+scikit-learn==1.6.1
+scipy==1.15.3
+torch==2.7.1
+tqdm==4.67.1
