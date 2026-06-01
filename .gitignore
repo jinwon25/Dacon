@@ -1,12 +1,14 @@
 # ---- Datasets / raw inputs ----
 모기 비행 궤적 예측 AI 경진대회/open/
 스마트 창고 출고 지연 예측 AI 경진대회/data/
+식음업장 메뉴 수요 예측 AI 온라인 해커톤/data/
 
 # ---- Heavy outputs / submissions / model checkpoints ----
 모기 비행 궤적 예측 AI 경진대회/outputs/
 모기 비행 궤적 예측 AI 경진대회/archive/
 스마트 창고 출고 지연 예측 AI 경진대회/models/
 스마트 창고 출고 지연 예측 AI 경진대회/submissions/
+식음업장 메뉴 수요 예측 AI 온라인 해커톤/submissions/
 
 # ---- Generic large/binary artifacts (defense in depth) ----
 *.csv

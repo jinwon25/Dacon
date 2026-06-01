@@ -8,6 +8,7 @@
 |---|---|---|---|
 | [모기 비행 궤적 예측 AI 경진대회](./모기%20비행%20궤적%20예측%20AI%20경진대회) | 진행 중 | LB **0.6306** (R-Hit@1cm, 높을수록 좋음) | Physics candidate + Attn-GRU selector + boundary 보정 |
 | [스마트 창고 출고 지연 예측 AI 경진대회](./스마트%20창고%20출고%20지연%20예측%20AI%20경진대회) | 완료 — **32위 (상위 10%)** | LB **9.86576** (MAE, 낮을수록 좋음) | 19-모델 mega-blend (GBDT 7 + Sequence NN 12, SLSQP) |
+| [식음업장 메뉴 수요 예측 AI 온라인 해커톤](./식음업장%20메뉴%20수요%20예측%20AI%20온라인%20해커톤) | 연구 단계 | 로컬 CV **~0.679** (가중 SMAPE, 낮을수록 좋음) | 요일평균+28일평균 무학습 블렌드가 공식 LSTM 베이스라인(LB 0.69~0.71) 추월 — 글로벌 GBDT 연구 중 |
 
 ## 폴더 구조
 
@@ -21,10 +22,15 @@
 │   ├── src/, scripts/, notebooks/           # 파이프라인 + 실험 코드
 │   └── open/, outputs/, archive/            # gitignore (원본 데이터, 산출물)
 │
-└── 스마트 창고 출고 지연 예측 AI 경진대회/
+├── 스마트 창고 출고 지연 예측 AI 경진대회/
+│   ├── README.md                            # 솔루션 상세
+│   ├── src/, notebooks/, docs/              # 학습/블렌드 코드 + 작업 로그
+│   └── data/, models/, submissions/         # gitignore (원본/체크포인트/제출)
+│
+└── 식음업장 메뉴 수요 예측 AI 온라인 해커톤/
     ├── README.md                            # 솔루션 상세
-    ├── src/, notebooks/, docs/              # 학습/블렌드 코드 + 작업 로그
-    └── data/, models/, submissions/         # gitignore (원본/체크포인트/제출)
+    ├── src/, notebooks/, docs/              # 베이스라인/지표 코드 + 작업 로그
+    └── data/, submissions/                  # gitignore (원본/제출)
 ```
 
 ## 공통 규칙
