@@ -188,7 +188,7 @@ DE 블렌드(`scipy.differential_evolution`)와 멤버 학습은 모두 seed 고
 ## 대회 규칙 준수
 
 - **사전학습 모델**: 별도 사전학습 가중치 미사용. 모든 모델을 본 대회 train으로 from-scratch 학습. ✓
-- **CREE 멤버 출처**: 대회 기간 중 Dacon **코드 공유 게시판에 공개되었던** baseline(HyperPhysics 회전물리)의 모델 구조를 참고(규칙 8조 B항 공개 코드 공유 허용). 해당 게시물은 **현재 삭제되어 링크 제시 불가**하나, 메커니즘은 교과서적 물리(Rodrigues 회전 + EMA 필터)이고 **구조는 재구현 + train만으로 from-scratch 학습**(가중치 차용 없음). ✓
+- **CREE 멤버 출처**: 대회 기간 중 Dacon **코드 공유 게시판에 공개되었던** baseline(HyperPhysics 회전물리)의 모델 구조를 참고(규칙 8조 B항 공개 코드 공유 허용). 해당 게시물은 **현재 삭제되어 링크 제시 불가**하나, 메커니즘은 교과서적 물리(Rodrigues 회전 + EMA 필터). **공개 모델 구조 코드를 포팅(구조 보존)** 해 우리 CV·데이터에 연결, **가중치 차용 없이 train만으로 from-scratch 학습**. 앙상블·주입·전체 파이프라인은 독자 기여. ✓
 - **원격 API 모델** (OpenAI, Gemini 등): 미사용. 모두 로컬 실행. ✓
 - **test 데이터 학습 금지**: 학습 fit에 test 미포함, pseudo-label 미사용 (실험 후 폐기). ✓
 - **외부 데이터**: 미사용. ✓
