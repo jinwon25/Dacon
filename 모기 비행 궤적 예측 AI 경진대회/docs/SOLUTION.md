@@ -73,7 +73,7 @@
   - 우리 RK4 적분 계열과 메커니즘이 완전히 달라 **base와 2.82mm 직교**(우리 frenet 멤버끼리는 0.6mm).
 - **3-CREE 앙상블** 로 강화: `dirnet(seed42)` + `dirnet(seed1)` + `3step-heading` 의 단순 평균. 앙상블은 내부 분산만 줄이고 **교차-paradigm 직교성은 보존**.
 
-> **규칙 준수 메모**: CREE 멤버는 Dacon 플랫폼에 **공개 공유된** baseline(HyperPhysics 회전물리)의 모델 구조를 기반으로 한다. 모델 구조만 차용하고 데이터는 본 대회 train만 사용했으며, **test 데이터는 학습에 일절 사용하지 않았다**. 2차 평가 자료에는 원 출처(공개 코드공유 게시물)를 명시한다. 사용 라이브러리(PyTorch/NumPy/SciPy/scikit-learn/LightGBM)는 모두 로컬 실행 가능한 오픈소스이며 외부 API를 사용하지 않았다.
+> **규칙 준수 메모 (CREE 출처)**: CREE 멤버는 대회 기간 중 Dacon **코드 공유 게시판에 공개되었던** baseline(HyperPhysics 회전 기반 turn-rate 물리모델)의 모델 구조를 참고했다(대회 규칙 8조 B항: 데이콘 플랫폼 공개 코드 공유 사용 허용). 해당 게시물은 **현재 삭제되어 링크를 제시할 수 없으나**, 핵심 메커니즘은 교과서적 물리(Rodrigues 회전 공식 + EMA 속도/가속도 필터)이며 **모델 구조는 우리가 재구현하고 본 대회 train만으로 from-scratch 학습**했다. 가중치 차용 없음, **test 데이터는 학습에 일절 사용하지 않음**. 사용 라이브러리(PyTorch/NumPy/SciPy/scikit-learn/LightGBM)는 모두 오픈소스(BSD/MIT/Apache)이며 외부 API·원격 모델을 사용하지 않았다.
 
 ---
 

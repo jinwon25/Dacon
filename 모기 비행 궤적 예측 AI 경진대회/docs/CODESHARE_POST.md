@@ -25,7 +25,7 @@ base      = frenet/neural conservative DE 블렌드 (OOF 0.6831)
 첨부 코드의 `submissions/rebuild.py` 하나로 최종 제출이 **외부 의존 없이 1초 만에 재현**(원본과 오차 < 0.001mm)됩니다.
 
 ## 규칙 준수
-- **CREE 멤버**는 본 대회 코드 공유 게시판에 공개된 HyperPhysics 회전물리 baseline의 모델 구조를 차용했습니다(출처: [코드공유 게시물 링크 — 제출 시 기입]). 데이터는 본 대회 train만 사용, 가중치는 from-scratch 재학습했습니다.
+- **CREE 멤버**는 대회 기간 중 코드 공유 게시판에 공개되었던 HyperPhysics 회전물리 baseline의 모델 구조를 참고했습니다(규칙 8조 B항 공개 코드 공유 허용). 해당 게시물은 현재 삭제되어 링크를 제시할 수 없으나, 메커니즘은 표준 물리(Rodrigues 회전 + EMA 필터)이며 구조는 재구현 후 본 대회 train만으로 from-scratch 학습했습니다(가중치 차용 없음).
 - test 데이터 학습 없음, 외부 데이터 없음, 원격 API 모델 없음(전부 로컬 실행), 시드 고정 재현 가능.
 
 ## 검증된 dead-end (시간 아끼시라고 공유)
