@@ -46,12 +46,21 @@ def predictors(input_g: pd.DataFrame, horizon=HORIZON):
     nz = v[v > 0]
     nz_mean = float(nz.mean()) if len(nz) else 0.0  # 0 제외 평균 (비-0 수준)
 
+    # 요일별 비-0 평균 (주간 계절성 + 비-0 수준 결합)
+    wd_nz_map = {}
+    for d in range(7):
+        sel = v[wd == d]
+        nzsel = sel[sel > 0]
+        wd_nz_map[d] = float(nzsel.mean()) if len(nzsel) else (nz_mean if nz_mean > 0 else overall)
+    wd_nz = np.array([wd_nz_map[d] for d in fut_wd])
+
     return {
         "zero": np.zeros(horizon),
         "last": np.full(horizon, last),
         "mean7": np.full(horizon, mean7),
         "mean28": np.full(horizon, overall),
         "nz_mean": np.full(horizon, nz_mean),
+        "wd_nz": wd_nz,
         "weekday_mean": weekday,
         "weekday_recent": weekday_recent,
         "weekday+mean7(0.5)": 0.5 * weekday + 0.5 * mean7,
