@@ -1,27 +1,29 @@
-# Competition data
-open/
+# Competition data (download separately) + 학습 산출물
+data/train/
+data/test/
+data/cache/
+data/*.csv
 
-# Model states and generated submissions
-archive/
+# Logs / run artifacts
 outputs/
-cache/
-final_candidates/*.npz
-
-# Local experiment logs
 run_log.json
+logs_*.log
 *.log
-logs_*.txt
 
-# Python / notebook artifacts
+# Build/cache
 __pycache__/
-*.py[cod]
+*.pyc
 .ipynb_checkpoints/
+# build_solution_pdf.py 중간 산출물 (PDF는 커밋)
+docs/SOLUTION.html
 
-# Local environment and editor state
+# Local environment
 .venv/
 venv/
 env/
 .env
 .claude/
+
+# OS
 .DS_Store
 Thumbs.db

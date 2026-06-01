@@ -1,2 +1,11 @@
-numpy>=2.0
-torch>=2.7
+# 모기 비행 궤적 예측 — 재현 환경 (Private LB 0.703151, 2등)
+# Python 3.11 기준. 최종 블렌드/제출 재현은 CPU만으로 충분 (GPU 불필요).
+# 멤버 신경망 학습은 Colab T4/L4 GPU 또는 CPU(16스레드) 모두 가능.
+#
+# 검증 환경: Python 3.11.2, Windows 11 (10.0.26200)
+numpy==2.2.6
+pandas==2.2.3
+scipy==1.15.3
+scikit-learn==1.6.1
+torch==2.7.1
+lightgbm==4.6.0
