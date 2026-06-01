@@ -43,12 +43,15 @@ def predictors(input_g: pd.DataFrame, horizon=HORIZON):
 
     mean7 = float(v[-7:].mean())
     last = float(v[-1])
+    nz = v[v > 0]
+    nz_mean = float(nz.mean()) if len(nz) else 0.0  # 0 제외 평균 (비-0 수준)
 
     return {
         "zero": np.zeros(horizon),
         "last": np.full(horizon, last),
         "mean7": np.full(horizon, mean7),
         "mean28": np.full(horizon, overall),
+        "nz_mean": np.full(horizon, nz_mean),
         "weekday_mean": weekday,
         "weekday_recent": weekday_recent,
         "weekday+mean7(0.5)": 0.5 * weekday + 0.5 * mean7,

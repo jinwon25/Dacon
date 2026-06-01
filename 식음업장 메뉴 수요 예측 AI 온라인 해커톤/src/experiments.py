@@ -30,6 +30,7 @@ def stacked_frame(n_folds=4):
             out.append(pd.DataFrame({
                 "fold": k, "item": it, "true": ans_by_item[it],
                 "wd": p["weekday_mean"], "m7": p["mean7"], "m28": p["mean28"],
+                "nz": p["nz_mean"],
             }))
     return pd.concat(out, ignore_index=True)
 
