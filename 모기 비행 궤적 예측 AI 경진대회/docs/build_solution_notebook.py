@@ -55,9 +55,12 @@ cells: list[dict] = []
 cells.append(md(
     "# 모기 비행 궤적 예측 — Private 2위(0.703151) 통합 솔루션 코드",
     "",
-    "지표 R-Hit@1cm. 모델 정의는 실제 제출 코드(`src/*.py`)에서 그대로 가져왔습니다. "
-    "**방법론 상세는 첨부 PDF 참조.** 전체 학습은 `src/` 스크립트로(멤버 ~40개), "
-    "§7 만 단독 실행으로 최종 결과를 재현·검증합니다.",
+    "지표 R-Hit@1cm. 모델 정의는 실제 제출 코드(`src/*.py`)에서 그대로 가져왔습니다. **방법론 상세는 첨부 PDF 참조.**",
+    "",
+    "**실행 방법**",
+    "- **최종 결과 검증 (권장, <1초)**: 맨 아래 **§7** 셀 실행 → 최종 제출 2개를 재생성하고 원본과 일치(오차 < 0.001mm) 확인. `submissions/inputs/`(base + 3-CREE frozen 예측) 필요.",
+    "- **전체 재학습**: `src/` 스크립트(멤버 ~40개, CPU/GPU 15~20h). §1~§6은 그 멤버들의 실제 코드.",
+    "- 전체 코드·데이터·재현 패키지: **https://github.com/jinwon25/Dacon** (`모기 비행 궤적 예측 AI 경진대회/`)",
 ))
 
 # ---- §1 ----
@@ -144,22 +147,26 @@ cells.append(code(
     "    return pd.read_csv(p)[['x', 'y', 'z']].to_numpy()\n\n"
     "INP = ROOT / 'submissions' / 'inputs'\n"
     "SUB = ROOT / 'submissions'\n\n"
-    "base = _xyz(INP / 'base_v148blend.csv')\n"
-    "cree = [_xyz(INP / f'cree_{t}.csv') for t in ('xy2', 'xy2s1', 'xy2h3')]\n"
-    "cree_ens3 = np.mean(cree, axis=0)\n"
-    "ids = pd.read_csv(INP / 'base_v148blend.csv')['id']\n\n"
-    "specs = [(0.40, 'submission_v157_ens3a0.40_FINAL.csv'),\n"
-    "         (0.45, 'submission_v157_ens3a0.45_FINAL.csv')]\n"
-    "for a, fn in specs:\n"
-    "    pred = (1.0 - a) * base + a * cree_ens3\n"
-    "    out = pd.DataFrame({'id': ids, 'x': pred[:, 0], 'y': pred[:, 1], 'z': pred[:, 2]})\n"
-    "    ref_path = SUB / fn\n"
-    "    if ref_path.exists():\n"
-    "        d = np.linalg.norm(pred - _xyz(ref_path), axis=-1).max() * 1000\n"
-    "        print(f'[alpha={a}] {fn}: max diff = {d:.5f} mm  -> {\"MATCH\" if d < 0.01 else \"MISMATCH\"}')\n"
-    "    else:\n"
-    "        print(f'[alpha={a}] {fn}: 원본 없음(스킵). 예측 생성만 수행.')\n"
-    "print('\\n[done] 최종 제출 = submission_v157_ens3a0.40 / a0.45  (Private 0.703151, 2위)')"
+    "if not INP.exists():\n"
+    "    print('[안내] 재현 입력(submissions/inputs/)이 없습니다. 노트북만 받으셨다면 전체 패키지를')\n"
+    "    print('       GitHub에서 받으세요: https://github.com/jinwon25/Dacon')\n"
+    "else:\n"
+    "    base = _xyz(INP / 'base_v148blend.csv')\n"
+    "    cree = [_xyz(INP / f'cree_{t}.csv') for t in ('xy2', 'xy2s1', 'xy2h3')]\n"
+    "    cree_ens3 = np.mean(cree, axis=0)\n"
+    "    ids = pd.read_csv(INP / 'base_v148blend.csv')['id']\n\n"
+    "    specs = [(0.40, 'submission_v157_ens3a0.40_FINAL.csv'),\n"
+    "             (0.45, 'submission_v157_ens3a0.45_FINAL.csv')]\n"
+    "    for a, fn in specs:\n"
+    "        pred = (1.0 - a) * base + a * cree_ens3\n"
+    "        out = pd.DataFrame({'id': ids, 'x': pred[:, 0], 'y': pred[:, 1], 'z': pred[:, 2]})\n"
+    "        ref_path = SUB / fn\n"
+    "        if ref_path.exists():\n"
+    "            d = np.linalg.norm(pred - _xyz(ref_path), axis=-1).max() * 1000\n"
+    "            print(f'[alpha={a}] {fn}: max diff = {d:.5f} mm  -> {\"MATCH\" if d < 0.01 else \"MISMATCH\"}')\n"
+    "        else:\n"
+    "            print(f'[alpha={a}] {fn}: 원본 없음(스킵). 예측 생성만 수행.')\n"
+    "    print('\\n[done] 최종 제출 = submission_v157_ens3a0.40 / a0.45  (Private 0.703151, 2위)')"
 ))
 
 for i, c in enumerate(cells):
