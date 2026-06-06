@@ -1,6 +1,6 @@
 # 모기 비행 궤적 예측 AI 경진대회
 
-데이콘에서 주최한 [**모기 비행 궤적 예측 AI 경진대회**](https://dacon.io/) 솔루션.
+데이콘에서 주최한 [**모기 비행 궤적 예측 AI 경진대회**](https://dacon.io/competitions/official/236716/overview/description) 솔루션.
 
 ## 최종 결과
 

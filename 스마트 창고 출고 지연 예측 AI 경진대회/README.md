@@ -1,6 +1,6 @@
 # 스마트 창고 출고 지연 예측 AI 경진대회
 
-데이콘에서 주최한 [**스마트 창고 출고 지연 예측 AI 경진대회**](https://dacon.io/) 솔루션.
+데이콘에서 주최한 [**스마트 창고 출고 지연 예측 AI 경진대회**](https://dacon.io/competitions/official/236696/overview/description) 솔루션.
 
 ## 최종 결과
 
