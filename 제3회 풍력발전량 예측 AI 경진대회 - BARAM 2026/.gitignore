@@ -1,0 +1,23 @@
+# Competition data and metadata (redistribution prohibited)
+data/
+
+# Trained models and generated submissions
+artifacts/
+submissions/
+
+# Python / Jupyter
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# Model-specific logs
+catboost_info/
+lightning_logs/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
