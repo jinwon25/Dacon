@@ -9,6 +9,7 @@
 | [모기 비행 궤적 예측 AI 경진대회](./모기%20비행%20궤적%20예측%20AI%20경진대회) | 완료 — **Private 2위** | LB Private **0.703151** (R-Hit@1cm, 높을수록 좋음) | 직교 메커니즘 앙상블 — Kalman 잔차 → Neural ODE → Frenet → CREE 회전물리 base를 쌓고 수동 α 주입으로 corr~0.99 plateau 돌파 (베이스라인 0.6306 → 0.703) |
 | [스마트 창고 출고 지연 예측 AI 경진대회](./스마트%20창고%20출고%20지연%20예측%20AI%20경진대회) | 완료 — **32위 (상위 10%)** | LB **9.86576** (MAE, 낮을수록 좋음) | 19-모델 mega-blend (GBDT 7 + Sequence NN 12, SLSQP) |
 | [식음업장 메뉴 수요 예측 AI 온라인 해커톤](./식음업장%20메뉴%20수요%20예측%20AI%20온라인%20해커톤) | 연구 중 | LB Private **0.5481** (가중 SMAPE, 낮을수록 좋음) | 업장별 nz-mean 블렌드 — 0 제외 SMAPE 특성 활용(베이스라인 0.694 → 0.548). LSTM·단일 GBDT는 열세 |
+| [제3회 풍력발전량 예측 AI 경진대회 - BARAM 2026](./제3회%20풍력발전량%20예측%20AI%20경진대회%20-%20BARAM%202026) | 연구 중 | LB Public **0.635279** (0.5·1-NMAE + 0.5·FICR, 높을수록 좋음) | LDAPS/GFS 공간 바람장·물리 피처 LightGBM, 2024 시간순 검증 |
 
 ## 폴더 구조
 
@@ -29,10 +30,15 @@
 │   ├── submissions/                         # 최종 제출 (submission.csv)
 │   └── data/, models/                       # gitignore (원본/체크포인트)
 │
-└── 식음업장 메뉴 수요 예측 AI 온라인 해커톤/
+├── 식음업장 메뉴 수요 예측 AI 온라인 해커톤/
     ├── README.md                            # 솔루션 상세
     ├── src/, notebooks/, docs/              # 베이스라인/블렌드/지표 코드 + 작업 로그
     └── data/, submissions/                  # gitignore (원본/생성 제출)
+│
+└── 제3회 풍력발전량 예측 AI 경진대회 - BARAM 2026/
+    ├── README.md                            # 솔루션 상세 + Public 제출 기록
+    ├── train.py, inference.py, src/, docs/  # 학습·추론 분리 + 문헌 전략
+    └── data/, artifacts/, submissions/      # gitignore (원본/모델/생성 제출)
 ```
 
 ## 공통 규칙
