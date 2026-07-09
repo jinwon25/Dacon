@@ -8,8 +8,8 @@ import numpy as np
 import pandas as pd
 from sklearn.ensemble import HistGradientBoostingRegressor
 
-from scada_proxy_direct import _fit_predict_proxy
-from scada_proxy_experiment import _hourly_scada
+from experiments.scada_proxy_direct import _fit_predict_proxy
+from experiments.scada_proxy_experiment import _hourly_scada
 from src.features import TIME_COL, build_features
 from src.metrics import CAPACITY_KWH, evaluate_competition, evaluate_group
 from train import calibrate, select_feature_columns
