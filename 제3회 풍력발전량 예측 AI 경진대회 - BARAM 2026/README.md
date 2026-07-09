@@ -21,14 +21,14 @@ Recommended next order:
 1. `blend_over115_scada_stack4.csv`
 2. `blend_over115_scada_stack6.csv`
 3. `blend_over115_scada_g12_6_g3_3.csv`
-4. `blend_stack5_powercurve_sel5_g12_t06.csv`
+4. `blend_stack5_antipowercurve2_g12_t06.csv`
 
 Suggested titles:
 
 - `Blend over115 scada stack4`
 - `Blend over115 scada stack6`
 - `Blend over115 scada g12 6 g3 3`
-- `Blend stack5 powercurve sel5 g12 t06`
+- `Blend stack5 antipowercurve2 g12 t06`
 
 ## Project Layout
 
@@ -103,7 +103,8 @@ python -m experiments.selective_member_blend --base submissions/blend_over115_sc
 - Manual extrapolation from `cal125` toward `blend_v1` peaked around `over115`.
 - SCADA proxy stack at 5% injection moved the score to `0.6402652274`.
 - `stack10` showed that more SCADA stack is not automatically better; FICR is the limiting term.
-- A new power-curve residual member is intentionally weak as a standalone model, but useful as a low-correlation candidate when selectively injected into G1/G2 agreement regimes.
+- Power-curve residual selective injection was tested in `blend_stack5_powercurve_sel5_g12_t06.csv` and dropped to `0.6400608956`; do not expand this family unless a stronger local validation signal is found.
+- Because the failed power-curve candidate lowered G1/G2 and hurt FICR, `blend_stack5_antipowercurve2_g12_t06.csv` is kept only as a tiny reverse-direction probe.
 
 ## Rule Compliance
 

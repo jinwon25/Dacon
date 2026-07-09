@@ -43,7 +43,7 @@ def blend_selectively(
         member_pred = member[target].astype(float)
         eligible = base_pred >= min_base_ratio * capacity
         agreement = (member_pred - base_pred).abs() <= max_disagreement * capacity
-        mask = eligible & agreement & (alpha > 0)
+        mask = eligible & agreement & (abs(alpha) > 0)
         blended = base_pred.copy()
         blended.loc[mask] = (1.0 - alpha) * base_pred.loc[mask] + alpha * member_pred.loc[mask]
         out[target] = np.clip(blended, 0, capacity)
