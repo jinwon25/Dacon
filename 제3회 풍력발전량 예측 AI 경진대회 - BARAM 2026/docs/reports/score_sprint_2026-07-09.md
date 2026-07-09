@@ -28,12 +28,14 @@ Recommended order:
 1. `blend_over115_scada_stack4.csv`
 2. `blend_over115_scada_stack6.csv`
 3. `blend_over115_scada_g12_6_g3_3.csv`
+4. `blend_stack5_powercurve_sel5_g12_t06.csv`
 
 Rationale:
 
 - `stack4` probes just below the public-winning 5%.
 - `stack6` probes just above it with low risk.
 - `g12_6_g3_3` reflects local evidence that the SCADA stack is weaker for group 3.
+- `powercurve_sel5_g12_t06` is the first non-GBDT/SCADA-proxy injection candidate. It only changes G1/G2 rows where the physical power-curve residual model and the current best prediction are within 6% of capacity.
 
 ## Methods Tried
 
@@ -43,12 +45,14 @@ Useful:
 - Metric-optimized convex blend of GBDT candidates.
 - Manual extrapolation from `cal125` toward `blend_v1`.
 - SCADA proxy stack with small injection weight.
+- Power-curve residual member as a low-weight, agreement-gated candidate.
 
 Low-priority:
 
 - Analog/KNN ensemble: local 2024 score around `0.603`.
 - Recent-year specialist: local 2024 score around `0.647`.
 - Direct SCADA proxy: local 2024 score around `0.642-0.643`.
+- Pure power-curve residual standalone: local 2024 score around `0.612`, so do not submit it directly.
 
 ## Next Method Work
 
@@ -59,3 +63,4 @@ Low-priority:
    - group 3 stack weight capped below group 1/2
    - no extra extrapolation above `over115` unless public evidence changes
 4. Add month/season diagnostics for public-like periods.
+5. If SCADA stack 4/6 do not move the score, test selective power-curve candidates before any broader calibration search.
