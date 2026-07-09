@@ -21,12 +21,14 @@ Recommended next order:
 1. `blend_over115_scada_stack4.csv`
 2. `blend_over115_scada_stack6.csv`
 3. `blend_over115_scada_g12_6_g3_3.csv`
+4. `blend_stack5_powercurve_sel5_g12_t06.csv`
 
 Suggested titles:
 
 - `Blend over115 scada stack4`
 - `Blend over115 scada stack6`
 - `Blend over115 scada g12 6 g3 3`
+- `Blend stack5 powercurve sel5 g12 t06`
 
 ## Project Layout
 
@@ -42,6 +44,8 @@ Suggested titles:
 |-- experiments/
 |   |-- blend_experiment.py
 |   |-- make_submission_blends.py
+|   |-- power_curve_residual.py
+|   |-- selective_member_blend.py
 |   |-- scada_proxy_stack_hist.py
 |   |-- scada_proxy_direct.py
 |   |-- recent_specialist.py
@@ -85,6 +89,13 @@ python -m experiments.make_submission_blends --output submissions/blend_over115_
 python -m experiments.make_submission_blends --output submissions/blend_over115_scada_g12_6_g3_3.csv --weights kpx_group_1=0.06,kpx_group_2=0.06,kpx_group_3=0.03
 ```
 
+Power-curve residual member:
+
+```bash
+python -m experiments.power_curve_residual --data-dir data --artifact-dir artifacts_power_curve --output submissions/power_curve_residual.csv
+python -m experiments.selective_member_blend --base submissions/blend_over115_scada_stack5.csv --member submissions/power_curve_residual.csv --output submissions/blend_stack5_powercurve_sel5_g12_t06.csv --weights kpx_group_1=0.05,kpx_group_2=0.05,kpx_group_3=0.0 --max-disagreement 0.06
+```
+
 ## Modeling Notes
 
 - The strongest baseline is not a single model but a blend of LightGBM/CatBoost candidates and SCADA proxy stack members.
@@ -92,6 +103,7 @@ python -m experiments.make_submission_blends --output submissions/blend_over115_
 - Manual extrapolation from `cal125` toward `blend_v1` peaked around `over115`.
 - SCADA proxy stack at 5% injection moved the score to `0.6402652274`.
 - `stack10` showed that more SCADA stack is not automatically better; FICR is the limiting term.
+- A new power-curve residual member is intentionally weak as a standalone model, but useful as a low-correlation candidate when selectively injected into G1/G2 agreement regimes.
 
 ## Rule Compliance
 
