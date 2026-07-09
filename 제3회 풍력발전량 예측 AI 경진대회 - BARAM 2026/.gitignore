@@ -3,6 +3,7 @@ data/
 
 # Trained models and generated submissions
 artifacts/
+artifacts*/
 submissions/
 
 # Python / Jupyter

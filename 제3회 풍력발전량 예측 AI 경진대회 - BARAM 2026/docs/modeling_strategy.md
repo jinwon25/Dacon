@@ -1,43 +1,88 @@
-# 문헌 기반 모델링 전략
+# 모델링 전략
 
-## 문제 구조
+## 대회 구조 요약
 
-이 대회는 12~35시간 전 생성된 NWP로 다음 24시간을 예측하는 day-ahead 문제다. 테스트 기간에는 SCADA와 실제 발전량이 없으므로, 직전 실제값을 입력하는 일반적인 자기회귀 모델은 사용할 수 없다. 모든 실험은 예측기준시점에 이용 가능했던 정보만 사용한다.
+BARAM 2026은 매일 09:00 KST 초기화 예보 중 다음 날 01:00부터 24시간 구간을 사용하는 day-ahead 발전량 예측 문제입니다. 테스트 기간에는 실제 발전량과 SCADA가 제공되지 않으므로, inference 입력은 공개된 LDAPS/GFS 예보와 달력 피처로 제한해야 합니다.
 
-## 적용 우선순위
+공식 평가 산식은 `0.5 * (1-NMAE) + 0.5 * FICR`입니다. 평가 대상은 실제 발전량이 그룹 설비용량의 10% 이상인 시간대이므로, 발전량이 충분히 나는 구간에서의 오차와 6%/8% 정산 경계 진입률이 중요합니다.
 
-### 1. NWP 직접 예측 앙상블
+## 현재 채택한 접근
 
-현재 LightGBM 모델은 격자별 바람장을 유지하고 풍속 크기를 명시적으로 파생한다. 다음 단계에서 CatBoost와 XGBoost를 같은 시간 분할로 학습하고, 2024년 out-of-fold 예측으로 그룹별 블렌드 가중치를 정한다. 작은 정형 데이터에서는 복잡한 딥러닝보다 이 기준선을 먼저 이기는 것이 필요하다.
+### 1. NWP 직접 예측 GBDT
 
-### 2. SCADA 기반 Model Output Statistics
+LDAPS 16개 격자와 GFS 9개 격자의 바람 성분은 grid-level로 보존하고, 나머지 기상 변수는 공간 통계량으로 압축합니다. 각 타깃 그룹은 별도 모델로 학습합니다.
 
-정제한 시간별 SCADA 발전량과 KPX 라벨의 상관계수는 그룹별 0.979~0.988이다. 이를 이용해 다음 두 경로를 만든다.
+현재 기본 피처 수는 702개입니다. `src/features.py`에는 117m hub-height proxy와 터빈 위치 기반 inverse-distance weighted 피처도 구현되어 있지만, 전체 투입 시 2024 holdout 성능이 악화되어 기본 `--feature-set base`에서는 제외합니다.
 
-1. NWP에서 터빈 현장 풍속을 예측하는 편향 보정 모델
-2. 보정 풍속에서 발전량을 예측하는 단조 파워커브 모델
+### 2. 그룹별 모델 패밀리 선택
 
-2단계 예측은 직접 발전량 모델과 앙상블한다. 풍속-발전량 관계와 물리적 출력 범위를 명시하는 접근은 풍력 파워커브 연구 및 물리-데이터 하이브리드 방향과 일치한다.
+검증 결과:
 
-### 3. 다중 격자 공간 모델
+| 타깃 | LightGBM best | CatBoost best | 선택 |
+|---|---:|---:|---|
+| `kpx_group_1` | 0.6669 | 검증 생략, 예비 실험에서 열세 | LightGBM |
+| `kpx_group_2` | 0.6693 | 예비 실험 0.6682 | LightGBM |
+| `kpx_group_3` | 0.6103 | 0.6251 | CatBoost |
 
-LDAPS 16개 및 GFS 9개 격자를 공간 노드로 보고 CNN 또는 작은 GNN을 적용한다. 바람장 이동을 표현할 수 있지만 표본이 약 26,000시간뿐이므로, LightGBM보다 시간순 검증이 좋아질 때만 앙상블에 포함한다. 풍력 예측에 AGCRN·MTGNN을 앙상블한 KDD Cup 사례는 공간 의존성 모델링의 근거가 된다.
+CatBoost는 그룹 3처럼 label 기간이 짧고 발전량 분포가 다른 타깃에서 더 안정적이었습니다. 이는 ordered boosting이 작은 데이터와 분포 shift에서 LightGBM과 다른 bias/variance tradeoff를 만들기 때문으로 해석합니다.
 
-### 4. 다중 수평선 딥러닝
+### 3. 보정
 
-TFT는 알려진 미래 공변량과 다중 수평선 예측을 함께 다룰 수 있고, TiDE는 같은 구조를 더 단순한 MLP 인코더-디코더로 처리한다. 이 데이터에서는 하루 24개 행을 하나의 예보 샘플로 재구성하여 실험한다. PatchTST와 N-HiTS는 강한 장기 시계열 기준선이지만, 테스트에 과거 발전량이 제공되지 않는 본 과제에서는 NWP 공변량을 자연스럽게 처리하는 TFT/TiDE보다 우선순위가 낮다.
+각 모델의 raw prediction에 대해 2024 holdout에서 scale/offset grid search를 수행합니다. 이 보정은 MAE뿐 아니라 FICR 경계 진입률을 함께 개선하기 위한 장치입니다.
 
-### 5. FICR 최적화
+보정 리스크를 관리하기 위해 inference에서 `--calibration-strength`를 제공합니다.
 
-공식 코드를 확보한 뒤 MAE와 6%·8% 정산 경계를 동시에 반영한다. 평균 예측만 제출하는 대신 여러 seed/model의 예측 분산으로 불확실성을 추정하고, 2024년 OOF에서 그룹·풍속 구간별 보정을 선택한다. Public 리더보드만을 이용한 반복 보정은 하지 않는다.
+- `1.0`: 검증 최적 보정 전체 적용
+- `0.5`: public/private shift 대응용 절반 보정
+- `0.0`: raw prediction
 
-## 주요 참고 자료
+## 왜 deep SOTA를 바로 쓰지 않았는가
 
-- [Temporal Fusion Transformers](https://arxiv.org/abs/1912.09363): 알려진 미래 입력, 변수 선택, 다중 수평선 예측
-- [TiDE](https://arxiv.org/abs/2304.08424): 공변량을 지원하는 효율적인 dense encoder
-- [PatchTST, ICLR 2023](https://openreview.net/forum?id=Jbdc0vTOcol): 패치 기반 장기 시계열 표현
-- [N-HiTS](https://arxiv.org/abs/2201.12886): 다중 스케일 계층적 보간 예측
-- [KDD Cup 풍력 공간-시간 GNN](https://arxiv.org/abs/2302.11159): AGCRN·MTGNN 기반 다중 터빈 공간 모델
-- [풍속·풍력 딥러닝 리뷰](https://doi.org/10.1016/j.apenergy.2021.117766): 직접 예측과 풍속-파워커브 2단계 접근
-- [풍력 파워커브 모델링 리뷰](https://doi.org/10.1016/j.rser.2019.109422): 물리적 파워커브와 불확실성 처리
-- [DACON 공식 평가 페이지](https://dacon.io/competitions/official/236727/overview/evaluation): 평가 대상, NMAE, FICR 정의
+TFT, PatchTST, N-HiTS, TiDE는 모두 강한 시계열 예측 모델입니다. 다만 이 대회에서는 다음 제약 때문에 1차 제출 후보로는 GBDT가 더 실용적입니다.
+
+- 테스트 기간 과거 발전량이 없어서 autoregressive target context를 자연스럽게 쓰기 어렵습니다.
+- 학습 표본이 시간 단위 약 2.6만 행이고, 그룹 3은 2023-2024만 label이 있어 deep model 학습 데이터가 작습니다.
+- 입력의 핵심 신호가 이미 미래 24시간 NWP covariate에 들어 있습니다.
+- 2차 코드 검증에서 재현성과 누수 소명이 중요합니다.
+
+따라서 SOTA 연구에서 가져올 부분은 모델 이름보다 구조적 아이디어입니다.
+
+- TFT/TiDE: known future covariate 중심 설계
+- PatchTST/N-HiTS: multi-horizon 예측과 scale decomposition 아이디어
+- 풍력 power curve 연구: hub-height wind speed, wind speed cubed, turbine location weighting
+- CatBoost: ordered boosting을 통한 prediction shift 완화
+
+## 다음 실험 순서
+
+1. **제출 우선순위**
+   - `hybrid_lgbm_cat_g3_half_cal.csv`
+   - `hybrid_lgbm_cat_g3_full_cal.csv`
+   - `hybrid_lgbm_cat_g3_raw.csv`
+
+2. **검증 확장**
+   - 2024 전체 holdout 외에 월별 score/FICR breakdown 생성
+   - public score와 local score 차이를 기록해 calibration strength 선택
+
+3. **피처 실험**
+   - `--feature-set own_idw_nohub`: 그룹별 위치 가중 피처 중 hub proxy 제외
+   - `--feature-set own_idw`: 자기 그룹 위치 가중 전체 피처
+   - 그룹 3에만 위치 가중 피처 적용
+
+4. **앙상블**
+   - 그룹 3 CatBoost raw와 LightGBM raw의 convex blending
+   - seed ensemble은 feature/model 개선 이후 적용
+
+5. **deep model 후보**
+   - 하루 24시간 horizon을 하나의 sample로 재구성한 TiDE/TFT 스타일 MLP
+   - 단, public score가 GBDT 대비 개선될 때만 유지
+
+## 참고 자료
+
+- DACON 대회 설명: https://dacon.io/competitions/official/236727/overview/description
+- DACON 평가 방식: https://dacon.io/competitions/official/236727/overview/evaluation
+- DACON 규칙: https://dacon.io/competitions/official/236727/overview/rules
+- Temporal Fusion Transformers: https://arxiv.org/abs/1912.09363
+- PatchTST: https://openreview.net/forum?id=Jbdc0vTOcol
+- N-HiTS: https://arxiv.org/abs/2201.12886
+- TiDE: https://arxiv.org/abs/2304.08424
+- CatBoost: https://arxiv.org/abs/1706.09516

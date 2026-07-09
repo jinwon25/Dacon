@@ -30,16 +30,18 @@ def main() -> None:
     report = json.loads((artifact_dir / "training_report.json").read_text(encoding="utf-8"))
 
     print("Building test features...")
-    X = build_features(args.data_dir, "test").reindex(columns=feature_columns)
+    X_all = build_features(args.data_dir, "test")
     sample = pd.read_csv(Path(args.data_dir) / "sample_submission.csv", encoding="utf-8-sig")
     sample[TIME_COL] = pd.to_datetime(sample[TIME_COL])
     indexed = sample.set_index(TIME_COL)
 
-    if not indexed.index.equals(X.index):
+    if not indexed.index.equals(X_all.index):
         raise ValueError("Test feature timestamps do not exactly match sample_submission.csv")
 
     for target, capacity in CAPACITY_KWH.items():
         model = joblib.load(artifact_dir / f"{target}.joblib")
+        columns = feature_columns[target] if isinstance(feature_columns, dict) else feature_columns
+        X = X_all.reindex(columns=columns)
         settings = report["targets"][target]
         strength = args.calibration_strength
         scale = 1.0 + strength * (settings["scale"] - 1.0)
