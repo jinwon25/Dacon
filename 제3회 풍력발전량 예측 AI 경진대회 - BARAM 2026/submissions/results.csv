@@ -1,0 +1,14 @@
+submission_id,title,submitted_at,file,score,one_minus_nmae,ficr,notes
+1473991,LGBM v1 - spatial weather features + time holdout calibration,2026-07-06 22:58:18,lgbm_v1.csv,0.6352790723,0.8741552448,0.3964028998,First public leaderboard submission
+1476563,Hybrid LGBM + CatBoost group3 half calibration,2026-07-07 22:26:40,hybrid_lgbm_cat_g3_half_cal.csv,0.6358853777,0.8740510337,0.3977197217,Half validation calibration; +0.0006063054 vs v1
+1476564,Hybrid LGBM + CatBoost group3 full calibration,2026-07-07 22:27:12,hybrid_lgbm_cat_g3_full_cal.csv,0.6366019333,0.8736225508,0.3995813158,+0.0013228610 vs v1
+1476569,Hybrid LGBM + CatBoost group3 calibration 1.25,2026-07-07 22:29:27,hybrid_lgbm_cat_g3_cal125.csv,0.6367222443,0.8730264358,0.4004180529,Best public so far; +0.0014431720 vs v1
+1476571,Hybrid LGBM + CatBoost group3 calibration 1.50,2026-07-07 22:29:57,hybrid_lgbm_cat_g3_cal150.csv,0.6355476403,0.8722118983,0.3988833824,Over-calibrated; score dropped despite FICR above v1
+1476577,Hybrid LGBM + CatBoost group3 calibration 1.20,2026-07-07 22:33:08,hybrid_lgbm_cat_g3_cal120.csv,0.6364601739,0.8731637597,0.3997565881,FICR derived from score and 1-NMAE; below cal125 by 0.0002620704
+1477436,Blend v1 mix50 cal125,2026-07-08 07:46:09,blend_v1_mix50_cal125.csv,0.6390450795,0.8745955866,0.4034945724,Blend hedge; +0.0023228352 vs cal125
+1477441,Blend v1 metric optimized,2026-07-08 07:47:10,blend_v1.csv,0.6394982166,0.8752066646,0.4037897687,Best public so far; +0.0027759723 vs cal125
+1477445,Blend v1 over110 cal125,2026-07-08 07:49:33,blend_v1_over110_cal125.csv,0.6398927384,0.8752047108,0.4045807659,Best public so far; +0.0003945218 vs blend_v1
+1478708,Blend v1 over115 cal125,2026-07-08 21:19:50,blend_v1_over115_cal125.csv,0.6398981745,0.8751878268,0.4046085222,Best public so far; essentially tied with over110
+1478711,Blend v1 over120 cal125,2026-07-08 21:20:38,blend_v1_over120_cal125.csv,0.6396174227,0.8751591011,0.4040757444,Extrapolation past 1.15 starts to degrade
+1480959,Blend over115 scada stack5,2026-07-09 21:15:15,blend_over115_scada_stack5.csv,0.6402652274,0.8753153766,0.4052150782,Best public so far; SCADA proxy stack signal confirmed
+1480964,Blend over115 scada stack10,2026-07-09 21:17:44,blend_over115_scada_stack10.csv,0.6397287088,0.8754003341,0.4040570835,SCADA stack over-mix; 1-NMAE improved but FICR dropped
