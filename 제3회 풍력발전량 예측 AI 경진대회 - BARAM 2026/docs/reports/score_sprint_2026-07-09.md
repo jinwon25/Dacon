@@ -11,14 +11,16 @@ Current public best:
 
 `blend_over115_scada_stack10.csv` dropped to `0.6397287088`.
 `blend_stack5_powercurve_sel5_g12_t06.csv` dropped to `0.6400608956`.
+`blend_over115_scada_stack4.csv` dropped slightly to `0.6402123189`.
 
 ## Interpretation
 
 The current plateau is no longer solved by global calibration or extrapolation. The useful new member is the SCADA proxy stack:
 
 - `stack5` improved both 1-NMAE and FICR.
+- `stack4` reduced both 1-NMAE and FICR versus stack5.
 - `stack10` improved 1-NMAE but reduced FICR enough to lower total score.
-- Therefore the useful injection region is around 3-6%, not 10%+.
+- Therefore the global SCADA stack weight is narrow around 5%; the next useful search is group-wise, not another global sweep.
 
 This mirrors the mosquito competition lesson: once the main ensemble is saturated, the next gain comes from a decorrelated member injected manually at a small weight, not from chasing the best OOF member.
 
@@ -26,16 +28,16 @@ This mirrors the mosquito competition lesson: once the main ensemble is saturate
 
 Recommended order:
 
-1. `blend_over115_scada_stack4.csv`
-2. `blend_over115_scada_stack6.csv`
-3. `blend_over115_scada_g12_6_g3_3.csv`
+1. `blend_over115_scada_g12_5_g3_3.csv`
+2. `blend_over115_scada_g12_6_g3_3.csv`
+3. `blend_over115_scada_stack6.csv`
 4. `blend_stack5_antipowercurve2_g12_t06.csv`
 
 Rationale:
 
-- `stack4` probes just below the public-winning 5%.
-- `stack6` probes just above it with low risk.
-- `g12_6_g3_3` reflects local evidence that the SCADA stack is weaker for group 3.
+- `g12_5_g3_3` keeps G1/G2 exactly at the current best and only lowers G3 SCADA stack weight to 3%.
+- `g12_6_g3_3` then tests whether G1/G2 can tolerate 6% while G3 stays lower.
+- `stack6` is now lower priority because `stack4` confirmed that global weights around 5% are already near the peak.
 - `powercurve_sel5_g12_t06` was tested as the first non-GBDT/SCADA-proxy injection candidate, but it reduced both 1-NMAE and FICR. Do not expand this route for now.
 - `antipowercurve2_g12_t06` is a tiny reverse-direction probe based on that failed result. It changes only G1/G2 agreement rows and moves the mean prediction by less than 4 kWh.
 
@@ -61,7 +63,7 @@ Low-priority:
 1. Cache OOF/test prediction matrices for every member.
 2. Add SCADA stack as a formal member in the blend optimizer instead of manual CSV-level injection.
 3. Search group-wise weights with constraints:
-   - all-group SCADA stack weight: 0.03-0.07
+   - all-group SCADA stack weight: keep 0.05 as anchor
    - group 3 stack weight capped below group 1/2
    - no extra extrapolation above `over115` unless public evidence changes
 4. Add month/season diagnostics for public-like periods.
