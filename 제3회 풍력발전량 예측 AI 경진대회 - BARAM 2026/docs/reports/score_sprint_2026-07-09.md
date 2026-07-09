@@ -10,6 +10,7 @@ Current public best:
 - FICR: `0.4052150782`
 
 `blend_over115_scada_stack10.csv` dropped to `0.6397287088`.
+`blend_stack5_powercurve_sel5_g12_t06.csv` dropped to `0.6400608956`.
 
 ## Interpretation
 
@@ -28,14 +29,15 @@ Recommended order:
 1. `blend_over115_scada_stack4.csv`
 2. `blend_over115_scada_stack6.csv`
 3. `blend_over115_scada_g12_6_g3_3.csv`
-4. `blend_stack5_powercurve_sel5_g12_t06.csv`
+4. `blend_stack5_antipowercurve2_g12_t06.csv`
 
 Rationale:
 
 - `stack4` probes just below the public-winning 5%.
 - `stack6` probes just above it with low risk.
 - `g12_6_g3_3` reflects local evidence that the SCADA stack is weaker for group 3.
-- `powercurve_sel5_g12_t06` is the first non-GBDT/SCADA-proxy injection candidate. It only changes G1/G2 rows where the physical power-curve residual model and the current best prediction are within 6% of capacity.
+- `powercurve_sel5_g12_t06` was tested as the first non-GBDT/SCADA-proxy injection candidate, but it reduced both 1-NMAE and FICR. Do not expand this route for now.
+- `antipowercurve2_g12_t06` is a tiny reverse-direction probe based on that failed result. It changes only G1/G2 agreement rows and moves the mean prediction by less than 4 kWh.
 
 ## Methods Tried
 
@@ -45,7 +47,6 @@ Useful:
 - Metric-optimized convex blend of GBDT candidates.
 - Manual extrapolation from `cal125` toward `blend_v1`.
 - SCADA proxy stack with small injection weight.
-- Power-curve residual member as a low-weight, agreement-gated candidate.
 
 Low-priority:
 
@@ -53,6 +54,7 @@ Low-priority:
 - Recent-year specialist: local 2024 score around `0.647`.
 - Direct SCADA proxy: local 2024 score around `0.642-0.643`.
 - Pure power-curve residual standalone: local 2024 score around `0.612`, so do not submit it directly.
+- Selective power-curve residual blend: public `0.6400608956`, below stack5 by `0.0002043318`.
 
 ## Next Method Work
 
@@ -63,4 +65,4 @@ Low-priority:
    - group 3 stack weight capped below group 1/2
    - no extra extrapolation above `over115` unless public evidence changes
 4. Add month/season diagnostics for public-like periods.
-5. If SCADA stack 4/6 do not move the score, test selective power-curve candidates before any broader calibration search.
+5. If SCADA stack 4/6 do not move the score, move to a new member family rather than expanding power-curve residual injection.
