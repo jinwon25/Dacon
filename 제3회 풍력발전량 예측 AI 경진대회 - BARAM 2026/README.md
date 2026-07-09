@@ -10,7 +10,7 @@ Goal: predict hourly 2025 wind-power generation for three KPX groups from LDAPS/
 |---:|---|---:|---:|---:|
 | 1480959 | `blend_over115_scada_stack5.csv` | 0.6402652274 | 0.8753153766 | 0.4052150782 |
 
-`blend_over115_scada_stack10.csv` dropped to `0.6397287088`, so the SCADA stack member is useful but should be injected lightly.
+`blend_over115_scada_stack4.csv` dropped slightly to `0.6402123189`, and `blend_over115_scada_stack10.csv` dropped to `0.6397287088`, so the global SCADA stack weight is currently best at 5%.
 
 ## Active Submission Candidates
 
@@ -18,16 +18,16 @@ Active candidates are kept in `submissions/` root. Older generated CSVs are move
 
 Recommended next order:
 
-1. `blend_over115_scada_stack4.csv`
-2. `blend_over115_scada_stack6.csv`
-3. `blend_over115_scada_g12_6_g3_3.csv`
+1. `blend_over115_scada_g12_5_g3_3.csv`
+2. `blend_over115_scada_g12_6_g3_3.csv`
+3. `blend_over115_scada_stack6.csv`
 4. `blend_stack5_antipowercurve2_g12_t06.csv`
 
 Suggested titles:
 
-- `Blend over115 scada stack4`
-- `Blend over115 scada stack6`
+- `Blend over115 scada g12 5 g3 3`
 - `Blend over115 scada g12 6 g3 3`
+- `Blend over115 scada stack6`
 - `Blend stack5 antipowercurve2 g12 t06`
 
 ## Project Layout
@@ -86,6 +86,7 @@ Manual member injection:
 
 ```bash
 python -m experiments.make_submission_blends --output submissions/blend_over115_scada_stack5.csv --weights 0.05
+python -m experiments.make_submission_blends --output submissions/blend_over115_scada_g12_5_g3_3.csv --weights kpx_group_1=0.05,kpx_group_2=0.05,kpx_group_3=0.03
 python -m experiments.make_submission_blends --output submissions/blend_over115_scada_g12_6_g3_3.csv --weights kpx_group_1=0.06,kpx_group_2=0.06,kpx_group_3=0.03
 ```
 
@@ -102,7 +103,7 @@ python -m experiments.selective_member_blend --base submissions/blend_over115_sc
 - `blend_v1` moved the public score from `0.6367` to `0.6395`.
 - Manual extrapolation from `cal125` toward `blend_v1` peaked around `over115`.
 - SCADA proxy stack at 5% injection moved the score to `0.6402652274`.
-- `stack10` showed that more SCADA stack is not automatically better; FICR is the limiting term.
+- `stack4` and `stack10` showed that the global optimum is narrow around 5%; next tests should be group-wise, not more global weight tuning.
 - Power-curve residual selective injection was tested in `blend_stack5_powercurve_sel5_g12_t06.csv` and dropped to `0.6400608956`; do not expand this family unless a stronger local validation signal is found.
 - Because the failed power-curve candidate lowered G1/G2 and hurt FICR, `blend_stack5_antipowercurve2_g12_t06.csv` is kept only as a tiny reverse-direction probe.
 

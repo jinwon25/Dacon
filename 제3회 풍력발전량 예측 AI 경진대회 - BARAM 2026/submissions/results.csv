@@ -13,3 +13,4 @@ submission_id,title,submitted_at,file,score,one_minus_nmae,ficr,notes
 1480959,Blend over115 scada stack5,2026-07-09 21:15:15,blend_over115_scada_stack5.csv,0.6402652274,0.8753153766,0.4052150782,Best public so far; SCADA proxy stack signal confirmed
 1480964,Blend over115 scada stack10,2026-07-09 21:17:44,blend_over115_scada_stack10.csv,0.6397287088,0.8754003341,0.4040570835,SCADA stack over-mix; 1-NMAE improved but FICR dropped
 1481028,Blend stack5 powercurve sel5 g12 t06,2026-07-09 21:58:05,blend_stack5_powercurve_sel5_g12_t06.csv,0.6400608956,0.8752921560,0.4048296351,Power-curve selective injection failed; FICR dropped vs stack5
+1481059,Blend over115 scada stack4,2026-07-09 22:14:46,blend_over115_scada_stack4.csv,0.6402123189,0.8752932341,0.4051314036,Below stack5; global SCADA stack weight 5% remains the peak among 4/5/10
