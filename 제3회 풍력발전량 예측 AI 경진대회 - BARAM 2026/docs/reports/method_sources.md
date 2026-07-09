@@ -45,3 +45,4 @@ For this repository:
 3. Use SCADA proxy members at low weights because `stack5` improved public score but `stack10` degraded FICR.
 4. Prefer constrained group-wise injection over unconstrained larger global injection.
 5. Optimize against FICR sensitivity separately from NMAE; public evidence shows that better 1-NMAE can still lose total score when FICR drops.
+6. Treat physical power-curve models as low-correlation ensemble members, not direct replacements for the GBDT blend.
