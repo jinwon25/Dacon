@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { koreaPortugal360 } from '../data/freezeFrameEvidence'
 import type { FormationKey, Tactics } from '../types'
 
 type SequenceView = 'actual' | 'proposal'
@@ -11,15 +12,13 @@ interface SequencePlayer {
   to: [number, number]
 }
 
-const actualPlayers: SequencePlayer[] = [
-  { id: 'cho', label: '조', team: 'korea', from: [60.7, 41.2], to: [72, 45] },
-  { id: 'son', label: '손', team: 'korea', from: [75, 66], to: [87.1, 68.4] },
-  { id: 'lee', label: '이', team: 'korea', from: [61, 24], to: [71, 30] },
-  { id: 'hwang', label: '황', team: 'korea', from: [52, 52], to: [66, 54] },
-  { id: 'por-1', label: 'P', team: 'portugal', from: [73, 33], to: [79, 42] },
-  { id: 'por-2', label: 'P', team: 'portugal', from: [80, 58], to: [85, 61] },
-  { id: 'por-3', label: 'P', team: 'portugal', from: [69, 76], to: [77, 72] },
-]
+const actualFrame = (shot: boolean): SequencePlayer[] => (shot ? koreaPortugal360.shot.players : koreaPortugal360.pass.players).map((player) => ({
+  id: player.id,
+  label: player.label,
+  team: player.team,
+  from: [player.x, player.y],
+  to: [player.x, player.y],
+}))
 
 function proposalPlayers(hwangOn: boolean, formation: FormationKey): SequencePlayer[] {
   const wideStart = formation === '3-4-3' ? 24 : 30
@@ -38,7 +37,7 @@ function proposalPlayers(hwangOn: boolean, formation: FormationKey): SequencePla
 export default function TacticalSequence({ hwangOn, formation, tactics }: { hwangOn: boolean; formation: FormationKey; tactics: Tactics }) {
   const [view, setView] = useState<SequenceView>('actual')
   const [phase, setPhase] = useState(false)
-  const players = view === 'actual' ? actualPlayers : proposalPlayers(hwangOn, formation)
+  const players = view === 'actual' ? actualFrame(phase) : proposalPlayers(hwangOn, formation)
   const tempoSeconds = Math.max(1.2, 2.8 - tactics.tempo / 60)
 
   useEffect(() => {
@@ -67,22 +66,24 @@ export default function TacticalSequence({ hwangOn, formation, tactics }: { hwan
         <div className="sequence-pitch">
           <div className="sequence-pitch-lines"><i /><i /><i /></div>
           <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-            {players.filter((player) => player.team === 'korea').map((player) => <line key={player.id} x1={player.from[0]} y1={player.from[1]} x2={player.to[0]} y2={player.to[1]} className={`sequence-route ${view}`} />)}
+            {view === 'actual'
+              ? <line x1="60.7" y1="41.2" x2="87.1" y2="68.4" className="sequence-route actual" />
+              : players.filter((player) => player.team === 'korea').map((player) => <line key={player.id} x1={player.from[0]} y1={player.from[1]} x2={player.to[0]} y2={player.to[1]} className="sequence-route proposal" />)}
           </svg>
           {players.map((player) => {
             const position = phase ? player.to : player.from
             return <span key={player.id} className={`sequence-player ${player.team}`} style={{ left: `${position[0]}%`, top: `${position[1]}%`, transitionDuration: `${tempoSeconds}s` }}>{player.label}</span>
           })}
           <span className={`sequence-ball ${phase ? 'moving' : ''} ${view}`} style={{ transitionDuration: `${tempoSeconds}s` }} />
-          <em>{view === 'actual' ? '실제 이벤트 좌표 기반' : '사용자 입력 기반 휴리스틱 동선'}</em>
+          <em>{view === 'actual' ? (phase ? koreaPortugal360.shot.label : koreaPortugal360.pass.label) : '사용자 입력 기반 휴리스틱 동선'}</em>
         </div>
 
         <aside className="sequence-analysis">
           <span className={`sequence-type ${view}`}>{view === 'actual' ? 'OBSERVED' : 'PROPOSED'}</span>
           {view === 'actual' ? <>
             <h3>조규성의 연결 후 손흥민 슈팅</h3>
-            <p>55분 공격 지역 진입은 슈팅으로 이어졌지만, 손흥민 주변의 지원 숫자가 적어 수비가 슈팅 경로를 빠르게 차단했습니다.</p>
-            <ul><li><b>패스</b> 조규성 → 손흥민</li><li><b>결과</b> Blocked · xG 0.024</li><li><b>근거</b> StatsBomb 이벤트 좌표</li></ul>
+            <p>패스 순간 13명, 슈팅 순간 8명의 가시 선수를 실제 360 프리즈프레임으로 보여줍니다. 손흥민과 골키퍼 사이에 수비가 밀집해 슈팅 경로가 제한됐습니다.</p>
+            <ul><li><b>패스</b> 조규성 → 손흥민</li><li><b>결과</b> Blocked · xG 0.024</li><li><b>근거</b> StatsBomb 360 두 이벤트 스냅샷</li></ul>
           </> : <>
             <h3>{hwangOn ? '반대편 러너를 추가한 전환안' : '기존 인원으로 폭을 넓힌 전환안'}</h3>
             <p>{formation} 대형에서 전방 폭을 넓혀 중앙 수비를 분산하고, 손흥민의 첫 패스 이후 두 번째 침투 선수를 만듭니다.</p>
@@ -90,7 +91,7 @@ export default function TacticalSequence({ hwangOn, formation, tactics }: { hwan
           </>}
         </aside>
       </div>
-      <p className="sequence-disclaimer">공과 패스 좌표는 실제 이벤트를 사용합니다. 공이 없는 선수의 위치는 360 추적 데이터가 없어 설명용으로 구성했습니다.</p>
+      <p className="sequence-disclaimer">실제 장면은 StatsBomb 360의 두 이벤트 프리즈프레임입니다. 이벤트 사이의 연속 트래킹이 아니며, 제안 장면의 움직임만 설명용 휴리스틱입니다.</p>
     </section>
   )
 }

@@ -68,7 +68,7 @@
       <h1>실제 경기의 한복판에서<br><span class="lime">전술 개입안</span>을 설계하다.</h1>
       <p class="lead">월드컵 이벤트 데이터로 문제를 진단하고, 포메이션·역할·교체를 직접 조정해 이점과 리스크를 비교하는 코칭 의사결정 웹서비스</p>
     </div>
-    <div class="cover-meta"><span>개인 참가 · jinwon25</span><span>기획서 초안 · 2026.07.11</span></div>
+    <div class="cover-meta"><span>개인 참가 · jinwon25</span><span>기획서 초안 · 2026.07.12</span></div>
   </section>
 
   <section class="page">
@@ -129,9 +129,9 @@
   <section class="page dark">
     <p class="eyebrow">05 · INTERVENTION REVIEW</p>
     <h2>실제 있었던 움직임과<br>내가 제안한 움직임을 분리합니다.</h2>
-    <img class="shot" src="../artifacts/result-sequence.png" alt="2D 전술 시퀀스와 결과 검토">
+    <img class="shot" src="../artifacts/result-360.png" alt="StatsBomb 360 기반 2D 전술 시퀀스와 결과 검토">
     <div class="grid-2" style="margin-top:7mm">
-      <div class="card"><b>Observed</b><p>55분 조규성→손흥민 패스와 차단된 슈팅은 StatsBomb 이벤트 좌표로 재현합니다.</p></div>
+      <div class="card"><b>Observed</b><p>55분 조규성→손흥민 패스와 슈팅 순간의 가시 선수는 StatsBomb 360 두 프리즈프레임으로 재현합니다.</p></div>
       <div class="card"><b>Proposed</b><p>사용자가 만든 개입안은 설명용 오프볼 위치와 휴리스틱 비교임을 명시합니다.</p></div>
     </div>
     <div class="footer"><span>관측 데이터 ≠ 제안 시나리오</span><span>06</span></div>
@@ -140,11 +140,11 @@
   <section class="page">
     <p class="eyebrow">06 · UNIVERSAL STUDIO</p>
     <h2>한 경기 체험을 넘어,<br>코칭 미팅에서 반복 사용합니다.</h2>
-    <img class="shot" src="../artifacts/studio-opponent.png" alt="범용 전술 스튜디오">
+    <img class="shot" src="../artifacts/studio-storyboard.png" alt="장면 타임라인이 포함된 범용 전술 스튜디오">
     <div class="grid-3" style="margin-top:6mm">
-      <div class="card"><b>상대 재현</b><p>상대 포메이션 오버레이와 붉은 선수 드래그로 압박 구조를 만듭니다.</p></div>
-      <div class="card"><b>A/B 비교</b><p>두 전술안을 저장·복원하고 팀 폭·수비 라인·전환 위험 차이를 봅니다.</p></div>
-      <div class="card"><b>공유</b><p>브라우저 자동 저장, 실행 취소, 16:9 PNG, 인쇄 PDF를 제공합니다.</p></div>
+      <div class="card"><b>빠른 시작</b><p>국가별 전술·역습·코너킥 템플릿에서 시작해 상대 구조까지 함께 편집합니다.</p></div>
+      <div class="card"><b>장면 재생</b><p>패스·침투 경로와 최대 5개 배치 장면을 저장해 순서대로 재생합니다.</p></div>
+      <div class="card"><b>분석·공유</b><p>Before/After, 코치 적용, A/B 비교, 16:9 PNG와 인쇄 PDF를 제공합니다.</p></div>
     </div>
     <div class="footer"><span>RE:TACTIC 기획서</span><span>07</span></div>
   </section>
@@ -159,7 +159,7 @@
     </div>
     <table>
       <tr><th>항목</th><th>방식</th><th>오해 방지</th></tr>
-      <tr><td>데이터</td><td>StatsBomb Open Data · match 3857262</td><td>서비스·README·기획서에 출처와 로고 표시</td></tr>
+      <tr><td>데이터</td><td>StatsBomb 이벤트·360 · match 3857262</td><td>360을 연속 트래킹이 아닌 이벤트 스냅샷으로 명시</td></tr>
       <tr><td>재현</td><td>원본 이벤트에서 45–64분 집계 스크립트 제공</td><td>원본을 저장소에 복제하지 않고 파생값만 번들</td></tr>
       <tr><td>시나리오</td><td>관측값을 기준선으로 선택 가중치 적용</td><td>승률·득점 확률·실제 결과 예측으로 표현하지 않음</td></tr>
       <tr><td>런타임</td><td>정적 데이터와 브라우저 내 계산</td><td>외부 API 키·회원가입·유료 결제 불필요</td></tr>
@@ -174,7 +174,7 @@
     <div class="grid-2">
       <div class="card"><b>참신성 · 30</b><p>실제 경기의 결정적 순간을 데이터로 진단하고, 직접 만든 개입안의 운영 위험까지 검토합니다.</p></div>
       <div class="card"><b>감독 경험 · 25</b><p>브리핑·전술판·터치라인 개입·결과 메모를 3분의 몰입 흐름으로 연결합니다.</p></div>
-      <div class="card"><b>완성도 · 25</b><p>드래그·교체·실시간 진단·A/B·자동 저장·PNG가 외부 키 없이 실제 작동합니다.</p></div>
+      <div class="card"><b>완성도 · 25</b><p>드래그·경로·장면 재생·코치 적용·A/B·자동 저장·PNG가 외부 키 없이 실제 작동합니다.</p></div>
       <div class="card"><b>기획/구현 · 20</b><p>모든 데이터와 인터랙션을 ‘전술 선택의 근거와 결과’라는 한 축으로 통일했습니다.</p></div>
     </div>
     <table style="margin-top:10mm;color:#dce9df">
