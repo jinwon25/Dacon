@@ -7,7 +7,7 @@ import { evidenceMethod, matchEvidence, playerEvidence } from './data/evidence'
 import { formationPositions, initialSquad, roleOptions } from './data/match'
 import type { FormationKey, Metrics, Player, Stage, Tactics } from './types'
 
-const formations: FormationKey[] = ['4-3-3', '4-2-3-1', '3-4-3', '5-3-2']
+const formations: FormationKey[] = ['4-3-3', '4-2-3-1', '4-4-2', '4-1-4-1', '4-3-1-2', '3-4-3', '5-3-2']
 const stageOrder: Stage[] = ['intro', 'briefing', 'tactics', 'result']
 const stageLabels: Record<Stage, string> = { intro: '시작', briefing: '진단', tactics: '설계', result: '검토' }
 type AppMode = 'guided' | 'studio'
