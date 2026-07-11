@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>RE:TACTIC 기획서 초안</title>
+  <style>
+    @page { size: A4; margin: 0; }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: #102219; background: #dfe7e2; font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; }
+    .page { position: relative; width: 210mm; height: 297mm; margin: 12mm auto; padding: 18mm 18mm 16mm; overflow: hidden; background: #f5f7f3; page-break-after: always; }
+    .page:last-child { page-break-after: auto; }
+    .dark { color: #edf6ef; background: radial-gradient(circle at 80% 10%, #16432d, transparent 38%), #07130f; }
+    .lime { color: #aaff3f; }
+    .eyebrow { margin: 0 0 8mm; color: #62a179; font-size: 8pt; font-weight: 800; letter-spacing: .16em; }
+    .dark .eyebrow { color: #aaff3f; }
+    h1 { margin: 0; font-size: 31pt; line-height: 1.18; letter-spacing: -.045em; }
+    h2 { margin: 0 0 8mm; font-size: 23pt; line-height: 1.25; letter-spacing: -.035em; }
+    h3 { margin: 0 0 3mm; font-size: 12pt; }
+    p { margin: 0; font-size: 10pt; line-height: 1.72; }
+    .lead { margin-top: 8mm; max-width: 150mm; color: #587063; font-size: 13pt; line-height: 1.62; }
+    .dark .lead { color: #abc1b2; }
+    .brand { display: flex; align-items: center; gap: 4mm; font-weight: 900; letter-spacing: .08em; }
+    .brand i { display: grid; place-items: center; width: 12mm; height: 12mm; border-radius: 3mm 1mm; color: #07130f; background: #aaff3f; font-style: normal; }
+    .cover-copy { margin-top: 58mm; }
+    .cover-meta { position: absolute; left: 18mm; right: 18mm; bottom: 18mm; display: flex; justify-content: space-between; padding-top: 6mm; border-top: .3mm solid #274636; color: #8ba596; font-size: 9pt; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5mm; }
+    .card { padding: 6mm; border: .35mm solid #cfdad2; background: #fff; }
+    .dark .card { border-color: #284637; background: #0c1d16; }
+    .card b { display: block; margin-bottom: 3mm; color: #178744; font-size: 11pt; }
+    .dark .card b { color: #aaff3f; }
+    .card p, .card li { color: #5d7065; font-size: 8.5pt; line-height: 1.6; }
+    .dark .card p, .dark .card li { color: #9fb5a8; }
+    ul { margin: 2mm 0 0; padding-left: 5mm; }
+    li { margin: 1.5mm 0; font-size: 9pt; line-height: 1.55; }
+    .quote { margin: 8mm 0; padding: 7mm; border-left: 1.2mm solid #aaff3f; background: #0e251a; color: #eff8f1; font-size: 14pt; font-weight: 700; line-height: 1.55; }
+    .flow { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 9mm; border: .35mm solid #cbd8cf; }
+    .flow div { min-height: 32mm; padding: 5mm; border-right: .35mm solid #cbd8cf; }
+    .flow div:last-child { border: 0; }
+    .flow span { display: block; margin-bottom: 4mm; color: #178744; font-size: 8pt; font-weight: 900; }
+    .flow strong { font-size: 10pt; }
+    .flow small { display: block; margin-top: 2mm; color: #6f8276; font-size: 7.5pt; line-height: 1.5; }
+    .shot { width: 100%; max-height: 142mm; margin-top: 6mm; object-fit: cover; object-position: top; border: .5mm solid #294537; box-shadow: 0 5mm 14mm rgba(7,19,15,.12); }
+    .shot.tall { max-height: 165mm; }
+    .caption { margin-top: 3mm; color: #718277; font-size: 7.5pt; }
+    .number { color: #aaff3f; font-size: 28pt; font-weight: 900; }
+    .metric { padding: 6mm; border-top: 1mm solid #aaff3f; background: #102219; color: #eff8f1; }
+    .metric strong { display: block; font-size: 19pt; }
+    .metric small { color: #9cb1a4; font-size: 8pt; }
+    table { width: 100%; border-collapse: collapse; margin-top: 5mm; font-size: 8.5pt; }
+    th, td { padding: 4mm; border: .3mm solid #ccd8d0; text-align: left; vertical-align: top; line-height: 1.5; }
+    th { color: #17472d; background: #e4ece6; }
+    .note { margin-top: 6mm; padding: 5mm; color: #4e6658; background: #e7eee9; font-size: 8pt; line-height: 1.6; }
+    .arch { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: center; gap: 4mm; margin: 10mm 0; }
+    .arch div { min-height: 34mm; padding: 6mm 4mm; border: .4mm solid #c9d7ce; background: #fff; text-align: center; }
+    .arch b { display: block; margin-bottom: 3mm; color: #178744; }
+    .arch span { color: #809187; font-size: 16pt; }
+    .footer { position: absolute; left: 18mm; right: 18mm; bottom: 9mm; display: flex; justify-content: space-between; color: #8a9a90; font-size: 7pt; }
+    .dark .footer { color: #617a6c; }
+    @media print { body { background: none; } .page { margin: 0; } }
+  </style>
+</head>
+<body>
+  <section class="page dark">
+    <div class="brand"><i>R:</i> RE:TACTIC</div>
+    <div class="cover-copy">
+      <p class="eyebrow">2026 월간 해커톤 · 내가 축구 감독이라면</p>
+      <h1>실제 경기의 한복판에서<br><span class="lime">전술 개입안</span>을 설계하다.</h1>
+      <p class="lead">월드컵 이벤트 데이터로 문제를 진단하고, 포메이션·역할·교체를 직접 조정해 이점과 리스크를 비교하는 코칭 의사결정 웹서비스</p>
+    </div>
+    <div class="cover-meta"><span>개인 참가 · jinwon25</span><span>기획서 초안 · 2026.07.11</span></div>
+  </section>
+
+  <section class="page">
+    <p class="eyebrow">01 · SERVICE OVERVIEW</p>
+    <h2>“내가 감독이라면”을<br>근거 있는 의사결정으로 바꿉니다.</h2>
+    <p class="lead">기존 전술판은 생각을 그리는 데서 끝나고, 축구 게임은 결과의 근거를 알기 어렵습니다. RE:TACTIC은 실제 관측 데이터와 사용자의 전술 선택을 연결합니다.</p>
+    <div class="grid-3" style="margin-top:12mm">
+      <div class="card"><b>문제</b><p>선수를 배치한 뒤 무엇이 나아졌는지 알기 어렵고, 전문 분석 도구는 첫 사용 장벽이 높습니다.</p></div>
+      <div class="card"><b>해결</b><p>상황 진단 → 전술 설계 → 움직임 비교 → 개입 메모의 짧은 코칭 루프를 제공합니다.</p></div>
+      <div class="card"><b>가치</b><p>초보자는 실제 경기로 조작법을 익히고, 코치는 범용 보드에서 자신의 경기안을 만듭니다.</p></div>
+    </div>
+    <div class="quote">“실제 월드컵의 결정적 순간을 데이터로 읽고, 내가 만든 개입안이 감수해야 할 위험까지 확인한다.”</div>
+    <div class="grid-2">
+      <div class="metric"><strong>3분</strong><small>첫 화면에서 개입 메모까지 목표 시간</small></div>
+      <div class="metric"><strong>2개 모드</strong><small>안내형 실제 경기 분석 + 범용 전술 스튜디오</small></div>
+    </div>
+    <div class="footer"><span>RE:TACTIC 기획서</span><span>02</span></div>
+  </section>
+
+  <section class="page">
+    <p class="eyebrow">02 · MANAGER EXPERIENCE</p>
+    <h2>데이터 브리핑부터 검토까지,<br>감독의 네 가지 순간을 연결합니다.</h2>
+    <div class="flow">
+      <div><span>01 · 시작</span><strong>경기 맥락</strong><small>65분, 1–1, 승리가 필요한 이유를 즉시 이해</small></div>
+      <div><span>02 · 진단</span><strong>데이터 브리핑</strong><small>직전 20분과 공간 증거를 코치 해석과 함께 확인</small></div>
+      <div><span>03 · 설계</span><strong>전술 개입</strong><small>포메이션·위치·역할·교체·팀 지시를 직접 조작</small></div>
+      <div><span>04 · 검토</span><strong>개입 메모</strong><small>실제 장면과 제안 움직임, 이점·리스크·운영 조건 비교</small></div>
+    </div>
+    <img class="shot tall" src="../artifacts/intro-dual-mode.png" alt="RE:TACTIC 시작 화면">
+    <p class="caption">첫 방문자는 강조된 ‘실제 경기로 익히기’를 선택하고, 숙련 사용자는 빈 전술판으로 바로 이동합니다.</p>
+    <div class="footer"><span>RE:TACTIC 기획서</span><span>03</span></div>
+  </section>
+
+  <section class="page dark">
+    <p class="eyebrow">03 · DATA BRIEFING</p>
+    <h2>숫자를 보여주는 대신,<br>다음 행동을 설명합니다.</h2>
+    <img class="shot" src="../artifacts/briefing-spatial.png" alt="실제 경기 데이터 브리핑">
+    <div class="grid-3" style="margin-top:7mm">
+      <div class="card"><b>관측 구간</b><p>2022 대한민국–포르투갈<br>45분 이상 65분 미만</p></div>
+      <div class="card"><b>공간 증거</b><p>한국 4회·포르투갈 16회 공격 지역 진입의 시작·도착 좌표</p></div>
+      <div class="card"><b>해석</b><p>“한국의 진입은 적고 직접적”이라는 코칭 문장으로 전술 과제 연결</p></div>
+    </div>
+    <div class="footer"><span>Match data · StatsBomb Open Data · ID 3857262</span><span>04</span></div>
+  </section>
+
+  <section class="page">
+    <p class="eyebrow">04 · CORE INTERACTIONS</p>
+    <h2>선수 위치만이 아니라<br>역할과 운영 원칙까지 조정합니다.</h2>
+    <div class="grid-2">
+      <div class="card"><b>피치 조작</b><ul><li>마우스·터치 선수 드래그</li><li>4개 포메이션 프리셋</li><li>선수 선택과 포지션별 역할 변경</li><li>벤치 선수 교체</li></ul></div>
+      <div class="card"><b>팀 단위 지시</b><ul><li>압박 강도</li><li>공격 폭</li><li>공격 템포</li><li>위험 감수</li></ul></div>
+    </div>
+    <img class="shot" src="../artifacts/tactics-professional.png" alt="전술 설계 화면">
+    <p class="caption">설정을 바꾸는 즉시 공격 위협·중원 장악·전환 노출·고강도 부담 비교값이 갱신됩니다. 비교값은 승률이나 실제 경기 예측이 아닙니다.</p>
+    <div class="footer"><span>RE:TACTIC 기획서</span><span>05</span></div>
+  </section>
+
+  <section class="page dark">
+    <p class="eyebrow">05 · INTERVENTION REVIEW</p>
+    <h2>실제 있었던 움직임과<br>내가 제안한 움직임을 분리합니다.</h2>
+    <img class="shot" src="../artifacts/result-sequence.png" alt="2D 전술 시퀀스와 결과 검토">
+    <div class="grid-2" style="margin-top:7mm">
+      <div class="card"><b>Observed</b><p>55분 조규성→손흥민 패스와 차단된 슈팅은 StatsBomb 이벤트 좌표로 재현합니다.</p></div>
+      <div class="card"><b>Proposed</b><p>사용자가 만든 개입안은 설명용 오프볼 위치와 휴리스틱 비교임을 명시합니다.</p></div>
+    </div>
+    <div class="footer"><span>관측 데이터 ≠ 제안 시나리오</span><span>06</span></div>
+  </section>
+
+  <section class="page">
+    <p class="eyebrow">06 · UNIVERSAL STUDIO</p>
+    <h2>한 경기 체험을 넘어,<br>코칭 미팅에서 반복 사용합니다.</h2>
+    <img class="shot" src="../artifacts/studio-opponent.png" alt="범용 전술 스튜디오">
+    <div class="grid-3" style="margin-top:6mm">
+      <div class="card"><b>상대 재현</b><p>상대 포메이션 오버레이와 붉은 선수 드래그로 압박 구조를 만듭니다.</p></div>
+      <div class="card"><b>A/B 비교</b><p>두 전술안을 저장·복원하고 팀 폭·수비 라인·전환 위험 차이를 봅니다.</p></div>
+      <div class="card"><b>공유</b><p>브라우저 자동 저장, 실행 취소, 16:9 PNG, 인쇄 PDF를 제공합니다.</p></div>
+    </div>
+    <div class="footer"><span>RE:TACTIC 기획서</span><span>07</span></div>
+  </section>
+
+  <section class="page">
+    <p class="eyebrow">07 · DATA & TRUST</p>
+    <h2>실제 값, 사용자 입력, 비교 모델을<br>세 층으로 투명하게 나눕니다.</h2>
+    <div class="arch">
+      <div><b>관측값</b><p>패스·진입·슈팅·xG·압박과 실제 이벤트 좌표</p></div><span>＋</span>
+      <div><b>사용자 입력</b><p>포메이션·위치·역할·교체·팀 지시</p></div><span>→</span>
+      <div><b>시나리오 비교</b><p>같은 입력에 같은 결과를 내는 설명 가능한 휴리스틱</p></div>
+    </div>
+    <table>
+      <tr><th>항목</th><th>방식</th><th>오해 방지</th></tr>
+      <tr><td>데이터</td><td>StatsBomb Open Data · match 3857262</td><td>서비스·README·기획서에 출처와 로고 표시</td></tr>
+      <tr><td>재현</td><td>원본 이벤트에서 45–64분 집계 스크립트 제공</td><td>원본을 저장소에 복제하지 않고 파생값만 번들</td></tr>
+      <tr><td>시나리오</td><td>관측값을 기준선으로 선택 가중치 적용</td><td>승률·득점 확률·실제 결과 예측으로 표현하지 않음</td></tr>
+      <tr><td>런타임</td><td>정적 데이터와 브라우저 내 계산</td><td>외부 API 키·회원가입·유료 결제 불필요</td></tr>
+    </table>
+    <div class="note">선수 사진, 방송 영상, FIFA·국가대표 엠블럼, 게임 능력치를 사용하지 않습니다. 피치·토큰·도표는 자체 CSS/SVG로 제작했습니다.</div>
+    <div class="footer"><span>RE:TACTIC 기획서</span><span>08</span></div>
+  </section>
+
+  <section class="page dark">
+    <p class="eyebrow">08 · DIFFERENTIATION & DELIVERY</p>
+    <h2>심사 기준을 하나의<br>완성된 코칭 흐름으로 대응합니다.</h2>
+    <div class="grid-2">
+      <div class="card"><b>참신성 · 30</b><p>실제 경기의 결정적 순간을 데이터로 진단하고, 직접 만든 개입안의 운영 위험까지 검토합니다.</p></div>
+      <div class="card"><b>감독 경험 · 25</b><p>브리핑·전술판·터치라인 개입·결과 메모를 3분의 몰입 흐름으로 연결합니다.</p></div>
+      <div class="card"><b>완성도 · 25</b><p>드래그·교체·실시간 진단·A/B·자동 저장·PNG가 외부 키 없이 실제 작동합니다.</p></div>
+      <div class="card"><b>기획/구현 · 20</b><p>모든 데이터와 인터랙션을 ‘전술 선택의 근거와 결과’라는 한 축으로 통일했습니다.</p></div>
+    </div>
+    <table style="margin-top:10mm;color:#dce9df">
+      <tr><th>구분</th><th>RE:TACTIC의 선택</th></tr>
+      <tr><td>일반 전술판</td><td>배치 이후 구조 진단과 A/B 의사결정까지 연결</td></tr>
+      <tr><td>축구 게임</td><td>흥미 위주의 점수 대신 관측 근거·이점·리스크를 설명</td></tr>
+      <tr><td>전문 분석 도구</td><td>첫 행동을 추천하고 모든 차트에 코치의 한 문장을 제공</td></tr>
+    </table>
+    <p class="lead" style="margin-top:12mm">React + TypeScript + Vite · Pointer Events · localStorage · html-to-image · GitHub Pages</p>
+    <div class="footer"><span>RE:TACTIC · 실제 데이터로 더 나은 전술 대화를</span><span>09</span></div>
+  </section>
+</body>
+</html>
