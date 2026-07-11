@@ -423,7 +423,7 @@ export default function UniversalStudio() {
             <div className="export-note"><small>COACHING NOTE</small><strong>{context.objective}</strong><p>{getStudioNote(context, tactics, diagnostics.transitionRisk)}</p></div>
           </aside>
         </div>
-        <footer><span>Designed with RE:TACTIC Universal Tactics Studio</span><b>jinwon25.github.io/retactic-world-cup</b></footer>
+        <footer><span>Designed with RE:TACTIC Universal Tactics Studio</span><b>jinwon25.github.io/Dacon</b></footer>
       </div>
     </main>
   )

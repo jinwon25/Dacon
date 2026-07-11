@@ -2,7 +2,7 @@
 
 2026 월간 해커톤 **「내가 축구 감독이라면 - 월드컵 전술 웹서비스 챌린지」** 출품 프로젝트입니다.
 
-**배포 데모:** https://jinwon25.github.io/retactic-world-cup/
+**배포 데모:** https://jinwon25.github.io/Dacon/
 
 ## 콘셉트: RE:TACTIC Match Intervention Lab
 
