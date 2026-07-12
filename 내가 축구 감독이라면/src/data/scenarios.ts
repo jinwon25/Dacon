@@ -3,7 +3,17 @@ import { matchEvidence, playerEvidence, type PlayerMatchEvidence, type TeamWindo
 import { formationPositions, initialSquad } from './match'
 import { spatialEvidence, type SpatialPass, type SpatialShot } from './spatialEvidence'
 
-export type GuidedScenarioId = 'korea-portugal-65' | 'argentina-netherlands-83'
+export type GuidedScenarioId = 'korea-portugal-65' | 'argentina-netherlands-83' | 'korea-south-africa-64'
+
+export interface OfficialMatchReport {
+  inContestPossession: number
+  lineBreaks: [number, number]
+  finalThirdReceptions: [number, number]
+  crosses: [number, number]
+  forcedTurnovers: [number, number]
+  secondBalls: [number, number]
+  phases: Array<{ label: string; ours: number; opponent: number }>
+}
 
 export interface PassNetworkNode {
   id: string
@@ -24,6 +34,7 @@ export interface PassNetworkData {
   edges: PassNetworkEdge[]
   completedPasses: number
   minimumEdgeCount: number
+  nodeMetricLabel?: string
 }
 
 export interface BallFlowAction {
@@ -45,6 +56,9 @@ export interface GuidedScenario {
   difficulty: string
   matchId: number
   sourceUrl: string
+  sourceName?: string
+  sourceKind?: 'event' | 'official-report'
+  sourceNote?: string
   extractedAt: string
   windowLabel: string
   minute: number
@@ -108,6 +122,8 @@ export interface GuidedScenario {
     operatingSafe: string
     operatingRisk: string
   }
+  officialReport?: OfficialMatchReport
+  networkPositionBasis?: string
 }
 
 const koreaNetwork: PassNetworkData = {
@@ -248,18 +264,88 @@ const argentinaSpatial: GuidedScenario['spatial'] = {
   },
 }
 
+const korea2026Base: Array<Omit<Player, 'x' | 'y'>> = [
+  { id: 'kor26-kim-seunggyu', number: 1, name: '김승규', shortName: '김승규', position: 'GK', role: '스위퍼 키퍼', onPitch: true, slot: 0 },
+  { id: 'kor26-lee-hanbeom', number: 2, name: '이한범', shortName: '이한범', position: 'DF', role: '커버 센터백', onPitch: true, slot: 1 },
+  { id: 'kor26-kim-minjae', number: 4, name: '김민재', shortName: '김민재', position: 'DF', role: '빌드업 센터백', onPitch: true, slot: 2 },
+  { id: 'kor26-lee-gihyuk', number: 3, name: '이기혁', shortName: '이기혁', position: 'DF', role: '빌드업 센터백', onPitch: true, slot: 3 },
+  { id: 'kor26-seol-youngwoo', number: 22, name: '설영우', shortName: '설영우', position: 'DF', role: '공격형 풀백', onPitch: true, slot: 4 },
+  { id: 'kor26-hwang-inbeom', number: 6, name: '황인범', shortName: '황인범', position: 'MF', role: '딥라잉 플레이메이커', onPitch: true, slot: 5 },
+  { id: 'kor26-castrop', number: 23, name: '옌스 카스트로프', shortName: '카스트로프', position: 'MF', role: '볼 위닝 미드필더', onPitch: true, slot: 6 },
+  { id: 'kor26-kim-jingyu', number: 24, name: '김진규', shortName: '김진규', position: 'MF', role: '공간 침투형', onPitch: true, slot: 7 },
+  { id: 'kor26-lee-kangin', number: 19, name: '이강인', shortName: '이강인', position: 'MF', role: '인버티드 윙어', onPitch: true, slot: 8 },
+  { id: 'kor26-oh-hyeongyu', number: 18, name: '오현규', shortName: '오현규', position: 'FW', role: '타깃 포워드', onPitch: true, slot: 9 },
+  { id: 'kor26-son-heungmin', number: 7, name: '손흥민', shortName: '손흥민', position: 'FW', role: '인사이드 포워드', onPitch: true, slot: 10 },
+  { id: 'kor26-park-jinseob', number: 16, name: '박진섭', shortName: '박진섭', position: 'DF', role: '빌드업 센터백', onPitch: false, slot: null },
+  { id: 'kor26-cho-guesung', number: 9, name: '조규성', shortName: '조규성', position: 'FW', role: '라인 브레이커', onPitch: false, slot: null },
+  { id: 'kor26-lee-jaesung', number: 10, name: '이재성', shortName: '이재성', position: 'MF', role: '공간 침투형', onPitch: false, slot: null },
+  { id: 'kor26-bae-junho', number: 17, name: '배준호', shortName: '배준호', position: 'MF', role: '공간 침투형', onPitch: false, slot: null },
+  { id: 'kor26-hwang-heechan', number: 11, name: '황희찬', shortName: '황희찬', position: 'FW', role: '라인 브레이커', onPitch: false, slot: null },
+]
+
+const korea2026Squad = korea2026Base.map((player) => ({
+  ...player,
+  ...(player.slot === null ? { x: 0, y: 0 } : formationPositions['3-4-3'][player.slot]),
+}))
+
+const korea2026Evidence: Record<string, PlayerMatchEvidence> = {
+  'kor26-kim-seunggyu': { passesCompleted: 35, passesAttempted: 40, pressures: 0, shots: 0, recoveries: 3, carries: 0, note: 'FIFA 전체 경기 보고서' },
+  'kor26-lee-hanbeom': { passesCompleted: 77, passesAttempted: 80, pressures: 0, shots: 0, recoveries: 0, carries: 0, note: 'FIFA 전체 경기 보고서' },
+  'kor26-kim-minjae': { passesCompleted: 82, passesAttempted: 82, pressures: 0, shots: 1, recoveries: 0, carries: 0, note: '65분 교체 전 · FIFA 전체 경기 보고서' },
+  'kor26-lee-gihyuk': { passesCompleted: 86, passesAttempted: 93, pressures: 0, shots: 0, recoveries: 0, carries: 0, note: 'FIFA 전체 경기 보고서' },
+  'kor26-hwang-inbeom': { passesCompleted: 71, passesAttempted: 79, pressures: 0, shots: 0, recoveries: 0, carries: 0, note: 'FIFA 전체 경기 보고서' },
+  'kor26-seol-youngwoo': { passesCompleted: 39, passesAttempted: 41, pressures: 0, shots: 1, recoveries: 0, carries: 0, note: 'FIFA 전체 경기 보고서' },
+  'kor26-castrop': { passesCompleted: 27, passesAttempted: 30, pressures: 0, shots: 0, recoveries: 0, carries: 0, note: '후반 투입 · FIFA 전체 경기 보고서' },
+  'kor26-kim-jingyu': { passesCompleted: 51, passesAttempted: 52, pressures: 0, shots: 0, recoveries: 0, carries: 0, note: '후반 투입 · FIFA 전체 경기 보고서' },
+  'kor26-lee-kangin': { passesCompleted: 53, passesAttempted: 62, pressures: 0, shots: 1, recoveries: 0, carries: 0, note: 'FIFA 전체 경기 보고서' },
+  'kor26-oh-hyeongyu': { passesCompleted: 8, passesAttempted: 11, pressures: 0, shots: 2, recoveries: 0, carries: 0, note: '74분 교체 전 · FIFA 전체 경기 보고서' },
+  'kor26-son-heungmin': { passesCompleted: 20, passesAttempted: 24, pressures: 0, shots: 1, recoveries: 0, carries: 0, note: '후반 투입 · FIFA 전체 경기 보고서' },
+  'kor26-park-jinseob': { passesCompleted: 45, passesAttempted: 47, pressures: 0, shots: 1, recoveries: 0, carries: 0, note: '65분 교체 투입 · FIFA 전체 경기 보고서' },
+}
+
+const korea2026Network: PassNetworkData = {
+  completedPasses: 657,
+  minimumEdgeCount: 16,
+  nodeMetricLabel: '패스 시도',
+  nodes: [
+    ['김승규', '김승규', 9, 50, 40], ['이한범', '이한범', 31, 79, 80], ['김민재', '김민재', 27, 50, 82],
+    ['이기혁', '이기혁', 34, 21, 93], ['설영우', '설영우', 55, 90, 41], ['황인범', '황인범', 53, 58, 79],
+    ['카스트로프', '카스트로프', 55, 35, 30], ['김진규', '김진규', 70, 48, 52], ['이강인', '이강인', 72, 82, 62],
+    ['오현규', '오현규', 84, 50, 11], ['손흥민', '손흥민', 74, 18, 24], ['박진섭', '박진섭', 18, 68, 47],
+  ].map(([id, label, x, y, involvements]) => ({ id: String(id), label: String(label), x: Number(x), y: Number(y), involvements: Number(involvements) })),
+  edges: [
+    ['이기혁', '김민재', 19], ['박진섭', '이기혁', 19], ['김민재', '이기혁', 18],
+    ['이한범', '김민재', 16], ['이한범', '이강인', 16],
+  ].map(([from, to, count]) => ({ from: String(from), to: String(to), count: Number(count) })),
+}
+
+const southAfrica2026Network: PassNetworkData = {
+  completedPasses: 279,
+  minimumEdgeCount: 10,
+  nodeMetricLabel: '패스 시도',
+  nodes: [
+    ['Williams', '윌리엄스', 9, 50, 39], ['Mudau', '무다우', 38, 84, 42], ['Okon', '오콘', 28, 65, 51],
+    ['Mbokazi', '음보카지', 29, 35, 30], ['Modiba', '모디바', 41, 15, 22], ['Sithole', '시톨레', 54, 61, 53],
+    ['Mbatha', '음바타', 55, 38, 34], ['Appollis', '아폴리스', 72, 85, 24], ['Mofokeng', '모포켕', 71, 49, 22],
+    ['Maseko', '마세코', 74, 17, 10], ['Makgopa', '마크고파', 85, 50, 7],
+  ].map(([id, label, x, y, involvements]) => ({ id: String(id), label: String(label), x: Number(x), y: Number(y), involvements: Number(involvements) })),
+  edges: [
+    ['Mudau', 'Okon', 18], ['Okon', 'Williams', 14], ['Okon', 'Mudau', 14], ['Mudau', 'Sithole', 11], ['Williams', 'Okon', 10],
+  ].map(([from, to, count]) => ({ from: String(from), to: String(to), count: Number(count) })),
+}
+
 export const guidedScenarios: Record<GuidedScenarioId, GuidedScenario> = {
   'korea-portugal-65': {
     id: 'korea-portugal-65', order: '01', tournament: '2022 월드컵 · 조별리그', missionType: '득점 필요', difficulty: '입문',
     matchId: matchEvidence.matchId, sourceUrl: matchEvidence.sourceUrl, extractedAt: matchEvidence.extractedAt, windowLabel: '45′–64′', minute: 65, score: [1, 1],
     ours: { name: '대한민국', short: 'KOR', flag: '🇰🇷', status: '승리 필요' }, opponent: { name: '포르투갈', short: 'POR', flag: '🇵🇹', status: '조 1위 확정권' },
     objective: '균형을 잃지 않고 결승골을 만들어라',
-    intro: { eyebrow: 'MATCH INTERVENTION LAB · 2022 WORLD CUP', title: '남은 시간', accent: '25분.', lead: '포르투갈과 1–1. 이대로라면 탈락입니다.\n실제 경기 데이터를 확인하고 65분 개입안을 설계하세요.' },
+    intro: { eyebrow: '경기 개입 연구실 · 2022 월드컵', title: '남은 시간', accent: '25분.', lead: '포르투갈과 1–1. 이대로라면 탈락입니다.\n실제 경기 데이터를 확인하고 65분 개입안을 설계하세요.' },
     briefing: {
       title: '직전 20분의 문제를 먼저 정의합니다.', description: 'StatsBomb 실제 이벤트 45–64분을 기준으로 만든 코칭 스태프용 경기 스냅샷입니다.', diagnosisTitle: '전진보다 압박에 에너지를 썼습니다',
-      diagnosisQuote: '압박은 더 많았지만 전진 진입은 4 대 16입니다. 탈취 이후 첫 두 번의 패스를 개선해야 합니다.', contextNumber: '1', contextLabel: 'GOAL\nNEEDED',
+      diagnosisQuote: '압박은 더 많았지만 전진 진입은 4 대 16입니다. 탈취 이후 첫 두 번의 패스를 개선해야 합니다.', contextNumber: '1', contextLabel: '득점\n필요',
       successTitle: '승리 시', successDetail: '다른 경기 결과에 따라 16강 진출', failureTitle: '무승부 시', failureDetail: '조별리그 탈락', optionTitle: '전환 속도를 높일 교체안',
-      optionPlayer: '황희찬', optionNumber: 11, optionPosition: 'FW', optionRole: '라인 브레이커', optionAvailability: 'AVAILABLE 65′', optionTraits: ['이재성 OUT', '황희찬 IN', '전환 공격'],
+      optionPlayer: '황희찬', optionNumber: 11, optionPosition: '공격수', optionRole: '라인 브레이커', optionAvailability: '65′ 투입 가능', optionTraits: ['이재성 제외', '황희찬 투입', '전환 공격'],
       optionQuote: '실제 경기에서도 65분에 실행된 교체입니다. 여기서는 결과를 복제하지 않고 전술적 이점과 리스크를 비교합니다.',
     },
     comparisonRows: [
@@ -296,12 +382,12 @@ export const guidedScenarios: Record<GuidedScenarioId, GuidedScenario> = {
     matchId: 3869321, sourceUrl: 'https://github.com/statsbomb/open-data', extractedAt: '2026-07-12', windowLabel: '70′–82′', minute: 83, score: [2, 1],
     ours: { name: '아르헨티나', short: 'ARG', flag: '🇦🇷', status: '한 골 리드' }, opponent: { name: '네덜란드', short: 'NED', flag: '🇳🇱', status: '동점 필요' },
     objective: '박스 앞을 지키되 역습 출구를 잃지 마라',
-    intro: { eyebrow: 'MATCH CONTROL LAB · 2022 WORLD CUP', title: '버텨야 할 시간', accent: '10분+.', lead: '네덜란드가 82분 추격골을 넣었습니다.\n긴 패스와 크로스에 대응하면서 리드를 지킬 운영안을 설계하세요.' },
+    intro: { eyebrow: '경기 운영 연구실 · 2022 월드컵', title: '버텨야 할 시간', accent: '10분+.', lead: '네덜란드가 82분 추격골을 넣었습니다.\n긴 패스와 크로스에 대응하면서 리드를 지킬 운영안을 설계하세요.' },
     briefing: {
       title: '상대의 공격 방식이 바뀐 순간을 읽습니다.', description: 'StatsBomb 실제 이벤트 70–82분에서 네덜란드의 직접 전개와 측면 집중을 분리한 코칭 스냅샷입니다.', diagnosisTitle: '경기는 점유전에서 세컨드볼 싸움으로 바뀌었습니다',
-      diagnosisQuote: '네덜란드는 13분 동안 긴 패스 17회와 크로스 5회를 시도했습니다. 라인을 내리기만 하면 두 번째 공을 계속 내줄 수 있습니다.', contextNumber: '1', contextLabel: 'GOAL\nLEAD',
+      diagnosisQuote: '네덜란드는 13분 동안 긴 패스 17회와 크로스 5회를 시도했습니다. 라인을 내리기만 하면 두 번째 공을 계속 내줄 수 있습니다.', contextNumber: '1', contextLabel: '한 골\n우세',
       successTitle: '리드 유지 시', successDetail: '준결승 진출', failureTitle: '동점 허용 시', failureDetail: '연장전과 체력 리스크', optionTitle: '오른쪽 크로스를 닫을 교체안',
-      optionPlayer: '곤살로 몬티엘', optionNumber: 4, optionPosition: 'DF', optionRole: '수비형 풀백', optionAvailability: 'AVAILABLE 83′', optionTraits: ['몰리나 OUT', '몬티엘 IN', '측면 보호'],
+      optionPlayer: '곤살로 몬티엘', optionNumber: 4, optionPosition: '수비수', optionRole: '수비형 풀백', optionAvailability: '83′ 투입 가능', optionTraits: ['몰리나 제외', '몬티엘 투입', '측면 보호'],
       optionQuote: '신선한 풀백으로 크로스 시작점을 압박할 수 있지만, 전진 출구가 줄어들면 수비 블록이 지나치게 낮아질 수 있습니다.',
     },
     comparisonRows: [
@@ -327,6 +413,52 @@ export const guidedScenarios: Record<GuidedScenarioId, GuidedScenario> = {
     squad: argentinaSquad, playerEvidence: argentinaPlayerEvidence, defaultFormation: '5-3-2', defaultTactics: { pressing: 44, width: 68, tempo: 46, risk: 34 }, selectedPlayerId: 'arg-otamendi', impactPlayerId: 'arg-montiel',
     metricLabels: ['역습 출구', '세컨드볼 안정성', '박스 노출', '수비 부담'],
     result: { baseline: '70–82분 실제 관측값', impactOn: '몬티엘 투입으로 오른쪽 크로스 시작점에 더 빠르게 접근할 수 있습니다.', impactOff: '기존 인원 유지 시 몰리나 앞 공간을 미드필더가 함께 닫는 운영 조건이 필요합니다.', actualChoice: '실제 경기에서는 83분 직후 즉각적인 추가 교체 없이 경기를 이어갔습니다.', actualOutcome: '네덜란드는 추가시간 프리킥 패턴으로 2–2를 만들었고 경기는 연장전으로 향했습니다.', planOn: '측면 봉쇄 강화안', planOff: '블록 균형 유지안', operatingSafe: '공을 걷어낸 뒤 메시·라우타로 중 한 명은 역습 출구로 유지', operatingRisk: '양 풀백이 동시에 내려서면 박스 앞 세컨드볼 담당을 명확히 지정' },
+  },
+  'korea-south-africa-64': {
+    id: 'korea-south-africa-64', order: '03', tournament: '2026 월드컵 · 조별리그', missionType: '추격 설계', difficulty: '심화',
+    matchId: 54,
+    sourceUrl: 'https://www.fifatrainingcentre.com/media/native/tournaments/fifa-world-cup/2026/PMSR-M54-RSA-V-KOR.pdf',
+    sourceName: 'FIFA Training Centre', sourceKind: 'official-report', extractedAt: '2026-07-12',
+    sourceNote: '공개된 FIFA 전체 경기 보고서를 바탕으로 64분의 의사결정 상황을 사후 재구성했습니다. 시점별 원시 이벤트 좌표는 사용하지 않습니다.',
+    windowLabel: '전체 경기 · 사후 보고서', minute: 64, score: [0, 1],
+    ours: { name: '대한민국', short: 'KOR', flag: '🇰🇷', status: '동점 필요' }, opponent: { name: '남아프리카공화국', short: 'RSA', flag: '🇿🇦', status: '한 골 리드' },
+    objective: '점유를 슈팅으로 바꾸되 역습 통로를 닫아라',
+    intro: { eyebrow: '공식 경기 보고서 재구성 · 2026 월드컵', title: '추격할 시간', accent: '26분+.', lead: '마세코의 선제골로 0–1. 이제 점유만으로는 부족합니다.\nFIFA 공식 경기 보고서를 읽고 64분 이후의 추격안을 다시 설계하세요.' },
+    briefing: {
+      title: '많이 가진 공을 위협적인 장면으로 바꿉니다.', description: 'FIFA Training Centre 전체 경기 보고서로 되짚는 사후 코칭 리뷰입니다. 64분 당시 실시간 통계로 오해하지 않도록 전체 경기 수치와 재구성 가정을 분리했습니다.', diagnosisTitle: '점유 우위가 박스 안 위협으로 이어지지 않았습니다',
+      diagnosisQuote: '한국은 점유 60.9%, 패스 성공률 92%, 공격 지역 리셉션 187회를 기록했지만 슈팅은 8회였습니다. 넓게 돌린 공을 박스 안의 다음 행동으로 연결해야 합니다.', contextNumber: '1', contextLabel: '동점골\n필요',
+      successTitle: '동점 시', successDetail: '경기 흐름과 조별리그 생존 가능성 회복', failureTitle: '추가 실점 시', failureDetail: '남아공의 전환 공격에 경기 결정 위험', optionTitle: '후방 안정성을 유지할 교체안',
+      optionPlayer: '박진섭', optionNumber: 16, optionPosition: '수비수', optionRole: '빌드업 센터백', optionAvailability: '65′ 투입 가능', optionTraits: ['김민재 제외', '박진섭 투입', '양 윙백 전진'],
+      optionQuote: '실제 경기의 65분 교체를 출발점으로 삼되, 공격 숫자를 늘릴 때 후방 세 명의 간격을 어떻게 지킬지 함께 검토합니다.',
+    },
+    comparisonRows: [
+      { label: '패스 성공률', ours: '92%', opponent: '81%', oursValue: 92, opponentValue: 81, max: 100 },
+      { label: '공격 지역 리셉션', ours: '187회', opponent: '53회', oursValue: 187, opponentValue: 53, max: 187 },
+      { label: '슈팅', ours: '8회', opponent: '13회', oursValue: 8, opponentValue: 13, max: 13 },
+      { label: '강제 턴오버', ours: '28회', opponent: '40회', oursValue: 28, opponentValue: 40, max: 40 },
+    ],
+    possessionEstimate: [60.9, 30.3],
+    evidence: {
+      ours: { passesAttempted: 718, passesCompleted: 657, passCompletion: 92, finalThirdEntries: 187, boxEntries: 0, shots: 8, xg: 0.74, pressures: 199, counterpressures: 0 },
+      opponent: { passesAttempted: 345, passesCompleted: 279, passCompletion: 81, finalThirdEntries: 53, boxEntries: 0, shots: 13, xg: 0.89, pressures: 321, counterpressures: 0 },
+    },
+    spatial: { ours: { finalThirdEntries: [], shots: [] }, opponent: { finalThirdEntries: [], shots: [] } },
+    spatialCopy: { entriesTitle: '시점별 좌표는 공개되지 않았습니다', entriesBody: '공식 보고서의 집계값과 패스 연결을 사용하며, 존재하지 않는 이벤트 좌표를 임의 생성하지 않습니다.', entriesOurs: '187', entriesOpponent: '53', shotsTitle: '전체 경기 슈팅 집계', shotsBody: '한국 8회, 남아공 13회입니다.', shotsOurs: '0.74', shotsOpponent: '0.89' },
+    networks: { ours: korea2026Network, opponent: southAfrica2026Network },
+    networkCopy: { title: '높은 패스량은 후방 연결에 집중됐습니다', body: 'FIFA 전체 경기 패스 매트릭스의 상위 연결입니다. 한국은 이기혁–김민재 축, 남아공은 무다우–오콘 축의 반복이 두드러졌습니다.' },
+    networkPositionBasis: '위치는 64분 전후 포메이션을 바탕으로 한 참조 배치이며 실제 평균 위치 좌표가 아닙니다.',
+    flow: { title: '원시 볼 이동 좌표 미공개', summary: '공식 보고서에 연속 이벤트 좌표가 없어 임의 애니메이션을 제공하지 않습니다.', actions: [] },
+    squad: korea2026Squad, playerEvidence: korea2026Evidence, defaultFormation: '3-4-3', defaultTactics: { pressing: 62, width: 72, tempo: 68, risk: 58 }, selectedPlayerId: 'kor26-lee-kangin', impactPlayerId: 'kor26-park-jinseob',
+    metricLabels: ['박스 진입 위협', '전개 안정성', '역습 노출', '고강도 부담'],
+    result: { baseline: 'FIFA 전체 경기 보고서 기반 사후 기준선', impactOn: '박진섭이 후방 중앙을 맡으면 좌우 센터백과 윙백의 전진 타이밍을 분리해 전환 위험을 관리할 수 있습니다.', impactOff: '김민재를 유지한다면 공격 가담보다 전환 시 중앙 통로 보호 역할을 우선해야 합니다.', actualChoice: '실제 경기에서는 65분 김민재 대신 박진섭을 투입했습니다.', actualOutcome: '한국은 점유 우위를 이어갔지만 0–1로 경기를 마쳤습니다.', planOn: '후방 균형형 추격안', planOff: '기존 수비축 유지안', operatingSafe: '한쪽 윙백이 전진할 때 반대쪽 윙백과 중앙 수비수는 잔류', operatingRisk: '양쪽을 동시에 올리면 남아공의 측면 전환에 3대3 상황이 열릴 수 있음' },
+    officialReport: {
+      inContestPossession: 8.9, lineBreaks: [114, 69], finalThirdReceptions: [187, 53], crosses: [39, 7], forcedTurnovers: [28, 40], secondBalls: [63, 68],
+      phases: [
+        { label: '비압박 빌드업', ours: 48, opponent: 33 }, { label: '전진 전개', ours: 18, opponent: 12 },
+        { label: '공격 지역', ours: 18, opponent: 9 }, { label: '공격 전환', ours: 10, opponent: 15 },
+        { label: '중간 블록', ours: 16, opponent: 30 }, { label: '카운터프레스', ours: 9, opponent: 6 },
+      ],
+    },
   },
 }
 

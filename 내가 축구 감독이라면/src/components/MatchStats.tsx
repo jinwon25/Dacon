@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { GuidedScenario } from '../data/scenarios'
+import CountryFlag from './CountryFlag'
 
 type DetailView = 'passing' | 'defending'
 
@@ -39,8 +40,26 @@ export default function MatchStats({ scenario }: { scenario: GuidedScenario }) {
   const [view, setView] = useState<DetailView>('passing')
   const ours = scenario.evidence.ours
   const opponent = scenario.evidence.opponent
+  const report = scenario.officialReport
   const details: Record<DetailView, StatRowData[]> = {
-    passing: [
+    passing: report ? [
+      {
+        label: '패스 성공', description: '성공 / 시도 · 전체 경기',
+        ours: `${ours.passesCompleted}/${ours.passesAttempted} · ${ours.passCompletion}%`,
+        opponent: `${opponent.passesCompleted}/${opponent.passesAttempted} · ${opponent.passCompletion}%`,
+        oursValue: ours.passCompletion, opponentValue: opponent.passCompletion,
+      },
+      {
+        label: '라인 브레이크', description: '상대 수비 단위를 통과한 완료 전개',
+        ours: `${report.lineBreaks[0]}회`, opponent: `${report.lineBreaks[1]}회`,
+        oursValue: report.lineBreaks[0], opponentValue: report.lineBreaks[1],
+      },
+      {
+        label: '공격 지역 리셉션', description: '파이널 서드에서 공을 받은 횟수',
+        ours: `${report.finalThirdReceptions[0]}회`, opponent: `${report.finalThirdReceptions[1]}회`,
+        oursValue: report.finalThirdReceptions[0], opponentValue: report.finalThirdReceptions[1],
+      },
+    ] : [
       {
         label: '패스 성공', description: '성공 / 시도 · 성공률',
         ours: `${ours.passesCompleted}/${ours.passesAttempted} · ${ours.passCompletion.toFixed(1)}%`,
@@ -58,7 +77,23 @@ export default function MatchStats({ scenario }: { scenario: GuidedScenario }) {
         oursValue: ours.boxEntries, opponentValue: opponent.boxEntries,
       },
     ],
-    defending: [
+    defending: report ? [
+      {
+        label: '수비 압박', description: '직접 압박을 포함한 전체 압박',
+        ours: `${ours.pressures}회`, opponent: `${opponent.pressures}회`,
+        oursValue: ours.pressures, opponentValue: opponent.pressures,
+      },
+      {
+        label: '강제 턴오버', description: '압박으로 상대 소유권을 끊은 횟수',
+        ours: `${report.forcedTurnovers[0]}회`, opponent: `${report.forcedTurnovers[1]}회`,
+        oursValue: report.forcedTurnovers[0], opponentValue: report.forcedTurnovers[1],
+      },
+      {
+        label: '세컨드볼', description: '경합 뒤 두 번째 공 관여',
+        ours: `${report.secondBalls[0]}회`, opponent: `${report.secondBalls[1]}회`,
+        oursValue: report.secondBalls[0], opponentValue: report.secondBalls[1],
+      },
+    ] : [
       {
         label: '압박', description: '볼 보유자에게 압력을 가한 이벤트',
         ours: `${ours.pressures}회`, opponent: `${opponent.pressures}회`,
@@ -74,7 +109,7 @@ export default function MatchStats({ scenario }: { scenario: GuidedScenario }) {
 
   const topStats = [
     {
-      label: '인플레이 점유 추정', ours: `${scenario.possessionEstimate[0].toFixed(1)}%`, opponent: `${scenario.possessionEstimate[1].toFixed(1)}%`,
+      label: report ? '공식 점유율' : '인플레이 점유 추정', ours: `${scenario.possessionEstimate[0].toFixed(1)}%`, opponent: `${scenario.possessionEstimate[1].toFixed(1)}%`,
       oursValue: scenario.possessionEstimate[0], opponentValue: scenario.possessionEstimate[1],
     },
     { label: '기대득점 xG', ours: formatXg(ours.xg), opponent: formatXg(opponent.xg), oursValue: ours.xg, opponentValue: opponent.xg },
@@ -85,13 +120,13 @@ export default function MatchStats({ scenario }: { scenario: GuidedScenario }) {
     <article className="analysis-card match-stats-card pitch-analysis">
       <div className="card-heading">
         <span>01</span>
-        <div><small>MATCH STATS · {scenario.windowLabel}</small><h2>{scenario.briefing.diagnosisTitle}</h2></div>
+        <div><small>경기 통계 · {scenario.windowLabel}</small><h2>{scenario.briefing.diagnosisTitle}</h2></div>
       </div>
 
       <div className="match-stat-teams" aria-label={`${scenario.ours.name}와 ${scenario.opponent.name} 경기 통계 비교`}>
-        <strong><i>{scenario.ours.flag}</i>{scenario.ours.name}</strong>
-        <span>관측 구간</span>
-        <strong>{scenario.opponent.name}<i>{scenario.opponent.flag}</i></strong>
+        <strong><CountryFlag code={scenario.ours.short} label={scenario.ours.name} />{scenario.ours.name}</strong>
+        <span>{report ? '전체 경기' : '관측 구간'}</span>
+        <strong>{scenario.opponent.name}<CountryFlag code={scenario.opponent.short} label={scenario.opponent.name} /></strong>
       </div>
 
       <div className="top-stat-grid">
@@ -111,7 +146,9 @@ export default function MatchStats({ scenario }: { scenario: GuidedScenario }) {
         {details[view].map((row) => <DetailRow key={row.label} row={row} />)}
       </div>
 
-      <p className="stat-method"><b>산출 기준</b> 점유율은 이벤트별 포제션의 인플레이 지속시간을 합산한 구간 추정치이며, 나머지는 StatsBomb 이벤트 직접 집계입니다.</p>
+      <p className="stat-method"><b>산출 기준</b> {report
+        ? `FIFA Training Centre 전체 경기 보고서의 공식 집계입니다. 점유 경합 ${report.inContestPossession}%는 양 팀 점유율에서 제외되어 있습니다.`
+        : '점유율은 이벤트별 포제션의 인플레이 지속시간을 합산한 구간 추정치이며, 나머지는 StatsBomb 이벤트 직접 집계입니다.'}</p>
       <p className="coach-quote">“{scenario.briefing.diagnosisQuote}”</p>
     </article>
   )

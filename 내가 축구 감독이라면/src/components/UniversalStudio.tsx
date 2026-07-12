@@ -205,6 +205,7 @@ export default function UniversalStudio() {
   const [rightPanelTab, setRightPanelTab] = useState<RightPanelTab>('player')
   const [isPlaying, setIsPlaying] = useState(false)
   const [coachPreview, setCoachPreview] = useState<CoachPreview | null>(null)
+  const [showControlSurface, setShowControlSurface] = useState(false)
   const [hasDragged, setHasDragged] = useState(false)
   const [lastSaved, setLastSaved] = useState('방금')
   const [exportStatus, setExportStatus] = useState<'idle' | 'working' | 'done' | 'error'>('idle')
@@ -264,6 +265,16 @@ export default function UniversalStudio() {
       ],
     }
   }, [formation, onPitch, opponents, selectedPlayer, tactics])
+
+  const controlCells = useMemo(() => Array.from({ length: 96 }, (_, index) => {
+    const column = index % 12
+    const row = Math.floor(index / 12)
+    const point = { x: (column + .5) / 12 * 100, y: (row + .5) / 8 * 100 }
+    const oursDistance = Math.min(...onPitch.map((player) => distance(point, player)))
+    const opponentDistance = Math.min(...opponents.map((player) => distance(point, player)))
+    const control = (opponentDistance - oursDistance) / Math.max(oursDistance + opponentDistance, 1)
+    return { id: index, control }
+  }), [onPitch, opponents])
 
   const sceneBaseline = useMemo(() => {
     const players = activeScene?.squad.filter((player) => player.onPitch) ?? []
@@ -650,7 +661,7 @@ export default function UniversalStudio() {
     <main className="universal-studio page-wrap wide">
       <header className="studio-heading">
         <div>
-          <p className="eyebrow">UNIVERSAL TACTICS STUDIO</p>
+          <p className="eyebrow">범용 전술 스튜디오</p>
           <h1><span>모든 경기를 위한</span><span>범용 전술 보드</span></h1>
           <p>경기 정보와 선수를 입력하세요.<br />전술의 구조적 위험을 바로 확인할 수 있습니다.</p>
         </div>
@@ -675,7 +686,7 @@ export default function UniversalStudio() {
       <div className="studio-layout">
         <aside className="studio-left">
           <section className="panel studio-panel" id="studio-context">
-            <div className="panel-title"><span>01</span><div><small>MATCH CONTEXT</small><h2>경기 정보</h2></div></div>
+            <div className="panel-title"><span>01</span><div><small>경기 상황</small><h2>경기 정보</h2></div></div>
             <div className="form-grid">
               <label>우리 팀<input value={context.teamName} onChange={(event) => setContext({ ...context, teamName: event.target.value })} /></label>
               <label>상대 팀<input value={context.opponentName} onChange={(event) => setContext({ ...context, opponentName: event.target.value })} /></label>
@@ -691,7 +702,7 @@ export default function UniversalStudio() {
           </section>
 
           <section className="panel studio-panel">
-            <div className="panel-title"><span>03</span><div><small>TEAM INSTRUCTIONS</small><h2>팀 지시</h2></div></div>
+            <div className="panel-title"><span>03</span><div><small>팀 전술 지시</small><h2>팀 지시</h2></div></div>
             <RangeControl label="압박 강도" low="기다리기" high="즉시 압박" value={tactics.pressing} onChange={(value) => setTactics({ ...tactics, pressing: value })} />
             <RangeControl label="공격 폭" low="좁게" high="넓게" value={tactics.width} onChange={(value) => setTactics({ ...tactics, width: value })} />
             <RangeControl label="공격 템포" low="차분하게" high="빠르게" value={tactics.tempo} onChange={(value) => setTactics({ ...tactics, tempo: value })} />
@@ -701,11 +712,11 @@ export default function UniversalStudio() {
 
         <section className="studio-board">
           <section className="template-library" aria-label="전술 템플릿">
-            <header><div><small>QUICK START</small><strong>검증된 시작점에서 편집하세요</strong></div><span>템플릿 선택 시 현재 보드를 교체합니다</span></header>
+            <header><div><small>빠른 시작</small><strong>검증된 시작점에서 편집하세요</strong></div><span>템플릿 선택 시 현재 보드를 교체합니다</span></header>
             <div>{studioTemplates.map((template) => <button type="button" key={template.id} onClick={() => applyTemplate(template)}><b>{template.title}</b><small>{template.note}</small></button>)}</div>
           </section>
           <div className="board-toolbar">
-            <div><small>02 · FORMATION</small><strong>{formation}</strong></div>
+            <div><small>02 · 포메이션</small><strong>{formation}</strong></div>
             <label className="compact-formation-select"><span>우리 팀 포메이션</span><select aria-label="우리 팀 포메이션" value={formation} onChange={(event) => applyFormation(event.target.value as FormationKey)}>{formations.map((item) => <option value={item} key={item}>{item}</option>)}</select></label>
             <div className="board-actions"><button className="reset-layout" type="button" disabled={layoutHistory.length === 0} onClick={undoLayout}>↶ 실행 취소</button><button className="reset-layout" type="button" onClick={() => applyFormation(formation)}>배치 원위치</button></div>
           </div>
@@ -719,12 +730,15 @@ export default function UniversalStudio() {
               <button type="button" className={boardTool === 'move' ? 'active' : ''} onClick={() => setBoardTool('move')}><i>↕</i><span>선수 이동</span></button>
               <button type="button" className={boardTool === 'pass' ? 'active pass' : 'pass'} onClick={() => setBoardTool('pass')}><i>→</i><span>패스</span></button>
               <button type="button" className={boardTool === 'run' ? 'active run' : 'run'} onClick={() => setBoardTool('run')}><i>⇢</i><span>침투</span></button>
+              <button type="button" aria-pressed={showControlSurface} className={showControlSurface ? 'active-control' : ''} onClick={() => setShowControlSurface((current) => !current)}><i>▦</i><span>공간 지배도</span></button>
             </div>
             <p>{boardTool === 'move' ? '선수를 끌어 배치하세요.' : `${selectedPlayer?.shortName ?? '선수'} 선택됨 · 경기장의 도착 지점을 누르세요.`}</p>
             <div><span>경로 {routes.length}</span><button type="button" disabled={routes.length === 0} onClick={() => setRoutes((current) => current.slice(0, -1))}>되돌리기</button><button type="button" disabled={routes.length === 0} onClick={() => setRoutes([])}>모두 지우기</button></div>
           </div>
           <div className={`pitch studio-pitch tool-${boardTool} ${isPlaying ? 'story-playing' : ''}`} ref={pitchRef} onPointerDown={handlePitchPointerDown}>
+            {showControlSurface && opponentVisible && <div className="control-surface" aria-hidden="true">{controlCells.map((cell) => <i key={cell.id} className={cell.control >= 0 ? 'ours' : 'theirs'} style={{ '--control-alpha': Math.min(.32, .06 + Math.abs(cell.control) * .36) } as React.CSSProperties} />)}</div>}
             <div className="pitch-lines"><i className="halfway" /><i className="circle" /><i className="box top" /><i className="box bottom" /></div>
+            {showControlSurface && opponentVisible && <div className="control-legend"><span><i />우리 팀</span><span><i />상대 팀</span><small>선수 거리 기반 근사치</small></div>}
             {draggingId && selectedPlayer && <div className={`position-zone zone-${selectedPlayer.position.toLowerCase()}`} aria-hidden="true" />}
             <svg className="board-routes" viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="패스와 침투 경로">
               <defs>
@@ -736,9 +750,9 @@ export default function UniversalStudio() {
             </svg>
             <div className="attack-label">↑ {context.teamName || '우리 팀'} 공격 방향</div>
             {!hasDragged && boardTool === 'move' && <div className="drag-coachmark"><span>↕</span><strong>선수를 끌어서 위치를 바꿔보세요</strong><small>클릭하면 이름과 역할을 수정할 수 있습니다</small></div>}
-            {boardTool !== 'move' && <div className="route-coachmark"><b>{boardTool === 'pass' ? 'PASS' : 'RUN'}</b><span>{selectedPlayer?.shortName ?? '선수'}에서 시작 · 도착 지점을 클릭</span></div>}
+            {boardTool !== 'move' && <div className="route-coachmark"><b>{boardTool === 'pass' ? '패스' : '침투'}</b><span>{selectedPlayer?.shortName ?? '선수'}에서 시작 · 도착 지점을 클릭</span></div>}
             {ghostPlayers.map((player) => <span className="ghost-player" key={`ghost-${player.id}`} style={{ left: `${player.x}%`, top: `${player.y}%` }}><i>{player.number}</i></span>)}
-            {coachPreview && <span className="coach-preview-target" style={{ left: `${coachPreview.x}%`, top: `${coachPreview.y}%` }}>AI</span>}
+            {coachPreview && <span className="coach-preview-target" style={{ left: `${coachPreview.x}%`, top: `${coachPreview.y}%` }}>추천</span>}
             {opponentVisible && opponents.map((player) => (
               <button
                 className={`player-token opponent-token ${draggingId === player.id ? 'dragging' : ''}`}
@@ -765,7 +779,7 @@ export default function UniversalStudio() {
             ))}
           </div>
           <section className="storyboard panel" aria-label="전술 장면 타임라인">
-            <header><div><small>SCENE TIMELINE</small><strong>배치를 장면으로 저장하고 순서대로 재생하세요</strong></div><div><button type="button" onClick={saveCurrentScene}>현재 장면 저장</button><button type="button" disabled={scenes.length >= 5} onClick={addScene}>＋ 다음 장면</button><button className="play-story" type="button" disabled={scenes.length < 2} onClick={isPlaying ? stopPlayback : playScenes}>{isPlaying ? '■ 정지' : '▶ 전체 재생'}</button></div></header>
+            <header><div><small>장면 타임라인</small><strong>배치를 장면으로 저장하고 순서대로 재생하세요</strong></div><div><button type="button" onClick={saveCurrentScene}>현재 장면 저장</button><button type="button" disabled={scenes.length >= 5} onClick={addScene}>＋ 다음 장면</button><button className="play-story" type="button" disabled={scenes.length < 2} onClick={isPlaying ? stopPlayback : playScenes}>{isPlaying ? '■ 정지' : '▶ 전체 재생'}</button></div></header>
             <div className="scene-track">
               {scenes.map((scene, index) => <div className={`scene-item ${activeSceneId === scene.id ? 'active' : ''}`} key={scene.id}>
                 <button type="button" onClick={() => { stopPlayback(); restoreScene(scene) }}><b>{String(index + 1).padStart(2, '0')}</b><span>{scene.name}</span><small>{scene.formation} · 경로 {scene.routes.length}</small></button>
@@ -776,7 +790,7 @@ export default function UniversalStudio() {
             <p>현재 장면을 저장한 뒤 다음 장면에서 선수 위치를 바꾸세요. 재생 시 장면 사이를 부드럽게 연결합니다.</p>
           </section>
           <div className="bench panel studio-bench">
-            <div className="bench-heading"><div><small>BENCH</small><strong>필드 선수를 선택한 뒤 교체 선수를 누르세요</strong></div><span>{bench.length}명</span></div>
+            <div className="bench-heading"><div><small>교체 명단</small><strong>필드 선수를 선택한 뒤 교체 선수를 누르세요</strong></div><span>{bench.length}명</span></div>
             <div className="bench-list">{bench.map((player) => <button type="button" key={player.id} onClick={() => swapWithBench(player.id)}><span>{player.number}</span><div><strong>{player.shortName}</strong><small>{player.name}</small></div>{selectedPlayer?.onPitch && <em>교체</em>}</button>)}</div>
           </div>
         </section>
@@ -789,7 +803,7 @@ export default function UniversalStudio() {
           </nav>
 
           {rightPanelTab === 'player' && <section className="panel studio-panel player-editor context-panel-content">
-            <div className="panel-title"><span>02</span><div><small>SELECTED PLAYER</small><h2>선수 정보</h2></div></div>
+            <div className="panel-title"><span>02</span><div><small>선택 선수</small><h2>선수 정보</h2></div></div>
             {selectedPlayer && <>
               <div className="selected-summary"><b>{selectedPlayer.number}</b><div><strong>{selectedPlayer.name}</strong><small>{selectedPlayer.position} · {selectedPlayer.onPitch ? '필드 선수' : '벤치 선수'}</small></div></div>
               <div className="player-quick-metrics"><span><small>주변 패스</small><b>{diagnostics.passOptions}</b></span><span><small>현재 좌표</small><b>{Math.round(selectedPlayer.x)}·{Math.round(selectedPlayer.y)}</b></span></div>
@@ -803,11 +817,11 @@ export default function UniversalStudio() {
           </section>}
 
           {rightPanelTab === 'analysis' && <section className="panel studio-panel diagnostics-panel context-panel-content">
-            <div className="panel-title"><span>04</span><div><small>STRUCTURE CHECK</small><h2>실시간 전술 점검</h2></div></div>
+            <div className="panel-title"><span>04</span><div><small>전술 구조 점검</small><h2>실시간 전술 점검</h2></div></div>
             <div className="diagnostic-summary four"><span><small>팀 폭</small><b>{diagnostics.teamWidth}</b><em>{signed(diagnostics.teamWidth - sceneBaseline.teamWidth)}</em></span><span><small>수비 라인</small><b>{diagnostics.defensiveLine}</b><em>{signed(diagnostics.defensiveLine - sceneBaseline.defensiveLine)}</em></span><span><small>패스 선택</small><b>{diagnostics.passOptions}</b><em>{selectedPlayer?.shortName}</em></span><span><small>전환 위험</small><b>{diagnostics.transitionRisk}</b><em>{diagnostics.transitionRisk < 62 ? '안정' : '주의'}</em></span></div>
             <p className="baseline-caption">변화값은 저장된 현재 장면 대비입니다.</p>
             <ul className="diagnostic-list">{diagnostics.checks.map((check) => <li className={check.tone} key={check.title}><i>{check.tone === 'good' ? '✓' : '!'}</i><div><strong>{check.title}</strong><span>{check.detail}</span></div></li>)}</ul>
-            <div className={`studio-recommendation ${coachPreview ? 'previewing' : ''}`}><small>AI-STYLE COACH · RULE BASED</small><strong>{coachPreview?.title ?? context.objective}</strong><p>{getStudioNote(context, tactics, diagnostics.transitionRisk, diagnostics.passOptions, diagnostics.compactness)}</p><div><button type="button" onClick={previewCoachRecommendation}>{coachPreview ? '다른 제안 보기' : '미리 보기'}</button><button type="button" disabled={!coachPreview} onClick={applyCoachRecommendation}>적용하기</button></div></div>
+            <div className={`studio-recommendation ${coachPreview ? 'previewing' : ''}`}><small>설명 가능한 전술 코치 · 규칙 기반</small><strong>{coachPreview?.title ?? context.objective}</strong><p>{getStudioNote(context, tactics, diagnostics.transitionRisk, diagnostics.passOptions, diagnostics.compactness)}</p><div><button type="button" onClick={previewCoachRecommendation}>{coachPreview ? '다른 제안 보기' : '미리 보기'}</button><button type="button" disabled={!coachPreview} onClick={applyCoachRecommendation}>적용하기</button></div></div>
           </section>}
 
           {rightPanelTab === 'plan' && <section className="panel studio-panel session-summary context-panel-content">
@@ -820,7 +834,7 @@ export default function UniversalStudio() {
               <PlanSlot label="B" snapshot={planSlots.B} onLoad={loadPlan} />
             </div>
             {planSlots.A && planSlots.B && <div className="ab-difference"><small>A/B 차이</small><span>전환 위험 <b>{signed(planSlots.B.transitionRisk - planSlots.A.transitionRisk)}</b></span><span>팀 폭 <b>{signed(planSlots.B.teamWidth - planSlots.A.teamWidth)}</b></span></div>}
-            <div className="export-actions"><button className="secondary-button" type="button" onClick={() => window.print()}>PDF</button><button className="primary-button" type="button" onClick={exportPng}>PNG 저장 <span>↓</span></button></div>
+            <div className="export-actions"><button className="secondary-button" type="button" onClick={() => window.print()}>문서 저장</button><button className="primary-button" type="button" onClick={exportPng}>이미지 저장 <span>↓</span></button></div>
             {exportStatus === 'done' && <p className="export-feedback success">PNG 저장이 완료됐습니다.</p>}
             {exportStatus === 'error' && <p className="export-feedback error">이미지 생성에 실패했습니다. 다시 시도해주세요.</p>}
           </section>}
@@ -828,7 +842,7 @@ export default function UniversalStudio() {
       </div>
 
       <div className="export-card" ref={exportRef} aria-hidden="true">
-        <header><div><span>R:</span><strong>RE:TACTIC</strong></div><small>TACTICAL PLAN · {today}</small></header>
+        <header><div><span>R:</span><strong>RE:TACTIC</strong></div><small>전술 계획 · {today}</small></header>
         <div className="export-card-body">
           <section className="export-pitch">
             <div className="export-pitch-lines"><i /><i /><i /></div>
@@ -839,15 +853,15 @@ export default function UniversalStudio() {
             {onPitch.map((player) => <span className="export-player ours" key={`export-${player.id}`} style={{ left: `${player.x}%`, top: `${player.y}%` }}>{player.shortName}</span>)}
           </section>
           <aside className="export-summary">
-            <p>MATCH PLAN</p>
+            <p>경기 계획</p>
             <h2>{context.teamName} <b>{context.ourScore}:{context.theirScore}</b> {context.opponentName}</h2>
             <span>{context.phase} {context.minute ? `${context.minute}′` : ''} · 목표: {context.objective}</span>
             <div className="export-formations"><i><small>우리 대형</small><b>{formation}</b></i><i><small>상대 대형</small><b>{opponentFormation}</b></i></div>
             <div className="export-metrics"><i><small>팀 폭</small><b>{diagnostics.teamWidth}</b></i><i><small>수비 라인</small><b>{diagnostics.defensiveLine}</b></i><i><small>전환 위험</small><b>{diagnostics.transitionRisk}</b></i></div>
-            <div className="export-note"><small>COACHING NOTE</small><strong>{context.objective}</strong><p>{getStudioNote(context, tactics, diagnostics.transitionRisk, diagnostics.passOptions, diagnostics.compactness)}</p></div>
+            <div className="export-note"><small>코칭 메모</small><strong>{context.objective}</strong><p>{getStudioNote(context, tactics, diagnostics.transitionRisk, diagnostics.passOptions, diagnostics.compactness)}</p></div>
           </aside>
         </div>
-        <footer><span>Designed with RE:TACTIC Universal Tactics Studio</span><b>jinwon25.github.io/Dacon</b></footer>
+        <footer><span>RE:TACTIC 범용 전술 스튜디오에서 제작</span><b>jinwon25.github.io/Dacon</b></footer>
       </div>
     </main>
   )

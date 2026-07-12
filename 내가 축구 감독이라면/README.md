@@ -19,7 +19,7 @@
 
 ## 핵심 가치
 
-- **즉시 이해되는 재미:** 첫 화면에서 바로 유명 경기의 위기 상황에 도전합니다.
+- **명확한 제품 정체성:** 독립 홈에서 서비스 가치를 이해한 뒤 실제 경기 또는 범용 보드로 진입합니다.
 - **감독다운 선택:** 위치뿐 아니라 선수 역할, 압박 높이, 수비 폭, 공격 속도까지 조정합니다.
 - **데이터의 의미 있는 사용:** 실제 경기 데이터가 장식용 차트가 아니라 전술 선택의 근거와 결과 계산에 쓰입니다.
 - **현장에서 읽히는 결과:** 전술안의 채택 판단, 이점, 리스크, 운영 조건을 한 장의 메모로 요약합니다.
@@ -34,6 +34,8 @@
 - [x] 실제 기준 전술과 내 전술의 What-if 비교 및 의사결정 메모
 - [x] 실제 관측값과 휴리스틱 시나리오 점수 분리 표기
 - [x] 실데이터 공격 진입·슈팅 공간 시각화
+- [x] FIFA 2026 남아공–한국 공식 경기 보고서 기반 사후 전술 재구성
+- [x] 상호작용 패스맵과 선수 거리 기반 공간 지배도 근사 레이어
 - [x] 범용 보드 상대팀 오버레이·전술안 A/B·실행 취소
 - [x] PNG·PDF 공유 기능과 정적 배포 검증
 - [ ] 기획서 PDF·시연 영상·최종 제출 마감
@@ -65,7 +67,7 @@ npm run verify
 
 ### 실제 경기 분석
 
-- 한국 대 포르투갈 경기 상황으로 바로 시작
+- 한국–포르투갈, 아르헨티나–네덜란드, 2026 남아공–한국의 세 경기 개입 미션
 - StatsBomb 실제 이벤트로 계산한 직전 20분 코치 브리핑
 - 양 팀의 실제 공격 지역 진입 패스와 슈팅 위치 지도
 - 설명이 붙은 7개 포메이션 프리셋 선택과 선수 드래그 배치
@@ -94,7 +96,7 @@ npm run verify
 - 브라우저 자동 저장, 초기화, PNG 및 인쇄·PDF 저장
 - 편집 가능한 전술 JSON 파일 내보내기·불러오기
 
-상단 모드 스위치 또는 첫 화면의 `빈 전술판에서 시작`으로 두 모드를 오갈 수 있습니다.
+서비스 홈과 상단 모드 스위치에서 실제 경기 분석과 범용 전술 스튜디오를 선택할 수 있습니다.
 
 검수 화면은 [`artifacts`](artifacts) 폴더에 보관합니다. `#briefing`, `#tactics`, `#result` 해시를 붙이면 개발 중 해당 화면으로 바로 진입할 수 있습니다.
 
@@ -108,9 +110,13 @@ node scripts/extract-statsbomb-evidence.mjs
 
 Match event data: StatsBomb Open Data · Match 3857262. 파생 지표는 RE:TACTIC이 계산했습니다. 시나리오 점수는 실제 경기 결과 예측이나 승률이 아닙니다.
 
+2026 남아공–한국 시나리오는 [FIFA Training Centre 공식 전체 경기 보고서](https://www.fifatrainingcentre.com/media/native/tournaments/fifa-world-cup/2026/PMSR-M54-RSA-V-KOR.pdf)를 사용합니다. 64분 시점은 사후 전술 재구성이며 공개되지 않은 이벤트 좌표나 트래킹 데이터를 임의 생성하지 않습니다.
+
 UX 정보 구조와 초보자 설계 원칙은 [`docs/04_ux_architecture.md`](docs/04_ux_architecture.md)에 정리합니다.
 
 평가 항목별 구현 근거와 제출 전 위험은 [`docs/07_evaluation_audit.md`](docs/07_evaluation_audit.md)에 보수적으로 점검했습니다.
+
+패스맵·공간 지배도·AI 코치의 연구 근거와 현재 구현 한계는 [`docs/08_analysis_research.md`](docs/08_analysis_research.md)에 정리했습니다.
 
 시연 순서는 [`docs/05_demo_script.md`](docs/05_demo_script.md), 마감 전 확인 항목은 [`docs/06_submission_checklist.md`](docs/06_submission_checklist.md)를 따릅니다.
 
@@ -140,7 +146,7 @@ UX 정보 구조와 초보자 설계 원칙은 [`docs/04_ux_architecture.md`](do
 ├─ scripts/             # 원본 데이터 재산출과 정적 빌드 검증
 ├─ docs/                # 전략, UX, 라이선스, 시연, 평가 점검
 ├─ deliverables/        # 제출용 기획서 PDF
-├─ artifacts/           # 최신 대표 화면 6장만 보관
+├─ artifacts/           # 최신 대표 화면만 선별 보관
 └─ public/              # 출처 표시에 필요한 정적 자산
 ```
 
