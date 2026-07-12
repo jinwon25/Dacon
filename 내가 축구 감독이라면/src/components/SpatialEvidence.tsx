@@ -13,7 +13,7 @@ export default function SpatialEvidence({ scenario }: { scenario: GuidedScenario
   return (
     <section className="spatial-evidence panel">
       <header className="spatial-heading">
-        <div className="panel-title"><span>04</span><div><small>SPATIAL EVIDENCE · {scenario.windowLabel}</small><h2>숫자가 만들어진 위치를 확인하세요</h2></div></div>
+        <div className="panel-title"><span>04</span><div><small>공간 근거 · {scenario.windowLabel}</small><h2>숫자가 만들어진 위치를 확인하세요</h2></div></div>
         <div className="spatial-tabs" role="tablist" aria-label="공간 데이터 종류">
           <button type="button" role="tab" aria-selected={view === 'entries'} className={view === 'entries' ? 'active' : ''} onClick={() => setView('entries')}>공격 지역 진입</button>
           <button type="button" role="tab" aria-selected={view === 'shots'} className={view === 'shots' ? 'active' : ''} onClick={() => setView('shots')}>슈팅 위치</button>
