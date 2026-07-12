@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import type { PointerEvent as ReactPointerEvent } from 'react'
+import type { ChangeEvent, PointerEvent as ReactPointerEvent } from 'react'
 import { toPng } from 'html-to-image'
 import { createGenericSquad, createOpponentSquad } from '../data/generic'
 import { formationPositions, roleOptions } from '../data/match'
@@ -208,8 +208,10 @@ export default function UniversalStudio() {
   const [hasDragged, setHasDragged] = useState(false)
   const [lastSaved, setLastSaved] = useState('방금')
   const [exportStatus, setExportStatus] = useState<'idle' | 'working' | 'done' | 'error'>('idle')
+  const [fileStatus, setFileStatus] = useState('')
   const pitchRef = useRef<HTMLDivElement>(null)
   const exportRef = useRef<HTMLDivElement>(null)
+  const importInputRef = useRef<HTMLInputElement>(null)
   const playbackTimerRef = useRef<number | null>(null)
 
   const onPitch = squad.filter((player) => player.onPitch)
@@ -595,6 +597,55 @@ export default function UniversalStudio() {
     }
   }
 
+  const exportTacticFile = () => {
+    const snapshot: SavedStudio = { context, formation, tactics, squad, opponentFormation, opponentVisible, opponents, planSlots, routes, scenes, activeSceneId }
+    const blob = new Blob([JSON.stringify({ format: 'retactic-studio', version: 1, savedAt: new Date().toISOString(), data: snapshot }, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const anchor = document.createElement('a')
+    const safeTeam = (context.teamName || 'team').replace(/[^가-힣a-zA-Z0-9-_]/g, '-')
+    anchor.href = url
+    anchor.download = `retactic-${safeTeam}-${formation}.json`
+    anchor.click()
+    URL.revokeObjectURL(url)
+    setFileStatus('전술 파일을 저장했습니다.')
+    window.setTimeout(() => setFileStatus(''), 2400)
+  }
+
+  const importTacticFile = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    event.target.value = ''
+    if (!file) return
+    try {
+      const parsed = JSON.parse(await file.text()) as { format?: string; version?: number; data?: SavedStudio }
+      const data = parsed.data
+      if (parsed.format !== 'retactic-studio' || parsed.version !== 1 || !data || !formations.includes(data.formation) || !Array.isArray(data.squad) || data.squad.length < 11) {
+        throw new Error('Invalid RE:TACTIC file')
+      }
+      const nextOpponents = Array.isArray(data.opponents) && data.opponents.length ? data.opponents : createOpponentSquad()
+      const nextOpponentFormation = data.opponentFormation && formations.includes(data.opponentFormation) ? data.opponentFormation : '4-3-3'
+      const nextScenes = Array.isArray(data.scenes) && data.scenes.length
+        ? data.scenes.slice(0, 5)
+        : [createScene('scene-1', sceneNames[0], data.squad, nextOpponents, data.formation, nextOpponentFormation, data.routes ?? [])]
+      setContext(data.context ?? defaultContext)
+      setFormation(data.formation)
+      setTactics(data.tactics ?? defaultTactics)
+      setSquad(clonePlayers(data.squad))
+      setOpponentFormation(nextOpponentFormation)
+      setOpponentVisible(data.opponentVisible ?? true)
+      setOpponents(clonePlayers(nextOpponents))
+      setPlanSlots(data.planSlots ?? {})
+      setRoutes(cloneRoutes(data.routes ?? nextScenes[0].routes ?? []))
+      setScenes(nextScenes)
+      setActiveSceneId(nextScenes.some((scene) => scene.id === data.activeSceneId) ? data.activeSceneId! : nextScenes[0].id)
+      setLayoutHistory([])
+      setCoachPreview(null)
+      setFileStatus(`${file.name}을 불러왔습니다.`)
+    } catch {
+      setFileStatus('RE:TACTIC 전술 파일을 확인해주세요.')
+    }
+    window.setTimeout(() => setFileStatus(''), 3200)
+  }
+
   return (
     <main className="universal-studio page-wrap wide">
       <header className="studio-heading">
@@ -605,10 +656,14 @@ export default function UniversalStudio() {
         </div>
         <div className="studio-actions">
           <span className="save-status"><i /> 자동 저장 {lastSaved}</span>
+          <button className="secondary-button compact" type="button" onClick={() => importInputRef.current?.click()}>불러오기</button>
+          <input ref={importInputRef} type="file" accept="application/json,.json" onChange={importTacticFile} style={{ display: 'none' }} />
+          <button className="secondary-button compact" type="button" onClick={exportTacticFile}>전술 파일</button>
           <button className="secondary-button compact" type="button" onClick={resetStudio}>초기화</button>
           <button className="primary-button compact" type="button" onClick={exportPng} disabled={exportStatus === 'working'}>{exportStatus === 'working' ? '이미지 생성 중…' : 'PNG 저장'}</button>
         </div>
       </header>
+      {fileStatus && <p className="studio-file-status" role="status">{fileStatus}</p>}
 
       <div className="studio-steps" aria-label="사용 순서">
         <span className="active"><b>1</b><i>경기 정보</i><small>팀과 목표 입력</small></span>
@@ -651,12 +706,12 @@ export default function UniversalStudio() {
           </section>
           <div className="board-toolbar">
             <div><small>02 · FORMATION</small><strong>{formation}</strong></div>
-            <div className="formation-pills">{formations.map((item) => <button type="button" className={formation === item ? 'active' : ''} key={item} onClick={() => applyFormation(item)}>{item}</button>)}</div>
+            <label className="compact-formation-select"><span>우리 팀 포메이션</span><select aria-label="우리 팀 포메이션" value={formation} onChange={(event) => applyFormation(event.target.value as FormationKey)}>{formations.map((item) => <option value={item} key={item}>{item}</option>)}</select></label>
             <div className="board-actions"><button className="reset-layout" type="button" disabled={layoutHistory.length === 0} onClick={undoLayout}>↶ 실행 취소</button><button className="reset-layout" type="button" onClick={() => applyFormation(formation)}>배치 원위치</button></div>
           </div>
           <div className="opponent-toolbar">
             <label><input type="checkbox" checked={opponentVisible} onChange={(event) => setOpponentVisible(event.target.checked)} /><span>상대팀 표시</span></label>
-            <div><small>{context.opponentName || '상대 팀'} 대형</small>{formations.map((item) => <button type="button" className={opponentFormation === item ? 'active' : ''} key={item} onClick={() => applyOpponentFormation(item)}>{item}</button>)}</div>
+            <label className="compact-formation-select opponent"><span>{context.opponentName || '상대 팀'} 포메이션</span><select aria-label="상대 팀 포메이션" value={opponentFormation} onChange={(event) => applyOpponentFormation(event.target.value as FormationKey)}>{formations.map((item) => <option value={item} key={item}>{item}</option>)}</select></label>
             <p>붉은 선수를 직접 움직여 상대 압박 구조를 재현하세요.</p>
           </div>
           <div className="drawing-toolbar" aria-label="전술 그리기 도구">

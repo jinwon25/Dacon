@@ -3,11 +3,24 @@ import type { PointerEvent as ReactPointerEvent } from 'react'
 import UniversalStudio from './components/UniversalStudio'
 import SpatialEvidence from './components/SpatialEvidence'
 import TacticalSequence from './components/TacticalSequence'
-import { evidenceMethod, matchEvidence, playerEvidence } from './data/evidence'
-import { formationPositions, initialSquad, roleOptions } from './data/match'
+import PassNetwork from './components/PassNetwork'
+import BallFlow from './components/BallFlow'
+import MatchStats from './components/MatchStats'
+import { evidenceMethod } from './data/evidence'
+import { formationPositions, roleOptions } from './data/match'
+import { cloneScenarioSquad, defaultScenarioId, guidedScenarios, type GuidedScenario, type GuidedScenarioId } from './data/scenarios'
 import type { FormationKey, Metrics, Player, Stage, Tactics } from './types'
 
 const formations: FormationKey[] = ['4-3-3', '4-2-3-1', '4-4-2', '4-1-4-1', '4-3-1-2', '3-4-3', '5-3-2']
+const formationGuidance: Record<FormationKey, string> = {
+  '4-3-3': '측면 폭과 전방 압박의 균형',
+  '4-2-3-1': '중앙 보호와 2선 연결 강화',
+  '4-4-2': '두 줄 수비와 빠른 전환',
+  '4-1-4-1': '중앙 간격을 좁히는 안정형',
+  '4-3-1-2': '중앙 수적 우위와 투톱 침투',
+  '3-4-3': '높은 폭과 공격 숫자 확보',
+  '5-3-2': '박스 보호와 역습 출구 유지',
+}
 const stageOrder: Stage[] = ['intro', 'briefing', 'tactics', 'result']
 const stageLabels: Record<Stage, string> = { intro: '시작', briefing: '진단', tactics: '설계', result: '검토' }
 type AppMode = 'guided' | 'studio'
@@ -25,34 +38,66 @@ function calculateMetrics(
   squad: Player[],
   tactics: Tactics,
   formation: FormationKey,
+  scenario: GuidedScenario,
 ): Metrics {
-  const hwangHeechanOnPitch = squad.some((player) => player.onPitch && player.id === 'hwang-heechan')
+  const impactPlayerOnPitch = squad.some((player) => player.onPitch && player.id === scenario.impactPlayerId)
   const attackBoost = formation === '3-4-3' ? 8 : formation === '4-2-3-1' ? 4 : formation === '5-3-2' ? -4 : 2
   const safetyBoost = formation === '5-3-2' ? 10 : formation === '3-4-3' ? -6 : 2
-  const observedPassGap = matchEvidence.portugal.passCompletion - matchEvidence.southKorea.passCompletion
-  const observedPressureLoad = matchEvidence.southKorea.pressures
+  const observedPassGap = scenario.evidence.opponent.passCompletion - scenario.evidence.ours.passCompletion
+  const observedPressureLoad = scenario.evidence.ours.pressures
+  const outfield = squad.filter((player) => player.onPitch && player.position !== 'GK')
+  const averageY = outfield.reduce((sum, player) => sum + player.y, 0) / Math.max(outfield.length, 1)
+  const widthSpread = Math.max(...outfield.map((player) => player.x), 50) - Math.min(...outfield.map((player) => player.x), 50)
+  const forwardShift = clamp((53 - averageY) * .45, -8, 8)
+  const widthFit = clamp(8 - Math.abs(widthSpread - tactics.width) * .15, -5, 8)
+  const attackingRoles = outfield.filter((player) => /공격|라인 브레이커|인사이드|포처|공간 침투/.test(player.role)).length
+  const roleBoost = clamp((attackingRoles - 3) * 1.4, -4, 6)
+
+  if (scenario.id === 'argentina-netherlands-83') {
+    return {
+      threat: clamp(Math.round(34 + tactics.tempo * .2 + tactics.risk * .18 + attackBoost + forwardShift + roleBoost + (impactPlayerOnPitch ? -2 : 3))),
+      control: clamp(Math.round(58 - observedPassGap * .45 + (100 - tactics.risk) * .16 + tactics.width * .08 + widthFit * .45 + (impactPlayerOnPitch ? 5 : 0))),
+      exposure: clamp(Math.round(62 + tactics.risk * .2 + tactics.pressing * .08 + forwardShift * .7 - widthFit * .35 - safetyBoost - (impactPlayerOnPitch ? 9 : 0))),
+      fatigue: clamp(Math.round(34 + observedPressureLoad * .35 + tactics.pressing * .25 + (impactPlayerOnPitch ? -4 : 2))),
+    }
+  }
 
   return {
-    threat: clamp(Math.round(24 + tactics.tempo * 0.25 + tactics.risk * 0.28 + attackBoost + (hwangHeechanOnPitch ? 7 : 0))),
-    control: clamp(Math.round(52 - observedPassGap * 0.6 + tactics.width * 0.12 + (100 - tactics.risk) * 0.08)),
-    exposure: clamp(Math.round(12 + tactics.pressing * 0.14 + tactics.risk * 0.35 - safetyBoost)),
+    threat: clamp(Math.round(24 + tactics.tempo * 0.25 + tactics.risk * 0.28 + attackBoost + forwardShift + roleBoost + (impactPlayerOnPitch ? 7 : 0))),
+    control: clamp(Math.round(52 - observedPassGap * 0.6 + tactics.width * 0.12 + (100 - tactics.risk) * 0.08 + widthFit * .5)),
+    exposure: clamp(Math.round(12 + tactics.pressing * 0.14 + tactics.risk * 0.35 + forwardShift * .7 - widthFit * .3 - safetyBoost)),
     fatigue: clamp(Math.round(12 + observedPressureLoad * 0.45 + tactics.pressing * 0.28 + tactics.tempo * 0.16)),
   }
 }
 
 function App() {
+  const [scenarioId, setScenarioId] = useState<GuidedScenarioId>(defaultScenarioId)
+  const scenario = guidedScenarios[scenarioId]
   const [mode, setMode] = useState<AppMode>(getInitialMode)
   const [stage, setStage] = useState<Stage>(getInitialStage)
-  const [formation, setFormation] = useState<FormationKey>('4-3-3')
-  const [squad, setSquad] = useState<Player[]>(initialSquad)
-  const [selectedId, setSelectedId] = useState<string>('son-heungmin')
+  const [formation, setFormation] = useState<FormationKey>(scenario.defaultFormation)
+  const [squad, setSquad] = useState<Player[]>(() => cloneScenarioSquad(scenario))
+  const [selectedId, setSelectedId] = useState<string>(scenario.selectedPlayerId)
   const [draggingId, setDraggingId] = useState<string | null>(null)
   const [substitutionUsed, setSubstitutionUsed] = useState(false)
-  const [tactics, setTactics] = useState<Tactics>({ pressing: 58, width: 62, tempo: 64, risk: 56 })
+  const [tactics, setTactics] = useState<Tactics>({ ...scenario.defaultTactics })
   const pitchRef = useRef<HTMLDivElement>(null)
 
   const selectedPlayer = squad.find((player) => player.id === selectedId) ?? null
-  const metrics = useMemo(() => calculateMetrics(squad, tactics, formation), [squad, tactics, formation])
+  const metrics = useMemo(() => calculateMetrics(squad, tactics, formation, scenario), [squad, tactics, formation, scenario])
+
+  const selectScenario = (nextId: GuidedScenarioId) => {
+    const next = guidedScenarios[nextId]
+    setScenarioId(nextId)
+    setStage('intro')
+    setFormation(next.defaultFormation)
+    setSquad(cloneScenarioSquad(next))
+    setSelectedId(next.selectedPlayerId)
+    setDraggingId(null)
+    setSubstitutionUsed(false)
+    setTactics({ ...next.defaultTactics })
+    window.history.replaceState(null, '', '#intro')
+  }
 
   const setFormationPreset = (nextFormation: FormationKey) => {
     setFormation(nextFormation)
@@ -112,11 +157,11 @@ function App() {
   const resetGame = () => {
     setMode('guided')
     setStage('intro')
-    setFormation('4-3-3')
-    setSquad(initialSquad)
-    setSelectedId('son-heungmin')
+    setFormation(scenario.defaultFormation)
+    setSquad(cloneScenarioSquad(scenario))
+    setSelectedId(scenario.selectedPlayerId)
     setSubstitutionUsed(false)
-    setTactics({ pressing: 58, width: 62, tempo: 64, risk: 56 })
+    setTactics({ ...scenario.defaultTactics })
     window.history.replaceState(null, '', '#intro')
   }
 
@@ -138,7 +183,7 @@ function App() {
             <button type="button" className={mode === 'studio' ? 'active' : ''} onClick={() => switchMode('studio')}><span className="mode-long">범용 전술 스튜디오</span><span className="mode-short">전술판</span></button>
           </nav>
           {mode === 'guided' && <div className="match-chip">
-            <span>🇰🇷 KOR</span><strong>1 : 1</strong><span>POR 🇵🇹</span><em>65′</em>
+            <span>{scenario.ours.flag} {scenario.ours.short}</span><strong>{scenario.score[0]} : {scenario.score[1]}</strong><span>{scenario.opponent.short} {scenario.opponent.flag}</span><em>{scenario.minute}′</em>
           </div>}
         </div>
         {mode === 'guided' ? <nav className="stage-nav" aria-label="진행 단계">
@@ -154,10 +199,11 @@ function App() {
       </nav>
 
       {mode === 'studio' ? <UniversalStudio /> : <>
-      {stage === 'intro' && <IntroScreen onStart={() => setStage('briefing')} onStudio={() => switchMode('studio')} />}
-      {stage === 'briefing' && <BriefingScreen onBack={() => setStage('intro')} onNext={() => setStage('tactics')} />}
+      {stage === 'intro' && <IntroScreen scenario={scenario} scenarioId={scenarioId} onScenario={selectScenario} onStart={() => setStage('briefing')} onStudio={() => switchMode('studio')} />}
+      {stage === 'briefing' && <BriefingScreen scenario={scenario} onBack={() => setStage('intro')} onNext={() => setStage('tactics')} />}
       {stage === 'tactics' && (
         <TacticsScreen
+          scenario={scenario}
           formation={formation}
           squad={squad}
           selectedPlayer={selectedPlayer}
@@ -178,107 +224,95 @@ function App() {
           onSubmit={() => setStage('result')}
         />
       )}
-      {stage === 'result' && <ResultScreen metrics={metrics} squad={squad} tactics={tactics} formation={formation} onRetry={() => setStage('tactics')} />}
+      {stage === 'result' && <ResultScreen scenario={scenario} metrics={metrics} squad={squad} tactics={tactics} formation={formation} onRetry={() => setStage('tactics')} />}
       </>}
     </div>
   )
 }
 
-function IntroScreen({ onStart, onStudio }: { onStart: () => void; onStudio: () => void }) {
+function IntroScreen({ scenario, scenarioId, onScenario, onStart, onStudio }: { scenario: GuidedScenario; scenarioId: GuidedScenarioId; onScenario: (id: GuidedScenarioId) => void; onStart: () => void; onStudio: () => void }) {
   return (
     <main className="intro-screen">
       <div className="stadium-glow" />
       <section className="intro-copy">
-        <p className="eyebrow">MATCH INTERVENTION LAB · 2022 WORLD CUP</p>
-        <h1>남은 시간 <span>25분.</span><br />한 골이 필요합니다.</h1>
-        <p className="intro-lead">
-          포르투갈과 1–1. 이대로라면 탈락입니다.<br />실제 경기 데이터를 확인하고 65분 개입안을 설계하세요.
-        </p>
+        <p className="eyebrow">{scenario.intro.eyebrow}</p>
+        <h1>{scenario.intro.title} <span>{scenario.intro.accent}</span><br />{scenario.missionType === '득점 필요' ? '한 골이 필요합니다.' : '한 골을 지켜야 합니다.'}</h1>
+        <p className="intro-lead">{scenario.intro.lead.split('\n').map((line) => <span key={line}>{line}<br /></span>)}</p>
+        <div className="scenario-picker" role="group" aria-label="실제 경기 미션 선택">
+          {Object.values(guidedScenarios).map((item) => <button type="button" key={item.id} className={scenarioId === item.id ? 'active' : ''} onClick={() => onScenario(item.id)} aria-pressed={scenarioId === item.id}><span>{item.order}</span><div><small>{item.tournament}</small><strong>{item.ours.name}–{item.opponent.name}</strong><em>{item.minute}′ · {item.missionType}</em></div><b>{item.difficulty}</b></button>)}
+        </div>
         <div className="objective-card">
           <span className="objective-icon">◎</span>
           <div>
             <small>MATCH OBJECTIVE</small>
-            <strong>균형을 잃지 않고 결승골을 만들어라</strong>
+            <strong>{scenario.objective}</strong>
           </div>
         </div>
         <div className="intro-actions">
-          <button className="primary-button large" type="button" onClick={onStart}>실제 경기로 익히기 <span>→</span></button>
+          <button className="primary-button large" type="button" onClick={onStart}>데이터 브리핑 시작 <span>→</span></button>
           <button className="secondary-button large" type="button" onClick={onStudio}>빈 전술판에서 시작</button>
         </div>
-        <p className="no-login"><b>처음이라면 실제 경기 분석을 추천합니다.</b> 로그인 없이 약 3분 · 마우스와 터치 지원</p>
+        <p className="no-login"><b>두 미션 모두 실제 StatsBomb 이벤트를 사용합니다.</b> 로그인 없이 약 3분 · 마우스와 터치 지원</p>
       </section>
       <section className="intro-scoreboard" aria-label="경기 상황">
-        <div className="time-ring"><strong>65</strong><span>MIN</span></div>
+        <div className="time-ring"><strong>{scenario.minute}</strong><span>MIN</span></div>
         <div className="teams-row">
-          <div><span className="flag-orb korea">🇰🇷</span><strong>대한민국</strong><small>승리 필요</small></div>
-          <b>1</b><i>:</i><b>1</b>
-          <div><span className="flag-orb portugal">🇵🇹</span><strong>포르투갈</strong><small>조 1위 확정권</small></div>
+          <div><span className="flag-orb korea">{scenario.ours.flag}</span><strong>{scenario.ours.name}</strong><small>{scenario.ours.status}</small></div>
+          <b>{scenario.score[0]}</b><i>:</i><b>{scenario.score[1]}</b>
+          <div><span className="flag-orb portugal">{scenario.opponent.flag}</span><strong>{scenario.opponent.name}</strong><small>{scenario.opponent.status}</small></div>
         </div>
         <div className="timeline-mini">
-          <span style={{ left: '5%' }}>5′ <b>0–1</b></span>
-          <span style={{ left: '31%' }}>27′ <b>1–1</b></span>
-          <em style={{ left: '72%' }}>YOU ARE HERE</em>
+          {scenario.id === 'korea-portugal-65' ? <><span style={{ left: '5%' }}>5′ <b>0–1</b></span><span style={{ left: '31%' }}>27′ <b>1–1</b></span><em style={{ left: '72%' }}>YOU ARE HERE</em></> : <><span style={{ left: '30%' }}>35′ <b>1–0</b></span><span style={{ left: '67%' }}>73′ <b>2–0</b></span><span style={{ left: '78%' }}>82′ <b>2–1</b></span><em style={{ left: '88%' }}>YOU ARE HERE</em></>}
         </div>
       </section>
     </main>
   )
 }
 
-function BriefingScreen({ onBack, onNext }: { onBack: () => void; onNext: () => void }) {
-  const korea = matchEvidence.southKorea
-  const portugal = matchEvidence.portugal
-
+function BriefingScreen({ scenario, onBack, onNext }: { scenario: GuidedScenario; onBack: () => void; onNext: () => void }) {
   return (
     <main className="briefing-screen page-wrap">
       <div className="page-heading">
         <div>
-          <p className="eyebrow">MATCH INTERVENTION BRIEF · 65′</p>
-          <h1>직전 20분의 문제를 먼저 정의합니다.</h1>
-          <p>StatsBomb 실제 이벤트 45–64분을 기준으로 만든 코칭 스태프용 경기 스냅샷입니다.</p>
+          <p className="eyebrow">MATCH INTERVENTION BRIEF · {scenario.minute}′</p>
+          <h1>{scenario.briefing.title}</h1>
+          <p>{scenario.briefing.description}</p>
         </div>
         <span className="live-pill"><i /> VERIFIED MATCH DATA</span>
       </div>
 
       <section className="briefing-grid">
-        <article className="analysis-card pitch-analysis">
-          <div className="card-heading"><span>01</span><div><small>LAST 20 MINUTES</small><h2>전진보다 압박에 에너지를 썼습니다</h2></div></div>
-          <div className="evidence-comparison">
-            <div className="comparison-head"><span>45′–64′</span><b>대한민국</b><b>포르투갈</b></div>
-            <ComparisonRow label="패스 성공률" korea={`${korea.passCompletion}%`} portugal={`${portugal.passCompletion}%`} koreaValue={korea.passCompletion} portugalValue={portugal.passCompletion} />
-            <ComparisonRow label="공격 지역 진입" korea={`${korea.finalThirdEntries}회`} portugal={`${portugal.finalThirdEntries}회`} koreaValue={korea.finalThirdEntries} portugalValue={portugal.finalThirdEntries} max={16} />
-            <ComparisonRow label="박스 진입" korea={`${korea.boxEntries}회`} portugal={`${portugal.boxEntries}회`} koreaValue={korea.boxEntries} portugalValue={portugal.boxEntries} max={4} />
-            <ComparisonRow label="압박" korea={`${korea.pressures}회`} portugal={`${portugal.pressures}회`} koreaValue={korea.pressures} portugalValue={portugal.pressures} max={30} invert />
-          </div>
-          <p className="coach-quote">“압박은 더 많았지만 전진 진입은 4 대 16입니다. 탈취 이후 첫 두 번의 패스를 개선해야 합니다.”</p>
-        </article>
+        <MatchStats scenario={scenario} />
 
         <article className="analysis-card">
           <div className="card-heading"><span>02</span><div><small>MATCH CONTEXT</small><h2>우리에게 필요한 결과</h2></div></div>
-          <div className="context-number"><strong>1</strong><span>GOAL<br />NEEDED</span></div>
+          <div className="context-number"><strong>{scenario.briefing.contextNumber}</strong><span>{scenario.briefing.contextLabel}</span></div>
           <ul className="signal-list">
-            <li><span className="signal good">↗</span><div><strong>승리 시</strong><small>다른 경기 결과에 따라 16강 진출</small></div></li>
-            <li><span className="signal warn">—</span><div><strong>무승부 시</strong><small>조별리그 탈락</small></div></li>
+            <li><span className="signal good">↗</span><div><strong>{scenario.briefing.successTitle}</strong><small>{scenario.briefing.successDetail}</small></div></li>
+            <li><span className="signal warn">—</span><div><strong>{scenario.briefing.failureTitle}</strong><small>{scenario.briefing.failureDetail}</small></div></li>
           </ul>
         </article>
 
         <article className="analysis-card">
-          <div className="card-heading"><span>03</span><div><small>INTERVENTION OPTION</small><h2>전환 속도를 높일 교체안</h2></div></div>
+          <div className="card-heading"><span>03</span><div><small>INTERVENTION OPTION</small><h2>{scenario.briefing.optionTitle}</h2></div></div>
           <div className="player-spotlight">
-            <div className="shirt-number">11</div>
-            <div><strong>황희찬</strong><small>FW · 라인 브레이커</small></div>
-            <b>AVAILABLE 65′</b>
+            <div className="shirt-number">{scenario.briefing.optionNumber}</div>
+            <div><strong>{scenario.briefing.optionPlayer}</strong><small>{scenario.briefing.optionPosition} · {scenario.briefing.optionRole}</small></div>
+            <b>{scenario.briefing.optionAvailability}</b>
           </div>
-          <div className="trait-row"><span>이재성 OUT</span><span>황희찬 IN</span><span>전환 공격</span></div>
-          <p className="coach-quote accent">“실제 경기에서도 65분에 실행된 교체입니다. 여기서는 결과를 복제하지 않고 전술적 이점과 리스크를 비교합니다.”</p>
+          <div className="trait-row">{scenario.briefing.optionTraits.map((trait) => <span key={trait}>{trait}</span>)}</div>
+          <p className="coach-quote accent">“{scenario.briefing.optionQuote}”</p>
         </article>
       </section>
 
-      <SpatialEvidence />
+      <SpatialEvidence scenario={scenario} />
+      <PassNetwork scenario={scenario} />
+      <BallFlow scenario={scenario} />
 
       <div className="source-strip">
         <img src="/statsbomb-logo.png" alt="StatsBomb" />
-        <p><strong>데이터 근거</strong> Match 3857262 · 45′ 이상 65′ 미만 이벤트 직접 집계 · 추출일 2026-07-11</p>
-        <a href={matchEvidence.sourceUrl} target="_blank" rel="noreferrer">원본 저장소 ↗</a>
+        <p><strong>데이터 근거</strong> Match {scenario.matchId} · {scenario.windowLabel} 이벤트 직접 집계 · 추출일 {scenario.extractedAt}</p>
+        <a href={scenario.sourceUrl} target="_blank" rel="noreferrer">원본 저장소 ↗</a>
       </div>
 
       <div className="page-actions">
@@ -289,18 +323,8 @@ function BriefingScreen({ onBack, onNext }: { onBack: () => void; onNext: () => 
   )
 }
 
-function ComparisonRow({ label, korea, portugal, koreaValue, portugalValue, max = 100, invert = false }: { label: string; korea: string; portugal: string; koreaValue: number; portugalValue: number; max?: number; invert?: boolean }) {
-  const koreaWidth = clamp(koreaValue / max * 100)
-  const portugalWidth = clamp(portugalValue / max * 100)
-  return (
-    <div className={`comparison-row ${invert ? 'invert' : ''}`}>
-      <span>{label}</span><strong>{korea}</strong><strong>{portugal}</strong>
-      <div className="comparison-bars"><i style={{ width: `${koreaWidth}%` }} /><i style={{ width: `${portugalWidth}%` }} /></div>
-    </div>
-  )
-}
-
 interface TacticsScreenProps {
+  scenario: GuidedScenario
   formation: FormationKey
   squad: Player[]
   selectedPlayer: Player | null
@@ -322,16 +346,16 @@ interface TacticsScreenProps {
 }
 
 function TacticsScreen(props: TacticsScreenProps) {
-  const { formation, squad, selectedPlayer, draggingId, substitutionUsed, tactics, metrics, pitchRef } = props
+  const { scenario, formation, squad, selectedPlayer, draggingId, substitutionUsed, tactics, metrics, pitchRef } = props
   const onPitch = squad.filter((player) => player.onPitch)
   const bench = squad.filter((player) => !player.onPitch)
-  const selectedEvidence = selectedPlayer ? playerEvidence[selectedPlayer.id] : null
+  const selectedEvidence = selectedPlayer ? scenario.playerEvidence[selectedPlayer.id] : null
 
   return (
     <main className="tactics-screen page-wrap wide">
       <div className="tactics-heading">
-        <div><p className="eyebrow">MATCH INTERVENTION WORKSPACE · 65′</p><h1>개입 전술안을 설계하세요.</h1></div>
-        <div className="decision-clock"><span>분석 기준</span><strong>65′</strong><small>관측값 + 시나리오 비교</small></div>
+        <div><p className="eyebrow">MATCH INTERVENTION WORKSPACE · {scenario.minute}′</p><h1>{scenario.objective}</h1></div>
+        <div className="decision-clock"><span>분석 기준</span><strong>{scenario.minute}′</strong><small>{scenario.windowLabel} 관측 + 시나리오 비교</small></div>
       </div>
 
       <div className="guided-instructions" aria-label="전술 설계 순서">
@@ -344,10 +368,14 @@ function TacticsScreen(props: TacticsScreenProps) {
       <div className="tactics-layout">
         <aside className="control-panel panel">
           <div className="panel-title"><span>01</span><div><small>TEAM SHAPE</small><h2>포메이션</h2></div></div>
-          <div className="formation-grid">
-            {formations.map((item) => <button className={formation === item ? 'selected' : ''} type="button" key={item} onClick={() => props.onFormation(item)}>{item}</button>)}
-          </div>
-          <p className="helper">프리셋 적용 후 선수를 자유롭게 움직일 수 있습니다.</p>
+          <label className="formation-select">
+            <span>기본 대형</span>
+            <select aria-label="포메이션 선택" value={formation} onChange={(event) => props.onFormation(event.target.value as FormationKey)}>
+              {formations.map((item) => <option value={item} key={item}>{item} · {formationGuidance[item]}</option>)}
+            </select>
+          </label>
+          <div className="formation-summary"><strong>{formation}</strong><span>{formationGuidance[formation]}</span><i>{formation === scenario.defaultFormation ? '실제 기준 대형' : 'WHAT-IF 대형'}</i></div>
+          <p className="helper">대형을 적용한 뒤 선수 위치를 직접 조정할 수 있습니다.</p>
 
           <div className="section-divider" />
           <div className="panel-title"><span>02</span><div><small>TEAM INSTRUCTIONS</small><h2>팀 지시</h2></div></div>
@@ -407,15 +435,15 @@ function TacticsScreen(props: TacticsScreenProps) {
 
           <section className="panel metrics-panel">
             <div className="panel-title"><span>04</span><div><small>SCENARIO COMPARISON</small><h2>전술 리스크 검토</h2></div></div>
-            <Metric label="침투 가능성" value={metrics.threat} good />
-            <Metric label="볼 순환 안정성" value={metrics.control} good />
-            <Metric label="전환 노출" value={metrics.exposure} />
-            <Metric label="고강도 부담" value={metrics.fatigue} />
-            <div className="projection-note"><span>✦</span><p><strong>분석 코멘트</strong>{getCoachNote(metrics, squad)}</p></div>
-            <small className="estimate-label">* {evidenceMethod.modeled}. {evidenceMethod.caution}</small>
+            <Metric label={scenario.metricLabels[0]} value={metrics.threat} good />
+            <Metric label={scenario.metricLabels[1]} value={metrics.control} good />
+            <Metric label={scenario.metricLabels[2]} value={metrics.exposure} />
+            <Metric label={scenario.metricLabels[3]} value={metrics.fatigue} />
+            <div className="projection-note"><span>✦</span><p><strong>분석 코멘트</strong>{getCoachNote(metrics, squad, scenario)}</p></div>
+            <small className="estimate-label">* {scenario.windowLabel} 관측값에 대형·배치 높이·팀 폭·역할·교체·팀 지시의 설명 가능한 규칙을 적용합니다. {evidenceMethod.caution}</small>
           </section>
 
-          <button className="primary-button submit-tactic" type="button" onClick={props.onSubmit}>전술안 분석하기 <span>→</span></button>
+          <button className="primary-button submit-tactic" type="button" onClick={props.onSubmit}>WHAT-IF 비교 실행 <span>→</span></button>
           <button className="text-button center" type="button" onClick={props.onBack}>브리핑 다시 보기</button>
         </aside>
       </div>
@@ -444,53 +472,88 @@ function Metric({ label, value, good = false }: { label: string; value: number; 
   )
 }
 
-function getCoachNote(metrics: Metrics, squad: Player[]) {
-  const hwangOn = squad.some((player) => player.id === 'hwang-heechan' && player.onPitch)
+function getCoachNote(metrics: Metrics, squad: Player[], scenario: GuidedScenario) {
+  const impactOn = squad.some((player) => player.id === scenario.impactPlayerId && player.onPitch)
+  if (scenario.id === 'argentina-netherlands-83') {
+    if (metrics.exposure > 65) return '박스 노출이 높습니다. 최종 라인만 내리지 말고 크로스 시작점을 먼저 압박해야 합니다.'
+    if (impactOn && metrics.control > 58) return '몬티엘이 측면을 닫고 있습니다. 메시나 라우타로 한 명은 역습 출구로 남겨두세요.'
+    if (metrics.threat < 45) return '모든 선수가 내려오면 세컨드볼을 따내도 전진할 수 없습니다. 전방 출구를 한 명 유지하세요.'
+    return '블록 간격은 안정적입니다. 박스 앞 세컨드볼 담당과 크로스 압박 선수를 명확히 지정하세요.'
+  }
   if (metrics.exposure > 65) return '공격 숫자는 충분하지만 공을 잃은 직후 중앙 공간이 위험합니다.'
-  if (hwangOn && metrics.threat > 60) return '황희찬의 속도가 손흥민의 전진 패스와 연결될 가능성이 높습니다.'
+  if (impactOn && metrics.threat > 60) return '황희찬의 속도가 손흥민의 전진 패스와 연결될 가능성이 높습니다.'
   if (metrics.threat < 52) return '탈락을 피하려면 더 빠른 템포나 뒷공간을 노릴 선수가 필요합니다.'
   return '균형은 안정적입니다. 이제 승부를 바꿀 한 가지 과감한 선택이 필요합니다.'
 }
 
-function ResultScreen({ metrics, squad, tactics, formation, onRetry }: { metrics: Metrics; squad: Player[]; tactics: Tactics; formation: FormationKey; onRetry: () => void }) {
-  const hwangOn = squad.some((player) => player.id === 'hwang-heechan' && player.onPitch)
-  const performance = metrics.threat + metrics.control - metrics.exposure * 0.65 - metrics.fatigue * 0.15 + (hwangOn ? 8 : 0)
-  const recommendation = performance >= 90 ? '채택 권고' : performance < 58 ? '재설계 필요' : '조건부 채택'
-  const tone = performance >= 90 ? 'win' : performance < 58 ? 'lose' : 'draw'
-  const planLabel = hwangOn ? '전환 속도 강화안' : tactics.pressing > 68 ? '고강도 압박 유지안' : '점유 안정화안'
+function ResultScreen({ scenario, metrics, squad, tactics, formation, onRetry }: { scenario: GuidedScenario; metrics: Metrics; squad: Player[]; tactics: Tactics; formation: FormationKey; onRetry: () => void }) {
+  const impactOn = squad.some((player) => player.id === scenario.impactPlayerId && player.onPitch)
+  const baselineMetrics = calculateMetrics(cloneScenarioSquad(scenario), scenario.defaultTactics, scenario.defaultFormation, scenario)
+  const performance = Math.round(scenario.id === 'argentina-netherlands-83'
+    ? metrics.threat * .15 + metrics.control * .3 + (100 - metrics.exposure) * .4 + (100 - metrics.fatigue) * .15 + (impactOn ? 5 : 0)
+    : metrics.threat * .32 + metrics.control * .32 + (100 - metrics.exposure) * .25 + (100 - metrics.fatigue) * .11 + (impactOn ? 6 : 0))
+  const recommendation = performance >= 70 ? '채택 권고' : performance < 50 ? '재설계 필요' : '조건부 채택'
+  const tone = performance >= 70 ? 'win' : performance < 50 ? 'lose' : 'draw'
+  const planLabel = impactOn ? scenario.result.planOn : tactics.pressing > 68 ? '고강도 압박 유지안' : scenario.result.planOff
   const operatingCondition = metrics.exposure > 60
-    ? '공을 잃은 직후 중앙 미드필더 한 명은 반드시 잔류'
-    : '첫 전진 패스 실패 시 즉시 수비 블록 복귀'
+    ? scenario.result.operatingRisk
+    : scenario.result.operatingSafe
+  const impactPlayer = squad.find((player) => player.id === scenario.impactPlayerId)?.shortName ?? scenario.briefing.optionPlayer
+  const whatIfMetrics = ([
+    ['threat', scenario.metricLabels[0], true],
+    ['control', scenario.metricLabels[1], true],
+    ['exposure', scenario.metricLabels[2], false],
+    ['fatigue', scenario.metricLabels[3], false],
+  ] as const).map(([key, label, higherIsBetter]) => {
+    const before = baselineMetrics[key]
+    const after = metrics[key]
+    const delta = after - before
+    return { key, label, before, after, delta, improved: higherIsBetter ? delta > 0 : delta < 0 }
+  })
 
   return (
     <main className="result-screen page-wrap">
       <div className={`result-hero ${tone}`}>
-        <p className="eyebrow">INTERVENTION REVIEW · NOT A MATCH PREDICTION</p>
+        <p className="eyebrow">TACTICAL WHAT-IF · COACHING MODEL, NOT A MATCH PREDICTION</p>
         <div className="decision-status"><span>TACTICAL PROPOSAL</span><strong>{formation}</strong><em>{recommendation}</em></div>
         <h1>{planLabel}</h1>
-        <p>45–64분 실제 관측값을 기준선으로 사용자의 전술안을 비교한 코칭 검토 결과입니다.</p>
+        <p>{scenario.result.baseline}을 기준선으로 사용자의 전술안을 비교한 코칭 검토 결과입니다.</p>
       </div>
 
-      <TacticalSequence hwangOn={hwangOn} formation={formation} tactics={tactics} />
+      <section className="what-if-panel panel" aria-label="실제 기준 전술과 사용자 전술 변화 비교">
+        <header><div><small>BASELINE → MY PLAN</small><h2>내 개입으로 달라진 전술 상태</h2></div><span>{scenario.defaultFormation} 기준</span></header>
+        <div>
+          {whatIfMetrics.map((item) => (
+            <article key={item.key} className={item.delta === 0 ? 'neutral' : item.improved ? 'improved' : 'declined'}>
+              <small>{item.label}</small>
+              <p><span>{item.before}</span><i>→</i><strong>{item.after}</strong></p>
+              <b>{item.delta === 0 ? '변화 없음' : `${item.delta > 0 ? '+' : ''}${item.delta}점`}</b>
+            </article>
+          ))}
+        </div>
+        <p>실제 관측 구간을 기준선으로 대형, 선수 배치 높이와 폭, 역할, 교체, 팀 지시만 바꿔 다시 계산했습니다. 경기 결과나 득점 확률을 예측하지 않습니다.</p>
+      </section>
+
+      {scenario.id === 'korea-portugal-65' ? <TacticalSequence hwangOn={impactOn} formation={formation} tactics={tactics} /> : <PassNetwork scenario={scenario} />}
 
       <section className="result-grid">
         <article className="manager-card">
-          <div className="card-top"><span>RE:TACTIC</span><small>INTERVENTION NOTE · 65′</small></div>
+          <div className="card-top"><span>RE:TACTIC</span><small>INTERVENTION NOTE · {scenario.minute}′</small></div>
           <div className="manager-badge">R:</div>
           <p>PROPOSED INTERVENTION</p>
           <h2>{planLabel}</h2>
-          <div className="manager-traits"><span>{formation}</span><span>위험 {tactics.risk}</span><span>템포 {tactics.tempo}</span><span>{hwangOn ? '황희찬 투입' : '기존 인원 유지'}</span></div>
+          <div className="manager-traits"><span>{formation}</span><span>위험 {tactics.risk}</span><span>템포 {tactics.tempo}</span><span>{impactOn ? `${impactPlayer} 투입` : '기존 인원 유지'}</span></div>
           <small>운영 조건 · {operatingCondition}</small>
         </article>
 
         <article className="report-card">
           <div className="panel-title"><span>05</span><div><small>DECISION MEMO</small><h2>이점과 리스크를 검토합니다</h2></div></div>
           <ul className="report-list">
-            <li className={hwangOn ? 'positive' : 'neutral'}><b>{hwangOn ? '✓' : '!'}</b><div><strong>전진 수단</strong><span>{hwangOn ? '황희찬 투입으로 탈취 후 측면 뒷공간을 바로 공격할 선택지가 생깁니다.' : '기존 인원 유지 시 패스 성공률 격차를 줄일 별도 전진 패턴이 필요합니다.'}</span></div></li>
+            <li className={impactOn ? 'positive' : 'neutral'}><b>{impactOn ? '✓' : '!'}</b><div><strong>{scenario.id === 'korea-portugal-65' ? '전진 수단' : '측면 대응'}</strong><span>{impactOn ? scenario.result.impactOn : scenario.result.impactOff}</span></div></li>
             <li className={metrics.exposure < 60 ? 'positive' : 'negative'}><b>{metrics.exposure < 60 ? '✓' : '!'}</b><div><strong>전환 수비</strong><span>{metrics.exposure < 60 ? '공격적 개입 속에서도 후방 숫자를 관리할 수 있는 범위입니다.' : '압박과 위험 감수가 함께 높아 공을 잃은 뒤 중앙 보호 조건이 필요합니다.'}</span></div></li>
-            <li className={metrics.control > 50 ? 'positive' : 'neutral'}><b>{metrics.control > 50 ? '✓' : '!'}</b><div><strong>볼 순환</strong><span>직전 20분 패스 성공률 65.6%를 기준으로 한 안정성 비교 점수는 {metrics.control}점입니다.</span></div></li>
+            <li className={metrics.control > 50 ? 'positive' : 'neutral'}><b>{metrics.control > 50 ? '✓' : '!'}</b><div><strong>{scenario.metricLabels[1]}</strong><span>{scenario.windowLabel} 패스 성공률 {scenario.evidence.ours.passCompletion}%를 기준으로 한 비교 점수는 {metrics.control}점입니다.</span></div></li>
           </ul>
-          <div className="actual-choice"><span>실제 경기와 비교</span><p>실제 경기에서는 65분 황희찬 투입 후 추가시간 손흥민의 전진 패스를 받아 결승골을 기록했습니다. 이 사실은 사후 비교 정보이며 시나리오 점수 계산에는 정답값으로 사용하지 않습니다.</p></div>
+          <div className="actual-choice"><span>실제 경기와 비교</span><p>{scenario.result.actualChoice} {scenario.result.actualOutcome} 이 사실은 사후 비교 정보이며 시나리오 점수 계산에는 정답값으로 사용하지 않습니다.</p></div>
         </article>
       </section>
 
@@ -500,7 +563,7 @@ function ResultScreen({ metrics, squad, tactics, formation, onRetry }: { metrics
       </div>
       <footer className="data-source">
         <img src="/statsbomb-logo.png" alt="StatsBomb" />
-        <p>Match event data: StatsBomb Open Data · Match 3857262. 파생 지표는 RE:TACTIC이 계산했습니다. 시나리오 점수는 실제 경기 결과 예측이나 승률이 아닙니다.</p>
+        <p>Match event data: StatsBomb Open Data · Match {scenario.matchId}. 파생 지표는 RE:TACTIC이 계산했습니다. 시나리오 점수는 실제 경기 결과 예측이나 승률이 아닙니다.</p>
       </footer>
     </main>
   )

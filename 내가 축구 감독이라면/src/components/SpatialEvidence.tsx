@@ -1,22 +1,22 @@
 import { useState } from 'react'
-import { spatialEvidence } from '../data/spatialEvidence'
+import type { GuidedScenario } from '../data/scenarios'
 
 type View = 'entries' | 'shots'
 const pitchX = (value: number) => value * 1.2
 const pitchY = (value: number) => value * .8
 
-export default function SpatialEvidence() {
+export default function SpatialEvidence({ scenario }: { scenario: GuidedScenario }) {
   const [view, setView] = useState<View>('entries')
-  const korea = spatialEvidence['South Korea']
-  const portugal = spatialEvidence.Portugal
+  const korea = scenario.spatial.ours
+  const portugal = scenario.spatial.opponent
 
   return (
     <section className="spatial-evidence panel">
       <header className="spatial-heading">
-        <div className="panel-title"><span>04</span><div><small>SPATIAL EVIDENCE · 45′–64′</small><h2>숫자가 만들어진 위치를 확인하세요</h2></div></div>
+        <div className="panel-title"><span>04</span><div><small>SPATIAL EVIDENCE · {scenario.windowLabel}</small><h2>숫자가 만들어진 위치를 확인하세요</h2></div></div>
         <div className="spatial-tabs" role="tablist" aria-label="공간 데이터 종류">
-          <button type="button" className={view === 'entries' ? 'active' : ''} onClick={() => setView('entries')}>공격 지역 진입</button>
-          <button type="button" className={view === 'shots' ? 'active' : ''} onClick={() => setView('shots')}>슈팅 위치</button>
+          <button type="button" role="tab" aria-selected={view === 'entries'} className={view === 'entries' ? 'active' : ''} onClick={() => setView('entries')}>공격 지역 진입</button>
+          <button type="button" role="tab" aria-selected={view === 'shots'} className={view === 'shots' ? 'active' : ''} onClick={() => setView('shots')}>슈팅 위치</button>
         </div>
       </header>
 
@@ -51,17 +51,17 @@ export default function SpatialEvidence() {
         </div>
 
         <aside className="spatial-insight">
-          <div className="spatial-legend"><span><i className="korea" /> 대한민국</span><span><i className="portugal" /> 포르투갈</span></div>
+          <div className="spatial-legend"><span><i className="korea" /> {scenario.ours.name}</span><span><i className="portugal" /> {scenario.opponent.name}</span></div>
           {view === 'entries' ? <>
-            <strong>한국의 진입은 적고 직접적이었습니다</strong>
-            <p>4회 중 2회가 김승규에서 조규성으로 향한 긴 패스였습니다. 반면 포르투갈은 칸셀루·비티냐를 거쳐 양 측면으로 16회 진입했습니다.</p>
-            <div className="insight-kpis"><span><small>한국</small><b>4</b></span><span><small>포르투갈</small><b>16</b></span></div>
+            <strong>{scenario.spatialCopy.entriesTitle}</strong>
+            <p>{scenario.spatialCopy.entriesBody}</p>
+            <div className="insight-kpis"><span><small>{scenario.ours.name}</small><b>{scenario.spatialCopy.entriesOurs}</b></span><span><small>{scenario.opponent.name}</small><b>{scenario.spatialCopy.entriesOpponent}</b></span></div>
           </> : <>
-            <strong>양 팀 모두 양질의 슈팅을 만들지 못했습니다</strong>
-            <p>20분 동안 한국 2회, 포르투갈 1회의 슈팅이 나왔지만 양 팀의 합산 xG는 0.098에 그쳤습니다.</p>
-            <div className="insight-kpis"><span><small>한국 xG</small><b>0.045</b></span><span><small>포르투갈 xG</small><b>0.053</b></span></div>
+            <strong>{scenario.spatialCopy.shotsTitle}</strong>
+            <p>{scenario.spatialCopy.shotsBody}</p>
+            <div className="insight-kpis"><span><small>{scenario.ours.name} xG</small><b>{scenario.spatialCopy.shotsOurs}</b></span><span><small>{scenario.opponent.name} xG</small><b>{scenario.spatialCopy.shotsOpponent}</b></span></div>
           </>}
-          <small className="source-note">StatsBomb event coordinates · Match 3857262</small>
+          <small className="source-note">StatsBomb event coordinates · Match {scenario.matchId}</small>
         </aside>
       </div>
     </section>
