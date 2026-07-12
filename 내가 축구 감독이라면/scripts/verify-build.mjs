@@ -29,10 +29,17 @@ const bundle = assetRefs
 assert(bundle.includes('StatsBomb Open Data'), '데이터 출처 문구가 번들에 포함되어 있습니다.')
 assert(bundle.includes('시나리오 점수는 승률이나 실제 경기 결과 예측이 아닙니다.'), '휴리스틱 결과 주의 문구가 포함되어 있습니다.')
 assert(bundle.includes('범용 전술 보드'), '범용 전술 스튜디오가 번들에 포함되어 있습니다.')
+assert(bundle.includes('인플레이 점유 추정'), '점유 추정의 성격이 화면에 명시되어 있습니다.')
+assert(bundle.includes('WHAT-IF 비교 실행'), '전술 What-if 비교 흐름이 번들에 포함되어 있습니다.')
 
 const evidence = read('src/data/evidence.ts')
 assert(/matchId:\s*3857262/.test(evidence), '검증 경기 ID 3857262가 고정되어 있습니다.')
 assert(/finalThirdEntries:\s*4/.test(evidence) && /finalThirdEntries:\s*16/.test(evidence), '공격 지역 진입 집계값이 포함되어 있습니다.')
+
+const scenarios = read('src/data/scenarios.ts')
+assert(scenarios.includes('3869321'), '두 번째 검증 경기 ID 3869321이 고정되어 있습니다.')
+assert(scenarios.includes('possessionEstimate: [23.1, 76.9]') && scenarios.includes('possessionEstimate: [56.8, 43.2]'), '두 시나리오의 점유 추정값이 포함되어 있습니다.')
+assert((scenarios.match(/id: 'ned-/g) ?? []).length === 4, '네덜란드 추격골 볼 흐름 4개 이벤트를 확인했습니다.')
 
 const spatial = read('src/data/spatialEvidence.ts')
 const portugalStart = spatial.indexOf('Portugal:')

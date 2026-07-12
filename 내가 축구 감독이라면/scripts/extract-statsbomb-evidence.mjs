@@ -1,18 +1,34 @@
-const MATCH_ID = 3857262
-const SOURCE = `https://raw.githubusercontent.com/statsbomb/open-data/master/data/events/${MATCH_ID}.json`
-const START_MINUTE = 45
-const END_MINUTE = 65
-
-const response = await fetch(SOURCE)
-if (!response.ok) throw new Error(`StatsBomb data request failed: ${response.status}`)
-
-const events = await response.json()
-const windowEvents = events.filter((event) => event.minute >= START_MINUTE && event.minute < END_MINUTE)
+const scenarios = [
+  { matchId: 3857262, startMinute: 45, endMinute: 65, teams: ['South Korea', 'Portugal'] },
+  { matchId: 3869321, startMinute: 70, endMinute: 83, teams: ['Argentina', 'Netherlands'] },
+]
 
 const isCompletedPass = (event) => event.type?.name === 'Pass' && !event.pass?.outcome
 const isInsideBox = (location) => location?.[0] >= 102 && location?.[1] >= 18 && location?.[1] <= 62
 
-function summarizeTeam(teamName) {
+function estimateInPlayPossession(windowEvents, teamNames) {
+  const possessions = new Map()
+  for (const event of windowEvents) {
+    const team = event.possession_team?.name
+    if (!teamNames.includes(team) || event.possession == null) continue
+    const second = event.minute * 60 + event.second
+    const eventEnd = second + Math.min(Number(event.duration || 0), 10)
+    const key = `${event.possession}:${team}`
+    const current = possessions.get(key) ?? { team, start: second, end: eventEnd }
+    current.start = Math.min(current.start, second)
+    current.end = Math.max(current.end, eventEnd)
+    possessions.set(key, current)
+  }
+
+  const duration = Object.fromEntries(teamNames.map((team) => [team, 0]))
+  for (const possession of possessions.values()) {
+    duration[possession.team] += Math.max(1, possession.end - possession.start)
+  }
+  const total = Object.values(duration).reduce((sum, value) => sum + value, 0)
+  return Object.fromEntries(teamNames.map((team) => [team, Number((duration[team] / total * 100).toFixed(1))]))
+}
+
+function summarizeTeam(windowEvents, teamName) {
   const teamEvents = windowEvents.filter((event) => event.team?.name === teamName)
   const passes = teamEvents.filter((event) => event.type?.name === 'Pass')
   const completed = passes.filter(isCompletedPass)
@@ -27,18 +43,26 @@ function summarizeTeam(teamName) {
     finalThirdEntries: finalThirdEntries.length,
     boxEntries: boxEntries.length,
     shots: shots.length,
-    xg: Number(shots.reduce((sum, event) => sum + event.shot.statsbomb_xg, 0).toFixed(3)),
+    xg: Math.round((shots.reduce((sum, event) => sum + event.shot.statsbomb_xg, 0) + Number.EPSILON) * 1000) / 1000,
     pressures: teamEvents.filter((event) => event.type?.name === 'Pressure').length,
     counterpressures: teamEvents.filter((event) => event.counterpress === true).length,
   }
 }
 
-const result = {
-  matchId: MATCH_ID,
-  source: SOURCE,
-  window: { startMinute: START_MINUTE, endMinuteExclusive: END_MINUTE },
-  southKorea: summarizeTeam('South Korea'),
-  portugal: summarizeTeam('Portugal'),
+const results = []
+for (const scenario of scenarios) {
+  const source = `https://raw.githubusercontent.com/statsbomb/open-data/master/data/events/${scenario.matchId}.json`
+  const response = await fetch(source)
+  if (!response.ok) throw new Error(`StatsBomb data request failed: ${response.status}`)
+  const events = await response.json()
+  const windowEvents = events.filter((event) => event.minute >= scenario.startMinute && event.minute < scenario.endMinute)
+  results.push({
+    matchId: scenario.matchId,
+    source,
+    window: { startMinute: scenario.startMinute, endMinuteExclusive: scenario.endMinute },
+    inPlayPossessionEstimate: estimateInPlayPossession(windowEvents, scenario.teams),
+    teams: Object.fromEntries(scenario.teams.map((team) => [team, summarizeTeam(windowEvents, team)])),
+  })
 }
 
-console.log(JSON.stringify(result, null, 2))
+console.log(JSON.stringify(results, null, 2))
