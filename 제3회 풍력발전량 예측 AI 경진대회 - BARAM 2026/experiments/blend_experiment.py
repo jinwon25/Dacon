@@ -174,6 +174,10 @@ def main() -> None:
     report: dict[str, object] = {"valid_start": args.valid_start, "candidates": [s.__dict__ for s in specs], "targets": {}}
     valid_predictions: dict[str, np.ndarray] = {}
     valid_truth: dict[str, np.ndarray] = {}
+    prediction_cache: dict[str, np.ndarray] = {
+        "candidate_names": np.asarray([spec.name for spec in specs]),
+        "test_index_ns": X_test_all.index.astype("int64").to_numpy(),
+    }
 
     for target_i, (target, capacity) in enumerate(CAPACITY_KWH.items(), start=1):
         y = labels[target]
@@ -235,6 +239,11 @@ def main() -> None:
         test_matrix = np.column_stack(target_test_preds)
         indexed_submission[target] = np.clip(test_matrix @ weights, 0, capacity)
         valid_predictions[target] = np.clip(pred_matrix @ weights, 0, capacity)
+        prediction_cache[f"{target}__valid_index_ns"] = X_all.index[valid_mask].astype("int64").to_numpy()
+        prediction_cache[f"{target}__valid_truth"] = valid_truth[target].astype("float32")
+        prediction_cache[f"{target}__valid_matrix"] = pred_matrix.astype("float32")
+        prediction_cache[f"{target}__test_matrix"] = test_matrix.astype("float32")
+        prediction_cache[f"{target}__selected_weights"] = weights.astype("float32")
         target_report["blend_metric"] = blend_metric
         target_report["selected_weights"] = {
             spec.name: float(weight)
@@ -254,6 +263,7 @@ def main() -> None:
     output.to_csv(output_path, index=False, encoding="utf-8-sig")
     (artifact_dir / "blend_report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     joblib.dump(report, artifact_dir / "blend_report.joblib")
+    np.savez_compressed(artifact_dir / "prediction_cache.npz", **prediction_cache)
 
     print(json.dumps(competition_metric, ensure_ascii=False, indent=2), flush=True)
     print(f"Saved submission to {output_path.resolve()}", flush=True)

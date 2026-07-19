@@ -1,0 +1,12 @@
+{
+  "competition_slug": "baram_2026",
+  "title": "Issue-cycle NWP trajectory-shape residual expert for group 3",
+  "family": "cycle_trajectory_residual",
+  "rationale": "The public-best fine meta-gate surface can still contain residual error tied to the shape of the 24-hour forecast trajectory within one NWP issue cycle. Cycle mean, spread, extrema, and lead-relative deviations are available at issue time and do not use SCADA or future-valid weather.",
+  "expected_signal": "A positive-residual-only bounded expert must improve Q1-to-Q2 and locked H1-to-H2 score, 1-NMAE, and FICR, remain positive in every monthly fold, and clear issue-cycle bootstrap positive-fraction and q05 gates against the rolling fine incumbent.",
+  "source_urls": [
+    "https://arxiv.org/abs/1706.09516",
+    "https://www.sciencedirect.com/science/article/pii/S0169207016000145"
+  ],
+  "risk_notes": "No labels are used in trajectory features. The fine incumbent is reconstructed with threshold=.545 and extra_alpha=.50 using Q1->Q2 and H1->H2 rolling probabilities. Candidate generation is disabled until all locked monthly and issue-cycle gates pass."
+}

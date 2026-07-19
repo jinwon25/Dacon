@@ -1,0 +1,13 @@
+{
+  "competition_slug": "baram_2026",
+  "title": "XGBoost absolute-error diversity member for group 3",
+  "family": "group3_xgboost_diversity",
+  "rationale": "The exact production lineage combines LightGBM and CatBoost but no direct XGBoost member. A regularized depth-wise histogram learner can add a different residual surface while preserving the proven base features and eligible-only training contract.",
+  "expected_signal": "The Q2-selected XGBoost member must improve the exact current H2 surface in both NMAE and FICR, remain positive across seeds and at least four months, and show enough diversity from the CatBoost parent to support a bounded child ensemble.",
+  "source_urls": [
+    "https://arxiv.org/abs/1603.02754",
+    "https://xgboost.readthedocs.io/en/stable/",
+    "https://arxiv.org/abs/2208.08952"
+  ],
+  "risk_notes": "A standalone XGBoost may be weaker than the mature production ensemble; only stable complementary error is useful. This diagnostic cannot emit a submission."
+}

@@ -1,0 +1,32 @@
+{
+  "hypothesis_id": 7,
+  "module": "experiments.spatiotemporal_consensus_promotion",
+  "args": [
+    "--artifact-dir",
+    "artifacts_final/spatiotemporal_consensus",
+    "--output",
+    "submissions/blend_best_spatiotemporal_multitask20.csv",
+    "--write-submission-if-qualified"
+  ],
+  "report_path": "artifacts_final/spatiotemporal_consensus/spatiotemporal_consensus_promotion_report.json",
+  "evaluation_path": "artifacts_final/spatiotemporal_consensus/agent_evaluation.json",
+  "candidate_path": "submissions/blend_best_spatiotemporal_multitask20.csv",
+  "timeout_seconds": 7200,
+  "validation_plan_id": 1,
+  "input_paths": [
+    "artifacts_final/lineage/exact_driver_oof.npz",
+    "artifacts_final/spatiotemporal/validation_predictions.npz",
+    "artifacts_final/spatiotemporal_seed29/validation_predictions.npz",
+    "artifacts_final/spatiotemporal_final/spatiotemporal_member.csv",
+    "submissions/blend_best_crossg3_traj_meta_finesweep.csv",
+    "data/train/train_labels.csv",
+    "data/train/gfs_train.csv"
+  ],
+  "tags": {
+    "stage": "structural_model_promotion",
+    "target": "kpx_group_3",
+    "policy": "global_alpha_0_20",
+    "seeds": "17_29"
+  },
+  "change_summary": "Blend the independently validated two-seed spatial-temporal NWP graph ensemble into group 3 at the Q1/Q2-frozen global weight 0.20."
+}

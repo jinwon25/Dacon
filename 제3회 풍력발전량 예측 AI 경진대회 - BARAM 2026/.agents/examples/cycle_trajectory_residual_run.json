@@ -1,0 +1,24 @@
+{
+  "hypothesis_id": 8,
+  "module": "experiments.cycle_trajectory_residual",
+  "args": [],
+  "report_path": "artifacts_final/structural_20260718/structural_report.json",
+  "evaluation_path": "artifacts_final/structural_20260718/agent_evaluation.json",
+  "timeout_seconds": 1800,
+  "validation_plan_id": 1,
+  "input_paths": [
+    "artifacts_final/feature_cache/features_train.pkl",
+    "artifacts_final/feature_cache/features_test.pkl",
+    "artifacts_final/lineage/exact_driver_oof.npz",
+    "artifacts_final/meta_gate/meta_gate_cache.npz",
+    "submissions/blend_best_crossg3_traj_meta_finesweep.csv",
+    "data/train/train_labels.csv"
+  ],
+  "candidate_path": null,
+  "tags": {
+    "stage": "diagnostic_member",
+    "target": "kpx_group_3",
+    "promotion": "rejected"
+  },
+  "change_summary": "Add issue-cycle trajectory-shape residual features and a bounded positive-residual gate; no submission side effect."
+}

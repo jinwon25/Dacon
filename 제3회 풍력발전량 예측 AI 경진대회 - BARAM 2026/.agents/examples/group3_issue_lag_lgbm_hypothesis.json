@@ -1,0 +1,14 @@
+{
+  "competition_slug": "baram_2026",
+  "title": "Leakage-safe pre-issue weather-state auxiliary model for group 3",
+  "family": "group3_issue_lag_lgbm",
+  "rationale": "The strongest public model is bottlenecked by group-3 regime shifts. Public Open-Meteo historical forecasts provide weather states strictly before each BARAM issue time; 6/12/24-hour lags add the synoptic initial condition without test SCADA, future-valid weather, observations, or reanalysis.",
+  "expected_signal": "An external-feature LightGBM must beat an identical no-external control directionally, then an H1-selected blend changing at most 25% of rows and moving p95 at most 1.5% must improve locked H2 score, 1-NMAE, and FICR across seeds, months, and day bootstrap.",
+  "source_urls": [
+    "https://dacon.io/competitions/official/236727/overview/rules",
+    "https://open-meteo.com/en/docs/historical-forecast-api",
+    "https://open-meteo.com/en/licence",
+    "https://arxiv.org/abs/2402.13916"
+  ],
+  "risk_notes": "External data provenance and publication-time safety are material. Only values at least six hours before data_available_kst_dtm are joined, and the source file, URL, license, period, coordinates, and SHA-256 are retained."
+}

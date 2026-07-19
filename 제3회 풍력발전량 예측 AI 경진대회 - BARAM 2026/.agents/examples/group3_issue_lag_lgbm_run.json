@@ -1,0 +1,35 @@
+{
+  "hypothesis_id": 6,
+  "module": "experiments.group3_issue_lag_lgbm",
+  "args": [
+    "--artifact-dir",
+    "artifacts_final/agent_service/runs/{run_id}/group3_issue_lag_lgbm",
+    "--agent-evaluation-output",
+    "artifacts_final/agent_service/runs/{run_id}/evaluation.json",
+    "--candidate",
+    "submissions/blend_best_g3_issue_lag_lgbm.csv"
+  ],
+  "report_path": "artifacts_final/agent_service/runs/{run_id}/group3_issue_lag_lgbm/group3_issue_lag_lgbm_report.json",
+  "evaluation_path": "artifacts_final/agent_service/runs/{run_id}/evaluation.json",
+  "candidate_path": "submissions/blend_best_g3_issue_lag_lgbm.csv",
+  "timeout_seconds": 7200,
+  "validation_plan_id": 1,
+  "input_paths": [
+    "artifacts_final/feature_cache/features_train.pkl",
+    "artifacts_final/feature_cache/features_test.pkl",
+    "artifacts_final/external_weather/open_meteo_gfs_issue_history.csv",
+    "artifacts_final/external_weather/open_meteo_gfs_issue_history.provenance.json",
+    "artifacts_final/lineage/exact_driver_oof.npz",
+    "artifacts_final/meta_gate/meta_gate_cache.npz",
+    "submissions/blend_best_crossg3_traj_meta25_p55.csv",
+    "data/train/train_labels.csv",
+    "data/train/gfs_train.csv",
+    "data/test/gfs_test.csv"
+  ],
+  "tags": {
+    "stage": "external_signal_validation",
+    "target": "kpx_group_3",
+    "external_data": "open_meteo_gfs_issue_history"
+  },
+  "change_summary": "Add only 6/12/24-hour pre-issue public weather-state features to the group-3 auxiliary LightGBM while retaining the current public-best OOF baseline and deterministic promotion gates."
+}

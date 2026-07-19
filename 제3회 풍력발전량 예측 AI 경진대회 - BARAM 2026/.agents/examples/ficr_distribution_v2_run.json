@@ -1,0 +1,30 @@
+{
+  "hypothesis_id": 9,
+  "module": "experiments.ficr_distribution_v2",
+  "args": [
+    "--artifact-dir",
+    "artifacts_final/ficr_distribution_v2",
+    "--n-estimators",
+    "80",
+    "--n-bootstrap",
+    "1000"
+  ],
+  "report_path": "artifacts_final/ficr_distribution_v2/distribution_report.json",
+  "evaluation_path": "artifacts_final/ficr_distribution_v2/evaluation.json",
+  "timeout_seconds": 7200,
+  "validation_plan_id": 1,
+  "input_paths": [
+    "artifacts_final/lineage/exact_driver_oof.npz",
+    "artifacts_final/meta_gate_sweep/meta_gate_policy_sweep_report.json",
+    "data/train/train_labels.csv",
+    "data/train/gfs_train.csv"
+  ],
+  "tags": {
+    "stage": "conditional_residual_distribution_audit",
+    "target": "kpx_group_3",
+    "validation": "q1_to_q2_h1_to_h2_issue_cycle_bootstrap",
+    "candidate_csv_created": "false",
+    "seeds": "1300_1301_1302_1303_1304"
+  },
+  "change_summary": "Fit Q1/H1 conditional residual quantiles and a mean-residual control, integrate the official 6%/8% settlement utility over a bounded action grid, and stop before submission unless every locked gate passes."
+}

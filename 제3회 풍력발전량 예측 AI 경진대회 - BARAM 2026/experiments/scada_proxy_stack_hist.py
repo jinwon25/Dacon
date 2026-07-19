@@ -100,6 +100,10 @@ def main() -> None:
     report: dict[str, object] = {"valid_start": args.valid_start, "proxy_report": proxy_report, "targets": {}}
     valid_pred: dict[str, np.ndarray] = {}
     valid_truth: dict[str, np.ndarray] = {}
+    cache: dict[str, np.ndarray] = {
+        "candidate_names": np.asarray(["scada_proxy_stack_hist"]),
+        "test_index_ns": X_test.index.astype("int64").to_numpy(),
+    }
 
     for i, (target, capacity) in enumerate(CAPACITY_KWH.items(), start=1):
         y = labels[target]
@@ -109,6 +113,7 @@ def main() -> None:
             "eligible_only": (~valid_time) & y.notna() & (y >= 0.10 * capacity),
         }
         best = {"score": -np.inf}
+        best_valid: np.ndarray | None = None
         for variant, train_mask in variants.items():
             raw_valid = np.clip(
                 _fit_target(X_aug.loc[train_mask], y.loc[train_mask], X_aug.loc[valid], 19_000 + i),
@@ -116,6 +121,7 @@ def main() -> None:
                 capacity,
             )
             scale, offset, metric = calibrate(y.loc[valid].to_numpy(), raw_valid, capacity)
+            calibrated_valid = np.clip(raw_valid * scale + offset, 0, capacity)
             print(target, variant, metric, flush=True)
             if metric["score"] > best["score"]:
                 best = {
@@ -125,6 +131,7 @@ def main() -> None:
                     "offset": offset,
                     "metric": metric,
                 }
+                best_valid = calibrated_valid
 
         final_mask = y.notna()
         if best["variant"] == "eligible_only":
@@ -134,10 +141,20 @@ def main() -> None:
             0,
             capacity,
         )
-        submission[target] = np.clip(raw_test * best["scale"] + best["offset"], 0, capacity)
-        valid_pred[target] = np.full(valid.sum(), np.nan)
+        pred_test = np.clip(raw_test * best["scale"] + best["offset"], 0, capacity)
+        submission[target] = pred_test
+        if best_valid is None:
+            raise RuntimeError(f"No validation candidate selected for {target}")
+        valid_pred[target] = best_valid
         valid_truth[target] = y.loc[valid].to_numpy()
         report["targets"][target] = best | {"final_train_rows": int(final_mask.sum())}
+        cache[f"{target}__valid_index_ns"] = X.index[valid].astype("int64").to_numpy()
+        cache[f"{target}__valid_truth"] = valid_truth[target].astype("float32")
+        cache[f"{target}__valid_matrix"] = best_valid[:, None].astype("float32")
+        cache[f"{target}__test_matrix"] = pred_test[:, None].astype("float32")
+        cache[f"{target}__selected_weights"] = np.asarray([1.0], dtype="float32")
+
+    report["competition_metric"] = evaluate_competition(valid_truth, valid_pred)
 
     output = submission.reset_index()[sample.columns]
     output[TIME_COL] = output[TIME_COL].dt.strftime("%Y-%m-%d %H:%M:%S")
@@ -145,7 +162,9 @@ def main() -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output.to_csv(output_path, index=False, encoding="utf-8-sig")
     (artifact_dir / "stack_hist_report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    np.savez_compressed(artifact_dir / "prediction_cache.npz", **cache)
     print(json.dumps(report["targets"], ensure_ascii=False, indent=2), flush=True)
+    print(json.dumps(report["competition_metric"], ensure_ascii=False, indent=2), flush=True)
     print(f"Saved submission to {output_path.resolve()}", flush=True)
 
 

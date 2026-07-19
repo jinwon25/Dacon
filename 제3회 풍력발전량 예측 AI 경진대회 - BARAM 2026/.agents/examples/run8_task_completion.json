@@ -1,0 +1,6 @@
+{
+  "status": "completed",
+  "run_id": 8,
+  "decision": "rejected",
+  "reason": "Execution and validation completed. The locked worst-month score delta was negative, so no candidate or submission was created."
+}

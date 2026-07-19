@@ -1,0 +1,13 @@
+{
+  "family": "controlled_g12_scada_group3_monthmask_affine",
+  "family_group": "broad_positive_affine_transfer",
+  "direction": "positive",
+  "submission_id": 1495095,
+  "file": "submission_scada_g12_controlled_g3_monthmask_meta.csv",
+  "score": 0.6389115671,
+  "one_minus_nmae": 0.8719628694,
+  "ficr": 0.4058602647,
+  "score_delta_vs_best": -0.0028355956,
+  "changed_ratio": 1.0,
+  "submitted_at": "2026-07-18 14:57:15"
+}

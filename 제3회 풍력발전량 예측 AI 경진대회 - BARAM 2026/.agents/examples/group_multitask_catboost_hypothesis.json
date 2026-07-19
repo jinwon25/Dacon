@@ -1,0 +1,13 @@
+{
+  "competition_slug": "baram_2026",
+  "title": "Missing-target multi-output CatBoost for short-history group 3",
+  "family": "group_multitask_catboost",
+  "rationale": "Group 3 has no 2022 labels while groups 1 and 2 have a highly correlated extra year. CatBoost's MultiRMSEWithMissingValues can learn capacity-normalized shared trees from all three outputs without pseudo-labeling the missing group-3 period.",
+  "expected_signal": "The Q2-selected multi-output learner must beat the exact current group-3 surface on locked H2 with positive NMAE and FICR deltas, all seeds positive, at least four positive months, and a non-negative bootstrap lower tail. It must also beat the parent single-task CatBoost control to attribute the gain to multi-task transfer.",
+  "source_urls": [
+    "https://catboost.ai/docs/en/concepts/loss-functions-multiregression",
+    "https://arxiv.org/abs/1706.09516",
+    "https://vbn.aau.dk/en/publications/probabilistic-wind-power-forecasting-for-newly-built-wind-farms-b/"
+  ],
+  "risk_notes": "Shared trees can create negative transfer from the higher-capacity farms or optimize smooth RMSE at the expense of FICR thresholds. This run is diagnostic and cannot emit a submission."
+}

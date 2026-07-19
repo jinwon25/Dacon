@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "competition_eligible": false,
+  "provider": "NOAA/NCEP",
+  "dataset": "GEFS operational forecast archive",
+  "source_type": "operational_forecast_archive",
+  "documentation_url": "https://www.ncei.noaa.gov/products/weather-climate-models/global-ensemble-forecast",
+  "license": "US government public data; verify the exact NOAA disclaimer for redistributed files",
+  "license_url": "https://www.noaa.gov/disclaimer",
+  "retrieved_at_utc": "REPLACE_ME",
+  "coverage": {
+    "initialization_start_utc": "REPLACE_ME",
+    "initialization_end_utc": "REPLACE_ME",
+    "cycle_hours_utc": [0, 6, 12, 18],
+    "selected_cycle_policy": "latest cycle conservatively public before data_available_kst_dtm",
+    "variables": [
+      "wind_u_10m_ensemble_mean",
+      "wind_v_10m_ensemble_mean",
+      "wind_speed_10m_ensemble_std",
+      "wind_speed_10m_p10",
+      "wind_speed_10m_p50",
+      "wind_speed_10m_p90"
+    ]
+  },
+  "availability_evidence": {
+    "method": "provider_schedule_with_conservative_lag",
+    "conservative_delay_minutes": 370,
+    "evidence_url": "REPLACE_WITH_PROVIDER_SCHEDULE_OR_TIMESTAMPED_CATALOG"
+  },
+  "causality_audit": {
+    "rows": 0,
+    "violations": 0,
+    "reference_column": "data_available_kst_dtm",
+    "availability_column": "public_availability_utc",
+    "initialization_column": "initialization_utc",
+    "minimum_availability_margin_minutes": -1
+  },
+  "raw_files": []
+}

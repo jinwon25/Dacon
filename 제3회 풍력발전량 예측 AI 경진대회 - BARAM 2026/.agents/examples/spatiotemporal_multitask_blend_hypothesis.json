@@ -1,0 +1,12 @@
+{
+  "competition_slug": "baram_2026",
+  "title": "Two-seed spatial-temporal NWP graph blend for group 3",
+  "family": "spatiotemporal_multitask_blend",
+  "rationale": "The exact public lineage is saturated by sparse cross-group calibration. A graph encoder over the LDAPS/GFS grids plus a dilated 24-hour temporal head supplies a genuinely different physical NWP representation, while two independently trained seeds control neural variance.",
+  "expected_signal": "A Q1/Q2-selected two-seed blend must improve score, 1-NMAE, and FICR for every seed and pass the locked H2 complete-issue-cycle month, season, and bootstrap contract as an ensemble.",
+  "source_urls": [
+    "https://arxiv.org/abs/2208.08952",
+    "https://arxiv.org/abs/1709.04875"
+  ],
+  "risk_notes": "This is a structural model blend and changes every group-3 row. Groups 1 and 2 remain byte-equivalent to the public best; policy selection never uses H2, and final test inference uses only competition-provided NWP."
+}

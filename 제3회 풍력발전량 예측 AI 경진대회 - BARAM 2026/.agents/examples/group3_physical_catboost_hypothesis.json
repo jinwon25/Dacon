@@ -1,0 +1,13 @@
+{
+  "competition_slug": "baram_2026",
+  "title": "Group-3 CatBoost with turbine-location and hub-height physical features",
+  "family": "group3_physical_catboost",
+  "rationale": "The selected group-3 blend gives CatBoost almost all weight but only evaluates its base feature surface; group-specific IDW and hub-height features were evaluated with LightGBM, not the short-history-friendly CatBoost branch.",
+  "expected_signal": "The physical feature branch must beat an otherwise identical base-control CatBoost and the exact current H2 surface with positive FICR, stable seeds, at least four positive months, and a positive bootstrap lower tail.",
+  "source_urls": [
+    "https://www.sciencedirect.com/science/article/pii/S0169207016000145",
+    "https://arxiv.org/abs/1706.09516",
+    "https://baidukddcup2022.github.io/papers/Baidu_KDD_Cup_2022_Workshop_paper_1833.pdf"
+  ],
+  "risk_notes": "A full replacement changes nearly every row and is diagnostic only; any candidate must be a separately validated bounded child ensemble."
+}

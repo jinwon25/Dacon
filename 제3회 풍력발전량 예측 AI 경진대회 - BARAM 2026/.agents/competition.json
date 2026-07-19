@@ -1,0 +1,36 @@
+{
+  "slug": "baram_2026",
+  "name": "제3회 풍력발전량 예측 AI 경진대회 - BARAM 2026",
+  "platform": "dacon",
+  "competition_id": "236727",
+  "task_type": "grouped_time_series_regression",
+  "metric_name": "macro_0_5_one_minus_nmae_plus_0_5_ficr",
+  "metric_direction": "maximize",
+  "sample_submission_path": "data/sample_submission.csv",
+  "id_columns": ["forecast_id", "forecast_kst_dtm"],
+  "target_columns": ["kpx_group_1", "kpx_group_2", "kpx_group_3"],
+  "target_ranges": {
+    "kpx_group_1": {"min": 0.0, "max": 21600.0},
+    "kpx_group_2": {"min": 0.0, "max": 21600.0},
+    "kpx_group_3": {"min": 0.0, "max": 21000.0}
+  },
+  "time_columns": ["data_available_kst_dtm", "issue_time", "valid_time", "forecast_kst_dtm"],
+  "group_columns": ["turbine_id", "kpx_group"],
+  "rules": {
+    "test_actual_generation": "forbidden",
+    "test_scada": "forbidden",
+    "forecast_information_cutoff": "generated_published_and_confirmed_before_each_data_available_kst_dtm",
+    "forecast_valid_time_does_not_establish_availability": "required",
+    "post_reference_forecast_run": "forbidden",
+    "post_reference_observations_and_corrections": "forbidden",
+    "reanalysis_as_dynamic_predictor": "forbidden",
+    "derived_features_containing_post_reference_information": "forbidden",
+    "external_weather_data": "public_legal_reproducible_and_timestamp_provenance_required",
+    "external_data_files_sources_collection_time_period_variables_license_and_preprocessing": "required_for_second_evaluation",
+    "pretrained_weight_publication_cutoff": "2026-07-05T23:59:59+09:00",
+    "pretrained_weight_license": "must_allow_use_modification_distribution_redistribution_and_commercial_use",
+    "remote_llm_raw_rows": "forbidden",
+    "remote_llm_schema_and_aggregates": "allowed_after_rule_review",
+    "public_leaderboard_as_optimizer": "forbidden"
+  }
+}

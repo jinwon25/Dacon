@@ -1,0 +1,13 @@
+{
+  "competition_slug": "baram_2026",
+  "title": "Direct CatBoost experts by six-hour NWP lead phase",
+  "family": "group3_horizon_catboost",
+  "rationale": "The daily NWP issue supplies lead hours +12 through +35, but the current direct learner uses one tree ensemble for all horizons. Four direct experts can learn horizon-specific forecast bias while preserving the successful CatBoost feature and loss surface.",
+  "expected_signal": "The Q2-selected phase experts must beat both the exact current group-3 H2 surface and the monolithic CatBoost parent, with all seeds positive, all four lead phases positive, at least four positive months, and a non-negative bootstrap lower tail.",
+  "source_urls": [
+    "https://www.sciencedirect.com/science/article/pii/S0169207013000836",
+    "https://www.sciencedirect.com/science/article/pii/S0169207016000145",
+    "https://arxiv.org/abs/2208.08952"
+  ],
+  "risk_notes": "Partitioning reduces rows per model and can amplify FICR variance. This run is a full-replacement diagnostic and cannot emit a submission."
+}

@@ -1,0 +1,13 @@
+{
+  "competition_slug": "baram_2026",
+  "title": "Rolling-origin CatBoost refresh with seed-consensus blending",
+  "family": "group3_rolling_catboost_blend",
+  "rationale": "The parent diagnostic showed that recent expanding-window CatBoost control outperformed both the physical-feature branch and the frozen current H2 surface, suggesting iteration and calibration staleness rather than missing physical features.",
+  "expected_signal": "A Q2-selected seed-consensus blend changing at most 25% of rows must improve H2 score, NMAE and FICR, remain positive across seeds and at least four months, and pass the day-bootstrap gate.",
+  "source_urls": [
+    "https://arxiv.org/abs/1706.09516",
+    "https://github.com/openai/mle-bench",
+    "https://baidukddcup2022.github.io/papers/Baidu_KDD_Cup_2022_Workshop_paper_1833.pdf"
+  ],
+  "risk_notes": "The parent full replacement was seed-unstable; this child uses unanimous seed direction, uncertainty, disagreement, and coverage gates."
+}

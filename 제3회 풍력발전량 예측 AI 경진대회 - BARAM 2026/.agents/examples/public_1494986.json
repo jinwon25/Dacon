@@ -1,0 +1,12 @@
+{
+  "run_id": 7,
+  "family": "spatiotemporal_multitask_blend",
+  "submission_id": 1494986,
+  "file": "blend_best_spatiotemporal_multitask20.csv",
+  "score": 0.6415388286,
+  "one_minus_nmae": 0.8755529915,
+  "ficr": 0.4075246656,
+  "score_delta_vs_best": -0.0002083341,
+  "changed_ratio": 1.0,
+  "submitted_at": "2026-07-18 11:03:16"
+}

@@ -1,0 +1,6 @@
+{
+  "status": "completed",
+  "run_id": 9,
+  "decision": "rejected",
+  "reason": "The direct FICR distribution policy failed locked score, FICR, worst-month, and issue-cycle bootstrap gates. No candidate or submission was created."
+}
