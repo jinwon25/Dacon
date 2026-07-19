@@ -102,9 +102,22 @@ def fit_final(family: str, X_train: pd.DataFrame, y_train: pd.Series, seed: int,
 
 
 def calibrate(y_true: np.ndarray, raw_pred: np.ndarray, capacity: float) -> tuple[float, float, dict]:
+    """Tune affine calibration against the discontinuous FICR-aware metric.
+
+    A coarse grid (1%/100 kWh) can miss the narrow 6% and 8% error bands;
+    use a two-pass search with a fine local grid around the best coarse point.
+    """
     best = (-np.inf, 1.0, 0.0, None)
-    for scale in np.arange(0.96, 1.041, 0.01):
-        for offset in np.arange(-600.0, 601.0, 100.0):
+    for scale in np.arange(0.94, 1.061, 0.01):
+        for offset in np.arange(-800.0, 801.0, 100.0):
+            pred = np.clip(raw_pred * scale + offset, 0, capacity)
+            metric = evaluate_group(y_true, pred, capacity)
+            if metric.score > best[0]:
+                best = (metric.score, float(scale), float(offset), metric)
+    # Refine around the coarse optimum to align predictions with FICR bands.
+    _, coarse_scale, coarse_offset, _ = best
+    for scale in np.arange(coarse_scale - 0.01, coarse_scale + 0.0101, 0.002):
+        for offset in np.arange(coarse_offset - 100.0, coarse_offset + 100.1, 25.0):
             pred = np.clip(raw_pred * scale + offset, 0, capacity)
             metric = evaluate_group(y_true, pred, capacity)
             if metric.score > best[0]:

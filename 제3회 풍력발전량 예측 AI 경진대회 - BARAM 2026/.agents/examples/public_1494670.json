@@ -1,0 +1,11 @@
+{
+  "family": "exact_oof_meta_gate_finesweep",
+  "submission_id": 1494670,
+  "file": "blend_best_crossg3_traj_meta_finesweep.csv",
+  "score": 0.6417471627,
+  "one_minus_nmae": 0.8754733572,
+  "ficr": 0.4080209682,
+  "score_delta_vs_best": 0.0000917901,
+  "changed_ratio": 0.11929223744292237,
+  "submitted_at": "2026-07-17 22:05:11"
+}

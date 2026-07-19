@@ -31,20 +31,27 @@ def evaluate_group(
 ) -> MetricResult:
     """Evaluate one group on rows used by the competition.
 
-    FICR currently follows the public Korean settlement convention:
-    error <= 6% earns 4 units, error <= 8% earns 3 units, otherwise 0.
-    Replace only this function if DACON's downloadable scorer differs.
+    FICR follows DACON's official scorer: error <= 6% earns 4 units,
+    error <= 8% earns 3 units, and each row's settlement is weighted by
+    actual generation before normalization by the theoretical maximum.
     """
     y_true = np.asarray(y_true, dtype=float)
     y_pred = np.asarray(y_pred, dtype=float)
-    valid = np.isfinite(y_true) & np.isfinite(y_pred) & (y_true >= 0.10 * capacity)
+    # Match the supplied official notebook: eligibility depends only on actual
+    # generation.  Never silently remove an eligible row because its forecast
+    # is non-finite; the official scorer would propagate that invalid value.
+    valid = y_true >= 0.10 * capacity
     if not valid.any():
         raise ValueError("No valid evaluation rows (actual must be >= 10% of capacity).")
+    if not np.isfinite(y_pred[valid]).all():
+        raise ValueError("Predictions contain non-finite values on eligible rows.")
 
     error_rate = np.abs(y_true[valid] - y_pred[valid]) / capacity
     nmae = float(error_rate.mean())
-    settlement = np.where(error_rate <= 0.06, 4.0, np.where(error_rate <= 0.08, 3.0, 0.0))
-    ficr = float(settlement.mean() / 4.0)
+    unit_price = np.where(error_rate <= 0.06, 4.0, np.where(error_rate <= 0.08, 3.0, 0.0))
+    earned_settlement = float(np.sum(y_true[valid] * unit_price))
+    max_settlement = float(np.sum(y_true[valid] * 4.0))
+    ficr = earned_settlement / max_settlement
     one_minus_nmae = 1.0 - nmae
     score = 0.5 * one_minus_nmae + 0.5 * ficr
     return MetricResult(score, one_minus_nmae, ficr, nmae, int(valid.sum()))

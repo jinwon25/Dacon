@@ -1,0 +1,11 @@
+{
+  "family": "settlement_composite",
+  "submission_id": 1494668,
+  "file": "blend_best_settlement_composite.csv",
+  "score": 0.6377660509,
+  "one_minus_nmae": 0.8714368889,
+  "ficr": 0.4040952129,
+  "score_delta_vs_best": -0.0038893217,
+  "changed_ratio": 1.0,
+  "submitted_at": "2026-07-17 22:04:25"
+}

@@ -1,0 +1,18 @@
+{
+  "competition_slug": "baram_2026",
+  "objective": "Find a low-coverage intervention that can recover FICR without giving back the meta-gate NMAE gain.",
+  "constraints": [
+    "use primary papers or winning-solution repositories",
+    "do not reuse broad phase/regime injection above 21.445% row coverage",
+    "emit one falsifiable hypothesis at a time",
+    "do not use public leaderboard score as the optimization objective",
+    "do not send raw competition rows to a remote LLM"
+  ],
+  "required_output": [
+    "source URLs",
+    "mechanism",
+    "expected local signature",
+    "failure signature",
+    "bounded implementation plan"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "competition_slug": "baram_2026",
+  "name": "exact_oof_forward_lock_v1",
+  "method": "grouped_forward_lock",
+  "rationale": "Preserve issue-time lineage, separate earlier and later periods, and evaluate month and day stability before any submission.",
+  "n_splits": 2,
+  "time_column": "issue_time",
+  "group_columns": ["kpx_group"],
+  "embargo_rows": 0,
+  "leakage_checks": [
+    "test-period actual generation is absent",
+    "test-period SCADA is absent",
+    "all stacked features use OOF lineage",
+    "locked period is never used for parameter selection",
+    "duplicate and near-duplicate timestamps are audited"
+  ]
+}

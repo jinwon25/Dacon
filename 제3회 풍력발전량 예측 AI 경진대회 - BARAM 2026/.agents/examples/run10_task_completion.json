@@ -1,0 +1,6 @@
+{
+  "status": "completed",
+  "run_id": 10,
+  "decision": "rejected",
+  "reason": "Reproduction confirmed the FICR distribution policy failure. Locked score, FICR, worst-month, and issue-cycle bootstrap gates failed; no submission was created."
+}

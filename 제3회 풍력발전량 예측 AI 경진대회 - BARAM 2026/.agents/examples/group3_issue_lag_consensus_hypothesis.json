@@ -1,0 +1,13 @@
+{
+  "competition_slug": "baram_2026",
+  "title": "Three-seed consensus micro-gate for the pre-issue weather model",
+  "family": "group3_issue_lag_lgbm",
+  "rationale": "Run 6 showed positive mean H2 score and FICR but failed NMAE, seed, month, and bootstrap gates. Restricting movement to rows where all three external models agree in direction directly targets the observed instability.",
+  "expected_signal": "The H1-selected child must cap locked and test coverage at 3%, improve all three H2 metrics, remain positive for every seed and at least three months, and pass the day-bootstrap tail gate.",
+  "source_urls": [
+    "https://dacon.io/competitions/official/236727/overview/rules",
+    "https://open-meteo.com/en/docs/historical-forecast-api",
+    "https://arxiv.org/abs/2402.13916"
+  ],
+  "risk_notes": "This is the same failed family, so coverage is capped below 25% of the parent run's 13.0% coverage. H2 is not used to select the consensus policy."
+}

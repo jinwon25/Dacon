@@ -1,0 +1,14 @@
+{
+  "competition_slug": "baram_2026",
+  "objective": "Determine whether exact-OOF CatBoost refreshes or direct multiclass settlement actions can safely extend the selected meta-gate.",
+  "constraints": [
+    "select every threshold on Q2 only",
+    "limit Q2 coverage to 20% and p95 movement to 1.5% of capacity",
+    "evaluate H2 exactly once per predeclared selection rule",
+    "do not create a run or CSV when the policy gate fails"
+  ],
+  "families": [
+    "risk-adjusted mean CatBoost disagreement gate",
+    "11-class residual action ExtraTrees policy"
+  ]
+}

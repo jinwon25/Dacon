@@ -1,0 +1,9 @@
+{
+  "competition_slug": "baram_2026",
+  "title": "Conditional residual distribution for direct 6/8-percent FICR utility",
+  "family": "ficr_distribution_v2",
+  "rationale": "The public finesweep OOF baseline is fixed first. A conditional residual CDF may price the 6%/8% settlement discontinuities more faithfully than a single residual mean, but it must survive issue-cycle and seed-stability gates.",
+  "expected_signal": "Q1-trained residual quantiles improve Q2 score, 1-NMAE, and FICR with all five seeds; the H1-fitted policy then improves at least four H2 months and the complete issue-cycle bootstrap.",
+  "source_urls": [],
+  "risk_notes": "No submission is created. Quantile/CDF and mean-residual controls use the same bounded action grid and are explicitly compared for redundancy. The recorded baseline is the exact rolling p=.545/a=.50 finesweep, not the legacy meta cache candidate."
+}
