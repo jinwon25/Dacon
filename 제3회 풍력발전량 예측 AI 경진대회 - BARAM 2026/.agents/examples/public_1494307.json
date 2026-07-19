@@ -1,0 +1,11 @@
+{
+  "family": "exact_oof_meta_gate",
+  "submission_id": 1494307,
+  "file": "blend_best_crossg3_traj_meta25_p55.csv",
+  "score": 0.6416553726,
+  "one_minus_nmae": 0.8754552834,
+  "ficr": 0.4078554618,
+  "score_delta_vs_best": 0.0001753677,
+  "changed_ratio": 0.1106,
+  "submitted_at": "2026-07-17 12:35:35"
+}

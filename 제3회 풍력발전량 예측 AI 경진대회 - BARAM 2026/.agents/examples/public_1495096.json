@@ -1,0 +1,13 @@
+{
+  "family": "seasonal_group3_affine",
+  "family_group": "broad_positive_affine_transfer",
+  "direction": "positive",
+  "submission_id": 1495096,
+  "file": "blend_best_crossg3_season_affine1165m300_skip1_6_12.csv",
+  "score": 0.6329965062,
+  "one_minus_nmae": 0.8691989122,
+  "ficr": 0.3967941001,
+  "score_delta_vs_best": -0.0087506565,
+  "changed_ratio": 0.7479452054794521,
+  "submitted_at": "2026-07-18 14:58:28"
+}

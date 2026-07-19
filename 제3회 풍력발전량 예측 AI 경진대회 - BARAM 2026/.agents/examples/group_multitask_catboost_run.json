@@ -1,0 +1,27 @@
+{
+  "hypothesis_id": 3,
+  "parent_run_id": 1,
+  "module": "experiments.group_multitask_catboost",
+  "args": [
+    "--artifact-dir",
+    "artifacts_final/agent_service/runs/{run_id}/group_multitask_catboost",
+    "--agent-evaluation-output",
+    "artifacts_final/agent_service/runs/{run_id}/evaluation.json"
+  ],
+  "report_path": "artifacts_final/agent_service/runs/{run_id}/group_multitask_catboost/group_multitask_catboost_report.json",
+  "evaluation_path": "artifacts_final/agent_service/runs/{run_id}/evaluation.json",
+  "timeout_seconds": 7200,
+  "validation_plan_id": 1,
+  "input_paths": [
+    "artifacts_final/feature_cache/features_train.pkl",
+    "artifacts_final/lineage/exact_driver_oof.npz",
+    "artifacts_final/meta_gate/meta_gate_cache.npz",
+    "artifacts_final/agent_service/runs/1/physical_catboost/physical_catboost_cache.npz",
+    "data/train/train_labels.csv"
+  ],
+  "tags": {
+    "stage": "structural_transfer_diagnostic",
+    "target": "kpx_group_3"
+  },
+  "change_summary": "Replace the single-output group-3 CatBoost with capacity-normalized shared trees trained by MultiRMSEWithMissingValues, using observed group-1/2 labels in 2022 while group-3 remains missing."
+}
