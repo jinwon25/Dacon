@@ -495,8 +495,18 @@ def main() -> None:
     parser.add_argument("--bootstrap-samples", type=int, default=2_000)
     args = parser.parse_args()
 
+    observation_path = (
+        args.observation_features
+        if args.observation_features.is_absolute()
+        else ROOT / args.observation_features
+    )
+    manifest_path = (
+        args.manifest if args.manifest.is_absolute() else ROOT / args.manifest
+    )
+    output_path = args.output if args.output.is_absolute() else ROOT / args.output
+
     observations, manifest_validation = load_observation_features(
-        args.observation_features, args.manifest
+        observation_path, manifest_path
     )
     index, truth, all_experts = load_experts()
     experts = {name: all_experts[name] for name in RETAINED_EXPERTS}
@@ -573,7 +583,7 @@ def main() -> None:
         }
 
     report = {
-        "method": "causal KMA ASOS group-3 six-hour utility router",
+        "method": "causal issue-time observation group-3 six-hour utility router",
         "contract": {
             "dependency_unit": "one issue cycle and one six-hour lead phase",
             "observation_boundary": "latest observation plus conservative lag <= issue time",
@@ -615,8 +625,8 @@ def main() -> None:
             reverse=True,
         )[:5],
     }
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
         json.dumps(_to_builtin(report), ensure_ascii=False, indent=2), encoding="utf-8"
     )
     print(
@@ -633,7 +643,7 @@ def main() -> None:
             indent=2,
         )
     )
-    print(f"Wrote {args.output.relative_to(ROOT)}")
+    print(f"Wrote {output_path.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":
