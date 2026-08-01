@@ -236,7 +236,7 @@ artifacts_final/
     kma_multiyear_active_reconciliation_20260802.json
 ```
 
-최종본이 따로 존재하는 smoke 보고서 7개, `base_v2/smoke`, 2022 KMA smoke
+최종본이 따로 존재하는 smoke 보고서 6개, `base_v2/smoke`, 2022 KMA smoke
 다운로드, 빈 실행 로그 2개를 삭제했다. Python `__pycache__`와 pytest cache도
 최종 테스트 이후 삭제한다. 기존 연구 코드·보고서·candidate는 사용자 작업과
 공개 실패 계보를 보존하기 위해 임의로 이동하거나 삭제하지 않는다.
