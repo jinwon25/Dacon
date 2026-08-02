@@ -115,3 +115,74 @@ the locked G3 stress tests are materially stronger than the rejected options.
 The first result determines the next dose update. A positive result below
 0.650 supports another locally bounded factor step; a regression freezes the
 new G3 dose and falls back to the G2-only anchor.
+
+## Submission 1508378 observation
+
+The selected joint candidate was submitted as 1508378 and established another
+public best:
+
+| Submission | Score | 1-NMAE | FiCR |
+| --- | ---: | ---: | ---: |
+| 1508365, G2 0.095 / G3 1.00x | 0.6470679857 | 0.8759467997 | 0.4181891717 |
+| 1508378, G2 0.1825 / G3 1.25x | 0.6474693752 | 0.8759267969 | 0.4190119536 |
+| Delta | +0.0004013895 | -0.0000200028 | +0.0008227819 |
+
+The factor direction is confirmed, but the public score and FiCR response was
+only about 18--19% of the corresponding full-year OOF response. The current
+1-NMAE implies that score 0.650 now requires FiCR 0.4240732031, leaving a
+FiCR gap of 0.0050612495. Repeated extrapolation of the same joint direction
+cannot credibly close that gap without first separating its two components.
+
+## Post-1508378 breakthrough audit
+
+Three routes were checked without using the public score for policy selection.
+
+1. A 180-candidate stabilizer grid mixed the legacy exact driver and the
+   issue-trajectory TCN around the new G1/G2/G3 anchor. No candidate passed
+   the Q1 component and monthly gates.
+2. A 280-candidate mechanism-diversity grid tested the exact driver, SCADA
+   stack, LDAPS multiresolution surface, and issue-trajectory TCN by group and
+   dose. Five candidates passed Q1, none transferred through Q2. Six
+   retrospective all-period nonnegative points existed only at tiny doses;
+   their full-year gains were on the order of `1e-5`, below submission value.
+3. The retained lineage was audited for a full-season, incumbent-matched 2023
+   OOF surface. The nested Base-v2 cache starts at 2023-12-01 and all exact
+   incumbent-matched caches cover 2024 only. A defensible conditional
+   distribution or direct-utility retry therefore requires rebuilding an
+   earlier year-forward baseline, not retuning the already exposed 2024 H2.
+
+This agrees with external wind-forecasting evidence: weather ensembles and
+probabilistic post-processing can improve point decisions, but the final power
+ensemble must be calibrated, and a market objective should choose an action
+from the conditional distribution rather than blindly optimizing MAE.
+
+- Bruninx et al., [Probabilistic Wind Power Forecasting with Tree-Based
+  Machine Learning and Weather Ensembles](https://arxiv.org/abs/2602.13010)
+- Muñoz et al., [Feature-driven Improvement of Renewable Energy Forecasting
+  and Trading](https://arxiv.org/abs/1907.07580)
+- Phipps et al., [Evaluating Ensemble Post-Processing for Wind Power
+  Forecasts](https://arxiv.org/abs/2009.14127)
+
+## Next factorial probe after 1508378
+
+Submit the already validated G2-only anchor:
+
+`artifacts_final/candidates/public_positive_g1w1375_g2w1825_g3frozen_20260802.csv`
+
+Suggested title: `Public Positive G1w1375 G2w1825 G3 Frozen`
+
+SHA-256:
+`8056206176d12f21f72fda14fba8fa3b19bcc8a6da7d8a6e389b9e28a40c4902`
+
+Let `A` be submission 1508365, `B` submission 1508378, and `C` this G2-only
+probe. Because G2 and G3 are different official macro groups, the exact public
+component effects are:
+
+- additional G2 dose: `C - A`
+- additional G3 dose: `B - C`
+- checksum: `(C - A) + (B - C) = B - A`
+
+Only one submission is needed to identify both effects. If `C > B`, G3 1.25x
+is removed. If `C < A`, the extra G2 dose is removed. If `A < C < B`, both
+directions are positive and the stronger component receives the next bounded
+dose. This preserves the remaining daily slots for an evidence-based update.
