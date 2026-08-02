@@ -186,3 +186,100 @@ Only one submission is needed to identify both effects. If `C > B`, G3 1.25x
 is removed. If `C < A`, the extra G2 dose is removed. If `A < C < B`, both
 directions are positive and the stronger component receives the next bounded
 dose. This preserves the remaining daily slots for an evidence-based update.
+
+## Submission 1508386 factorial result
+
+The G2-only probe was submitted as 1508386 and narrowly exceeded the joint
+G2/G3 candidate:
+
+| Submission | G2 dose | G3 dose | Score | 1-NMAE | FiCR |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 1508365 (A) | 0.0950 | 1.00x | 0.6470679857 | 0.8759467997 | 0.4181891717 |
+| 1508378 (B) | 0.1825 | 1.25x | 0.6474693752 | 0.8759267969 | 0.4190119536 |
+| 1508386 (C) | 0.1825 | 1.00x | 0.6474704399 | 0.8761125755 | 0.4188283043 |
+
+The exact public factor effects are therefore:
+
+| Isolated effect | Score | 1-NMAE | FiCR |
+| --- | ---: | ---: | ---: |
+| Additional G2 dose, `C - A` | +0.0004024542 | +0.0001657758 | +0.0006391326 |
+| G3 1.25x, `B - C` | -0.0000010647 | -0.0001857786 | +0.0001836493 |
+
+G3 1.25x buys FiCR by giving back almost exactly the same amount of nMAE and
+is net negative. G3 is frozen at 1.00x. The meaningful public gain comes from
+G2, for which the nMAE response is also positive. At submission 1508386's
+1-NMAE, score 0.650 requires FiCR `0.4238874245`; the remaining FiCR gap is
+`0.0050591202`.
+
+## Incremental G2 fail-closed gate
+
+A dense locked-OOF grid searched G2 weights from 0.1850 to 0.3000 relative to
+the scored 0.1825 anchor. The apparent full-year peak was 0.2350, but its
+incremental gain was only `+0.0000537` locally and did not transfer by period:
+
+- Q1 score improved approximately `+0.0005844`.
+- Q2 score fell approximately `-0.0000311`.
+- H2 score fell approximately `-0.0001875`.
+
+No searched weight passed the Q2/H2/full/month gates. For weight 0.2350, the
+minimum 5% lower bounds across 5,000 complementary subset draws and 2,000 H2
+issue-block bootstraps were score `-0.0010557`, 1-NMAE `-0.0001371`, and FiCR
+`-0.0020532`. The public component calibration was deliberately disabled for
+selection because the local nMAE calibration delta and the observed public
+nMAE delta have opposite signs. G2 is frozen at 0.1825.
+
+## Independent prior-year OOF
+
+To test whether the FiCR-oriented G2 quantile mechanism was repeatable, a new
+causal group-2 OOF surface was built for the four 2023 issue seasons. Each
+outer season was excluded from alpha, train-row policy, early-stopping, and
+iteration selection. The diagnostic used a reduced base-feature profile with
+alpha 0.65/0.70 and one fixed seed; it created neither test predictions nor a
+submission.
+
+| 2023 outer season | Quantile minus L1 score |
+| --- | ---: |
+| DJF | +0.027242 |
+| MAM | +0.021643 |
+| JJA | -0.007939 |
+| SON | +0.016423 |
+| Full prior year | +0.017050 |
+
+The full-year component deltas were 1-NMAE `-0.007328` and FiCR `+0.041429`.
+The season-stratified issue-block bootstrap was positive in 100% of 2,000
+draws with a score 5% lower bound of `+0.007753`. This confirms the broad G2
+quantile/FiCR mechanism in another year, but the negative JJA result explains
+why unrestricted dose escalation is unstable.
+
+## Seasonal policy transfer audit
+
+Three increasingly narrow additions above 0.1825 were then checked on both
+2023 and 2024 OOF:
+
+- January--March weight 0.2350: positive annual mean in both years, but March
+  2024 was negative and every required resampling lower bound failed.
+- January--February weight 0.2350: positive annual mean in both years, but
+  score and FiCR 5% lower bounds remained negative.
+- February-only weight 0.2350: 2023 score `+0.000257` and 2024 score
+  `+0.000096`, but the 2023 score/FiCR lower bounds and both-year FiCR lower
+  bounds were negative.
+
+A policy selected only on 2023 (`DJF/MAM/SON=0.35`, `JJA=0.05`) gained
+`+0.004419` in 2023 but lost `-0.001521` on untouched 2024 validation. This
+closes calendar-season routing: the apparent monthly optimum is not stable
+across years.
+
+## Final decision for 2026-08-02
+
+Submission 1508386 remains the selected incumbent:
+
+`artifacts_final/candidates/public_positive_g1w1375_g2w1825_g3frozen_20260802.csv`
+
+SHA-256:
+`8056206176d12f21f72fda14fba8fa3b19bcc8a6da7d8a6e389b9e28a40c4902`
+
+No additional candidate passes the locked validation gates. The final daily
+slot should be preserved rather than spent on a projected `1e-4` gain with a
+negative resampling lower bound. The next model family must add genuinely new
+conditional-distribution or weather-ensemble information; further G2/G3 dose
+or calendar retuning is closed.
