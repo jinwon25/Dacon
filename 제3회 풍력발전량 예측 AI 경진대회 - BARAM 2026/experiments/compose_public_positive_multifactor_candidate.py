@@ -55,6 +55,13 @@ PUBLIC_INCUMBENT = {
     "one_minus_nmae": 0.8757842477,
     "ficr": 0.4164659352,
 }
+PUBLIC_OBSERVED_EXPANSION = {
+    "score": 0.6470679857,
+    "one_minus_nmae": 0.8759467997,
+    "ficr": 0.4181891717,
+}
+OBSERVED_G1_WEIGHT = 0.1375
+OBSERVED_G2_WEIGHT = 0.095
 PUBLIC_FACTOR_MACRO_DELTAS = {
     "kpx_group_1": {
         "score": 0.0003023555,
@@ -156,7 +163,9 @@ def _transfer_projection(
         for component in COMPONENTS
     }
     projected = {
-        component: float(PUBLIC_INCUMBENT[component] + total_increment[component])
+        component: float(
+            PUBLIC_INCUMBENT[component] + total_increment[component]
+        )
         for component in COMPONENTS
     }
     return {
@@ -169,6 +178,58 @@ def _transfer_projection(
             "Projection extrapolates two isolated public factor points using "
             "component-specific 2024-to-public transfer ratios. It is not an "
             "observed score and private transfer is not guaranteed."
+        ),
+    }
+
+
+def _joint_observed_projection(
+    candidate_delta: dict[str, float],
+    observed_local_delta: dict[str, float],
+) -> dict[str, Any]:
+    """Calibrate OOF deltas to the scored 1508365 joint expansion."""
+    observed_public_delta = {
+        component: float(
+            PUBLIC_OBSERVED_EXPANSION[component]
+            - PUBLIC_INCUMBENT[component]
+        )
+        for component in COMPONENTS
+    }
+    ratios: dict[str, float] = {}
+    projected_increment: dict[str, float] = {}
+    projected_metrics: dict[str, float] = {}
+    for component in COMPONENTS:
+        denominator = observed_local_delta[component]
+        if abs(denominator) <= 1e-12:
+            raise ValueError(
+                f"observed local delta is zero for {component}"
+            )
+        ratio = observed_public_delta[component] / denominator
+        ratios[component] = float(ratio)
+        projected_increment[component] = float(
+            candidate_delta[component] * ratio
+        )
+        projected_metrics[component] = float(
+            PUBLIC_INCUMBENT[component]
+            + projected_increment[component]
+        )
+    return {
+        "calibration_submission_id": 1508365,
+        "calibration_weights": {
+            "group1": OBSERVED_G1_WEIGHT,
+            "group2": OBSERVED_G2_WEIGHT,
+        },
+        "observed_public_delta": observed_public_delta,
+        "observed_local_delta": observed_local_delta,
+        "component_transfer_ratios": ratios,
+        "projected_macro_increment": projected_increment,
+        "projected_public_metrics": projected_metrics,
+        "projected_score_gap_to_065": float(
+            0.65 - projected_metrics["score"]
+        ),
+        "warning": (
+            "Projection assumes the component-specific OOF-to-public transfer "
+            "ratio observed at submission 1508365 remains stable along the "
+            "same two-factor direction. It is not an observed score."
         ),
     }
 
@@ -222,6 +283,20 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             weight=args.group2_weight,
             capacity=CAPACITY_KWH["kpx_group_2"],
         )
+        observed_g1_validation = apply_capped_residual_stack(
+            primary["kpx_group_1__reference"],
+            g1_control_validation,
+            residual["kpx_group_1__candidate"],
+            residual_weight=OBSERVED_G1_WEIGHT,
+            capacity=CAPACITY_KWH["kpx_group_1"],
+            movement_cap_ratio=0.05,
+        )
+        observed_g2_validation = apply_bounded_blend(
+            g2_control_validation,
+            primary["kpx_group_2__expert"],
+            weight=OBSERVED_G2_WEIGHT,
+            capacity=CAPACITY_KWH["kpx_group_2"],
+        )
 
     candidate = {target: active[target].copy() for target in TARGETS}
     candidate["kpx_group_1"] = g1_expanded_validation
@@ -271,6 +346,17 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         ),
     }
     projection = _transfer_projection(local_base, local_incremental)
+    observed_candidate = {
+        target: active[target].copy() for target in TARGETS
+    }
+    observed_candidate["kpx_group_1"] = observed_g1_validation
+    observed_candidate["kpx_group_2"] = observed_g2_validation
+    observed_local_delta = metric_delta(
+        truth, active, observed_candidate, full_rows
+    )
+    joint_projection = _joint_observed_projection(
+        period_deltas["full"], observed_local_delta
+    )
 
     iid = complementary_subset_stress_all(
         truth,
@@ -310,6 +396,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         base_weight=G1_BASE_WEIGHT,
         expanded_weight=args.group1_weight,
         capacity=CAPACITY_KWH["kpx_group_1"],
+        maximum_factor_ratio=args.maximum_factor_ratio,
     )
     output["kpx_group_2"] = expand_observed_factor(
         frames["group2_control"]["kpx_group_2"].to_numpy(dtype=float),
@@ -317,6 +404,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         base_weight=G2_BASE_WEIGHT,
         expanded_weight=args.group2_weight,
         capacity=CAPACITY_KWH["kpx_group_2"],
+        maximum_factor_ratio=args.maximum_factor_ratio,
     )
     if not np.array_equal(
         output["kpx_group_3"].to_numpy(dtype=float),
@@ -345,6 +433,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "group2_base_weight": G2_BASE_WEIGHT,
             "group2_expanded_weight": args.group2_weight,
             "group3_frozen": True,
+            "maximum_production_factor_ratio": args.maximum_factor_ratio,
             "public_score_used_for_factor_direction": True,
             "weights_selected_on_repeatedly_inspected_2024_surface": True,
             "test_actual_generation_used": False,
@@ -370,6 +459,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "movement": movement_summary(active, candidate),
         },
         "public_transfer_projection": projection,
+        "submission_1508365_calibrated_projection": joint_projection,
         "production_movement_vs_incumbent": movement_summary(
             production_active, production_candidate
         ),
@@ -381,7 +471,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         },
         "decision": (
             "controlled_public_probe_candidate"
-            if projection["projected_public_metrics"]["score"]
+            if joint_projection["projected_public_metrics"]["score"]
             > PUBLIC_INCUMBENT["score"]
             else "reject_nonpositive_projection"
         ),
@@ -441,6 +531,9 @@ def main() -> None:
     )
     parser.add_argument("--group1-weight", type=float, default=G1_EXPANDED_WEIGHT)
     parser.add_argument("--group2-weight", type=float, default=G2_EXPANDED_WEIGHT)
+    parser.add_argument(
+        "--maximum-factor-ratio", type=float, default=0.05
+    )
     parser.add_argument("--subset-repetitions", type=int, default=5_000)
     parser.add_argument("--bootstrap-repetitions", type=int, default=2_000)
     parser.add_argument("--seed", type=int, default=20260802)
@@ -472,6 +565,9 @@ def main() -> None:
                     "positive_score_months"
                 ],
                 "projection": report["public_transfer_projection"],
+                "submission_1508365_calibrated_projection": report[
+                    "submission_1508365_calibrated_projection"
+                ],
             },
             ensure_ascii=False,
             indent=2,
