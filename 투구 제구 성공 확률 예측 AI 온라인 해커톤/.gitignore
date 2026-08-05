@@ -1,0 +1,20 @@
+# Official/raw data and organizer artifacts
+data/
+baseline_submit/
+*.zip
+
+# Generated inference outputs and model artifacts
+output/
+model/*.txt
+model/*.json
+model/*.csv
+model/*.joblib
+
+# Local caches
+__pycache__/
+.pytest_cache/
+*.py[cod]
+
+# Keep the required experiment ledger despite repository-wide *.csv ignore.
+!reports/experiments.csv
+!reports/calibration_curve.csv
