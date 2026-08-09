@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import shutil
 import subprocess
@@ -18,7 +19,6 @@ import numpy as np
 import pandas as pd
 import psutil
 
-import script
 from src.metrics import validate_submission
 from src.package import verify_package
 
@@ -57,23 +57,6 @@ def validate(project: Path, zip_path: Path) -> None:
     if not pd.api.types.is_numeric_dtype(submission["control_success"]):
         raise ValueError("prediction column is not numeric")
 
-    # Same number of rows as the hidden evaluation set; these are training rows
-    # used only as a shape/runtime proxy, never to report predictive quality.
-    benchmark_start = time.perf_counter()
-    with PeakRss() as rss:
-        benchmark = pd.read_csv(
-            project / "data" / "train.csv",
-            encoding="utf-8-sig",
-            nrows=EVALUATION_ROWS,
-            low_memory=False,
-        ).drop(columns="control_success")
-        prediction = script.predict_dataframe(benchmark)
-    benchmark_seconds = time.perf_counter() - benchmark_start
-    if len(prediction) != EVALUATION_ROWS or not np.isfinite(prediction).all():
-        raise ValueError("representative-batch inference failed")
-    if ((prediction < 0.0) | (prediction > 1.0)).any():
-        raise ValueError("representative-batch probabilities out of range")
-
     # Test the actual archive from an unrelated cwd. Evaluation data is placed
     # next to extracted script.py, matching the official mount contract.
     with tempfile.TemporaryDirectory(prefix="aimers9_verify_") as temp_name:
@@ -95,13 +78,41 @@ def validate(project: Path, zip_path: Path) -> None:
         validate_submission(archived_submission, test["row_id"])
         archive_smoke_stdout = completed.stdout.strip()
 
+        # Import the extracted script so the representative benchmark uses the
+        # exact ZIP models rather than whichever artifacts happen to be in the
+        # project-level model directory.
+        module_spec = importlib.util.spec_from_file_location(
+            "submission_package_script", extracted / "script.py"
+        )
+        if module_spec is None or module_spec.loader is None:
+            raise RuntimeError("could not import extracted submission script")
+        submission_script = importlib.util.module_from_spec(module_spec)
+        module_spec.loader.exec_module(submission_script)
+        benchmark_start = time.perf_counter()
+        with PeakRss() as rss:
+            benchmark = pd.read_csv(
+                project / "data" / "train.csv",
+                encoding="utf-8-sig",
+                nrows=EVALUATION_ROWS,
+                low_memory=False,
+            ).drop(columns="control_success")
+            prediction = submission_script.predict_dataframe(benchmark)
+        benchmark_seconds = time.perf_counter() - benchmark_start
+        if len(prediction) != EVALUATION_ROWS or not np.isfinite(prediction).all():
+            raise ValueError("representative-batch inference failed")
+        if ((prediction < 0.0) | (prediction > 1.0)).any():
+            raise ValueError("representative-batch probabilities out of range")
+        ensemble = json.loads(
+            (extracted / "model" / "ensemble.json").read_text(encoding="utf-8")
+        )
+        hybrid_present = (extracted / "model" / "hybrid.json").exists()
+        script_text = (extracted / "script.py").read_text(encoding="utf-8").lower()
+
     with zipfile.ZipFile(zip_path) as archive:
         compressed_mb = zip_path.stat().st_size / (1024.0**2)
         uncompressed_mb = sum(item.file_size for item in archive.infolist()) / (1024.0**2)
         members = archive.namelist()
 
-    ensemble = json.loads((project / "model" / "ensemble.json").read_text(encoding="utf-8"))
-    script_text = (project / "script.py").read_text(encoding="utf-8").lower()
     forbidden_network_tokens = ["requests.", "urllib.request", "http://", "https://", "socket."]
     network_free = not any(token in script_text for token in forbidden_network_tokens)
     forbidden_test_stats = ["groupby(", "value_counts(", ".rank(", ".rolling(", ".expanding("]
@@ -126,7 +137,7 @@ def validate(project: Path, zip_path: Path) -> None:
 - 평가 28GB RAM 제한 대비: **통과**
 - 인터넷 호출 정적 검사: **없음**
 - test 내부 groupby/value_counts/rank/rolling/expanding 정적 검사: **없음**
-- 최종 feature set: **{ensemble['feature_set']}**; test 전체 통계 사용: **없음**
+- 최종 feature set: **{ensemble['feature_set']}{' + hybrid' if hybrid_present else ''}**; test 전체 통계 사용: **없음**
 - 검증 환경: Python **{sys.version.split()[0]}**, pandas **{pd.__version__}**, numpy **{np.__version__}**, LightGBM **{lightgbm.__version__}**
 
 주의: 대표 배치는 실제 비공개 target이 없는 관계로 학습 데이터의 첫 {EVALUATION_ROWS:,}행을 오직 실행 시간·메모리·shape 검증에만 사용했다. 이 배치에서 성능 점수는 계산하지 않았다.

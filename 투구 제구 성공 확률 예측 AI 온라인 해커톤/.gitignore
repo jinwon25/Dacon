@@ -18,3 +18,32 @@ __pycache__/
 # Keep the required experiment ledger despite repository-wide *.csv ignore.
 !reports/experiments.csv
 !reports/calibration_curve.csv
+!reports/submissions.csv
+!reports/walk_forward_results.csv
+!reports/brier_decomposition.csv
+!reports/calibration_results.csv
+!reports/ensemble_results.csv
+!reports/ensemble_parameters.csv
+!reports/reliability_tables.csv
+!reports/segment_results.csv
+!reports/bootstrap_results.csv
+!reports/wave0_correlations.csv
+!reports/base_rate_forecasts.csv
+!reports/model_diversity.csv
+!reports/damped_bootstrap_audit.csv
+!reports/reproducibility_manifest.csv
+!reports/domain_segment_rates.csv
+!reports/domain_feature_screen.csv
+!reports/domain_game_type_errors.csv
+!reports/domain_game_type_regime.csv
+!reports/domain_drift_results.csv
+!reports/domain_drift_offsets.csv
+!reports/domain_drift_bootstrap.csv
+!reports/domain_drift_monthly.csv
+!reports/rf_seed_results.csv
+!reports/rf_seed_bootstrap.csv
+!reports/domain_feature_results.csv
+
+# Follow-up OOF/model caches are reproducible and can be large.
+artifacts/followup/oof/
+artifacts/followup/models/

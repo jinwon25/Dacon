@@ -77,8 +77,9 @@ def _brier_eval(prediction: np.ndarray, dataset: lgb.Dataset):
 
 
 def _base_lgb_params(variant: dict[str, Any], seed: int = SEED) -> dict[str, Any]:
+    seed = int(variant.get("seed", seed))
     return {
-        "objective": "binary",
+        "objective": variant.get("objective", "binary"),
         "metric": "None",
         "verbosity": -1,
         "num_threads": 6,
@@ -107,9 +108,14 @@ def train_lgb_holdout(
     max_rounds: int,
     early_stopping_rounds: int,
     trackman_context: pd.DataFrame | None,
+    sample_weight: np.ndarray | None = None,
 ) -> dict[str, Any]:
     feature_set = variant["feature_set"]
-    builder = FeatureBuilder(feature_set=feature_set, trackman_context=trackman_context)
+    builder = FeatureBuilder(
+        feature_set=feature_set,
+        trackman_context=trackman_context,
+        drop_columns=list(variant.get("drop_columns", [])),
+    )
     y_train = train.iloc[train_idx][TARGET_COL].to_numpy(dtype=np.int8)
     y_valid = train.iloc[valid_idx][TARGET_COL].to_numpy(dtype=np.int8)
     builder.fit(train.iloc[train_idx], y_train)
@@ -122,6 +128,7 @@ def train_lgb_holdout(
         dtrain = lgb.Dataset(
             x_train,
             label=y_train,
+            weight=sample_weight,
             categorical_feature=categorical,
             free_raw_data=True,
         )
@@ -148,6 +155,8 @@ def train_lgb_holdout(
         fit_seconds = time.perf_counter() - fit_start
         inference_start = time.perf_counter()
         prediction = booster.predict(x_valid, num_iteration=booster.best_iteration)
+        if variant.get("objective") == "regression":
+            prediction = np.clip(prediction, 1e-6, 1.0 - 1e-6)
         inference_seconds = time.perf_counter() - inference_start
         model_size_mb = len(booster.model_to_string(num_iteration=booster.best_iteration).encode("utf-8")) / (1024.0**2)
         feature_names = x_train.columns.tolist()
@@ -170,7 +179,7 @@ def train_lgb_holdout(
     }
 
 
-def make_official_rf(features: list[str]) -> Pipeline:
+def make_official_rf(features: list[str], random_state: int = SEED) -> Pipeline:
     numeric = [col for col in features if col not in RF_CAT_COLS]
     preprocessor = ColumnTransformer(
         [
@@ -192,7 +201,7 @@ def make_official_rf(features: list[str]) -> Pipeline:
                     max_depth=10,
                     min_samples_leaf=200,
                     n_jobs=6,
-                    random_state=SEED,
+                    random_state=random_state,
                 ),
             ),
         ]
@@ -204,11 +213,22 @@ def train_rf_holdout(
     train_idx: np.ndarray,
     valid_idx: np.ndarray,
     features: list[str],
+    random_state: int = SEED,
+    sample_weight: np.ndarray | None = None,
 ) -> dict[str, Any]:
-    model = make_official_rf(features)
+    model = make_official_rf(features, random_state=random_state)
     with MemoryMonitor() as monitor:
         start = time.perf_counter()
-        model.fit(train.iloc[train_idx][features], train.iloc[train_idx][TARGET_COL])
+        fit_params = (
+            {"clf__sample_weight": sample_weight}
+            if sample_weight is not None
+            else {}
+        )
+        model.fit(
+            train.iloc[train_idx][features],
+            train.iloc[train_idx][TARGET_COL],
+            **fit_params,
+        )
         fit_seconds = time.perf_counter() - start
         start = time.perf_counter()
         prediction = model.predict_proba(train.iloc[valid_idx][features])[:, 1]

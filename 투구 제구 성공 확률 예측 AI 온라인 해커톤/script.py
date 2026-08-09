@@ -62,7 +62,7 @@ def build_features(frame: pd.DataFrame, spec: dict) -> pd.DataFrame:
     feature_set = spec["feature_set"]
     if feature_set == "no_asof":
         out = out.drop(columns=[column for column in out if column.startswith("asof_")])
-    if feature_set in {"engineered", "trackman"}:
+    if feature_set in {"engineered", "trackman", "trackman_pitcher"}:
         count = _safe_string(out["balls_before"]) + "-" + _safe_string(out["strikes_before"])
         out["count_state"] = count
         out["platoon"] = _safe_string(out["pitcher_hand"]) + "-" + _safe_string(out["batter_hand"])
@@ -117,6 +117,20 @@ def build_features(frame: pd.DataFrame, spec: dict) -> pd.DataFrame:
         ).sort_values("__row_order", kind="stable")
         out = out.drop(columns="__row_order").reset_index(drop=True)
         out["tm_context_missing"] = out["tm_context_n"].isna().astype("int8")
+    if feature_set == "trackman_pitcher":
+        profile = pd.read_csv(MODEL_DIR / "trackman_pitcher_profiles.csv")
+        out["__row_order"] = np.arange(len(out))
+        out = out.merge(
+            profile,
+            on=["season", "pitcher_id"],
+            how="left",
+            sort=False,
+            validate="many_to_one",
+        ).sort_values("__row_order", kind="stable")
+        out = out.drop(columns="__row_order").reset_index(drop=True)
+        out["tm_pitcher_profile_missing"] = (
+            out["tm_linked"].isna() | (out["tm_linked"] <= 0)
+        ).astype("int8")
 
     category_maps = spec["category_maps"]
     for column in spec["categorical_columns"]:
@@ -153,6 +167,30 @@ def apply_calibration(probability: np.ndarray, calibration: dict, global_rate: f
     raise ValueError(f"unknown calibration method: {method}")
 
 
+def apply_optional_game_type_offsets(
+    probability: np.ndarray, frame: pd.DataFrame
+) -> np.ndarray:
+    """Apply frozen train-only offsets; each row depends only on its game_type."""
+    artifact = MODEL_DIR / "game_type_offsets.json"
+    if not artifact.exists():
+        return probability
+    spec = json.loads(artifact.read_text(encoding="utf-8"))
+    if spec.get("method") != "game_type_logit_offset":
+        raise ValueError("unsupported game_type offset artifact")
+    if "game_type" not in frame.columns:
+        raise ValueError("test is missing game_type")
+    output = np.asarray(probability, dtype=np.float64).copy()
+    game_type = frame["game_type"].astype("string").fillna("__MISSING__")
+    for value, raw_offset in spec["offsets"].items():
+        offset = float(raw_offset)
+        mask = game_type.eq(str(value)).to_numpy()
+        if mask.any() and offset != 0.0:
+            clipped = np.clip(output[mask], 1e-6, 1.0 - 1e-6)
+            logit = np.log(clipped / (1.0 - clipped)) + offset
+            output[mask] = 1.0 / (1.0 + np.exp(-np.clip(logit, -40.0, 40.0)))
+    return output
+
+
 def predict_dataframe(frame: pd.DataFrame) -> np.ndarray:
     feature_spec = json.loads((MODEL_DIR / "feature_spec.json").read_text(encoding="utf-8"))
     ensemble = json.loads((MODEL_DIR / "ensemble.json").read_text(encoding="utf-8"))
@@ -169,6 +207,7 @@ def predict_dataframe(frame: pd.DataFrame) -> np.ndarray:
     )
     weights = ensemble["weights"]
     prediction = float(weights["lightgbm"]) * calibrated
+    rf_probability = None
     if float(weights["hierarchical_prior"]) > 0.0:
         prediction += float(weights["hierarchical_prior"]) * hierarchical_prior(
             frame,
@@ -187,7 +226,90 @@ def predict_dataframe(frame: pd.DataFrame) -> np.ndarray:
             float(ensemble["global_rate"]),
         )
         prediction += float(weights["random_forest"]) * rf_probability
-    prediction = np.asarray(prediction, dtype=np.float64)
+    hybrid_path = MODEL_DIR / "hybrid.json"
+    if hybrid_path.exists():
+        if rf_probability is None:
+            raise ValueError("hybrid candidate requires incumbent random forest")
+        import joblib
+
+        hybrid = json.loads(hybrid_path.read_text(encoding="utf-8"))
+        candidate_prediction = np.asarray(prediction, dtype=np.float64).copy()
+        regular = frame["game_type"].astype("string").fillna("__MISSING__").eq(
+            str(
+                hybrid.get(
+                    "r_only_apply_game_type",
+                    hybrid.get("recency_apply_game_type", "R"),
+                )
+            )
+        ).to_numpy()
+        if hybrid.get("r_only_rf_model"):
+            r_only_rf = joblib.load(MODEL_DIR / hybrid["r_only_rf_model"])
+            r_only_probability = r_only_rf.predict_proba(
+                frame[ensemble["official_features"]]
+            )[:, 1]
+            r_only_probability = apply_calibration(
+                np.asarray(r_only_probability, dtype=float),
+                hybrid.get("r_only_rf_calibration", {"method": "identity"}),
+                float(ensemble["global_rate"]),
+            )
+            r_only_weight = float(hybrid.get("r_only_weight", 0.0))
+            candidate_prediction[regular] = (
+                (1.0 - r_only_weight) * candidate_prediction[regular]
+                + r_only_weight * r_only_probability[regular]
+            )
+        elif hybrid.get("recency_rf_model"):
+            weighted_rf = joblib.load(MODEL_DIR / hybrid["recency_rf_model"])
+            weighted_rf_probability = weighted_rf.predict_proba(
+                frame[ensemble["official_features"]]
+            )[:, 1]
+            weighted_rf_probability = apply_calibration(
+                np.asarray(weighted_rf_probability, dtype=float),
+                ensemble.get("rf_calibration", {"method": "identity"}),
+                float(ensemble["global_rate"]),
+            )
+            candidate_prediction[regular] += float(weights["random_forest"]) * (
+                weighted_rf_probability[regular] - rf_probability[regular]
+            )
+
+        trackman_weight = float(hybrid.get("trackman_weight", 0.0))
+        if trackman_weight > 0.0:
+            trackman_spec = json.loads(
+                (MODEL_DIR / hybrid["trackman_feature_spec"]).read_text(
+                    encoding="utf-8"
+                )
+            )
+            trackman_features = build_features(frame, trackman_spec)
+            trackman_booster = lgb.Booster(
+                model_str=(MODEL_DIR / hybrid["trackman_lgb_model"]).read_text(
+                    encoding="utf-8"
+                )
+            )
+            trackman_raw = trackman_booster.predict(
+                trackman_features,
+                num_iteration=int(hybrid["trackman_num_iterations"]),
+            )
+            drift_predictions = [
+                apply_calibration(
+                    np.asarray(trackman_raw, dtype=float),
+                    {"method": "logit_offset", "offset": float(offset)},
+                    float(trackman_spec["global_rate"]),
+                )
+                for offset in hybrid["trackman_drift_offsets"]
+            ]
+            trackman_probability = np.average(
+                np.column_stack(drift_predictions),
+                axis=1,
+                weights=np.asarray(hybrid["trackman_drift_weights"], dtype=float),
+            )
+            prediction = (
+                (1.0 - trackman_weight) * candidate_prediction
+                + trackman_weight * trackman_probability
+            )
+        else:
+            prediction = candidate_prediction
+    prediction = apply_optional_game_type_offsets(
+        np.asarray(prediction, dtype=np.float64), frame
+    )
     if not np.isfinite(prediction).all():
         raise ValueError("prediction contains NaN or infinite values")
     return np.clip(prediction, 0.0, 1.0)
