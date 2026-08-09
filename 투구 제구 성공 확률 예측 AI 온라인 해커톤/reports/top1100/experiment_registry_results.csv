@@ -1,0 +1,5 @@
+experiment_id,outer_period,train_cap,brier,score_equivalent,seconds,outer_target_used_for_selection,gate_result,termination_reason
+SCREEN_P0A_LGB_2024,2024,1200000,0.249260507,218.7367,43.87,false,FAIL,"screen did not establish honest nested improvement"
+SCREEN_CATBOOST_2024,2024,180000,0.248273754,613.7432,102.20,false,RETAIN_RESEARCH,"2024 signal; multi-year nested metrics not yet evaluable"
+SCREEN_FM_2024,2024,250000,0.448299226,0.0,31.46,false,FAIL,"probability saturation and severe Brier degradation"
+SCREEN_DYNAMIC_LOGIT_2024,2024,300000,0.343705606,0.0,11.46,false,FAIL,"poor probability fit"

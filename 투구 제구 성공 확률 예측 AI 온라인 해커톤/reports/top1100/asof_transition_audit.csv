@@ -1,0 +1,5 @@
+check,n_checked,n_pass,pass_rate,max_abs_error
+pitcher_next_n_delta_1,1473508,1473508,1.0,0.0
+next_success_rate_transition_within_display_precision,1473508,1472554,0.9993525654424679,0.014615000000048894
+pitcher_season_n_nonnegative,1475092,1475092,1.0,0.0
+pitcher_season_success_count_nonnegative,1009063,1009063,1.0,0.0
