@@ -35,6 +35,8 @@
 
 최신 2023/2024 forward 검증에서 enriched profile 전체를 넣은 대체 LGB는 각각 Brier 0.251331/0.249038로 incumbent 0.251137/0.248461보다 악화됐다. 작은 1~10% 잔차 블렌드도 2024에서 개선되지 않았다. 따라서 이 프로파일은 분석 자산으로 보존하되 다음 제출에 포함하지 않는다.
 
+추가로 `src/target_encoding.py`의 prequential 수축률(투수×카운트, 투수×타자손, 타자×카운트 등)을 시험했다. 2023은 Brier 0.251050으로 incumbent보다 -0.000087 개선됐지만, 2024는 자체 최적 offset에서도 0.249343으로 +0.000882 악화됐다. 연도 일반화가 없어 제출 후보에서 제외했다.
+
 ## 4. 도메인 지식과 외부 방법론의 적용 판단
 
 릴리스 포인트 변동성과 pitch mechanics의 일관성이 location consistency와 관련된다는 biomechanics/TrackMan 연구 결과는 타당하다. 다만 이 대회에서는 직접 투수 ID가 없고 매칭 불확실성이 크므로, 평균 구속을 모델 입력으로 대체하는 대신 고신뢰 매칭에 한해 residual prior로 제한해야 한다. Trackman의 속도·회전·movement·release point가 sequencing 분석에 쓰인다는 공식 설명도 같은 방향을 지지한다.
@@ -63,4 +65,3 @@ TabM은 parameter-efficient MLP ensemble, TabR은 retrieval/nearest-neighbor 성
 - Pitch command biomechanics: https://pubmed.ncbi.nlm.nih.gov/31449438/
 - TrackMan release parameters와 location consistency: https://www.tandfonline.com/doi/abs/10.1080/02640414.2020.1868679
 - Context-enhanced deep pitch-location prediction: https://link.springer.com/article/10.1007/s12283-025-00497-5
-
