@@ -13,5 +13,13 @@
     0.5,
     0.5
   ],
-  "selection_scope": "cached 2021-2024 walk-forward OOF; no test rows"
+  "selection_scope": "cached 2021-2024 walk-forward OOF; no test rows",
+  "public_probe": {
+    "submission_id": 45330,
+    "submitted_at": "2026-08-12 22:00:33",
+    "public_score": 754.3580670546,
+    "parent_public_score": 763.2665303697,
+    "public_delta_vs_parent": -8.9084633151,
+    "decision": "reject_for_champion_deployment"
+  }
 }

@@ -16,4 +16,11 @@
 - Recency-weighted delta: **-0.000531133**
 - Worst-fold delta: **-0.000066717**
 - Combined pitcher-season bootstrap P(improve): **1.0000**
-- This is a local OOF research candidate; the public score is not claimed until a DACON submission is made.
+- Local OOF research candidate was submitted as DACON submission **45330** (`submission7 edit`) on 2026-08-12.
+
+## Public probe result
+
+- Public score: **754.3580670546**
+- Parent `submit_v2.zip`: **763.2665303697**
+- Public delta versus parent: **-8.9084633151**
+- Decision: **reject for champion deployment; retain `submit_v2.zip` as the verified public champion**.
