@@ -1,0 +1,16 @@
+{
+  "candidate": "game_type_trackman_f100_r10_v1",
+  "output_name": "submit_game_type.zip",
+  "package_path": "E:\\학업\\교외 활동\\대외 활동\\공모전\\데이콘\\.git-worktrees\\aimers-clean-20260809\\투구 제구 성공 확률 예측 AI 온라인 해커톤\\submit_game_type.zip",
+  "package_sha256": "99C8A68AAE4095162A018FD3DDB0DA434BE27DE12CEAB7574C7C49F153078A58",
+  "source_name": "submit_v2.zip",
+  "source_sha256": "FE368AF109EF0BB8103D728F45794A6192599B691BF08DF02A22F31BD2D438A7",
+  "trackman_default_weight": 0.0,
+  "trackman_weight_by_game_type": {
+    "F": 1.0,
+    "R": 0.1
+  },
+  "local_validation_report": "reports/game_type_trackman_candidate.md",
+  "public_score": null,
+  "selection_note": "Local OOF candidate only; incumbent public score remains the deployment reference."
+}

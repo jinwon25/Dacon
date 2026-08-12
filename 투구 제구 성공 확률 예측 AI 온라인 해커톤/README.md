@@ -8,7 +8,8 @@
 - 익명 투수의 연도별 구종 궤적을 이용한 Trackman 일대일 연결을 새로 구현했다. 직접 ID 교집합은 0%지만 고신뢰 연결의 2024→2025 유지율은 95.65%다.
 - R 전용 반감기 1년 RF 95% + rolling-damped Trackman LGB 5% 후보가 2021~2024 네 fold를 모두 개선하고 고정 게이트를 통과했다.
 - `submission3 edit` (ID 39023)이 `submit_v2.zip`으로 Public **763.2665303697**을 기록해 incumbent보다 **13.7415812732점** 높았다.
-- 후속 통제 후보 `submit_v3.zip`은 v2에서 Trackman blend만 5%→10%으로 바꾼 파일이다. SHA-256은 `6EE2CF45679F94C457A13B4FEFDCCADF3DF71E09B36F294CCF2A0EC6689C4579`이며 기존 ZIP을 덮어쓰지 않는다.
+- 후속 통제 후보 `submit_v3.zip`은 v2에서 Trackman blend만 5%→10%으로 바꾼 파일이며 Public 761.9846367188로 폐기했다. `submit_v4.zip`/`submit_v5.zip`의 R-only branch도 각각 743.6520325296/741.0198690607로 폐기했다.
+- 다음 사용 가능한 제출 파일명은 `submit_v6.zip`이다. 고정 nested Brier·parity gate를 통과한 경우에만 생성한다.
 - 최종 제출 ZIP 파일명은 40자 이내, 기본 형식은 `submit_vN.zip`으로 고정한다. 상세 규칙과 이력은 [제출 파일명·이력](reports/submission_naming.md)을 참조한다.
 
 ## 현재 결과

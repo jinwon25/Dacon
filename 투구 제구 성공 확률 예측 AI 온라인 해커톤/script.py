@@ -191,6 +191,33 @@ def apply_optional_game_type_offsets(
     return output
 
 
+def resolve_trackman_weights(frame: pd.DataFrame, hybrid: dict) -> np.ndarray:
+    """Resolve a scalar or row-local game-type Trackman blend weight.
+
+    The optional mapping is deliberately keyed only by ``game_type``.  It does
+    not inspect test frequencies, ordering, or any other batch-level statistic.
+    Existing packages without the mapping retain their scalar behavior.
+    """
+    default = float(hybrid.get("trackman_default_weight", hybrid.get("trackman_weight", 0.0)))
+    mapping = hybrid.get("trackman_weight_by_game_type")
+    if mapping is None:
+        weights = np.full(len(frame), default, dtype=np.float64)
+    else:
+        if not isinstance(mapping, dict):
+            raise ValueError("trackman_weight_by_game_type must be a mapping")
+        if not np.isfinite(default) or not 0.0 <= default <= 1.0:
+            raise ValueError("trackman default weight must be in [0, 1]")
+        weights = np.full(len(frame), default, dtype=np.float64)
+        game_type = frame["game_type"].astype("string").fillna("__MISSING__")
+        for value, raw_weight in mapping.items():
+            weight = float(raw_weight)
+            if not np.isfinite(weight) or not 0.0 <= weight <= 1.0:
+                raise ValueError("trackman game-type weights must be in [0, 1]")
+            mask = game_type.eq(str(value)).to_numpy()
+            weights[mask] = weight
+    return weights
+
+
 def predict_dataframe(frame: pd.DataFrame) -> np.ndarray:
     feature_spec = json.loads((MODEL_DIR / "feature_spec.json").read_text(encoding="utf-8"))
     ensemble = json.loads((MODEL_DIR / "ensemble.json").read_text(encoding="utf-8"))
@@ -271,8 +298,8 @@ def predict_dataframe(frame: pd.DataFrame) -> np.ndarray:
                 weighted_rf_probability[regular] - rf_probability[regular]
             )
 
-        trackman_weight = float(hybrid.get("trackman_weight", 0.0))
-        if trackman_weight > 0.0:
+        trackman_weights = resolve_trackman_weights(frame, hybrid)
+        if np.any(trackman_weights > 0.0):
             trackman_spec = json.loads(
                 (MODEL_DIR / hybrid["trackman_feature_spec"]).read_text(
                     encoding="utf-8"
@@ -302,8 +329,8 @@ def predict_dataframe(frame: pd.DataFrame) -> np.ndarray:
                 weights=np.asarray(hybrid["trackman_drift_weights"], dtype=float),
             )
             prediction = (
-                (1.0 - trackman_weight) * candidate_prediction
-                + trackman_weight * trackman_probability
+                (1.0 - trackman_weights) * candidate_prediction
+                + trackman_weights * trackman_probability
             )
         else:
             prediction = candidate_prediction

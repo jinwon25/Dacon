@@ -1,0 +1,17 @@
+{
+  "candidate": "game_type_trackman_f100_r10_v1",
+  "trackman_weight_by_game_type": {
+    "F": 1.0,
+    "R": 0.1
+  },
+  "trackman_default_weight": 0.0,
+  "rolling_methods": [
+    "damped_3_0.5",
+    "damped_3_0.8"
+  ],
+  "rolling_weights": [
+    0.5,
+    0.5
+  ],
+  "selection_scope": "cached 2021-2024 walk-forward OOF; no test rows"
+}

@@ -10,11 +10,12 @@
 
 - 현재 공개 챔피언: `submit_v2.zip`, Public 763.2665303697.
 - `submit_v3.zip`은 Trackman 10% probe로 761.9846367188을 기록했으므로 폐기한다.
-- 다음 통제 후보: `submit_v4.zip` (R-only RF 25%, Trackman 0%), `submit_v5.zip` (R-only RF 25% + Trackman 5%).
+- `submit_v4.zip` (743.6520325296)와 `submit_v5.zip` (741.0198690607)은 공개 하락으로 폐기했다.
+- 다음 사용 가능한 버전은 반드시 `submit_v6.zip`이다. 고정 gate 통과 전에는 ZIP을 생성하지 않는다.
 
 ## 의사결정 원칙
 
 - 한 제출에서는 변경 축을 하나만 분리하거나, 사전에 로컬 검증된 조합만 사용한다.
-- R-only RF 25%는 2021~2024 season-forward 검증에서 네 해 모두 개선했다.
-- Trackman은 공개 검증상 5%를 상한으로 두고 10% 이상으로 확대하지 않는다.
+- R-only RF 25%의 과거 frozen cache 개선은 후보별 독립 local Brier가 아니므로 v2 성분의 인과 근거로 사용하지 않는다.
+- v2 내부의 Trackman 5%와 R-recency를 보존하되, 10% 확대/R-only 패키지는 공개 하락으로 폐기한다.
 - 공개 결과가 로컬 검증과 다르면 공개 결과를 우선하고, 해당 가설을 폐기하거나 weight를 낮춘다.
