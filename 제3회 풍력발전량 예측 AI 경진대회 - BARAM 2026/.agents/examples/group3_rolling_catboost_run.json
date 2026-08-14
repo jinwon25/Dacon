@@ -1,0 +1,26 @@
+{
+  "hypothesis_id": 2,
+  "parent_run_id": 1,
+  "module": "experiments.group3_rolling_catboost_blend",
+  "args": [
+    "--artifact-dir",
+    "artifacts_final/agent_service/runs/{run_id}/rolling_catboost",
+    "--agent-evaluation-output",
+    "artifacts_final/agent_service/runs/{run_id}/evaluation.json"
+  ],
+  "report_path": "artifacts_final/agent_service/runs/{run_id}/rolling_catboost/rolling_catboost_blend_report.json",
+  "evaluation_path": "artifacts_final/agent_service/runs/{run_id}/evaluation.json",
+  "timeout_seconds": 7200,
+  "validation_plan_id": 1,
+  "input_paths": [
+    "artifacts_final/feature_cache/features_train.pkl",
+    "artifacts_final/lineage/exact_driver_oof.npz",
+    "artifacts_final/meta_gate/meta_gate_cache.npz",
+    "data/train/train_labels.csv"
+  ],
+  "tags": {
+    "stage": "bounded_child_validation",
+    "target": "kpx_group_3"
+  },
+  "change_summary": "Remove the failed physical features and bound the rolling CatBoost refresh with seed-consensus and 25% coverage gates."
+}

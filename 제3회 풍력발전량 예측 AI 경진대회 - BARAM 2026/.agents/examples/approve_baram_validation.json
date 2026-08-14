@@ -1,0 +1,8 @@
+{
+  "gate_type": "validation_strategy",
+  "subject_type": "validation_plan",
+  "subject_id": 1,
+  "decision": "approved",
+  "reviewer": "human",
+  "reason": "Exact OOF lineage and forward locking match the competition's grouped time-series structure."
+}

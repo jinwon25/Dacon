@@ -1,0 +1,11 @@
+{
+  "family": "phase_regime_cross_group",
+  "submission_id": 1494535,
+  "file": "blend_best_phase_regime_crossg3.csv",
+  "score": 0.6411378997,
+  "one_minus_nmae": 0.8756126769,
+  "ficr": 0.4066631226,
+  "score_delta_vs_best": -0.0005174729,
+  "changed_ratio": 0.8578,
+  "submitted_at": "2026-07-17 18:11:40"
+}

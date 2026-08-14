@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": 1,
+  "module": "experiments.phase_regime_cross_group",
+  "args": [
+    "--artifact-dir",
+    "artifacts_final/agent_service/runs/{run_id}/experiment",
+    "--output",
+    "submissions/agent_phase_regime_run{run_id}.csv",
+    "--agent-evaluation-output",
+    "artifacts_final/agent_service/runs/{run_id}/evaluation.json"
+  ],
+  "report_path": "artifacts_final/agent_service/runs/{run_id}/experiment/phase_regime_report.json",
+  "evaluation_path": "artifacts_final/agent_service/runs/{run_id}/evaluation.json",
+  "candidate_path": "submissions/agent_phase_regime_run{run_id}.csv",
+  "timeout_seconds": 3600,
+  "validation_plan_id": 1,
+  "change_summary": "Split the existing cross-group transfer by lead phase and weather regime only."
+}

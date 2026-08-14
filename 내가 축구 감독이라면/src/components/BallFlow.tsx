@@ -37,7 +37,7 @@ export default function BallFlow({ scenario }: { scenario: GuidedScenario }) {
   return (
     <section className="ball-flow panel">
       <header className="ball-flow-heading">
-        <div className="panel-title"><span>06</span><div><small>OBSERVED BALL FLOW · EVENT SEQUENCE</small><h2>{scenario.flow.title}</h2></div></div>
+        <div className="panel-title"><span>06</span><div><small>실제 볼 흐름 · 이벤트 순서</small><h2>{scenario.flow.title}</h2></div></div>
         <div className="flow-controls">
           <button type="button" onClick={() => { setPlaying(false); setStep(-1) }}>처음으로</button>
           <button className="flow-play" type="button" onClick={togglePlayback}>{playing ? '■ 일시정지' : '▶ 실제 흐름 재생'}</button>

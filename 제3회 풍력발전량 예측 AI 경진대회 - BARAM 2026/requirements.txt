@@ -1,5 +1,8 @@
 joblib==1.5.1
 lightgbm==4.6.0
+catboost==1.2.8
+xgboost==3.0.1
 numpy==2.2.6
 pandas==2.2.3
+eccodes==2.47.0
 scikit-learn==1.6.1

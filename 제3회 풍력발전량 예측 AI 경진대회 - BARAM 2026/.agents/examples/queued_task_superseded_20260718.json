@@ -1,0 +1,5 @@
+{
+  "status": "superseded",
+  "completed_by": "queue_audit_2026-07-18",
+  "reason": "The referenced run is already rejected/archived, or the external-data family is now blocked by the hard compliance guard. No queued code or submission action remains valid."
+}

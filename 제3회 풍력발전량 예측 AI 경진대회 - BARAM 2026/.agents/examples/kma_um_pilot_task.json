@@ -1,0 +1,15 @@
+{
+  "competition_slug": "baram_2026",
+  "objective": "Validate one real KMA UM global N128 operational-forecast issue before any bulk external-data collection.",
+  "prerequisite": "KMA_API_KEY must be set locally to the current user's own APIHub key; never accept or store a key in task payloads, CLI arguments, logs, or artifacts.",
+  "command": "python -m experiments.fetch_kma_um_global --start 2024-01-01 --end 2024-01-03 --max-issues 1 --output-dir artifacts_final/external_weather/kma_um_global_pilot",
+  "acceptance": [
+    "real response contains both GRIB variable codes 2002 and 2003",
+    "raw file and redacted source sidecar hashes match",
+    "forecast initialization plus conservative 12-hour publication delay is no later than data_available_kst_dtm",
+    "hourly targets are bracketed by source leads and contain no missing values",
+    "manifest passes external-data checksum and causality validation"
+  ],
+  "on_success": "Collect 2024 only, run the KMA-vs-GFS disagreement control screen, and open H2 exactly once after Q2 passes all score components.",
+  "on_failure": "Fail closed, retain only the redacted response diagnostic, and do not collect 2024 or create a submission."
+}

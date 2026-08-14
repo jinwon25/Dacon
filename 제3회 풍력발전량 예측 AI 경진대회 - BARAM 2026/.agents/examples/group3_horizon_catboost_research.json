@@ -1,0 +1,20 @@
+{
+  "competition_slug": "baram_2026",
+  "objective": "Test a direct horizon-partitioned learner rather than another correction on the saturated cross-group surface.",
+  "evidence": [
+    "The GEFCom 2012 wind solution trained separate models for forecast-time slots.",
+    "BARAM has one daily issue cycle with exact lead hours +12 through +35.",
+    "Prior lead-phase work partitioned an ExtraTrees cross-group member, not the strongest direct CatBoost learner."
+  ],
+  "constraints": [
+    "keep the base feature set and MAE loss unchanged",
+    "select iterations and calibration only on Q2",
+    "compare against both the exact current surface and the monolithic CatBoost parent",
+    "do not emit a submission from the structural diagnostic"
+  ],
+  "source_urls": [
+    "https://www.sciencedirect.com/science/article/pii/S0169207013000836",
+    "https://www.sciencedirect.com/science/article/pii/S0169207016000145",
+    "https://arxiv.org/abs/2208.08952"
+  ]
+}

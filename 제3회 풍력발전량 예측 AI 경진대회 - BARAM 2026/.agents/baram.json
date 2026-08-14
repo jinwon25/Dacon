@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "database_path": "artifacts_final/agent_service/state.sqlite3",
+  "run_root": "artifacts_final/agent_service/runs",
+  "submission_dir": "submissions",
+  "archive_dir": "submissions/archive",
+  "competition_profile_path": ".agents/competition.json",
+  "allowed_module_prefixes": ["experiments."],
+  "human_submission_required": false,
+  "governance": {
+    "require_validation_approval": true,
+    "require_submission_selection": true,
+    "raw_data_to_remote_llm": false,
+    "one_change_per_child_run": true
+  },
+  "submission": {
+    "auto_submit_enabled": true,
+    "competition_id": "236727",
+    "team_name_env": "DACON_TEAM_NAME",
+    "token_env": "DACON_API_TOKEN",
+    "max_daily_auto_submissions": 1,
+    "max_total_auto_submissions": 5,
+    "min_hours_between_submissions": 6,
+    "max_file_bytes": 104857600,
+    "memo_prefix": "BARAM agent",
+    "results_csv": "submissions/results.csv"
+  },
+  "policy": {
+    "version": "baram-public-v2",
+    "min_locked_score_delta": 0.00015,
+    "min_locked_one_minus_nmae_delta": 0.0,
+    "min_locked_ficr_delta": 0.0,
+    "min_expected_macro_score_delta": 0.00005,
+    "min_positive_month_fraction": 0.5,
+    "require_worst_month_score_delta": true,
+    "min_worst_month_score_delta": 0.0,
+    "min_bootstrap_positive_fraction": 0.8,
+    "min_bootstrap_q05": -0.00025,
+    "max_changed_ratio": 0.25,
+    "max_p95_movement_ratio": 0.015,
+    "failed_family_max_coverage_fraction": 0.25,
+    "public_failure_guard": {
+      "enabled": true,
+      "require_same_direction": true,
+      "max_coverage_fraction": 0.25
+    },
+    "family_overrides": {
+      "spatiotemporal_multitask_blend": {
+        "max_changed_ratio": 1.0,
+        "max_p95_movement_ratio": 0.04
+      }
+    }
+  },
+  "roles": {
+    "rule_parser": "Extract platform rules into the competition profile. Ambiguous external-data or API use remains blocked until approved.",
+    "data_analyst": "Inspect schema and aggregate diagnostics locally; never send raw rows to a remote model.",
+    "research": "Cite primary sources and emit a falsifiable hypothesis; never create a submission.",
+    "experiment_planner": "Choose one bounded child change from the experiment tree under the approved validation strategy and resource budget.",
+    "modeling": "Implement one bounded hypothesis and write all intermediate outputs under the assigned run directory.",
+    "validation": "Use exact OOF lineage, forward locking, seed stability, month stability, and day bootstrap; never tune on the locked split.",
+    "critic": "Separate the highest local score from the safest selectable run; review leakage, rule compliance, fold variance, and failed-family evidence.",
+    "ensemble_builder": "Select OOF-diverse approved runs and optimize blends without using public leaderboard scores as the primary objective.",
+    "report": "Write compact experiment lineage, evidence, resource use, decision, and next-action reports.",
+    "submission_guard": "Validate exact schema, row identity, finite ranges, duplicate hashes, budgets, selection state, and credentials before submission.",
+    "steward": "Keep only promoted candidates active, archive public failures, and remove rejected caches while retaining compact reports.",
+    "leaderboard": "Record the scored result for a submitted file and let deterministic code compare it with the prior best.",
+    "orchestrator": "Route work by state and policy; external submission is allowed only when the explicit auto-submit switch, credentials, budget, and numerical gates all pass."
+  }
+}

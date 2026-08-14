@@ -1,0 +1,12 @@
+{
+  "title": "Lead-phase and weather-regime cross-group ensemble",
+  "family": "phase_regime_cross_group",
+  "rationale": "Partition the cross-group relationship by forecast phase and NWP regime.",
+  "expected_signal": "Improve group-3 NMAE and FICR on the untouched forward half.",
+  "source_urls": [
+    "https://baidukddcup2022.github.io/papers/Baidu_KDD_Cup_2022_Workshop_paper_0518.pdf",
+    "https://www.sciencedirect.com/science/article/pii/S0169207016000145"
+  ],
+  "risk_notes": "Broad row coverage may transfer NMAE but damage public FICR.",
+  "competition_slug": "baram_2026"
+}
