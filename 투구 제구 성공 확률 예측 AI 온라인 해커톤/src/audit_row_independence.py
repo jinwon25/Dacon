@@ -116,8 +116,11 @@ def audit(project: Path, zip_path: Path) -> dict[str, object]:
         script_text = (extracted / "script.py").read_text(encoding="utf-8").lower()
         batch_tokens = [token for token in FORBIDDEN_BATCH_TOKENS if token in script_text]
         network_tokens = [token for token in FORBIDDEN_NETWORK_TOKENS if token in script_text]
-        spec_path = extracted / "model" / "corrected_state_residual_spec.json"
-        spec = json.loads(spec_path.read_text(encoding="utf-8"))
+        spec_paths = [extracted / "model" / "corrected_state_residual_spec.json"]
+        advanced_spec = extracted / "model" / "advanced_domain_residual_spec.json"
+        if advanced_spec.exists():
+            spec_paths.append(advanced_spec)
+        specs = [json.loads(path.read_text(encoding="utf-8")) for path in spec_paths]
 
     deviations = {
         "single_vs_full": float(np.max(np.abs(single - full))),
@@ -138,8 +141,11 @@ def audit(project: Path, zip_path: Path) -> dict[str, object]:
         ),
         "forbidden_batch_tokens": batch_tokens,
         "forbidden_network_tokens": network_tokens,
-        "residual_train_sha256_matches": spec["train_sha256"]
-        == _sha256(project / "data" / "train.csv"),
+        "residual_train_sha256_matches": all(
+            spec["train_sha256"] == _sha256(project / "data" / "train.csv")
+            for spec in specs
+        ),
+        "audited_residual_specs": [path.name for path in spec_paths],
         "test_file_packaged": any(
             name.startswith("data/")
             for name in zipfile.ZipFile(zip_path).namelist()
