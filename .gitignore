@@ -28,6 +28,10 @@
 *.tar
 *.tar.gz
 *.7z
+*.whl
+
+# Local linked worktrees
+.git-worktrees/
 
 # Keep example/light reference CSVs if they exist at repo root (none expected)
 !**/sample_submission_template.csv
@@ -73,4 +77,3 @@ tmp/
 
 # ---- Claude Code workspace ----
 .claude/
-
