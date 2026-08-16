@@ -204,7 +204,9 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--project", type=Path, default=Path("."))
     parser.add_argument("--candidate", type=Path, default=Path("submit_v20.zip"))
-    parser.add_argument("--parent", type=Path, default=Path("submit_v19.zip"))
+    parser.add_argument(
+        "--parent", type=Path, default=Path("submissions/history/submit_v19.zip")
+    )
     parser.add_argument(
         "--artifact-manifest",
         type=Path,

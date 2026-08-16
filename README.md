@@ -6,19 +6,20 @@ LG Aimers 9기 DACON 해커톤의 팀 공용 연구 저장소입니다. 코드, 
 
 | 구분 | 상태 |
 |---|---|
-| 공식 champion | `submit_v19.zip` |
-| v19 Public | **1144.1518063753** |
-| 확인 당시 순위 | **16위** |
-| v19 제출 ID | `1533965` |
+| 공식 champion | `submit_v20.zip` |
+| v20 Public | **1151.472428719** |
+| 확인 당시 순위 | **12위** |
+| v20 제출 ID | `1534122` |
 | 현재 목표 | **Top 10 / Public 1160 근접** |
-| 새 challenger | `submit_v20.zip` — 로컬 생성, **미제출** |
+| v19 대비 Public gain | **+7.3206223437** |
+| 목표 1160까지 | **8.5275712810** |
+| 오늘 남은 제출 | **1회** |
 | v20 순방향 최소 gain | **+14.2517** vs v19 |
-| v20 Public 중심 추정 | 약 **1159.75** — 보장값 아님 |
 | v20 패키지 검증 | 12개 게이트 전부 통과; 원본 artifact 환경 76개 통과, clean checkout 72개 통과·4개 skip |
 
-v19는 실제 Public 결과가 있는 champion입니다. v20은 2023→2024, 두 시즌의 전반→후반 순방향 검증을 통과한 공격형 challenger이며 월별 증분은 8개 중 5개만 양수입니다. DACON 제출은 별도 승인 전에는 수행하지 않습니다.
+v20은 API 성공과 공식 리더보드 반영을 확인한 새 champion입니다. 사전 중심 추정 `1159.75`보다는 낮았지만 v19보다 `+7.3206` 개선됐습니다. 월별 증분이 8개 중 5개만 양수였던 위험을 고려해 남은 1회는 같은 신호의 Public 사후 가중치 조정에 사용하지 않습니다.
 
-핵심 판단 근거는 [v20 후보 보고서](reports/target1160_v20_candidate_20260816.md), 실제 champion 기록은 [v19 Public 결과](reports/v19_public_result_20260816.md)에서 확인하세요.
+핵심 판단 근거는 [v20 연구 보고서](reports/target1160_v20_candidate_20260816.md), 공식 결과는 [v20 Public 결과](reports/v20_public_result_20260816.md)에서 확인하세요.
 
 ## 처음 시작하기
 
@@ -79,14 +80,14 @@ python -m src.train_v20_target1160 --project .
 # 4. v19를 부모로 v20 ZIP 생성
 python -m src.package_v20_target1160 `
   --project . `
-  --parent submit_v19.zip `
+  --parent submissions/history/submit_v19.zip `
   --output submit_v20.zip
 
 # 5. 실제 ZIP 계보·런타임·배치 독립성 검증
 python -m src.validate_v20_target1160 `
   --project . `
   --candidate submit_v20.zip `
-  --parent submit_v19.zip
+  --parent submissions/history/submit_v19.zip
 ```
 
 ## v20 설계 요약

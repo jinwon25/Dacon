@@ -1,8 +1,8 @@
-# v20 target-1160 challenger — 2026-08-16
+# v20 target-1160 champion — 2026-08-16
 
 ## 결론
 
-`submit_v20.zip`을 v19의 **미제출 challenger**로 생성했다. v19는 실제 Public 결과가 있는 현 champion으로 유지한다.
+`submit_v20.zip`을 v19의 challenger로 생성한 뒤 DACON에 제출했고, Public 개선을 확인해 새 champion으로 승격했다.
 
 - 부모: `submit_v19.zip`
 - 부모 Public: `1144.1518063753`
@@ -10,9 +10,13 @@
 - ZIP 크기: `32,474,467` bytes (`30.970 MiB`)
 - 핵심 순방향 최소 개선: `+14.2516628409` unclipped BSS-equivalent
 - v19의 실제 local→Public 전달률을 적용한 중심 추정: 약 `1159.75`
-- DACON 제출: **수행하지 않음**
+- DACON Public: **1151.472428719**
+- v19 대비 Public gain: **+7.3206223437**
+- 확인 당시 순위: **12위**
+- 제출 ID: `1534122`
+- DACON 제출: `isSubmitted=true`, `detail=Success`
 
-중심 추정은 보장이 아니다. 월별 증분이 8개 중 5개만 양수이므로 v20은 안정형이 아니라 목표 점수에 근접하도록 설계한 공격형 후보이다.
+사전 중심 추정은 실제 결과보다 `8.2775712810` 높았다. 월별 증분이 8개 중 5개만 양수였던 위험과 Public 전달폭 축소가 일관되므로, v20은 개선에 성공했지만 안정형 후보로 해석하지 않는다.
 
 ## v19 잔차에서 확인한 구조
 
@@ -100,7 +104,7 @@ v19의 local 2024 gain 대비 실제 Public gain 전달률은 다음과 같다.
 1144.1518063753 + 1.09558 × 14.2516628409 ≈ 1159.77
 ```
 
-이는 한 번의 관측 전달률을 사용한 시나리오일 뿐 신뢰구간이 아니다. 제출한다면 `submit_v20.zip`을 첫 challenger로 사용하고, 남은 한 슬롯은 v20 결과를 확인하기 전 자동 사용하지 않는다. DACON 제출은 별도 승인 후에만 수행한다.
+이는 한 번의 관측 전달률을 사용한 시나리오일 뿐 신뢰구간이 아니었다. 실제 Public은 `1151.472428719`로 v19보다 `+7.3206223437` 개선됐고, 최신 연도 로컬 gain의 전달률은 약 `0.51367`이었다. v20을 champion으로 승격하되, 남은 1회 제출은 동일 신호의 Public 사후 가중치 조정에 사용하지 않는다. 공식 결과의 상세 근거는 `reports/v20_public_result_20260816.md`에 있다.
 
 ## 재현 명령
 
@@ -109,8 +113,8 @@ python -m src.v20_residual_overlay_screen --project .
 python -m src.v20_model_residual_screen --project .
 python -m src.v20_recency_eb_screen --project .
 python -m src.train_v20_target1160 --project .
-python -m src.package_v20_target1160 --project . --parent submit_v19.zip --output submit_v20.zip
-python -m src.validate_v20_target1160 --project . --candidate submit_v20.zip --parent submit_v19.zip
+python -m src.package_v20_target1160 --project . --parent submissions/history/submit_v19.zip --output submit_v20.zip
+python -m src.validate_v20_target1160 --project . --candidate submit_v20.zip --parent submissions/history/submit_v19.zip
 $env:PYTHONPATH=(Resolve-Path '.').Path; pytest -q
 ```
 

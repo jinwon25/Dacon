@@ -1,6 +1,6 @@
 # 팀 실험 실행 워크플로
 
-이 문서는 현재 Public champion v19를 기준으로 실험을 재현하고 새 후보를 평가하는 공통 절차다. Python 모듈이 계산의 단일 원본이고, [`../notebooks/experiment_workbench.ipynb`](../notebooks/experiment_workbench.ipynb)는 그 모듈을 순서대로 호출하고 결과를 확인하는 얇은 실행 화면이다. 노트북 안에 학습 로직을 복사하지 않는다.
+이 문서는 현재 Public champion v20을 기준으로 실험을 재현하고 새 후보를 평가하는 공통 절차다. Python 모듈이 계산의 단일 원본이고, [`../notebooks/experiment_workbench.ipynb`](../notebooks/experiment_workbench.ipynb)는 그 모듈을 순서대로 호출하고 결과를 확인하는 얇은 실행 화면이다. 노트북 안에 학습 로직을 복사하지 않는다.
 
 ## 가장 먼저: 파일과 실행 노트북
 
@@ -8,11 +8,11 @@
 
 | 작업 | 받을 파일 |
 |---|---|
-| champion 실행·비교 | `submit_v19.zip` |
-| v19 재패키징 | `submissions/history/submit_v17.zip` + `artifacts/state_mode_joint_final_20260816/` |
-| v19 재학습 | DACON 원본 데이터 + v19 활성 학습 코드와 선별 manifest |
+| champion 실행·비교 | `submit_v20.zip` |
+| v20 재패키징 | `submissions/history/submit_v19.zip` + `artifacts/v20_target1160_final_20260816/` |
+| v20 재학습 | DACON 원본 데이터 + v19 OOF/alignment artifact + v20 활성 학습 코드 |
 
-제출 ZIP은 수동으로 풀거나 다시 압축하지 않는다. v17 이하의 Drive 구조와 SHA-256은 [`ARTIFACT_HANDOFF.md`](ARTIFACT_HANDOFF.md), v19 최종 해시는 [`../reports/v19_public_result_20260816.md`](../reports/v19_public_result_20260816.md)에 있다.
+제출 ZIP은 수동으로 풀거나 다시 압축하지 않는다. v19 이하의 계보와 Drive 구조는 [`ARTIFACT_HANDOFF.md`](ARTIFACT_HANDOFF.md), v20 최종 해시는 [`../reports/v20_public_result_20260816.md`](../reports/v20_public_result_20260816.md)에 있다.
 
 Python 스크립트를 실행하는 공식 단일 노트북은 다음 파일이다.
 
@@ -161,7 +161,7 @@ python -m src.validate_v16_residual `
 새 후보는 다음 조건을 모두 만족해야 제출 검토 대상으로 올린다.
 
 1. 누수 없는 rolling-origin OOF만 사용한다.
-2. v17 행별 예측을 고정 incumbent로 paired 비교한다.
+2. v20 행별 예측을 고정 incumbent로 paired 비교한다.
 3. 최근 두 전이의 전체 gain 방향이 양수다.
 4. 월·투수·타자·투수×타자와 연속 투구 block bootstrap을 통과한다.
 5. 같은 final family 안에서 selection-aware Reality Check를 통과한다.
