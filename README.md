@@ -6,20 +6,21 @@ LG Aimers 9기 DACON 해커톤의 팀 공용 연구 저장소입니다. 코드, 
 
 | 구분 | 상태 |
 |---|---|
-| 공식 champion | `submit_v20.zip` |
-| v20 Public | **1151.472428719** |
+| 공식 champion | `submit_v21.zip` |
+| v21 Public | **1151.5138356157** |
 | 확인 당시 순위 | **12위** |
-| v20 제출 ID | `1534122` |
+| v21 제출 ID | `1534213` |
 | 현재 목표 | **Top 10 / Public 1160 근접** |
-| v19 대비 Public gain | **+7.3206223437** |
-| 목표 1160까지 | **8.5275712810** |
-| 오늘 남은 제출 | **1회** |
-| v20 순방향 최소 gain | **+14.2517** vs v19 |
-| v20 패키지 검증 | 12개 게이트 전부 통과; 원본 artifact 환경 76개 통과, clean checkout 72개 통과·4개 skip |
+| v20 대비 Public gain | **+0.0414068967** |
+| 목표 1160까지 | **8.4861643843** |
+| Top 10까지 | **6.4456139434** |
+| 오늘 남은 제출 | **0회** |
+| v21 순방향 최소 gain | **+10.7720** vs v20 |
+| v21 패키지 검증 | 12개 게이트 전부 통과; 원본 77개 통과, clean checkout 73개 통과·4개 skip |
 
-v20은 API 성공과 공식 리더보드 반영을 확인한 새 champion입니다. 사전 중심 추정 `1159.75`보다는 낮았지만 v19보다 `+7.3206` 개선됐습니다. 월별 증분이 8개 중 5개만 양수였던 위험을 고려해 남은 1회는 같은 신호의 Public 사후 가중치 조정에 사용하지 않습니다.
+v21은 API 성공과 공식 리더보드 반영을 확인한 새 champion입니다. v20보다 `+0.0414` 개선됐지만 로컬 `+10.7720`의 대부분은 2025 평가 분포로 전이되지 않았습니다. 같은 2024 잔차 lookup 계열의 Public 사후 가중치 조정은 하지 않습니다.
 
-핵심 판단 근거는 [v20 연구 보고서](reports/target1160_v20_candidate_20260816.md), 공식 결과는 [v20 Public 결과](reports/v20_public_result_20260816.md)에서 확인하세요.
+핵심 판단 근거는 [Target 1200 연구 보고서](reports/target1200_research_20260816.md), 공식 결과는 [v21 Public 결과](reports/v21_public_result_20260816.md), 규정 검토는 [공식 준수 감사](reports/dacon_official_compliance_audit_20260816.md)에서 확인하세요.
 
 ## 처음 시작하기
 
@@ -62,50 +63,44 @@ hackathon/
 
 보고서 탐색 순서는 [reports/README.md](reports/README.md)를 따르세요.
 
-## v20 재현 순서
+## v21 재현 순서
 
-아래 과정은 v19 OOF와 TrackMan alignment artifact가 로컬에 준비되어 있다는 전제입니다. 필요한 경로와 산출물은 [v20 후보 보고서](reports/target1160_v20_candidate_20260816.md)에 기록돼 있습니다.
+아래 과정은 v19 OOF, v20 부모 ZIP과 기존 artifact가 로컬에 준비되어 있다는 전제입니다. 필요한 경로와 판단 근거는 [Target 1200 연구 보고서](reports/target1200_research_20260816.md)에 기록돼 있습니다.
 
 ```powershell
-# 1. v19 잔차 lookup 스크린
-python -m src.v20_residual_overlay_screen --project .
+# 1. 2024 v19 OOF 잔차에서 동결 recency EB artifact 학습
+python -m src.train_v21_context_state_eb --project .
 
-# 2. 얕은 잔차 모델과 최근성 대안 검증
-python -m src.v20_model_residual_screen --project .
-python -m src.v20_recency_eb_screen --project .
-
-# 3. 2025용 frozen lookup 및 PFD 학생 모델 학습
-python -m src.train_v20_target1160 --project .
-
-# 4. v19를 부모로 v20 ZIP 생성
-python -m src.package_v20_target1160 `
+# 2. v20을 부모로 v21 ZIP 생성
+python -m src.package_v21_context_state_eb `
   --project . `
-  --parent submissions/history/submit_v19.zip `
-  --output submit_v20.zip
+  --parent submissions/history/submit_v20.zip `
+  --output submit_v21.zip
 
-# 5. 실제 ZIP 계보·런타임·배치 독립성 검증
-python -m src.validate_v20_target1160 `
+# 3. 실제 ZIP 계보·런타임·배치 독립성 검증
+python -m src.validate_v21_context_state_eb `
   --project . `
-  --candidate submit_v20.zip `
-  --parent submissions/history/submit_v19.zip
+  --candidate submit_v21.zip `
+  --parent submissions/history/submit_v20.zip
 ```
 
-## v20 설계 요약
+## v21 설계 요약
 
-v20은 v19 위에 다섯 개의 작은 증분만 더합니다.
+v21은 v20 위에 여섯 개의 동결 recency empirical-Bayes lookup만 더합니다.
 
-1. 투수 × 타자 손 × 카운트 압박 EB 잔차
-2. 투수 팀 × 타자 손 EB 잔차
-3. R_ANCHOR 카운트 × 양손 EB 잔차
-4. 기존 latent failure-mode의 미사용 보수 증분
-5. TrackMan을 학습 때만 사용하는 PFD soft student − hard control 차이
+1. R_CORE 투수 × 타자 손 × 최근 3경기 제구 구간
+2. R_CORE 투수 × 타자 손 × 최근 5경기 제구 구간
+3. 투수 × 타자 손 × 주자 상황
+4. 카운트 × 양손 × 이닝 구간
+5. 카운트 × 양손 × 최근 3경기 제구 구간
+6. 카운트 × 양손 × reverse rate 구간
 
-추론 시에는 TrackMan 현재 투구 물리값이나 test 전체 통계를 사용하지 않습니다. 모든 correction은 2024 OOF 또는 학습 시 교차적합 결과로 동결되고 각 test 행에 독립적으로 적용됩니다.
+추론 시에는 TrackMan 현재 투구 물리값이나 test 전체 통계를 사용하지 않습니다. 모든 correction은 2024 `target - v19 OOF`에서 미리 동결되고 각 test 행에 독립적으로 적용됩니다.
 
 ## 검증 원칙
 
 - 시간 순서를 지킨 2023→2024 및 시즌 전반→후반 검증
-- v19와 paired Brier 차이 비교
+- v20과 paired Brier 차이 비교
 - 월·도메인 분해
 - 투수, 타자, 투수×타자 5,000회 군집 부트스트랩
 - Public 점수로 가중치를 역튜닝하지 않음

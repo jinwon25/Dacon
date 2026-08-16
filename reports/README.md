@@ -1,22 +1,20 @@
 # 보고서 빠른 안내
 
-최신 의사결정은 아래 순서로 확인합니다.
+최신 의사결정은 아래 문서부터 확인한다.
 
-1. [v20_public_result_20260816.md](v20_public_result_20260816.md) — 공식 Public 1151.4724, 12위, 제출 ID와 champion 결정
-2. [target1160_v20_candidate_20260816.md](target1160_v20_candidate_20260816.md) — v20 구성, 순방향 검증, 부트스트랩과 Public 해석
-3. [v20_validation.md](v20_validation.md) / [JSON](v20_validation.json) — 실제 ZIP 계보·런타임·메모리·배치 독립성
-4. [v19_public_result_20260816.md](v19_public_result_20260816.md) — v20 직접 부모의 공식 결과
-5. [submissions.csv](submissions.csv) — 공식 제출 이력의 단일 기록원
+1. [`v21_public_result_20260816.md`](v21_public_result_20260816.md): 최신 공식 Public 점수, 순위, 제출 ID와 champion 결정
+2. [`target1200_research_20260816.md`](target1200_research_20260816.md): 전체 탐색, v21 선택 근거와 Public 전이 실패 해석
+3. [`dacon_official_compliance_audit_20260816.md`](dacon_official_compliance_audit_20260816.md): 공식 규정·FAQ 대비 준수 감사
+4. [`v21_validation.md`](v21_validation.md), [`v21_validation.json`](v21_validation.json): 실행 시간, 메모리, 계보, 배치 불변성
+5. [`submissions.csv`](submissions.csv): 전체 공식 제출 이력의 단일 기준표
 
-## 현재 판정
+## 보관 원칙
 
-- 공식 champion: `submit_v20.zip`
-- Public: `1151.472428719`, 확인 당시 12위
-- v19 대비 Public gain: `+7.3206223437`
-- 목표 1160까지: `8.5275712810`
-- v20 순방향 최소 gain: `+14.2517` vs v19
-- 남은 일일 제출: 1회; 같은 신호의 Public 사후 가중치 조정에는 사용하지 않음
+- `v21_*`와 `target1200_*`: 현재 champion과 최신 연구 기록
+- `v20_*`와 `target1160_*`: v21 직접 부모와 이전 champion 기록
+- `v19_*`와 `target1150_*`: v20 직접 부모와 이전 champion 기록
+- `v17_*`, `v18_*`, `v13_*`: 직접 계보와 비교 근거
+- 날짜가 붙은 나머지 보고서: 과거 실험·기각 가설의 재현 기록
+- `top1100/`: 2026-08-09 연구 사이클 기록
 
-날짜가 붙은 나머지 보고서는 과거 실험과 기각 가설의 근거입니다. 삭제하지 않되 최신 결론으로 오인하지 않도록 새 연구에서는 위 다섯 문서를 먼저 링크하세요.
-
-제출 ZIP, 모델, OOF는 Git에서 관리하지 않습니다. 실제 파일 위치 규칙은 [../submissions/README.md](../submissions/README.md)와 [../artifacts/README.md](../artifacts/README.md)를 참고하세요.
+보고서는 생성 산출물과 달리 실험 판단 근거이므로 삭제하지 않는다. 실제 ZIP 위치는 [`../submissions/README.md`](../submissions/README.md)에서 확인한다.

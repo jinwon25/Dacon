@@ -1731,6 +1731,60 @@ def apply_v20_target1160_overlay(
     )
 
 
+def apply_v21_context_state_eb_overlay(
+    probability: np.ndarray, frame: pd.DataFrame
+) -> np.ndarray:
+    """Apply frozen train-only recency EB maps using current-row features."""
+    spec_path = MODEL_DIR / "v21_context_state_eb_spec.json"
+    if not spec_path.exists():
+        return probability
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    separator = str(spec["separator"])
+    key_frame = frame.copy()
+
+    def rate_bin(column: str, bins: int) -> np.ndarray:
+        value = pd.to_numeric(key_frame[column], errors="coerce").fillna(0.5)
+        return np.floor(
+            np.clip(value.to_numpy(np.float64), 0.0, 1.0) * bins
+        ).astype(np.int16)
+
+    key_frame["prev3_b10"] = rate_bin(
+        "asof_pitcher_prev3_game_success_rate", 10
+    )
+    key_frame["prev5_b10"] = rate_bin(
+        "asof_pitcher_prev5_game_success_rate", 10
+    )
+    key_frame["prev3_b20"] = rate_bin(
+        "asof_pitcher_prev3_game_success_rate", 20
+    )
+    key_frame["reverse_b10"] = rate_bin("asof_pitcher_reverse_rate", 10)
+    key_frame["inning_band"] = pd.cut(
+        pd.to_numeric(key_frame["inning"], errors="coerce"),
+        bins=(-np.inf, 3, 6, 9, np.inf),
+        labels=("early", "middle", "late", "extra"),
+    ).astype("string")
+    domain = _joint_domain(frame)
+    correction = np.zeros(len(frame), dtype=np.float64)
+    for recipe in spec["recipes"]:
+        columns = [str(value) for value in recipe["columns"]]
+        pieces = [
+            key_frame[column].astype("string").fillna("__MISSING__")
+            for column in columns
+        ]
+        keys = pieces[0]
+        for piece in pieces[1:]:
+            keys = keys + separator + piece
+        effect = pd.Series(recipe["effects"], dtype="float64")
+        value = keys.map(effect).fillna(0.0).to_numpy(np.float64)
+        apply_mask = np.ones(len(frame), dtype=bool)
+        if str(recipe["domain"]) != "ALL":
+            apply_mask &= domain == str(recipe["domain"])
+        correction[apply_mask] += float(recipe["weight"]) * value[apply_mask]
+    return np.clip(
+        np.asarray(probability, dtype=np.float64) + correction, 0.001, 0.999
+    )
+
+
 def resolve_trackman_weights(frame: pd.DataFrame, hybrid: dict) -> np.ndarray:
     """Resolve a scalar or row-local game-type Trackman blend weight.
 
@@ -1932,6 +1986,7 @@ def predict_dataframe(frame: pd.DataFrame) -> np.ndarray:
     prediction = apply_recent_exact_overlay(prediction, frame)
     prediction = apply_joint_state_mode_overlay(prediction, frame)
     prediction = apply_v20_target1160_overlay(prediction, frame)
+    prediction = apply_v21_context_state_eb_overlay(prediction, frame)
     if not np.isfinite(prediction).all():
         raise ValueError("prediction contains NaN or infinite values")
     return np.clip(prediction, 0.0, 1.0)
