@@ -1,0 +1,22 @@
+{
+  "protocol": "LOCAL_EVALUATION_V2_DEPENDENCE_AND_SELECTION_AWARE",
+  "seed": 20260815,
+  "bootstrap_resamples": 3000,
+  "sequential_block_sizes": [500, 2000, 5000],
+  "crossed_clusters": ["pitcher_id", "batter_id"],
+  "post_break_year": 2023,
+  "recency_half_life_years": 1.0,
+  "gates": {
+    "minimum_cluster_improvement_probability": 0.95,
+    "minimum_month_positive_fraction": 0.6,
+    "require_latest_all_resampling_p05_positive": true,
+    "require_latest_leave_one_team_min_nonnegative": true,
+    "reality_check_research_alpha": 0.1
+  },
+  "interpretation": {
+    "official_metric": "clipped Brier Skill Score",
+    "comparison_metric": "unclipped paired BSS-equivalent gain",
+    "public_projection": "scenario only until at least three clean local-to-Public transfer observations exist",
+    "confirmation_2024": "development-contaminated; never call virgin holdout"
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "candidate": "submit_v16.zip",
+  "parent": "submit_v14.zip",
+  "candidate_size_mb": 25.96436882019043,
+  "added_members": [
+    "model/v16_residual_spec.json"
+  ],
+  "removed_members": [],
+  "changed_parent_members": [
+    "model/hybrid.json",
+    "script.py"
+  ],
+  "gates": {
+    "archive_lineage_ok": true,
+    "sample_rows_ok": true,
+    "benchmark_rows_ok": true,
+    "runtime_under_120s": true,
+    "batch_invariant": true,
+    "core_changed": true,
+    "anchor_unchanged": true,
+    "finals_unchanged": true,
+    "network_free": true,
+    "row_local_static": true
+  },
+  "sample_seconds": 7.204486500006169,
+  "sample_peak_mb": 270.4296875,
+  "sample_stdout": "Saved C:\\Users\\yun72_92xubzr\\AppData\\Local\\Temp\\aimers9_v16_verify_65nyarjm\\submit_v16\\output\\submission.csv rows=5 elapsed=2.531s",
+  "benchmark_seconds": 44.539884199999506,
+  "benchmark_peak_mb": 1397.3984375,
+  "benchmark_stdout": "Saved C:\\Users\\yun72_92xubzr\\AppData\\Local\\Temp\\aimers9_v16_verify_65nyarjm\\submit_v16\\output\\submission.csv rows=245789 elapsed=41.705s",
+  "batch_max_abs_difference": 1.6653345369377348e-16,
+  "domain_comparison": {
+    "R_CORE": {
+      "rows": 96,
+      "mean_difference": 0.0028430132110708176,
+      "mean_abs_difference": 0.0037379771909277874,
+      "max_abs_difference": 0.008119758618668038
+    },
+    "R_ANCHOR": {
+      "rows": 64,
+      "mean_difference": -1.734723475976807e-18,
+      "mean_abs_difference": 1.5612511283791264e-17,
+      "max_abs_difference": 1.1102230246251565e-16
+    },
+    "F": {
+      "rows": 64,
+      "mean_difference": 0.0,
+      "mean_abs_difference": 0.0,
+      "max_abs_difference": 0.0
+    }
+  },
+  "spec_without_effects": {
+    "candidate": "v16_multiseason_pitcher_batter_hand_eb_v1",
+    "method": "smoothed_oof_residual_mean",
+    "source_seasons": [
+      2022,
+      2023,
+      2024
+    ],
+    "forecast_season": 2025,
+    "season_decay": 0.5,
+    "alpha": 3200.0,
+    "group_columns": [
+      "pitcher_id",
+      "batter_hand"
+    ],
+    "apply_domain": "R_CORE",
+    "anchor_team_id": 13,
+    "separator": "\\u001f",
+    "unseen_effect": 0.0,
+    "row_local_inference": true,
+    "test_aggregate_used": false,
+    "season_rows": {
+      "2022": 174218,
+      "2023": 175785,
+      "2024": 178729
+    },
+    "n_effects": 808,
+    "effect_summary": {
+      "minimum": -0.01786243298846287,
+      "maximum": 0.013151131599233309,
+      "mean": -0.00037237570420523903,
+      "mean_absolute": 0.0021397719030163023,
+      "weighted_mean_absolute": 0.004014199294822883,
+      "median_effective_count": 227.5,
+      "maximum_effective_count": 2677.5
+    },
+    "selection_rule": "positive next-season gain on 2022->2023 and 2022+2023->2024; selected by maximum two-transition minimum gain",
+    "selection_caveat": "2024 and the candidate family are development-contaminated; Public submission is a deployment probe, not independent confirmation"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "candidate": "submit_v15.zip",
+  "incumbent": "submit_v13_fixed.zip",
+  "candidate_size_mb": 25.9527645111084,
+  "added_members": [
+    "model/v14_anchor_ridge.joblib",
+    "model/v14_f_trend_lgb.txt",
+    "model/v14_refinement_preprocess.joblib",
+    "model/v14_refinement_spec.json"
+  ],
+  "removed_members": [],
+  "changed_parent_members": [
+    "model/hybrid.json",
+    "script.py"
+  ],
+  "gates": {
+    "archive_lineage_ok": true,
+    "sample_rows_ok": true,
+    "benchmark_rows_ok": true,
+    "runtime_under_120s": true,
+    "batch_invariant": true,
+    "core_unchanged": true,
+    "anchor_changed": true,
+    "finals_changed": true,
+    "network_free": true,
+    "row_local_static": true
+  },
+  "sample_seconds": 5.1044469000189565,
+  "sample_peak_mb": 270.76953125,
+  "sample_stdout": "Saved C:\\Users\\yun72_92xubzr\\AppData\\Local\\Temp\\aimers9_v14_verify_wgdupwxh\\submit_v15\\output\\submission.csv rows=5 elapsed=2.150s",
+  "benchmark_seconds": 30.544914199999766,
+  "benchmark_peak_mb": 1406.53125,
+  "benchmark_stdout": "Saved C:\\Users\\yun72_92xubzr\\AppData\\Local\\Temp\\aimers9_v14_verify_wgdupwxh\\submit_v15\\output\\submission.csv rows=245789 elapsed=27.838s",
+  "batch_max_abs_difference": 1.1102230246251565e-16,
+  "domain_comparison": {
+    "R_CORE": {
+      "rows": 64,
+      "mean_difference": 6.938893903907228e-18,
+      "mean_abs_difference": 1.3877787807814457e-17,
+      "max_abs_difference": 1.1102230246251565e-16
+    },
+    "R_ANCHOR": {
+      "rows": 64,
+      "mean_difference": 0.008367442067227913,
+      "mean_abs_difference": 0.008367442067227913,
+      "max_abs_difference": 0.020736804888373095
+    },
+    "F": {
+      "rows": 64,
+      "mean_difference": -0.005485085365034723,
+      "mean_abs_difference": 0.00592995825630395,
+      "max_abs_difference": 0.0158841984448021
+    }
+  },
+  "spec": {
+    "candidate": "submit_v15",
+    "source_seasons": [
+      2023,
+      2024
+    ],
+    "forecast_season": 2025,
+    "anchor_team_id": 13,
+    "anchor_alpha": 500000.0,
+    "anchor_reliability_threshold": 0.9,
+    "anchor_weight": 0.2,
+    "f_trend_alpha": 0.35,
+    "parent_f_exact_weight": 0.75,
+    "f_trend_num_iterations": 180,
+    "row_local_inference": true,
+    "test_aggregate_used": false,
+    "selection_rule": "post-break 2022->2023 and 2023->2024 F trend; three-transition high-reliability anchor gate"
+  }
+}

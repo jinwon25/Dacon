@@ -1,0 +1,54 @@
+{
+  "seed": 42,
+  "outer_validation_seasons": [2021, 2022, 2023, 2024],
+  "diagnostic_validation_season": 2020,
+  "recency_weights": {
+    "2021": 1,
+    "2022": 2,
+    "2023": 3,
+    "2024": 4
+  },
+  "incumbent": {
+    "lgb_weight": 0.35,
+    "rf_weight": 0.65,
+    "trend_window": 3,
+    "lgb_variant": {
+      "name": "lgb_engineered_l31",
+      "feature_set": "engineered",
+      "num_leaves": 31,
+      "learning_rate": 0.05,
+      "min_data_in_leaf": 500,
+      "lambda_l2": 2.0,
+      "feature_fraction": 0.9,
+      "bagging_fraction": 0.85
+    },
+    "max_boost_rounds": 1200,
+    "early_stopping_rounds": 100
+  },
+  "base_rate_methods": [
+    "last",
+    "mean_2",
+    "mean_3",
+    "mean_4",
+    "logit_trend_2",
+    "logit_trend_3",
+    "logit_trend_4",
+    "logit_trend_5",
+    "damped_3_0.5",
+    "damped_3_0.8"
+  ],
+  "rolling_damped_ensemble": {
+    "name": "rolling_damped_equal_v1",
+    "methods": ["damped_3_0.5", "damped_3_0.8"],
+    "weights": [0.5, 0.5],
+    "fallback": "raw_blend"
+  },
+  "beta_regularization": [0.0001, 0.001, 0.01],
+  "bootstrap_resamples": 2000,
+  "submission_gate": {
+    "minimum_recency_weighted_improvement": 0.00001,
+    "minimum_2024_improvement": 0.00001,
+    "maximum_single_fold_worsening": 0.00005,
+    "minimum_cluster_improvement_probability": 0.9
+  }
+}

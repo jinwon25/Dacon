@@ -1,0 +1,27 @@
+{
+  "seed": 42,
+  "max_boost_rounds": 1200,
+  "early_stopping_rounds": 100,
+  "variants": [
+    {
+      "name": "lgb_domain_profile_v1",
+      "feature_set": "domain_profile",
+      "num_leaves": 31,
+      "learning_rate": 0.05,
+      "min_data_in_leaf": 500,
+      "lambda_l2": 2.0,
+      "feature_fraction": 0.9,
+      "bagging_fraction": 0.85
+    },
+    {
+      "name": "lgb_domain_regime_v1",
+      "feature_set": "domain_regime",
+      "num_leaves": 31,
+      "learning_rate": 0.05,
+      "min_data_in_leaf": 500,
+      "lambda_l2": 2.0,
+      "feature_fraction": 0.9,
+      "bagging_fraction": 0.85
+    }
+  ]
+}

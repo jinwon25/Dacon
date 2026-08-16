@@ -1,0 +1,17 @@
+baseline,arm,outer_validation_season,brier,delta_vs_A,status
+v2_frozen_replay,A_original_incumbent,2021,0.24694504619424518,0.0,legacy cache; diagnostic only
+v2_frozen_replay,B_R_recency_substitution,2021,0.24727028242293037,0.0003252362286851884,legacy recency cache; diagnostic only
+v2_frozen_replay,C_Trackman_5pct_only,2021,0.24685141992807524,-9.362626616993275e-05,legacy Trackman cache; diagnostic only
+v2_frozen_replay,D_full_v2,2021,0.2468659662145313,-7.907997971387526e-05,legacy hybrid report; diagnostic only
+v2_frozen_replay,A_original_incumbent,2022,0.2441693455303068,0.0,legacy cache; diagnostic only
+v2_frozen_replay,B_R_recency_substitution,2022,0.244107586998742,-6.175853156481503e-05,legacy recency cache; diagnostic only
+v2_frozen_replay,C_Trackman_5pct_only,2022,0.24412463789512193,-4.4707635184881855e-05,legacy Trackman cache; diagnostic only
+v2_frozen_replay,D_full_v2,2022,0.2441511697986075,-1.8175731699321407e-05,legacy hybrid report; diagnostic only
+v2_frozen_replay,A_original_incumbent,2023,0.2511374821404724,0.0,legacy cache; diagnostic only
+v2_frozen_replay,B_R_recency_substitution,2023,0.25115783328168984,2.035114121745618e-05,legacy recency cache; diagnostic only
+v2_frozen_replay,C_Trackman_5pct_only,2023,0.251098116850214,-3.936529025838631e-05,legacy Trackman cache; diagnostic only
+v2_frozen_replay,D_full_v2,2023,0.2510479036771844,-8.957846328799812e-05,legacy hybrid report; diagnostic only
+v2_frozen_replay,A_original_incumbent,2024,0.24846096110068522,0.0,legacy cache; diagnostic only
+v2_frozen_replay,B_R_recency_substitution,2024,0.2484052418702931,-5.571923039213167e-05,legacy recency cache; diagnostic only
+v2_frozen_replay,C_Trackman_5pct_only,2024,0.2484632300800873,2.2689794020869236e-06,legacy Trackman cache; diagnostic only
+v2_frozen_replay,D_full_v2,2024,0.2484405329274614,-2.0428173223813184e-05,legacy hybrid report; diagnostic only

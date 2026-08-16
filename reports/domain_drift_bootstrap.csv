@@ -1,0 +1,11 @@
+scope,candidate,reference,cluster_type,observed_delta,bootstrap_mean_delta,ci_lower,ci_upper,improvement_probability,n_improving_resamples,mc_probability_ci_lower,mc_probability_ci_upper,n_clusters,n_resamples
+2021,game_type_regime_residual_v1,incumbent,pitcher_season,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0003688199146187622,386.0,10000.0
+2021,game_type_regime_residual_v1,incumbent,pitcher,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0003688199146187622,386.0,10000.0
+2022,game_type_regime_residual_v1,incumbent,pitcher_season,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0003688199146187622,390.0,10000.0
+2022,game_type_regime_residual_v1,incumbent,pitcher,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0003688199146187622,390.0,10000.0
+2023,game_type_regime_residual_v1,incumbent,pitcher_season,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0003688199146187622,382.0,10000.0
+2023,game_type_regime_residual_v1,incumbent,pitcher,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0003688199146187622,382.0,10000.0
+2024,game_type_regime_residual_v1,incumbent,pitcher_season,-0.000125058900884251,-0.00012534481290629986,-0.00019083154521223604,-6.713778345086473e-05,1.0,10000.0,0.9996311800853812,1.0,391.0,10000.0
+2024,game_type_regime_residual_v1,incumbent,pitcher,-0.000125058900884251,-0.00012534481290629986,-0.00019083154521223604,-6.713778345086473e-05,1.0,10000.0,0.9996311800853812,1.0,391.0,10000.0
+2021-2024,game_type_regime_residual_v1,incumbent,pitcher_season,-3.1907771788081847e-05,-3.1920156217942376e-05,-4.862634986668158e-05,-1.6710226951614326e-05,1.0,10000.0,0.9996311800853812,1.0,1549.0,10000.0
+2021-2024,game_type_regime_residual_v1,incumbent,pitcher,-3.1907771788081847e-05,-3.207655768010618e-05,-4.937868097492933e-05,-1.679780453833948e-05,1.0,10000.0,0.9996311800853812,1.0,670.0,10000.0

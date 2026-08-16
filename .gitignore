@@ -1,0 +1,55 @@
+# DACON-provided data: each registered teammate downloads it independently.
+data/*
+!data/README.md
+baseline_submit/
+
+# Generated models, OOF predictions, caches, and submission archives.
+artifacts/*
+!artifacts/README.md
+model/
+output/
+submit*.zip
+submissions/**/*.zip
+*.npy
+*.npz
+*.parquet
+*.feather
+*.joblib
+*.pkl
+*.pickle
+*.cbm
+*.onnx
+*.pt
+*.pth
+*.ckpt
+
+# Secrets. Track only the key-name template.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python and test caches.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Editors and operating-system files.
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+
+# Logs and temporary files.
+*.log
+tmp/
+.cache/
