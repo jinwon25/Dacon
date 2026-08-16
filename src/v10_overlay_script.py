@@ -1504,6 +1504,12 @@ def apply_joint_state_mode_overlay(
     import joblib
 
     spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    v20_spec_path = MODEL_DIR / "v20_target1160_spec.json"
+    v20_spec = (
+        json.loads(v20_spec_path.read_text(encoding="utf-8"))
+        if v20_spec_path.exists()
+        else None
+    )
     preprocess = joblib.load(preprocess_path)
     features, domain = _joint_features(frame, preprocess)
     incumbent = np.asarray(probability, dtype=np.float64)
@@ -1558,9 +1564,11 @@ def apply_joint_state_mode_overlay(
     raw_by_mode = np.column_stack(raw_by_mode)
     conditional_success = np.asarray(spec["conditional_success"], dtype=np.float64)
 
+    mode_signal_names = [str(choice["mode_name"]) for choice in spec["choices"]]
+    if v20_spec is not None:
+        mode_signal_names.append(str(v20_spec["extra_mode"]["name"]))
     mode_raw = {}
-    for choice in spec["choices"]:
-        name = str(choice["mode_name"])
+    for name in mode_signal_names:
         if name in mode_raw:
             continue
         conditional = name.startswith("conditional_")
@@ -1637,7 +1645,90 @@ def apply_joint_state_mode_overlay(
             0.001,
             0.999,
         )
+    if v20_spec is not None:
+        extra_mode = v20_spec["extra_mode"]
+        extra_name = str(extra_mode["name"])
+        output = np.clip(
+            output
+            + float(extra_mode["weight"]) * (mode_raw[extra_name] - incumbent),
+            0.001,
+            0.999,
+        )
     return output
+
+
+def apply_v20_target1160_overlay(
+    probability: np.ndarray, frame: pd.DataFrame
+) -> np.ndarray:
+    """Apply frozen 2024 OOF EB and training-only TrackMan distillation."""
+    spec_path = MODEL_DIR / "v20_target1160_spec.json"
+    if not spec_path.exists():
+        return probability
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    separator = str(spec["separator"])
+    domain = _joint_domain(frame)
+    balls = pd.to_numeric(frame["balls_before"], errors="coerce").to_numpy()
+    strikes = pd.to_numeric(frame["strikes_before"], errors="coerce").to_numpy()
+    pressure = pd.Series(
+        np.where(
+            balls == 3,
+            "threeball",
+            np.where(strikes == 2, "twostrike", "normal"),
+        ),
+        index=frame.index,
+        dtype="string",
+    )
+    key_frame = frame.copy()
+    key_frame["pressure"] = pressure
+    correction = np.zeros(len(frame), dtype=np.float64)
+    for recipe in spec["eb_recipes"]:
+        columns = [str(value) for value in recipe["columns"]]
+        pieces = [
+            key_frame[column].astype("string").fillna("__MISSING__")
+            for column in columns
+        ]
+        keys = pieces[0]
+        for piece in pieces[1:]:
+            keys = keys + separator + piece
+        effects = pd.Series(recipe["effects"], dtype="float64")
+        values = keys.map(effects).fillna(0.0).to_numpy(np.float64)
+        apply_mask = np.ones(len(frame), dtype=bool)
+        if str(recipe["domain"]) != "ALL":
+            apply_mask &= domain == str(recipe["domain"])
+        correction[apply_mask] += float(recipe["weight"]) * values[apply_mask]
+
+    pfd = spec["pfd"]
+    columns = [str(value) for value in pfd["feature_columns"]]
+    features = frame.loc[:, columns].copy()
+    categorical = {str(value) for value in pfd["categorical_columns"]}
+    for column in columns:
+        if column in categorical:
+            values = features[column].astype("string").fillna("__MISSING__")
+            features[column] = pd.Categorical(
+                values.astype(str), categories=pfd["categories"][column]
+            )
+        else:
+            features[column] = pd.to_numeric(
+                features[column], errors="coerce"
+            ).astype(np.float32)
+    control = np.asarray(
+        _joint_booster(str(pfd["control_model"])).predict(
+            features, num_iteration=int(pfd["num_iterations"]["control"])
+        ),
+        dtype=np.float64,
+    )
+    soft = np.asarray(
+        _joint_booster(str(pfd["soft_model"])).predict(
+            features, num_iteration=int(pfd["num_iterations"]["soft"])
+        ),
+        dtype=np.float64,
+    )
+    correction += float(pfd["overlay_weight"]) * (soft - control)
+    return np.clip(
+        np.asarray(probability, dtype=np.float64) + correction,
+        0.001,
+        0.999,
+    )
 
 
 def resolve_trackman_weights(frame: pd.DataFrame, hybrid: dict) -> np.ndarray:
@@ -1840,6 +1931,7 @@ def predict_dataframe(frame: pd.DataFrame) -> np.ndarray:
     prediction = apply_legacy_cb_axis(prediction, base_prediction, frame)
     prediction = apply_recent_exact_overlay(prediction, frame)
     prediction = apply_joint_state_mode_overlay(prediction, frame)
+    prediction = apply_v20_target1160_overlay(prediction, frame)
     if not np.isfinite(prediction).all():
         raise ValueError("prediction contains NaN or infinite values")
     return np.clip(prediction, 0.0, 1.0)
