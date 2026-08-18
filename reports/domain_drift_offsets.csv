@@ -1,0 +1,9 @@
+forecast_year,game_type,detected,recent_window,earlier_rate_residual,recent_rate_residual,logit_offset,threshold,reason,history_seasons
+2021,F,False,0,,,0.0,0.05,insufficient_history_or_no_large_sign_change,2019;2020
+2021,R,False,0,,,0.0,0.05,insufficient_history_or_no_large_sign_change,2019;2020
+2022,F,False,0,,,0.0,0.05,insufficient_history_or_no_large_sign_change,2019;2020;2021
+2022,R,False,0,,,0.0,0.05,insufficient_history_or_no_large_sign_change,2019;2020;2021
+2023,F,False,0,,,0.0,0.05,insufficient_history_or_no_large_sign_change,2019;2020;2021;2022
+2023,R,False,0,,,0.0,0.05,insufficient_history_or_no_large_sign_change,2019;2020;2021;2022
+2024,F,True,1,0.13263735533690668,-0.027053707284237394,-0.10832112178444421,0.05,latest_year_large_sign_change,2019;2020;2021;2022;2023
+2024,R,False,0,,,0.0,0.05,insufficient_history_or_no_large_sign_change,2019;2020;2021;2022;2023

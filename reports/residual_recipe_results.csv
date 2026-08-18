@@ -1,0 +1,13 @@
+recipe,outer_validation_season,brier,delta_v2,eta,correction_abs_p995,correction_abs_max,correction_mean,status
+eb_count_platoon,2021,,,,,,,BLOCKED: v2_nested primary OOF unavailable; no target-dependent selection performed
+eb_count_platoon,2022,,,,,,,BLOCKED: v2_nested primary OOF unavailable; no target-dependent selection performed
+eb_count_platoon,2023,,,,,,,BLOCKED: v2_nested primary OOF unavailable; no target-dependent selection performed
+eb_count_platoon,2024,,,,,,,BLOCKED: v2_nested primary OOF unavailable; no target-dependent selection performed
+ridge_zero_intercept,2021,,,,,,,BLOCKED: v2_nested primary OOF unavailable; no target-dependent selection performed
+ridge_zero_intercept,2022,,,,,,,BLOCKED: v2_nested primary OOF unavailable; no target-dependent selection performed
+ridge_zero_intercept,2023,,,,,,,BLOCKED: v2_nested primary OOF unavailable; no target-dependent selection performed
+ridge_zero_intercept,2024,,,,,,,BLOCKED: v2_nested primary OOF unavailable; no target-dependent selection performed
+shallow_lgb_residual,2021,,,,,,,BLOCKED: v2_nested primary OOF unavailable; no target-dependent selection performed
+shallow_lgb_residual,2022,,,,,,,BLOCKED: v2_nested primary OOF unavailable; no target-dependent selection performed
+shallow_lgb_residual,2023,,,,,,,BLOCKED: v2_nested primary OOF unavailable; no target-dependent selection performed
+shallow_lgb_residual,2024,,,,,,,BLOCKED: v2_nested primary OOF unavailable; no target-dependent selection performed

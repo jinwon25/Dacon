@@ -1,0 +1,6 @@
+audit,value,interpretation
+row_permutation_sensitivity_max_abs,7.650644779205322,nonzero means raw frame order changes features
+current_target_flip_effect,0.0,the flipped row itself should be zero for strict prequential exclusion
+future_row_effect_of_current_target_flip,0.004975080490112305,future rows in the same group can see the current label
+full_frame_global_prior_self_future_shift,4.999999999999449e-05,fit-frame target mean changes when one label changes
+season_cross_fitted_alternative,,requires exact official chronological key; implementation deliberately isolated

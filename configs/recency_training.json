@@ -1,0 +1,5 @@
+{
+  "seed": 42,
+  "validation_seasons": [2024],
+  "half_lives": [1.0, 2.0]
+}

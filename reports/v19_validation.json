@@ -1,0 +1,69 @@
+{
+  "candidate": "submit_v19.zip",
+  "parent": "submit_v17.zip",
+  "candidate_size_mb": 30.788575172424316,
+  "added_members": [
+    "model/joint_domain_h05_l15_b075_F.txt",
+    "model/joint_domain_h05_l15_b075_R_ANCHOR.txt",
+    "model/joint_domain_h05_l15_b075_R_CORE.txt",
+    "model/joint_global_h05_l15_b050.txt",
+    "model/joint_global_h05_l15_b100.txt",
+    "model/joint_global_h05_l31_b075.txt",
+    "model/joint_global_h4_l15_b075.txt",
+    "model/joint_mode_classifier_h0.5.txt",
+    "model/joint_mode_classifier_h2.txt",
+    "model/joint_mode_classifier_h4.txt",
+    "model/joint_mode_outcome.txt",
+    "model/joint_selected_h05_l15_b075.txt",
+    "model/joint_state_mode_preprocess.joblib",
+    "model/joint_state_mode_spec.json"
+  ],
+  "removed_members": [],
+  "changed_parent_members": [
+    "model/hybrid.json",
+    "script.py"
+  ],
+  "gates": {
+    "archive_lineage_ok": true,
+    "sample_rows_ok": true,
+    "benchmark_rows_ok": true,
+    "probabilities_finite_and_bounded": true,
+    "runtime_under_120s": true,
+    "peak_memory_under_4gb": true,
+    "batch_invariant": true,
+    "all_domains_changed": true,
+    "network_free": true,
+    "row_local_declared": true,
+    "test_aggregate_unused": true
+  },
+  "sample_seconds": 4.799353999987943,
+  "sample_peak_mb": 272.28125,
+  "sample_stdout": "Saved C:\\Users\\yun72_92xubzr\\AppData\\Local\\Temp\\aimers9_joint_verify_e2x4_pdp\\submit_v19\\output\\submission.csv rows=5 elapsed=1.977s",
+  "benchmark_seconds": 58.05148029999691,
+  "benchmark_peak_mb": 1423.0859375,
+  "benchmark_stdout": "Saved C:\\Users\\yun72_92xubzr\\AppData\\Local\\Temp\\aimers9_joint_verify_e2x4_pdp\\submit_v19\\output\\submission.csv rows=245789 elapsed=55.469s",
+  "benchmark_probability_min": 0.3561619583912564,
+  "benchmark_probability_max": 0.6538323053262028,
+  "batch_max_abs_difference": 1.1102230246251565e-16,
+  "domain_comparison": {
+    "R_CORE": {
+      "rows": 128,
+      "mean_difference": -0.0015767410319497705,
+      "mean_abs_difference": 0.00775742189569502,
+      "max_abs_difference": 0.02217374323936272
+    },
+    "R_ANCHOR": {
+      "rows": 128,
+      "mean_difference": 0.015537968895771765,
+      "mean_abs_difference": 0.015537968895771765,
+      "max_abs_difference": 0.0394460613166856
+    },
+    "F": {
+      "rows": 128,
+      "mean_difference": -0.015609482272284581,
+      "mean_abs_difference": 0.01711689274625689,
+      "max_abs_difference": 0.0405696801113149
+    }
+  },
+  "all_gates": true
+}

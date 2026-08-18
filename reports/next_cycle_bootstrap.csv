@@ -1,0 +1,4 @@
+recipe,delta_2022,delta_2023,delta_2024,recency_weighted_delta,worst_fold_delta,strict_fold_count,bootstrap_fraction_negative,bootstrap_2024_fraction_negative,checks,pass
+eb_count_platoon,,,,,,0,0.0,0.0,"{""nested_oof_available"": false}",False
+ridge_zero_intercept,,,,,,0,0.0,0.0,"{""nested_oof_available"": false}",False
+shallow_lgb_residual,,,,,,0,0.0,0.0,"{""nested_oof_available"": false}",False
