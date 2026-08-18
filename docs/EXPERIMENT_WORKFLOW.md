@@ -1,6 +1,8 @@
 # 팀 실험 실행 워크플로
 
-이 문서는 현재 Public champion v20을 기준으로 실험을 재현하고 새 후보를 평가하는 공통 절차다. Python 모듈이 계산의 단일 원본이고, [`../notebooks/experiment_workbench.ipynb`](../notebooks/experiment_workbench.ipynb)는 그 모듈을 순서대로 호출하고 결과를 확인하는 얇은 실행 화면이다. 노트북 안에 학습 로직을 복사하지 않는다.
+> **2026-08-18 정정**: 이 문서는 이전에 champion을 v27로 기록했으나 공식 DACON 제출 이력 재대조 결과 오류였다. 실제 champion은 `submit_v26.zip`이다(Public `1157.9736407889`, 제출 ID `51773`). 근거와 재현 절차는 [`../reports/target1170_followup_20260817.md`](../reports/target1170_followup_20260817.md) 상단과 [`../notebooks/v26_champion_reproduction.ipynb`](../notebooks/v26_champion_reproduction.ipynb)에 있다.
+
+이 문서는 현재 Public champion v26을 기준으로 실험을 재현하고 새 후보를 평가하는 공통 절차다. Python 모듈이 계산의 단일 원본이고, [`../notebooks/v26_champion_reproduction.ipynb`](../notebooks/v26_champion_reproduction.ipynb)는 그 모듈을 순서대로 호출하고 결과를 확인하는 얇은 실행 화면이다. 노트북 안에 학습 로직을 복사하지 않는다. `experiment_workbench.ipynb`는 v14→v19 pressure EB 계열의 과거 워크벤치이며 v22 이후 R_ANCHOR 계열은 다루지 않는다.
 
 ## 가장 먼저: 파일과 실행 노트북
 
@@ -8,11 +10,11 @@
 
 | 작업 | 받을 파일 |
 |---|---|
-| champion 실행·비교 | `submit_v20.zip` |
-| v20 재패키징 | `submissions/history/submit_v19.zip` + `artifacts/v20_target1160_final_20260816/` |
-| v20 재학습 | DACON 원본 데이터 + v19 OOF/alignment artifact + v20 활성 학습 코드 |
+| champion 실행·비교 | `submit_v26.zip` |
+| v26 재패키징 | `submit_v25.zip` + `src/package_v26_anchor_weight_probe.py` (기본값 `--probe-eta 0.15`) |
+| v25 기반모형 재학습 | DACON 원본 데이터 + v22 OOF artifact + v25 활성 학습 코드 |
 
-제출 ZIP은 수동으로 풀거나 다시 압축하지 않는다. v19 이하의 계보와 Drive 구조는 [`ARTIFACT_HANDOFF.md`](ARTIFACT_HANDOFF.md), v20 최종 해시는 [`../reports/v20_public_result_20260816.md`](../reports/v20_public_result_20260816.md)에 있다.
+제출 ZIP은 수동으로 풀거나 다시 압축하지 않는다. v19 이하의 계보와 Drive 구조는 [`ARTIFACT_HANDOFF.md`](ARTIFACT_HANDOFF.md), v26 최종 해시와 공식 결과는 [`../reports/target1170_followup_20260817.md`](../reports/target1170_followup_20260817.md) 상단 정정 안내와 [`../reports/v26_validation.json`](../reports/v26_validation.json)에 있다.
 
 Python 스크립트를 실행하는 공식 단일 노트북은 다음 파일이다.
 

@@ -4,11 +4,12 @@ import vm from "node:vm";
 
 
 function parseArgs(argv) {
-  const args = { competitionId: "236743", maxMatches: 250, paths: null };
+  const args = { competitionId: "236743", maxMatches: 250, paths: null, summaryOnly: false };
   for (let index = 0; index < argv.length; index += 1) {
     if (argv[index] === "--competition-id") args.competitionId = argv[++index];
     else if (argv[index] === "--max-matches") args.maxMatches = Number(argv[++index]);
     else if (argv[index] === "--paths") args.paths = argv[++index].split(",");
+    else if (argv[index] === "--summary-only") args.summaryOnly = true;
     else throw new Error(`Unknown argument: ${argv[index]}`);
   }
   return args;
@@ -169,5 +170,8 @@ const paths = args.paths ?? [
   "/leaderboard",
 ];
 const pages = [];
-for (const path of paths) pages.push(await auditPage(`${base}${path}`, args.maxMatches));
+for (const path of paths) {
+  const page = await auditPage(`${base}${path}`, args.maxMatches);
+  pages.push(args.summaryOnly ? { url: page.url, status: page.status, title: page.title, summary: page.summary } : page);
+}
 console.log(JSON.stringify({ competition_id: args.competitionId, checked_at: new Date().toISOString(), pages }, null, 2));

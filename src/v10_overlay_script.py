@@ -1785,6 +1785,107 @@ def apply_v21_context_state_eb_overlay(
     )
 
 
+def apply_v22_low_variance_overlay(
+    probability: np.ndarray, frame: pd.DataFrame
+) -> np.ndarray:
+    """Apply the frozen row-local domain calibration and ASOF prior blend."""
+    spec_path = MODEL_DIR / "v22_low_variance_spec.json"
+    if not spec_path.exists():
+        return probability
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    parent = np.asarray(probability, dtype=np.float64)
+    domain = _joint_domain(frame)
+    correction = np.zeros(len(frame), dtype=np.float64)
+    for name, parameters in spec["domain_calibration"].items():
+        mask = domain == str(name)
+        correction[mask] += float(parameters["weight"]) * (
+            float(parameters["anchor"]) - parent[mask]
+        )
+    pitcher = (
+        pd.to_numeric(frame["asof_pitcher_success_rate"], errors="coerce")
+        .fillna(float(spec["missing_rate_default"]))
+        .to_numpy(np.float64)
+    )
+    batter = (
+        pd.to_numeric(frame["asof_batter_success_rate"], errors="coerce")
+        .fillna(float(spec["missing_rate_default"]))
+        .to_numpy(np.float64)
+    )
+    prior = (
+        float(spec["asof_prior"]["pitcher_fraction"]) * pitcher
+        + float(spec["asof_prior"]["batter_fraction"]) * batter
+    )
+    correction += float(spec["asof_prior"]["weight"]) * (prior - parent)
+    return np.clip(parent + correction, 0.001, 0.999)
+
+
+def _v25_postbreak_frame(frame: pd.DataFrame) -> pd.DataFrame:
+    """Mirror the frozen post-break training features using row-local inputs."""
+    output = frame.copy()
+    output["domain3"] = _joint_domain(frame).astype(str)
+    output["count_state"] = (
+        output["balls_before"].astype("Int64").astype(str)
+        + "-"
+        + output["strikes_before"].astype("Int64").astype(str)
+    )
+    output["hand_matchup"] = (
+        output["pitcher_hand"].astype("string").fillna("__MISSING__")
+        + "-"
+        + output["batter_hand"].astype("string").fillna("__MISSING__")
+    )
+    output["inning_bucket"] = pd.cut(
+        pd.to_numeric(output["inning"], errors="coerce"),
+        bins=(-np.inf, 3, 6, np.inf),
+        labels=("early", "middle", "late"),
+    ).astype("string")
+    for column in ("asof_pitcher_n", "asof_batter_n", "asof_pitcher_pitchmix_n"):
+        output[f"log1p_{column}"] = np.log1p(
+            pd.to_numeric(output[column], errors="coerce").clip(lower=0.0)
+        )
+    output["recent_success_delta_1_5"] = (
+        pd.to_numeric(output["asof_pitcher_prev1_game_success_rate"], errors="coerce")
+        - pd.to_numeric(output["asof_pitcher_prev5_game_success_rate"], errors="coerce")
+    )
+    output["recent_middle_delta_1_5"] = (
+        pd.to_numeric(output["asof_pitcher_prev1_game_middle_rate"], errors="coerce")
+        - pd.to_numeric(output["asof_pitcher_prev5_game_middle_rate"], errors="coerce")
+    )
+    output["pitcher_batter_rate_gap"] = (
+        pd.to_numeric(output["asof_pitcher_success_rate"], errors="coerce")
+        - pd.to_numeric(output["asof_batter_success_rate"], errors="coerce")
+    )
+    return output
+
+
+def apply_v25_postbreak_anchor_overlay(
+    probability: np.ndarray, frame: pd.DataFrame
+) -> np.ndarray:
+    """Blend a 2024-only direct model on R_ANCHOR rows."""
+    spec_path = MODEL_DIR / "v25_postbreak_anchor_spec.json"
+    if not spec_path.exists():
+        return probability
+    import joblib
+
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    parent = np.asarray(probability, dtype=np.float64)
+    domain = _joint_domain(frame)
+    apply_mask = domain == str(spec["apply_domain"])
+    if not apply_mask.any():
+        return parent
+    model = joblib.load(MODEL_DIR / str(spec["model_file"]))
+    selected = frame.loc[apply_mask].copy()
+    features = _v25_postbreak_frame(selected)
+    direct = np.asarray(model.predict_proba(features)[:, 1], dtype=np.float64)
+    low, high = (float(value) for value in spec["probability_clip"])
+    direct = np.clip(direct, low, high)
+    result = parent.copy()
+    eta = float(spec["blend_eta"])
+    result[apply_mask] = np.clip(
+        parent[apply_mask] + eta * (direct - parent[apply_mask]), low, high
+    )
+    return result
+
+
 def resolve_trackman_weights(frame: pd.DataFrame, hybrid: dict) -> np.ndarray:
     """Resolve a scalar or row-local game-type Trackman blend weight.
 
@@ -1987,6 +2088,8 @@ def predict_dataframe(frame: pd.DataFrame) -> np.ndarray:
     prediction = apply_joint_state_mode_overlay(prediction, frame)
     prediction = apply_v20_target1160_overlay(prediction, frame)
     prediction = apply_v21_context_state_eb_overlay(prediction, frame)
+    prediction = apply_v22_low_variance_overlay(prediction, frame)
+    prediction = apply_v25_postbreak_anchor_overlay(prediction, frame)
     if not np.isfinite(prediction).all():
         raise ValueError("prediction contains NaN or infinite values")
     return np.clip(prediction, 0.0, 1.0)

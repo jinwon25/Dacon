@@ -21,7 +21,7 @@
 - 출처: [2024 제도별 KBO/퓨처스 도입 시기](https://www.koreabaseball.com/MediaNews/Notice/View.aspx?bdSe=9932), KBO.
 - 검증된 사실: ABS는 퓨처스리그에서 2020년부터, KBO 리그에서는 2024년부터 운영됐다. 피치클락은 2024 퓨처스에서 먼저 적용됐다.
 - 적용: game type을 하나의 전역 시즌 추세로 합치지 않고 익명 strata별 regime residual을 점검했다.
-- 주의: 공식 대회 설명서는 `F`와 `R` 의미를 정의하지 않으므로 F=퓨처스로 확정하지 않았다.
+- 2026-08-17 교정: 공식 FAQ가 `R=Regular(1군 정규시즌)`, `F=Futures(퓨처스리그/2군)`로 답변했으므로 F는 퓨처스리그로 확정한다.
 
 ## 4. KBO ABS 영향 분석
 

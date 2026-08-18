@@ -18,6 +18,7 @@ from src.failure_mode_privileged_distillation import (
 from src.multi_year_state_model import _add_categories, _model, _state_features
 from src.temporal_stable_conditional import _add_domain_and_pressure
 from src.trackman_privileged_distillation import V17_NAME, _diagnostics, bss
+from src.v16_residual_calibration_screen import load_v14_folds
 
 
 def _mode_classifier(seed: int) -> lgb.LGBMClassifier:
@@ -73,7 +74,12 @@ def _temperature(probability: np.ndarray, power: float) -> np.ndarray:
     return output / output.sum(axis=1, keepdims=True)
 
 
-def run(project: Path, output_dir: Path, outcome_half_life: float) -> dict[str, object]:
+def run(
+    project: Path,
+    output_dir: Path,
+    outcome_half_life: float,
+    audit_years: tuple[int, ...] = (2023, 2024),
+) -> dict[str, object]:
     project = project.resolve()
     output_dir = (project / output_dir).resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -87,9 +93,10 @@ def run(project: Path, output_dir: Path, outcome_half_life: float) -> dict[str, 
     categorical = [column for column in features if column.startswith("cat__")]
     typed = _typed_features(features, mode)
     typed_categorical = [*categorical, "cat__latent_failure_mode"]
+    v14_folds = load_v14_folds(project, train) if 2022 in audit_years else {}
 
     folds_out: list[dict[str, object]] = []
-    for audit_year in (2023, 2024):
+    for audit_year in audit_years:
         print(f"[latent-mode] audit_year={audit_year}", flush=True)
         fit_mask = train["season"].lt(audit_year).to_numpy() & (mode >= 0)
         audit_mask = train["season"].eq(audit_year).to_numpy()
@@ -141,15 +148,24 @@ def run(project: Path, output_dir: Path, outcome_half_life: float) -> dict[str, 
         target = audit["control_success"].to_numpy(np.float64)
         audit_mode = mode[audit_mask]
         known = audit_mode >= 0
-        with np.load(
-            project
-            / "artifacts"
-            / "v16_multiseason_20260815_02"
-            / f"{V17_NAME}_o{audit_year}.npz"
-        ) as saved:
-            incumbent = saved["candidate"].astype(np.float64)
-            if not np.array_equal(target, saved["target"].astype(np.float64)):
-                raise ValueError(f"v17 order mismatch for {audit_year}")
+        if audit_year == 2022:
+            fold_rows, fold_target, incumbent = v14_folds[2022]
+            if not np.array_equal(target, fold_target.astype(np.float64)):
+                raise ValueError("v14 fallback order mismatch for 2022")
+            if not np.array_equal(
+                audit["row_id"].to_numpy(), fold_rows["row_id"].to_numpy()
+            ):
+                raise ValueError("v14 fallback row order mismatch for 2022")
+        else:
+            with np.load(
+                project
+                / "artifacts"
+                / "v16_multiseason_20260815_02"
+                / f"{V17_NAME}_o{audit_year}.npz"
+            ) as saved:
+                incumbent = saved["candidate"].astype(np.float64)
+                if not np.array_equal(target, saved["target"].astype(np.float64)):
+                    raise ValueError(f"v17 order mismatch for {audit_year}")
 
         oracle = np.sum(
             probability_by_name["mode_lgb_mean"] * raw_by_mode, axis=1
@@ -248,7 +264,7 @@ def run(project: Path, output_dir: Path, outcome_half_life: float) -> dict[str, 
         print(json.dumps(fold_result, ensure_ascii=False, indent=2), flush=True)
 
     combined = pd.concat(
-        [pd.read_csv(output_dir / f"metrics_o{year}.csv") for year in (2023, 2024)],
+        [pd.read_csv(output_dir / f"metrics_o{year}.csv") for year in audit_years],
         ignore_index=True,
     )
     robust = (
@@ -261,6 +277,7 @@ def run(project: Path, output_dir: Path, outcome_half_life: float) -> dict[str, 
     summary = {
         "protocol": "LATENT_FAILURE_MODE_FULL_HISTORY_FORWARD_V1",
         "outcome_half_life": outcome_half_life,
+        "audit_years": list(audit_years),
         "training_label_coverage": float(np.mean(mode >= 0)),
         "folds": folds_out,
         "robust": robust.head(60).to_dict(orient="records"),
@@ -280,8 +297,20 @@ def main() -> None:
         default=Path("artifacts/latent_failure_mode_state_20260816_01"),
     )
     parser.add_argument("--outcome-half-life", type=float, default=0.5)
+    parser.add_argument(
+        "--audit-years",
+        type=int,
+        nargs="+",
+        default=[2023, 2024],
+        choices=[2022, 2023, 2024],
+    )
     args = parser.parse_args()
-    run(args.project, args.output_dir, args.outcome_half_life)
+    run(
+        args.project,
+        args.output_dir,
+        args.outcome_half_life,
+        tuple(args.audit_years),
+    )
 
 
 if __name__ == "__main__":

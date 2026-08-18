@@ -6,11 +6,11 @@
 
 | 확인할 내용 | 기준 파일 |
 |---|---|
-| 공식 제출 ID·점수·순위·API 응답 | [`../reports/v19_public_result_20260816.md`](../reports/v19_public_result_20260816.md) |
+| 공식 점수·순위·리더보드 응답 | [`../reports/v22_public_result_20260817.md`](../reports/v22_public_result_20260817.md) |
 | 전체 공식 제출 이력과 SHA-256 | [`../reports/submissions.csv`](../reports/submissions.csv) |
-| v19 로컬 게이트와 후보 선택 | [`../reports/target1150_joint_candidate_20260816.md`](../reports/target1150_joint_candidate_20260816.md) |
-| 실행·메모리·배치 불변성 | [`../reports/v19_validation.json`](../reports/v19_validation.json) |
-| 최종 학습 파일 해시 | `../artifacts/state_mode_joint_final_20260816/manifest.json` |
+| v22 로컬 게이트와 후보 선택 | [`../reports/v22_followup_20260817.md`](../reports/v22_followup_20260817.md) |
+| 실행·메모리·배치 불변성 | [`../reports/v22_validation.json`](../reports/v22_validation.json) |
+| 최종 학습 파일 해시 | `../artifacts/v22_low_variance_balanced_20260817/manifest.json` |
 | 제출 ZIP 위치와 보존 정책 | [`../submissions/README.md`](../submissions/README.md) |
 
 숫자가 서로 다르면 위 순서에서 더 직접적인 원본을 우선한다. 순위는 시간에 따라 바뀔 수 있으므로 확인 시각이 있는 기록만 사용한다.
@@ -22,7 +22,7 @@
 - [평가 행 독립 추론 공지](https://dacon.io/competitions/official/236743/talkboard/417123): 다른 test 행의 분포·빈도·순서를 사용하지 않는 근거
 - [대회 FAQ](https://dacon.io/competitions/official/236743/talkboard/417082): TrackMan·teacher signal 사용 범위 해석
 
-규칙 해석과 v19 준수 판단의 상세 연결은 [`../reports/target1150_joint_candidate_20260816.md`](../reports/target1150_joint_candidate_20260816.md)에 있다.
+규칙 해석과 현재 패키지 준수 판단의 상세 연결은 [`../reports/dacon_official_compliance_audit_20260816.md`](../reports/dacon_official_compliance_audit_20260816.md)와 [`../reports/v22_validation.md`](../reports/v22_validation.md)에 있다.
 
 ## 모델링·검증 참고자료
 
@@ -38,5 +38,8 @@
 - v13: [`../reports/v13_public_result_20260815.md`](../reports/v13_public_result_20260815.md)
 - v17·v18: [`../reports/v17_v18_public_result_20260816.md`](../reports/v17_v18_public_result_20260816.md)
 - v19: [`../reports/v19_public_result_20260816.md`](../reports/v19_public_result_20260816.md)
+- v20: [`../reports/v20_public_result_20260816.md`](../reports/v20_public_result_20260816.md)
+- v21: [`../reports/v21_public_result_20260816.md`](../reports/v21_public_result_20260816.md)
+- v22: [`../reports/v22_public_result_20260817.md`](../reports/v22_public_result_20260817.md)
 
 과거 문서의 “현재 champion” 표현은 작성 당시 상태를 뜻한다. 현재 운영 기준은 항상 [`PROJECT_STATUS.md`](PROJECT_STATUS.md)에서 확인한다.

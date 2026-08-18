@@ -1,0 +1,61 @@
+{
+  "candidate": "submit_v25.zip",
+  "parent": "submit_v22.zip",
+  "added_members": [
+    "model/v25_postbreak_anchor.joblib",
+    "model/v25_postbreak_anchor_spec.json"
+  ],
+  "removed_members": [],
+  "changed_parent_members": [
+    "model/hybrid.json",
+    "script.py"
+  ],
+  "gates": {
+    "archive_lineage_ok": true,
+    "sample_rows_ok": true,
+    "benchmark_rows_ok": true,
+    "probabilities_finite_and_bounded": true,
+    "runtime_under_120s": true,
+    "peak_memory_under_4gb": true,
+    "batch_invariant": true,
+    "formula_exact": true,
+    "protected_domains_exactly_unchanged": true,
+    "anchor_domain_changed": true,
+    "row_local_declared": true,
+    "test_aggregate_unused": true,
+    "external_data_unused": true
+  },
+  "sample_seconds": 6.600534600001993,
+  "sample_peak_mb": 273.375,
+  "sample_stdout": "Saved C:\\Users\\yun72_92xubzr\\AppData\\Local\\Temp\\aimers9_v25_verify_et6j20jo\\submit_v25\\output\\submission.csv rows=5 elapsed=3.079s",
+  "benchmark_seconds": 58.861721299996134,
+  "benchmark_peak_mb": 1446.51171875,
+  "benchmark_stdout": "Saved C:\\Users\\yun72_92xubzr\\AppData\\Local\\Temp\\aimers9_v25_verify_et6j20jo\\submit_v25\\output\\submission.csv rows=245789 elapsed=55.598s",
+  "benchmark_probability_min": 0.3485605199041215,
+  "benchmark_probability_max": 0.6432694559258558,
+  "benchmark_mean_abs_shift": 0.0005039930649782798,
+  "benchmark_max_abs_shift": 0.01985974984933464,
+  "batch_max_abs_difference": 1.1102230246251565e-16,
+  "formula_max_abs_difference": 2.220446049250313e-16,
+  "domain_shift": {
+    "R_CORE": {
+      "rows": 176227,
+      "mean": 2.1073365700892307e-19,
+      "mean_abs": 6.781591781382817e-18,
+      "max_abs": 2.220446049250313e-16
+    },
+    "R_ANCHOR": {
+      "rows": 43776,
+      "mean": 0.002468704591255456,
+      "mean_abs": 0.0028297686277399766,
+      "max_abs": 0.01985974984933464
+    },
+    "F": {
+      "rows": 25786,
+      "mean": 0.0,
+      "mean_abs": 0.0,
+      "max_abs": 0.0
+    }
+  },
+  "all_gates": true
+}

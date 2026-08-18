@@ -8,15 +8,19 @@ function parseArgs(argv) {
   const args = {
     competitionId: "236743",
     credentialsFile: null,
+    team: null,
     diagnostic: false,
   };
   for (let i = 0; i < argv.length; i += 1) {
     if (argv[i] === "--competition-id") args.competitionId = argv[++i];
     else if (argv[i] === "--credentials-file") args.credentialsFile = argv[++i];
+    else if (argv[i] === "--team") args.team = argv[++i];
     else if (argv[i] === "--diagnostic") args.diagnostic = true;
     else throw new Error(`Unknown argument: ${argv[i]}`);
   }
-  if (!args.credentialsFile) throw new Error("--credentials-file is required");
+  if (!args.team && !args.credentialsFile) {
+    throw new Error("--team or --credentials-file is required");
+  }
   return args;
 }
 
@@ -70,7 +74,7 @@ function sanitize(value, team) {
 
 
 const args = parseArgs(process.argv.slice(2));
-const team = loadTeam(args.credentialsFile);
+const team = args.team ?? loadTeam(args.credentialsFile);
 const url = `https://dacon.io/competitions/official/${args.competitionId}/leaderboard`;
 const response = await fetch(url, { redirect: "follow" });
 if (!response.ok) throw new Error(`Leaderboard request failed: HTTP ${response.status}`);
