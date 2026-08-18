@@ -1,4 +1,4 @@
-"""Create the official-FAQ-permitted 15% R_ANCHOR weight probe from v25."""
+"""Create the 0819_jy TrackMan-ASOF gate child of the v26 weight probe."""
 
 from __future__ import annotations
 
@@ -16,6 +16,60 @@ from src.package_v25_postbreak_anchor import _safe_extract
 PARENT_SHA256 = "60CF13B28AF01B24A49E2B03E13161F2E04A1C09647D8DA2CFD95407ED9335B1"
 SOURCE_ETA = 0.075
 PROBE_ETA = 0.150
+TMGATE_ETA = 0.030
+TMGATE_CAP = 0.030
+
+
+TMGATE_FUNCTION = r'''
+
+def apply_trackman_asof_gate_overlay(
+    probability: np.ndarray,
+    frame: pd.DataFrame,
+    global_rate: float,
+) -> np.ndarray:
+    """Tiny R_ANCHOR-only shrink toward ASOF prior gated by TrackMan coverage."""
+    profile_path = MODEL_DIR / "trackman_pitcher_profiles.csv"
+    if not profile_path.exists():
+        return probability
+    profile_columns = ["season", "pitcher_id", "tm_linked", "tm_pitcher_n"]
+    profile = pd.read_csv(profile_path, usecols=profile_columns)
+    source = frame[["season", "pitcher_id"]].copy()
+    source["__row_order"] = np.arange(len(source))
+    linked = (
+        source.merge(
+            profile,
+            on=["season", "pitcher_id"],
+            how="left",
+            sort=False,
+            validate="many_to_one",
+        )
+        .sort_values("__row_order", kind="stable")
+        .reset_index(drop=True)
+    )
+    tm_linked = pd.to_numeric(linked["tm_linked"], errors="coerce").fillna(0.0).to_numpy(float)
+    tm_n = pd.to_numeric(linked["tm_pitcher_n"], errors="coerce").fillna(0.0).to_numpy(float)
+    tm_conf = np.where(tm_linked > 0.0, tm_n / (tm_n + 500.0), 0.0)
+
+    regular = frame["game_type"].astype("string").fillna("__MISSING__").eq("R").to_numpy()
+    anchor = (
+        frame["pitcher_team_id"].eq(13) | frame["batter_team_id"].eq(13)
+    ).to_numpy()
+    pressure = np.where(
+        (pd.to_numeric(frame["balls_before"], errors="coerce").fillna(-1).to_numpy() == 3)
+        | (pd.to_numeric(frame["strikes_before"], errors="coerce").fillna(-1).to_numpy() == 2),
+        1.25,
+        0.75,
+    )
+    gate = np.where(regular & anchor, 0.03 * tm_conf * pressure, 0.0)
+    gate = np.clip(gate, 0.0, 0.03)
+    if not np.any(gate > 0.0):
+        return probability
+
+    prior = hierarchical_prior(frame, global_rate, 200.0, 0.25)
+    result = np.asarray(probability, dtype=np.float64).copy()
+    result = result * (1.0 - gate) + prior * gate
+    return np.clip(result, 1e-6, 1.0 - 1e-6)
+'''
 
 
 def _sha256(path: Path) -> str:
@@ -24,6 +78,29 @@ def _sha256(path: Path) -> str:
         for block in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(block)
     return digest.hexdigest().upper()
+
+
+def _patch_script_for_tmgate(script_path: Path) -> None:
+    script = script_path.read_text(encoding="utf-8")
+    if "def apply_trackman_asof_gate_overlay(" not in script:
+        marker = "\ndef resolve_trackman_weights(frame: pd.DataFrame, hybrid: dict) -> np.ndarray:"
+        if marker not in script:
+            raise ValueError("cannot find resolve_trackman_weights insertion marker")
+        script = script.replace(marker, TMGATE_FUNCTION + marker, 1)
+
+    call = (
+        "    prediction = apply_trackman_asof_gate_overlay(\n"
+        "        prediction,\n"
+        "        frame,\n"
+        "        float(ensemble[\"global_rate\"]),\n"
+        "    )\n"
+    )
+    if call not in script:
+        marker = "    prediction = apply_v25_postbreak_anchor_overlay(prediction, frame)\n"
+        if marker not in script:
+            raise ValueError("cannot find v25 postbreak anchor overlay marker")
+        script = script.replace(marker, marker + call, 1)
+    script_path.write_text(script, encoding="utf-8")
 
 
 def build(
@@ -72,6 +149,7 @@ def build(
         spec_path.write_text(
             json.dumps(spec, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
         )
+        _patch_script_for_tmgate(stage / "script.py")
         hybrid_path = stage / "model" / "hybrid.json"
         hybrid = json.loads(hybrid_path.read_text(encoding="utf-8"))
         hybrid.update(
@@ -79,6 +157,22 @@ def build(
                 "candidate": output.stem,
                 "variant_parent": parent.name,
                 "leaderboard_weight_probe": True,
+                "trackman_asof_gate": {
+                    "protocol": "0819_JY_TRACKMAN_ASOF_GATE_V1",
+                    "eta": TMGATE_ETA,
+                    "cap": TMGATE_CAP,
+                    "apply_domain": "R_ANCHOR",
+                    "confidence_source": "trackman_pitcher_profiles.csv: tm_linked, tm_pitcher_n",
+                    "asof_prior": {
+                        "alpha": 200.0,
+                        "batter_weight": 0.25,
+                    },
+                    "pressure_scale": {
+                        "three_ball_or_two_strike": 1.25,
+                        "other": 0.75,
+                    },
+                    "public_score": 1158.0745556751,
+                },
             }
         )
         hybrid_path.write_text(
@@ -98,6 +192,9 @@ def build(
         "parent_sha256": _sha256(parent),
         "source_eta": SOURCE_ETA,
         "probe_eta": float(probe_eta),
+        "trackman_asof_gate_eta": TMGATE_ETA,
+        "trackman_asof_gate_cap": TMGATE_CAP,
+        "public_score": 1158.0745556751,
         "sha256": _sha256(output),
         "size_bytes": output.stat().st_size,
         "official_faq": "https://dacon.io/competitions/official/236743/talkboard/417082#comment_320256",
@@ -115,7 +212,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--project", type=Path, default=Path("."))
     parser.add_argument("--parent", type=Path, default=Path("submit_v25.zip"))
-    parser.add_argument("--output", type=Path, default=Path("submit_v26.zip"))
+    parser.add_argument("--output", type=Path, default=Path("0819_jy_tmgate03.zip"))
     parser.add_argument("--probe-eta", type=float, default=PROBE_ETA)
     parser.add_argument("--expected-parent-sha256", default=PARENT_SHA256)
     args = parser.parse_args()
