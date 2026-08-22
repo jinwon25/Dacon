@@ -1,6 +1,17 @@
 # 챔피언 및 기반 산출물 인계 안내
 
-현재 Public champion은 `submit_v26.zip`(`1157.9736407889`, 제출 ID `51773`; 2026-08-18 정정 — 이전에 기록됐던 `submit_v27.zip`/`1535195`는 오류였다, 근거는 [`../reports/target1170_followup_20260817.md`](../reports/target1170_followup_20260817.md) 참고)이다. v26의 직접 부모는 `submit_v25.zip`, v25의 직접 부모는 `submit_v22.zip`이며, 아래 Drive의 v17/v13 폴더는 더 이전 계보를 재현하기 위한 과거 자료다. 최신 파일·해시와 로컬 필수 artifact는 [`PROJECT_STATUS.md`](PROJECT_STATUS.md)와 [`../submissions/README.md`](../submissions/README.md)를 우선한다. v21·v22·v25·v27 ZIP과 `artifacts/v25_postbreak_anchor_20260817_01/`은 아직 로컬 private artifact이며 Drive 업로드 완료로 표시하지 않는다.
+현재 Public champion은 standalone `1161.2020600422`이며 전달 기준은
+[`STANDALONE_CHAMPION.md`](STANDALONE_CHAMPION.md)의 단일 ZIP이다. 이 문서의 Drive
+구조는 v26 이하 역사 계보를 재현할 때만 사용한다. v26(`1157.9736407889`, 제출 ID
+`51773`)의 직접 부모는 v25, v25의 직접 부모는 v22다. 최신 파일·해시는
+[`PROJECT_STATUS.md`](PROJECT_STATUS.md)와 [`../submissions/README.md`](../submissions/README.md)를
+우선한다. v21·v22·v25·v27 ZIP과 `artifacts/v25_postbreak_anchor_20260817_01/`은 아직
+로컬 private artifact이며 Drive 업로드 완료로 표시하지 않는다.
+
+2026-08-22 v84는 `submit_v84_probe.zip` 이름으로 제출해 Public `1161.2020600422`를
+확인했다. 현재 인계 파일은
+`artifacts/standalone_champion_1161/standalone_champion_1161.zip`, SHA-256은
+`C033FC38A5F9681E45B0BD2494359B8BD1387EE44E5F318C5B7A5547CFE6C4F7`이다.
 
 모델·OOF·제출 ZIP은 Git에 넣지 않고 [팀 전용 Google Drive]([private reference removed])에서 관리한다. Drive 루트에는 현재 기준선과 과거 기준선 두 폴더만 있다.
 

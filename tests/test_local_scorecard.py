@@ -6,7 +6,7 @@ from src.local_scorecard import build_scorecard
 
 def _metrics() -> pd.DataFrame:
     return pd.DataFrame(
-        {"year": [2022, 2023, 2024], "gain_vs_v13": [2.0, 4.0, 8.0]}
+        {"year": [2022, 2023, 2024], "gain_vs_incumbent": [2.0, 4.0, 8.0]}
     )
 
 
@@ -22,13 +22,15 @@ def _bootstrap(p05_2022: float = 0.5) -> pd.DataFrame:
 
 
 def test_scorecard_uses_half_life_weights_and_transfer_scenarios():
+    transfer = pd.DataFrame(
+        {"local_gain": [10.0, 20.0, 30.0], "public_gain": [5.0, 10.0, 15.0]}
+    )
     card = build_scorecard(
         "candidate",
         _metrics(),
         _bootstrap(),
         incumbent_public=1000.0,
-        calibration_local_gain=20.0,
-        calibration_public_gain=10.0,
+        transfer_history=transfer,
     )
 
     assert card["strict_gate"] is True
@@ -55,6 +57,19 @@ def test_pre_break_failure_can_fail_strict_but_pass_post_break():
 
     assert card["strict_gate"] is False
     assert card["post_break_gate"] is True
+
+
+def test_single_transfer_observation_suppresses_public_projection():
+    card = build_scorecard(
+        "candidate",
+        _metrics(),
+        _bootstrap(),
+        incumbent_public=1000.0,
+        calibration_local_gain=20.0,
+        calibration_public_gain=10.0,
+    )
+    assert card["public_scenarios"]["status"] == "insufficient_clean_transfer_history"
+    assert "latest_year" not in card["public_scenarios"]
 
 
 def test_scorecard_rejects_mismatched_years():

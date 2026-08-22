@@ -1,0 +1,45 @@
+{
+  "protocol": "TEAM_OOF_BUNDLE_V1",
+  "required_csv_columns": [
+    "row_id",
+    "axis",
+    "evaluation_season",
+    "target",
+    "prediction",
+    "domain3",
+    "month",
+    "pitcher_id",
+    "batter_id"
+  ],
+  "required_manifest_fields": [
+    "protocol",
+    "model_name",
+    "model_sha256",
+    "config_sha256",
+    "training_data_sha256",
+    "comparison_parent_sha256",
+    "row_local",
+    "test_aggregate_used",
+    "public_score_used_for_weight",
+    "axes"
+  ],
+  "axis_fields": [
+    "axis",
+    "role",
+    "evaluation_season",
+    "training_max_season",
+    "recipe_frozen_before_axis"
+  ],
+  "allowed_roles": [
+    "nested_outer",
+    "locked_shadow",
+    "development_contaminated"
+  ],
+  "rules": {
+    "unique_key": ["axis", "row_id"],
+    "training_max_season_strictly_less_than_evaluation_season": true,
+    "candidate_comparison_parent_must_equal_incumbent_model_sha256": true,
+    "public_score_may_not_determine_weight": true,
+    "test_rows_may_not_be_aggregated": true
+  }
+}

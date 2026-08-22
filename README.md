@@ -4,30 +4,121 @@
 
 원본 데이터와 모델 파일은 일반 Git 이력에 넣지 않는다. GitHub에는 재현 가능한 코드와 선별된 실험 기록만 보관하고, 모델·OOF·제출 ZIP은 동일한 공식 DACON 팀원만 접근할 수 있는 별도 private artifact로 관리한다.
 
+> **2026-08-22 최신 기준**: v82 위 F 도메인에 고정 shared pairwise FM을 적용한 v84가
+> Public **1161.2020600422**를 기록했다. 현재 전달·실행 기준은 과거 ZIP 계보가
+> 아니라 [`docs/STANDALONE_CHAMPION.md`](docs/STANDALONE_CHAMPION.md)의
+> `artifacts/standalone_champion_1161/standalone_champion_1161.zip`이다. 아래
+> 2026-08-18 정정은 v26 이전 계보를 설명하는 역사 기록이며 최신 기준을 대체하지
+> 않는다. 최신 후속 실행 결과와 1170 로드맵은
+> [`reports/target1170_v84_public_result_20260822.md`](reports/target1170_v84_public_result_20260822.md)를 따른다.
+
+> 다음 작업 세션의 불변 조건은
+> [`docs/PROJECT_MEMORY.md`](docs/PROJECT_MEMORY.md)에 영구 기록한다.
+> 최종 gate OOF, v62~v64 직교·물리 후보, 공개 대회 자료와 최신 논문 감사 결과는
+> [`reports/target1170_research_update_20260822.md`](reports/target1170_research_update_20260822.md)를
+> 참고하고, 후보 승격 기준은
+> [`configs/evaluation_v3.json`](configs/evaluation_v3.json)을 최신 원본으로 사용한다.
+
 > **2026-08-18 champion 정정**: 아래 표와 이어지는 서술은 이전에 `submit_v27.zip`을 champion으로 기록했지만, 공식 DACON 제출 이력을 다시 대조한 결과 이는 오류였다. `1535195`는 DACON이 실제 발급하는 5자리 제출 ID 형식과 다르다. **실제 champion은 `submit_v26.zip`**이다 — Public **1157.9736407889**는 그대로지만, 제출 ID는 `51773`(제출 2026-08-17 05:08:58)이다. `submit_v27.zip`은 Public `1156.6153781694`(ID `51775`), `submit_v28.zip`은 `1156.9983034655`(ID `51783`)로 둘 다 v26보다 낮다. 재현·검증은 [`notebooks/v26_champion_reproduction.ipynb`](notebooks/v26_champion_reproduction.ipynb)를 기준으로 한다. 정정 근거는 [`reports/target1170_followup_20260817.md`](reports/target1170_followup_20260817.md) 상단과 [`reports/submissions.csv`](reports/submissions.csv)에 있다.
 
 ## 현재 현황
 
 | 항목 | 현재 상태 |
 |---|---:|
-| 목표 Public 점수 | **1200** |
-| 현재 최고 Public 점수 | **1157.9736407889** |
-| 1170까지 남은 차이 | **12.0263592111** |
-| 1200까지 남은 차이 | **42.0263592111** |
+| 목표 Public 점수 | **1170** |
+| 현재 최고 Public 점수 | **1161.2020600422** |
+| 1170까지 남은 차이 | **8.7979399578** |
+| 1200까지 남은 차이 | **38.7979399578** |
 | 확인 당시 10위 컷 / 격차 | 미확인 (정정 이전 값은 v27 기준 기록이므로 재확인 필요) |
-| champion 제출 파일 | `submit_v26.zip` |
-| 직접 부모 | `submit_v25.zip` |
-| DACON 제출 ID | `51773` |
-| 제출 ZIP SHA-256 | `8BE26E156A91C1FA5E9989EEE5043DB5992A960DF35A53D8A9BFEF7E6825D096` |
-| 확인 당시 순위 | 미확인 (정정 이전 "10위"는 v27 기준 기록이므로 v26 기준으로 재확인 필요) |
-| 로컬 전체 추론 | **56.240초 / peak RSS 1,410.7MB** |
-| 현재 기준 브랜치 | `jinwon25/target-1160-research` |
+| champion 전달 파일 | `artifacts/standalone_champion_1161/standalone_champion_1161.zip` |
+| 모델 계보 | `v25 → v26(.15) → TrackMan-ASOF → EXP-021 R_CORE(.10) → shared FM F(.10)` |
+| DACON 제출 ID | `59988` |
+| 단일 ZIP SHA-256 | `C033FC38A5F9681E45B0BD2494359B8BD1387EE44E5F318C5B7A5547CFE6C4F7` |
+| 확인 당시 순위 | **13위** |
+| 단일 ZIP 검증 | 71개 파일·CRC·행 독립성 통과, 245,789행 재실행 114.487초, 공식 제출 41초 |
+| 현재 기준 브랜치 | `team/main` (이 릴리스 커밋) |
 | GitHub 운영 | feature branch → 팀 리뷰 → squash merge |
-| 공식 결과 확인 시각 | `2026-08-17 05:54 KST` |
+| 공식 결과 확인 시각 | `2026-08-22 14:59 KST` |
 
-공식 리더보드에서 점수와 순위를 확인했다. 순위는 다른 참가자의 제출에 따라 달라질 수 있으므로 위 값은 확인 당시 기록이다. 상세 근거는 [`reports/target1170_followup_20260817.md`](reports/target1170_followup_20260817.md)에 있다.
+공식 리더보드에서 점수를 확인했다. 순위는 다른 참가자의 제출에
+따라 달라질 수 있다. 상세 근거는
+[`reports/target1170_v84_public_result_20260822.md`](reports/target1170_v84_public_result_20260822.md)에 있다.
 
-v26은 v25의 `1155.8293405409`에서 **+2.1443002480**, v22에서 **+4.9300384091** 상승했다(위 정정 참고: 이 gain은 원래 v27 몫으로 잘못 기록됐던 값과 같은 크기이며, 실제로는 v26의 것이다). 새 실험의 운영 기준선은 v26이며, v25는 직접 부모로 보존한다. 후속 v27·v28은 검증 후 실제 제출했지만 v26을 넘지 못했다.
+### 1158.07 대비 무엇이 달라졌나
+
+직전 팀 최고점 `1158.0745556751`의 예측을 폐기하거나 전면 재학습한 것이 아니다.
+검증된 1158 계보를 부모로 고정하고, 서로 겹치지 않는 두 구간에 작은 logit 보정을
+순차 적용했다.
+
+| 단계 | 적용 행 | 추가 모델·강도 | Public | 직전 대비 |
+|---|---|---|---:|---:|
+| 1158 기준 | 기존 `R_ANCHOR` TrackMan-ASOF gate 포함 | 기존 계보 | 1158.0745556751 | - |
+| v82 | `R_CORE`만 | 사전 동결 EXP-021 strict, logit `0.10` | 1159.3352239501 | +1.2606682750 |
+| v84 | `F`만 | full-2023+late-2024, source·기간 균형 rank-16 shared pairwise FM, logit `0.10` | **1161.2020600422** | +1.8668360921 |
+
+1158 대비 누적 상승은 **+3.1275043671**이다. `R_ANCHOR`는 그대로 보호했고,
+v82의 `R_CORE`와 v84의 `F`는 서로 배타적인 routing이라 같은 행에 보정을 중복
+적용하지 않는다. 따라서 개선점은 전역 확률 이동이 아니라 검증된 하위 집단별 잔차
+보정 두 개를 안전하게 결합한 것이다.
+
+### 최고점 단일 버전 재검증
+
+`standalone_champion_1161.zip`은 루트에 `script.py`, `requirements.txt`, `model/`만
+가진 71개 파일짜리 독립 패키지다. 과거 제출 ZIP이나 저장소 `src/`를 import하지 않는다.
+실제 확정 ZIP을 임시 디렉터리에 풀어 그 안의 코드와 모델만으로 다시 검사한 결과는
+다음과 같다.
+
+- SHA-256: `C033FC38A5F9681E45B0BD2494359B8BD1387EE44E5F318C5B7A5547CFE6C4F7`
+- ZIP CRC와 루트 구조: 통과
+- 공식 규칙 정적 검사: 금지 연산 0건
+- 5행 실데이터의 단일행·순서변경·분할 예측 최대 차이: 각각 `1.11e-16`, `0`, `0`
+- 245,789행 규모 격리 재실행: `114.487초`, 유한값·`[0, 1]` 범위·ID 정렬 통과
+- DACON 실제 제출 실행시간: `41초`로 공식 제한 `600초` 이내
+
+동일 검사는 아래 한 명령으로 반복할 수 있다. `--scale-rows`를 생략하면 빠른 샘플·행
+독립성 검사만 수행한다.
+
+```powershell
+python -m src.audit_standalone_release `
+  --package artifacts/standalone_champion_1161/standalone_champion_1161.zip `
+  --test-csv data/test.csv `
+  --scale-rows 245789 `
+  --timeout-seconds 180
+```
+
+원본 데이터·학습 모델·제출 ZIP은 대회 데이터 보호와 저장소 용량 정책에 따라 공개
+Git에 올리지 않는다. GitHub에는 위 해시, 생성 코드, 검증 코드와 결과 문서를 남기며,
+확정 ZIP은 동일한 DACON 팀원끼리 private artifact로 전달한다.
+
+### 2026-08-22 평가 재감사
+
+- 공식 BSS 구현은 맞다. 1170에는 테스트 양성률을 0.4861로 가정할 때 평균 Brier
+  약 `2.1978e-05` 감소가 필요하다.
+- 2024 label은 반복 실험에 사용돼 독립 holdout이 아니다. 이후에는
+  `development_contaminated` 진단으로만 사용한다.
+- 새 후보는 서로 다른 nested/locked primary 축 2개, 월·domain·세 종류 bootstrap,
+  final-family Reality Check를 모두 통과해야 한다.
+- local→Public 단일 환산은 금지하며 clean 관측 3개 전에는 projection을 출력하지 않는다.
+- 공식 추론 제한은 600초이고 저장소의 120초는 내부 soft guard다.
+- v75에서 전역 calibration은 이미 양호했고, v76 domain×count source-only 보정은
+  exact late23→full24에서 `-45.486`으로 기각됐다. 해당 계열은 재개하지 않는다.
+- v77 팀 exact OOF 계약과 constrained blend evaluator를 완성했다. 독립 OOF가 없어 실제
+  weight는 계산하지 않았다.
+- v78 환경 안정 잔차는 primary 두 축에서 eta `0`, 미래 감사축에서 `-7.5362`로 기각했다.
+  제출 ZIP과 Public probe는 만들지 않았다.
+- v82는 full-2024 OOF gain `+1.2596972`와 실제 Public gain `+1.2606643`이 거의 정확히
+  일치해 새 champion으로 승격했다. 이 한 건을 다른 family의 환산계수로 쓰지 않는다.
+- v83 새 부모 조건부 감사에서 strict 증량과 v50은 기각했고, F-only v56을 다음 고정
+  recipe 복원 1순위로 정했다.
+- v84는 그 고정 v56 레시피를 full-2023+late-2024 source로 복원해 단일 ZIP으로 제출했고,
+  Public `+1.8668360921`이 전이돼 **1161.2020600422** 새 champion으로 승격했다.
+
+최종 TrackMan-ASOF gate는 v26에서 **+0.1009148862** 상승했다. 현재 후속
+실험의 운영 기준선은 v84 Public 1161.2020600422이며, v82·v26·1158 standalone과 v25는 계보
+감사용 부모로만 보존한다. v29~v56 중 상당수는 eta `0.10` 부모를 사용했으므로 현재
+기준선 위 후보로 간주하지 않는다. v57 strict 하나만 최종 부모 위에 재계산해 v82가 됐다.
+
+v26은 v25의 `1155.8293405409`에서 **+2.1443002480**, v22에서 **+4.9300384091** 상승했다(위 정정 참고: 이 gain은 원래 v27 몫으로 잘못 기록됐던 값과 같은 크기이며, 실제로는 v26의 것이다). 후속 v27·v28은 검증 후 실제 제출했지만 v26을 넘지 못했다.
 
 2026-08-17 후속 연구에서 row-local 도메인 보정과 투수·타자 ASOF prior를 결합한 `submit_v22.zip`을 생성하고 13개 패키지 게이트를 모두 통과시켰다. Public에서 v21 대비 `+1.5298`이 전이돼 새 champion으로 승격했다. 사전 등록한 `0 ~ +3` 분기에 따라 같은 계열의 강도 조정과 보수형 제출은 중단한다. 상세 판단은 [`reports/v22_public_result_20260817.md`](reports/v22_public_result_20260817.md)에 있다.
 
@@ -35,7 +126,7 @@ v26은 v25의 `1155.8293405409`에서 **+2.1443002480**, v22에서 **+4.93003840
 
 공식 FAQ와 데이터 의미를 다시 감사해 `F=Futures(퓨처스리그/2군)`, `R=Regular(1군 정규시즌)`로 문서를 교정했다. ASOF 누적은 전 행에서 직전 통계와 정확히 일치했고, F target 급락은 reverse 실패율의 2022 `4.82%`→2023 `29.96%` 급증과 함께 나타났다. 허용된 TrackMan ID 연결은 이미 train의 `82.54%`를 정렬하고 있었으며, 새 의미 기반 신호와 Public 역산 가중치는 시간축 게이트에서 기각됐다. `submit_v24.zip`은 만들지 않았다. 상세 결과는 [`reports/v24_semantic_eda_20260817.md`](reports/v24_semantic_eda_20260817.md)에 있다.
 
-### 2026-08-17 Public 결과와 결정
+### 2026-08-22까지의 Public 결과와 결정
 
 | 제출 | Public 점수 | v17 대비 | 판단 |
 |---|---:|---:|---|
@@ -47,27 +138,39 @@ v26은 v25의 `1155.8293405409`에서 **+2.1443002480**, v22에서 **+4.93003840
 | `submit_v21.zip` | 1151.5138356157 | +58.1924882349 | v22 직접 부모 |
 | `submit_v22.zip` | **1153.0436023798** | **+59.7222549990** | v25 직접 부모 |
 | `submit_v25.zip` | **1155.8293405409** | **+62.5079923062** | v26 직접 부모 |
-| `submit_v26.zip` | **1157.9736407889** | **+64.6522934081** | **현재 champion** (ID `51773`) |
+| `submit_v26.zip` | **1157.9736407889** | **+64.6522934081** | 최종 gate의 직접 부모 (ID `51773`) |
 | `submit_v27.zip` | 1156.6153781694 | +63.2940307886 | v25 기반 10% probe, v26보다 낮아 기각 |
 | `submit_v28.zip` | 1156.9983034655 | +63.6769560847 | v27 기반 손잡이 routing, v26보다 낮아 기각 |
+| `0819_3_tmgate03.zip` | 1158.0745556751 | +64.7532085624 | 직전 champion, 단일 ZIP 감사본 보존 |
+| `submit_v82_probe.zip` | **1159.3352239501** | **+66.0138765693** | v84 직접 부모, `standalone_champion_1159.zip` |
+| `submit_v84_probe.zip` | **1161.2020600422** | **+67.8807126614** | **현재 champion**, 로컬 전달명 `standalone_champion_1161.zip` |
 
-v26은 v25의 post-break R_ANCHOR 직접확률 보정 강도를 15%(스크립트 기본값)로 적용해 Public `+2.1443`을 추가했다. 이후 시도한 10% probe(v27)와 손잡이 routing(v28)은 모두 v26에 못 미쳤다. 이후 후보는 v26을 고정 기준선으로 두며, 같은 보정 계열의 연속 미세 조정은 중단한다.
+v26은 v25의 post-break R_ANCHOR 직접확률 보정 강도를 15%로 적용해 Public
+`+2.1443`을 추가했다. 이후 시도한 10% probe(v27)와 손잡이 routing(v28)은 모두
+v26에 못 미쳤다. 최종 TrackMan-ASOF gate가 v26에서 `+0.1009`를 더해 당시
+1158.0746 기준선을 만들었다.
+
+v82는 이 기준선의 R_CORE에 사전 고정 EXP-021 strict를 10% 혼합해 Public
+`+1.2606682750`를 추가했다. v84는 F-only shared FM으로 다시 `+1.8668360921`을 더했다.
+이후 후보는 1161.2020600422를 정확한 새 부모로 사용한다.
 
 ## 폴더를 처음 열었을 때
 
-루트에는 현재 champion과 재현에 필요한 직접 부모를 두고, 그 이전 제출물은 별도 보관한다.
+현재 작업은 단일 champion과 그 manifest를 기준으로 한다. 과거 제출물은 계보
+감사에만 사용하며 새 팀원에게 전달하지 않는다.
 
 ```text
 프로젝트 루트/
-├─ submit_v26.zip          현재 champion
-├─ submit_v25.zip          v26 직접 부모
-├─ submit_v22.zip          v25 직접 부모
-├─ submit_v21.zip          v22 직접 부모
-├─ submissions/history/   과거 제출본과 v21 부모 v20
-├─ reports/README.md       최신 결과 문서 안내
-├─ artifacts/README.md     모델 산출물 보존 기준
-├─ src/                    학습·패키징·검증 구현
-└─ tests/                  자동 검증
+├─ artifacts/standalone_champion_1161/
+│  ├─ standalone_champion_1161.zip   현재 전달·실행 파일
+│  ├─ standalone_manifest.json       파일 해시·검증 결과
+├─ artifacts/standalone_champion_1159/  직전 챔피언 감사본
+├─ artifacts/standalone_champion_1158/  직전 챔피언 감사본
+├─ docs/STANDALONE_CHAMPION.md        실행·전달 절차
+├─ reports/README.md                  최신 결과 문서 안내
+├─ submissions/                       과거 제출 계보 안내
+├─ src/                               학습·패키징·검증 구현
+└─ tests/                             자동 검증
 ```
 
 먼저 [`submissions/README.md`](submissions/README.md)와 [`reports/README.md`](reports/README.md)를 읽으면 현재 상태와 전체 이력을 빠르게 파악할 수 있다.
@@ -75,10 +178,11 @@ v26은 v25의 post-break R_ANCHOR 직접확률 보정 강도를 15%(스크립트
 ### 1. champion 파일 확인
 
 ```powershell
-Get-FileHash -Algorithm SHA256 .\submit_v26.zip
+Get-FileHash -Algorithm SHA256 `
+  .\artifacts\standalone_champion_1161\standalone_champion_1161.zip
 ```
 
-결과가 `8BE26E156A91C1FA5E9989EEE5043DB5992A960DF35A53D8A9BFEF7E6825D096`인지 확인한다.
+결과가 `C033FC38A5F9681E45B0BD2494359B8BD1387EE44E5F318C5B7A5547CFE6C4F7`인지 확인한다.
 
 ### 2. 데이터와 환경 준비
 
@@ -101,10 +205,12 @@ python -m pip install -r requirements-dev.txt
 ### 3. 검증 또는 연구 시작
 
 ```powershell
-jupyter lab notebooks/v26_champion_reproduction.ipynb
+python -m pytest -q tests/test_package_standalone_champion.py
 ```
 
-가장 먼저 이 노트북을 열어 champion(v26)을 실행·검증한다. v27·v28은 v26에 못 미쳐 기각된 후보이며, 그 계보를 다시 보려면 `python -m src.validate_v28_anchor_hand_route --project . --candidate submit_v28.zip --parent submit_v27.zip --report reports/v28_validation.md`로 v27 대비 단일 routing 변경의 계보·수식·배치 불변성을 재현할 수 있다. 새 연구는 champion v26을 덮어쓰지 않고 별도 후보명으로 생성한다.
+가장 먼저 단일 릴리스의 구조·실행·행 독립성을 검증한다. v26 재현 노트북과
+v27·v28 검증기는 역사 계보를 감사할 때만 사용한다. 새 연구는 현재 standalone
+champion을 덮어쓰지 않고 별도 후보명으로 생성한다.
 
 ## 무엇을 예측하는 대회인가
 
@@ -479,6 +585,17 @@ python scripts/audit_repository.py --include-untracked
 - [`docs/ARTIFACT_HANDOFF.md`](docs/ARTIFACT_HANDOFF.md): v19 부모인 v17과 v13 과거 기준선의 Drive 구조·해시·인계 방법
 - [`docs/TEAM_ONBOARDING.md`](docs/TEAM_ONBOARDING.md): 팀원 초대 후 확인할 체크리스트
 - [`CONTRIBUTING.md`](CONTRIBUTING.md): 실험과 Pull Request 작성 규칙
+
+## 2026-08-22 TrackMan 전수조사
+
+- TrackMan 1,793,078행을 공식 train과 target 없이 정렬한 결과 1,217,598행
+  (82.54%)이 강한 일대일 근거로 연결됐다.
+- test에는 현재 투구 물리량·plate location·intended target·TrackMan ID가 없으므로,
+  TrackMan은 origin 이전 시즌의 투수별 동결 profile로만 사용한다.
+- 고차원 물리 profile, repeatability, TrackMan 구종-label 학생 모델은 시간축에서 기각했다.
+- 단일 IVB 4~9월 후보 v70은 2024 재사용 축에서 양수였지만, recipe를 고정한 v74의
+  2022 과거축에서 eta `0`으로 반증되어 최종 기각했다.
+- 상세 근거와 1170 후속 경로: [`reports/trackman_deep_dive_20260822.md`](reports/trackman_deep_dive_20260822.md)
 
 ## 2026-08-17 인계 요약
 

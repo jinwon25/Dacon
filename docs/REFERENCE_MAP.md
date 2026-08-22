@@ -6,11 +6,12 @@
 
 | 확인할 내용 | 기준 파일 |
 |---|---|
-| 공식 점수·순위·리더보드 응답 | [`../reports/v22_public_result_20260817.md`](../reports/v22_public_result_20260817.md) |
+| 현재 Public·standalone SHA-256 | [`PROJECT_STATUS.md`](PROJECT_STATUS.md), [`STANDALONE_CHAMPION.md`](STANDALONE_CHAMPION.md) |
+| post-1161 결과와 1170 방향 | [`../reports/target1170_v84_public_result_20260822.md`](../reports/target1170_v84_public_result_20260822.md) |
 | 전체 공식 제출 이력과 SHA-256 | [`../reports/submissions.csv`](../reports/submissions.csv) |
-| v22 로컬 게이트와 후보 선택 | [`../reports/v22_followup_20260817.md`](../reports/v22_followup_20260817.md) |
-| 실행·메모리·배치 불변성 | [`../reports/v22_validation.json`](../reports/v22_validation.json) |
-| 최종 학습 파일 해시 | `../artifacts/v22_low_variance_balanced_20260817/manifest.json` |
+| TrackMan 전수조사·기각 경로 | [`../reports/trackman_deep_dive_20260822.md`](../reports/trackman_deep_dive_20260822.md) |
+| 최신 직교 후보·공개 자료 감사 | [`../reports/target1170_research_update_20260822.md`](../reports/target1170_research_update_20260822.md) |
+| 실행·행 독립성 manifest | `../artifacts/standalone_champion_1161/standalone_manifest.json` |
 | 제출 ZIP 위치와 보존 정책 | [`../submissions/README.md`](../submissions/README.md) |
 
 숫자가 서로 다르면 위 순서에서 더 직접적인 원본을 우선한다. 순위는 시간에 따라 바뀔 수 있으므로 확인 시각이 있는 기록만 사용한다.
@@ -29,6 +30,7 @@
 - [`../reports/literature_review.md`](../reports/literature_review.md): tabular 모델, calibration, proper scoring rule, drift와 ensemble 문헌 정리
 - [`../reports/domain_literature_review.md`](../reports/domain_literature_review.md): KBO 제도 변화, 투구 제구와 구종·릴리스 관련 도메인 연구
 - [`../reports/local_evaluation_v2_20260815.md`](../reports/local_evaluation_v2_20260815.md): rolling-origin, block bootstrap, Reality Check와 local scorecard 근거
+- [`../reports/evaluation_reaudit_20260822.md`](../reports/evaluation_reaudit_20260822.md): nested evidence role, 2024 오염 판정, Brier headroom과 평가 v3
 - [`../reports/top1100/references.md`](../reports/top1100/references.md): 초기 후보에서 검토·기각한 모델과 야구 도메인 참고자료
 
 참고 문헌은 방법을 시도할 근거이지 성능 보증이 아니다. 최종 채택 여부는 동일한 local gate와 패키지 검증 결과로 결정한다.

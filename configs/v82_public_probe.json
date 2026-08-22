@@ -1,0 +1,34 @@
+{
+  "protocol": "V82_PUBLIC_PROBE_V57_STRICT_BLEND_V1",
+  "parent": "standalone_champion_1158 / Public 1158.0745556751",
+  "challenger": "EXP-021 strict_lowrank_s300_r6",
+  "blend": {
+    "space": "probability",
+    "route": "R_CORE",
+    "weight": 0.1,
+    "anchor_team_id": 13
+  },
+  "recipe_selected_before_2024": true,
+  "selection_evidence": {
+    "full_2022_gain": 39.67359822505365,
+    "late_2023_gain": 7.195257857082556,
+    "full_2022_worst_month_gain": 3.2807101776843437,
+    "late_2023_worst_month_gain": 5.47901912953688
+  },
+  "final_parent_oof": {
+    "full_2024_gain": 1.2596972212386566,
+    "full_2024_worst_month_gain": -9.176154965760643,
+    "late_2024_gain": 0.4874655486832962,
+    "late_2024_worst_month_gain": -9.064119983850041
+  },
+  "probe_gate": {
+    "both_audit_gains_positive": true,
+    "both_worst_month_gains_above_minus_10": true,
+    "all_domain_gains_nonnegative": true,
+    "standalone_and_row_independence_required": true
+  },
+  "target1170_gate_passed": false,
+  "public_probe_authorized_by_user": true,
+  "test_aggregate_used": false,
+  "public_score_used_for_recipe_selection": false
+}

@@ -1,8 +1,18 @@
 # 팀 실험 실행 워크플로
 
+> **2026-08-22 현재 기준**: 운영 champion은 standalone Public
+> `1161.2020600422`이며 전달 파일은
+> `artifacts/standalone_champion_1161/standalone_champion_1161.zip`이다. 아래 v26
+> 절차는 역사 재현용이다. 새 후보 평가는
+> [`../configs/evaluation_v3.json`](../configs/evaluation_v3.json)과
+> [`../reports/evaluation_reaudit_20260822.md`](../reports/evaluation_reaudit_20260822.md)를
+> 우선한다.
+
 > **2026-08-18 정정**: 이 문서는 이전에 champion을 v27로 기록했으나 공식 DACON 제출 이력 재대조 결과 오류였다. 실제 champion은 `submit_v26.zip`이다(Public `1157.9736407889`, 제출 ID `51773`). 근거와 재현 절차는 [`../reports/target1170_followup_20260817.md`](../reports/target1170_followup_20260817.md) 상단과 [`../notebooks/v26_champion_reproduction.ipynb`](../notebooks/v26_champion_reproduction.ipynb)에 있다.
 
-이 문서는 현재 Public champion v26을 기준으로 실험을 재현하고 새 후보를 평가하는 공통 절차다. Python 모듈이 계산의 단일 원본이고, [`../notebooks/v26_champion_reproduction.ipynb`](../notebooks/v26_champion_reproduction.ipynb)는 그 모듈을 순서대로 호출하고 결과를 확인하는 얇은 실행 화면이다. 노트북 안에 학습 로직을 복사하지 않는다. `experiment_workbench.ipynb`는 v14→v19 pressure EB 계열의 과거 워크벤치이며 v22 이후 R_ANCHOR 계열은 다루지 않는다.
+이 문서는 현재 standalone champion을 고정 incumbent로 두고 새 후보를 평가하는 공통
+절차다. Python 모듈이 계산의 단일 원본이다. v26 재현 노트북과
+`experiment_workbench.ipynb`는 과거 계보 감사용이며 새 후보의 승인 화면이 아니다.
 
 ## 가장 먼저: 파일과 실행 노트북
 
@@ -10,7 +20,8 @@
 
 | 작업 | 받을 파일 |
 |---|---|
-| champion 실행·비교 | `submit_v26.zip` |
+| champion 실행·비교 | `artifacts/standalone_champion_1161/standalone_champion_1161.zip` |
+| 새 후보 로컬 비교 | 현재 champion exact OOF + 후보 exact temporal OOF |
 | v26 재패키징 | `submit_v25.zip` + `src/package_v26_anchor_weight_probe.py` (기본값 `--probe-eta 0.15`) |
 | v25 기반모형 재학습 | DACON 원본 데이터 + v22 OOF artifact + v25 활성 학습 코드 |
 
@@ -162,16 +173,29 @@ python -m src.validate_v16_residual `
 
 새 후보는 다음 조건을 모두 만족해야 제출 검토 대상으로 올린다.
 
-1. 누수 없는 rolling-origin OOF만 사용한다.
-2. v20 행별 예측을 고정 incumbent로 paired 비교한다.
-3. 최근 두 전이의 전체 gain 방향이 양수다.
-4. 월·투수·타자·투수×타자와 연속 투구 block bootstrap을 통과한다.
-5. 같은 final family 안에서 selection-aware Reality Check를 통과한다.
-6. `R_CORE`, `R_ANCHOR`, F 기여를 분리해 한 영역의 손실을 평균으로 숨기지 않는다.
-7. ZIP lineage, offline 실행, 120초 제한, 메모리와 batch invariance를 통과한다.
-8. 팀 리뷰 후 지정된 제출 담당자만 DACON에 올린다.
+1. 고정 incumbent는 Public 1158 standalone의 동일 행 exact OOF다.
+2. feature 선택, tuning, calibration을 outer fold 안에서 모두 반복한 `nested_outer` 또는
+   recipe를 보기 전에 잠근 `locked_shadow` 축이 서로 다르게 최소 2개 있어야 한다.
+3. 반복 열람한 2024 축은 `development_contaminated` 진단이며 primary evidence가 아니다.
+4. 모든 primary 축에서 gain `>0`, 양수 월 `>=75%`, 최악 월 `>-5`,
+   `R_CORE/R_ANCHOR/F` 최소 gain `>=0`을 만족한다.
+5. pitcher, crossed pitcher×batter, 연속 투구 block bootstrap p05가 모두 양수다.
+6. final family의 실행 trial을 빠짐없이 ledger에 남기고 White Reality Check
+   `p<=0.10`을 통과한다.
+7. exact parent parity와 recipe 동결 시점을 증명한다.
+8. 통과 후보만 처음부터 standalone ZIP으로 만든다. 과거 제출 ZIP·저장소 코드·다른
+   artifact에 실행 의존하지 않는다.
+9. 오프라인, 행 독립성, 메모리, 공식 600초와 내부 soft guard 120초를 통과한다.
+10. 팀 리뷰 후 지정된 제출 담당자만 DACON에 올린다.
 
-Public 결과는 모델 선택 규칙을 사후 미세조정하는 학습 데이터로 사용하지 않는다. v17/v18에서 확인한 결정은 “pressure EB 채택, 공격적 F 확대 기각” 수준으로만 고정한다.
+`src/evaluation_contract.py`가 2~7번을 기계적으로 판정한다. local→Public projection은
+clean transfer 관측 3개 전까지 억제하며, 이후에도 승격 근거로 사용하지 않는다. Public
+결과는 모델 선택 규칙이나 blend weight를 사후 미세조정하는 학습 데이터로 쓰지 않는다.
+
+팀원 모델을 혼합할 때는 `configs/oof_bundle_contract_v1.json` 형식의 exact temporal OOF만
+받고 `src/v77_team_oof_constrained_blend.py`로 정렬·SHA-256·strict-forward 경계와 source
+월·domain 비악화 제약을 검증한다. 제출 ZIP이나 Public 점수만 있는 모델의 weight는 정하지
+않는다. v77 결과도 bootstrap·Reality Check를 통과하기 전에는 승격 근거가 아니다.
 
 ## 8. 실험 기록 규칙
 

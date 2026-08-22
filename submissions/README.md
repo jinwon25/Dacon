@@ -1,16 +1,28 @@
 # 제출 파일 보관 규칙
 
-현재 DACON Public 챔피언은 프로젝트 루트의 [`../submit_v26.zip`](../submit_v26.zip)이다. (2026-08-18 정정: 이전에는 `submit_v27.zip`을 champion으로 기록했으나 공식 제출 이력 재대조 결과 오류였다. 근거는 [`../reports/target1170_followup_20260817.md`](../reports/target1170_followup_20260817.md) 상단, [`../notebooks/v26_champion_reproduction.ipynb`](../notebooks/v26_champion_reproduction.ipynb) 참고.)
+현재 DACON Public 챔피언은 `submit_v84_probe.zip`으로 제출한 **1161.2020600422**다.
+전달 기준은 내용과 SHA-256이 동일한
+[`../artifacts/standalone_champion_1161/standalone_champion_1161.zip`](../artifacts/standalone_champion_1161/standalone_champion_1161.zip)이다.
 
 | 항목 | 값 |
 |---|---:|
-| Public 점수 | **1157.9736407889** |
-| 확인 당시 순위 | 미확인 (정정 이전 "10위"는 v27 기준 기록) |
-| 제출 ID | `51773` |
-| SHA-256 | `8BE26E156A91C1FA5E9989EEE5043DB5992A960DF35A53D8A9BFEF7E6825D096` |
-| v25 대비 | **+2.1443002480** |
-| 목표 1170까지 | **12.0263592111** |
-| 목표 1200까지 | **42.0263592111** |
+| Public 점수 | **1161.2020600422** |
+| 확인 당시 순위 | **13위** |
+| 제출 ID | `59988` |
+| 단일 릴리스 SHA-256 | `C033FC38A5F9681E45B0BD2494359B8BD1387EE44E5F318C5B7A5547CFE6C4F7` |
+| 직전 1159 대비 | **+1.8668360921** |
+| 목표 1170까지 | **8.7979399578** |
+| 목표 1200까지 | **38.7979399578** |
+
+## 최신 승격 결과
+
+| 파일 | 상태 | OOF gain full/late-2024 | SHA-256 |
+|---|---|---:|---|
+| `../artifacts/standalone_champion_1161/standalone_champion_1161.zip` | API 성공, Public 1161.2020600422 | +1.0181 / +2.9166 | `C033FC38…FE6C4F7` |
+
+v84는 v83에서 고정한 rank-16 shared FM을 F에 logit 10% 적용한 단일 실행 패키지다.
+Public gain `+1.8668360921`을 확인해 챔피언으로 승격했다. 상세 근거는
+[`../reports/target1170_v84_public_result_20260822.md`](../reports/target1170_v84_public_result_20260822.md)에 있다.
 
 ## 제출하지 않을 동일 계열 후보
 
@@ -24,24 +36,31 @@ v22의 Public 변화가 `0 ~ +3` 구간이므로 보수형과 단순 강도 조�
 
 ```text
 프로젝트 루트/
-├─ submit_v26.zip          현재 champion, 제출·검증 기준 파일
-├─ submit_v25.zip          v26 직접 부모
-├─ submit_v22.zip          v25 직접 부모
-├─ submit_v21.zip          v22 직접 부모
+├─ artifacts/standalone_champion_1161/
+│  ├─ standalone_champion_1161.zip   현재 전달·검증 기준
+│  ├─ standalone_manifest.json
+├─ artifacts/standalone_champion_1159/  직전 챔피언 감사본
 └─ submissions/
    ├─ README.md            이 안내서
    └─ history/             과거 제출본과 미채택 후보 ZIP
 ```
 
-`history/`의 ZIP은 점수 계보와 재패키징을 위해 보존한다. 새 제출 후보를 만들 때는 루트에 생성하고, Public 결과가 확정된 뒤 champion이 아니면 `history/`로 옮긴다.
+`history/`의 ZIP은 점수 계보 감사에만 쓴다. 현재 champion은 이전 ZIP 없이 자체
+실행된다. 새 후보는 자동 게이트를 통과한 경우에만 별도 이름으로
+생성하고, 현재 champion을 덮어쓰지 않는다.
 
-v26의 직접 부모는 루트의 `submit_v25.zip`이고, v25의 직접 부모는 `submit_v22.zip`이다. v27과 v28은 실제 제출했으나 champion(v26)을 넘지 못한 probe로 보존한다.
+v26의 직접 부모는 `submit_v25.zip`이고, v25의 직접 부모는 `submit_v22.zip`이다.
+v27과 v28은 v26을 넘지 못한 probe다. 이들은 현재 champion의 실행 의존성이
+아니며 계보 감사용으로만 보존한다.
 
 ## 주요 Public 이력
 
 | 파일 | Public 점수 | 상태 |
 |---|---:|---|
-| `../submit_v26.zip` | **1157.9736407889** | 현재 champion (제출 ID `51773`) |
+| `submit_v84_probe.zip` | **1161.2020600422** | 현재 champion; 제출 ID `59988`; 로컬 전달명 `standalone_champion_1161.zip` |
+| `submit_v82_probe.zip` | **1159.3352239501** | v84 직접 부모; 로컬 전달명 `standalone_champion_1159.zip` |
+| 팀원 `0819_3_tmgate03.zip` | 1158.0745556751 | 직전 champion; standalone 감사본 보존 |
+| `../submit_v26.zip` | **1157.9736407889** | 최종 gate 직접 부모 (제출 ID `51773`) |
 | `../submit_v27.zip` | 1156.6153781694 | v25 기반 10% probe, champion 미달 |
 | `../submit_v28.zip` | 1156.9983034655 | v27 기반 손잡이 routing, champion 미달 |
 | `../submit_v25.zip` | 1155.8293405409 | v26 직접 부모 |

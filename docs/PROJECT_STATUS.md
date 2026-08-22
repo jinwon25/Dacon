@@ -1,79 +1,131 @@
 # 프로젝트 현황
 
-마지막 갱신: `2026-08-17 05:54 KST`
+마지막 갱신: `2026-08-22 KST`
+
+최신 후속 검증: [`../reports/target1170_v94_v96_multiorigin_20260822.md`](../reports/target1170_v94_v96_multiorigin_20260822.md). v94에서 2020~2024 fidelity-labelled OOF 계약을 만들고 v95 context transport와 v96 연중 regime을 검증했다. 오래된 origin에서 선택한 효과가 exact 2024에서 반전해 새 ZIP·DACON 제출 없이 champion을 유지한다.
 
 ## 현재 champion
 
-> **2026-08-18 정정**: 이 절은 이전에 `submit_v27.zip`을 champion으로 기록했으나 공식 DACON 제출 이력 재대조 결과 오류였다(제출 ID `1535195`는 DACON의 실제 5자리 ID 형식과 다름). 실제 champion은 `submit_v26.zip`이다. 근거: [`../reports/target1170_followup_20260817.md`](../reports/target1170_followup_20260817.md) 상단, [`../notebooks/v26_champion_reproduction.ipynb`](../notebooks/v26_champion_reproduction.ipynb).
-
 | 항목 | 값 |
 |---|---:|
-| champion | `submit_v26.zip` |
-| Public | **1157.9736407889** |
-| 제출 ID | `51773` |
-| 확인 당시 순위 | 미확인 (정정 이전 값은 v27 기준) |
-| v25 대비 | **+2.1443002480** |
-| 1170까지 | **12.0263592111** |
-| 1200까지 | **42.0263592111** |
-| SHA-256 | `8BE26E156A91C1FA5E9989EEE5043DB5992A960DF35A53D8A9BFEF7E6825D096` |
+| champion | `standalone_champion_1161.zip` |
+| Public | **1161.2020600422** |
+| 1170까지 | **8.7979399578** |
+| 전달 경로 | `artifacts/standalone_champion_1161/standalone_champion_1161.zip` |
+| SHA-256 | `C033FC38A5F9681E45B0BD2494359B8BD1387EE44E5F318C5B7A5547CFE6C4F7` |
+| 실행 의존성 | ZIP 내부 `script.py`, `requirements.txt`, `model/`만 사용 |
+| 행 독립성 | shuffle/partition 통과, 최대 `0.0` |
+| 현재 브랜치 기준 | `team/main`의 이 릴리스 커밋 |
 
-v26은 v25와 동일한 2024-only spline-logistic 직접확률 모델을 R_ANCHOR에 15%(스크립트 기본값) 혼합한다. Public에서 v25 대비 `+2.1443`이 추가 전이됐고 R_CORE/F는 부모와 동일하다. 10% probe(v27)와 손잡이 routing(v28)은 champion(v26)에 못 미쳤으므로 같은 계열 미세조정은 중단한다.
+이 파일은 현재 운영 상태의 단일 원본이다. 직전 `standalone_champion_1159.zip`과
+`standalone_champion_1158.zip`은 역사적 부모이며 현재 전달 파일이 아니다. v84 제출 API는
+성공했고 공개 리더보드에서 13위, 누적 제출 29회를 확인했다. 제출 이력 ID는 `59988`이다.
+과거 문서의 “champion” 표현은 작성 당시 기록으로만 읽는다.
 
-## champion 계보
+## 계보와 전달 원칙
 
 ```text
-v13 exact-ASOF
-  → v17 R_CORE pressure EB
-    → v19 multi-year state + latent failure-mode routing
-      → v20 pooled residual + training-only TrackMan PFD
-        → v21 recent-control state + count-context recency EB
-          → v22 low-variance domain calibration + row-local ASOF prior
-            → v25 post-break R_ANCHOR direct-probability overlay
-              → v26 frozen signal weight 15% (champion)
+v22 domain calibration + row-local ASOF
+  → v25 post-break R_ANCHOR direct probability
+    → v26 frozen signal weight 15%
+      → 0819 TrackMan-ASOF gate
+        → standalone_champion_1158.zip
+          → EXP-021 strict 10% on R_CORE
+            → standalone_champion_1159.zip
+              → shared pairwise FM 10% on F
+                → standalone_champion_1161.zip
 ```
+
+계보는 연구 설명용이다. 실행할 때 과거 ZIP을 연쇄적으로 요구하지 않는다. 새 후보도 처음부터
+standalone으로 만들며, 평가 v3를 통과하기 전에는 champion 파일을 덮어쓰지 않는다.
 
 ## 바로 읽을 문서
 
-1. `reports/target1170_followup_20260817.md`
-2. `reports/v28_validation.md`
-3. `reports/v24_semantic_eda_20260817.md`
-4. `reports/v22_public_result_20260817.md`
-5. `reports/dacon_official_compliance_audit_20260816.md`
-6. `reports/submissions.csv`
+1. [`../reports/target1170_v84_public_result_20260822.md`](../reports/target1170_v84_public_result_20260822.md)
+2. [`../reports/target1170_v83_post_public_plan_20260822.md`](../reports/target1170_v83_post_public_plan_20260822.md)
+3. [`../reports/evaluation_reaudit_20260822.md`](../reports/evaluation_reaudit_20260822.md)
+4. [`PROJECT_MEMORY.md`](PROJECT_MEMORY.md)
+5. [`STANDALONE_CHAMPION.md`](STANDALONE_CHAMPION.md)
+6. [`../reports/trackman_deep_dive_20260822.md`](../reports/trackman_deep_dive_20260822.md)
+7. [`../reports/target1170_v79_v81_followup_20260822.md`](../reports/target1170_v79_v81_followup_20260822.md)
+8. [`../reports/target1170_research_update_20260822.md`](../reports/target1170_research_update_20260822.md)
+9. [`../reports/submissions.csv`](../reports/submissions.csv)
 
-## 구현·재현 파일
+## 평가 상태
 
-```text
-src/package_v26_anchor_weight_probe.py
-src/v26_exact_diversity_screen.py
-src/v28_domain_specialist_screen.py
-src/v29_anchor_route_screen.py
-src/package_v28_anchor_hand_route.py
-src/validate_v28_anchor_hand_route.py
-```
+- 공식 점수 구현은 DACON BSS 식과 일치한다.
+- 1170은 테스트 양성률을 `0.4861`로 놓으면 평균 Brier 약 `2.1978e-05` 감소가 필요하다.
+- 2024 label은 반복 연구에 사용돼 `development_contaminated`다. 독립 holdout으로 부르지 않는다.
+- 새 후보는 `configs/evaluation_v3.json`과 `src/evaluation_contract.py`를 통과해야 한다.
+- primary evidence는 서로 다른 `nested_outer` 또는 `locked_shadow` 축 최소 2개다.
+- 전체 family trial ledger, White Reality Check, pitcher/crossed/block bootstrap을 요구한다.
+- local→Public 단일 환산은 금지하며 clean transfer 3개 전에는 projection을 표시하지 않는다.
+- 공식 추론 제한은 600초이고 저장소의 120초는 내부 soft guard다.
 
-최종 모델·OOF·데이터·제출 ZIP은 Git에 올리지 않는다. 로컬 champion ZIP은 프로젝트 루트에 두고 이전 ZIP은 `submissions/history/`로 이동한다.
+v84는 고정 v56 레시피의 조건부 full/late gain이 양수라 사용자 승인 탐색 정책으로 한 번
+제출했고 Public `1161.2020600422`를 기록해 새 champion으로 승격했다. 일반 후보의 평가 v3
+기준은 낮추지 않는다.
 
-## 검증 상태
+## 최신 실험 결정
 
-- 전체 테스트: `119 passed`
-- v26 245,789행 추론: `56.240초`
-- v26 peak RSS: `1,410.7 MB`
-- 배치 불변성 최대 오차: `1.11e-16`
-- 패키지·규정 게이트: `13/13 passed`
-- 공식 Public: `1157.9736407889`
+- v61: 최종 TrackMan gate exact OOF 재현. full-2024 `+0.0138`, late-2024
+  `-0.1612`; 확대 금지.
+- v62~v64: ExtraTrees, count interaction, physical-teacher student 모두 기각.
+- v65~v74: TrackMan 1,793,078행 전수조사. 현재 투구 물리·위치·의도 부재와 시간 전이
+  실패로 IVB·고차원 profile·구종 학생 계열 기각.
+- v75: full-2024 전역 calibration은 이미 양호. source-only additive/affine 보정은 게이트 실패.
+- v76: domain×count source-only contrast가 exact late23→full24에서 `-45.486`; 기각.
+- v77: 팀 exact OOF bundle 계약과 worst-domain constrained blend evaluator 완성. 독립 팀원
+  OOF가 없어 weight 계산은 보류한다.
+- v78: 환경 안정 trajectory residual은 primary 두 축 모두 source eta `0`; 2023에서 선택된
+  eta `0.5`도 full-2024 `-7.5362`로 반전해 기각했다.
+- v79: champion 고정 offset context/composition GLM은 primary 두 축 모두 eta `0`; 기각.
+- v80: 여섯 exact OOF 방향의 forward constrained stack은 late23→full24 `-0.7267`,
+  early24→late24 eta `0`. 기존 후보 same-axis oracle도 최대 `+2.4566`이고 대표 오차 상관이
+  `0.999986~0.999997`이라 기존 계열 재혼합을 종료한다.
+- v81: 안정 피처 shallow GBDT는 primary 두 축 모두 eta `0`; full23→full24 `-11.5698`로
+  반전해 기각한다.
+- v82: 2024 전에 고정한 EXP-021 strict 10% R_CORE 혼합을 최종 챔피언 위에서 재계산했다.
+  full/late-2024 gain은 `+1.2597/+0.4875`, 최악 월은 `-9.1762/-9.0641`이다. 평가 v3
+  승격 대상은 아니지만 단일 ZIP·행 독립성·245,789행 58.79초 감사를 통과했다. 실제
+  Public gain은 `+1.2606643`으로 full-2024 OOF와 `+0.0009671` 차이였다.
+- v83: 새 v82 OOF 부모 위 조건부 headroom을 재계산했다. strict 추가 증량은
+  full/late `-0.0763/-0.7871`, v50은 late·domain gate 실패다. F-only v56은
+  full/late `+1.0181/+2.9166`이라 다음 고정 recipe 복원 1순위다.
+- v84: 고정 v56을 full-2023+late-2024 source로 재학습하고 NumPy-only FM으로 내보냈다.
+  standalone 245,789행 `68.218초`, 수식 오차 `5.55e-17`, shuffle/partition `0`을 통과했다.
+  Public `1161.2020600422`, v82 대비 `+1.8668360921`로 새 champion이다.
+- v94: common wave0 full-2020~2024와 exact-v84 full22/late23/full24를 fidelity label,
+  raw-index·target·parent hash와 함께 분리했다. common evidence를 exact champion gain으로
+  오해하지 않는 multi-origin 계약을 완성했다.
+- v95: 2020→2021·2021→2022만으로 선택한 `count/R_CORE+F/alpha5000/eta1`은 exact
+  full22→late23 `+7.6946`이었지만 late23→full24 `-7.4283`, late24 `-4.4207`로 반전해 기각했다.
+- v96: 같은 recipe의 common early→late gain은 2020~2024 모두 양수였으나 exact v84는
+  2022 `-3.4258`, 2024 `+2.3382`로 부호가 달랐다. 2025 hidden label로 같은 시즌 residual을
+  fit할 수 없으므로 diagnostic으로만 보존하고 패키징하지 않는다.
 
-## 다음 연구 원칙
+실패 cache는 삭제하고 코드·테스트·compact 보고서만 보존한다.
 
-1. v26 R_ANCHOR 혼합 가중치·손잡이·카운트 routing의 리더보드 연속 미세 조정은 금지한다.
-2. 2024 단일 source 잔차 lookup보다 여러 연도에서 동일한 방향을 보이는 생성 구조를 우선한다.
-3. 현재 투구 구종·위치·실패유형처럼 추론 시 알 수 없는 oracle 정보는 사용하지 않는다.
-4. test 전체 집계·빈도·순서·그룹을 사용하지 않는다.
-5. 새 후보는 시간축 최소 gain, 월·도메인, 군집 bootstrap, 패키지 런타임을 모두 통과해야 한다.
-6. 팀 저장소는 개인 브랜치만 사용하고 main에 직접 push하지 않는다.
+## 다음 연구 순서
 
-2026-08-17 v23 구조 감사에서 잔차·다년 직접모형·latent state/mode·임베딩 신경망·그룹 강건 학습·post-break spline의 여섯 계열을 평가했다. 2023 선택 gain이 최대 `+505.7564`였던 후보도 동결한 2024에서 `-2.8009`로 반전했으며 모든 후보가 기각됐다. 2022 latent failure-mode OOF는 생성했지만, 다음 모델 선택 전에 2022·2023·2024 전체의 완전한 v22 analogue OOF를 동일 recipe로 완성해야 한다.
+1. 팀원 모델의 동일 row exact temporal OOF와 동일 recipe의 2025 test prediction을 받아
+   constrained blend headroom을 계산한다.
+2. 독립 OOF가 도착하면 analytic headroom과 residual correlation을 먼저 확인하고 v77의
+   source 월·domain 비악화 constrained blend를 실행한다.
+3. 비용이 허용되면 v94 common tier와 별도로 각 origin의 전체 champion ladder를 다시
+   학습해 완전 exact multi-origin nested runner를 만든다.
+4. 완전히 다른 합법적 정보원 또는 새 locked shadow가 생기기 전에는 같은 ASOF·상황·
+   TrackMan 계열의 미세탐색을 재개하지 않는다.
+5. blend가 평가 v3 선행 gate를 통과할 때만 bootstrap·Reality Check를 실행한다.
+6. 새 직교 기반모형을 확보한 뒤에만 cross-fitted beta/logit calibration을 검토한다.
 
-2026-08-17 v24 의미 감사에서 공식 `R=1군 정규시즌`, `F=퓨처스리그/2군`을 확인했다. ASOF 누적값은 전 train 행에서 직전 투구 수·성공 수와 정확히 일치했고, TrackMan 익명 ID 연결은 이미 121만 7,598행을 덮는다. 새 LI/점수 상황형, 레벨별 선수 이력형과 Public 역산 단계 가중치는 시간축 게이트를 통과하지 못했다. v22를 유지하며 `submit_v24.zip`은 생성하지 않았다.
+TrackMan profile 강도, scalar center/spread, domain×count lookup, v78 환경 안정 Ridge,
+TabM 크기·seed, v79/v81 강도·규제·tree 미세탐색은 재개하지 않는다. 최신 상세 근거는
+[`../reports/target1170_v79_v81_followup_20260822.md`](../reports/target1170_v79_v81_followup_20260822.md)에 있다.
 
-2026-08-17 v25 연구에서 실패유형 privileged profile과 세 종류 pitch-type student를 시간축 외부감사로 기각했다. 이후 post-break R_ANCHOR 직접확률 모델은 2023 선택 `+31.4866`, 2024 외부연도 `+1.7500`, 2024 전반→후반 `+0.8211`을 기록했고 Public `+2.7857`로 전이됐다. 상세 근거는 `reports/v25_public_result_20260817.md`에 있다.
+## Git·artifact 원칙
+
+- 개인 feature branch에서 작업하고 팀 리뷰 후 squash merge한다.
+- 모델·OOF·원본 데이터·제출 ZIP은 일반 Git 이력에 넣지 않는다.
+- 팀원 전달 artifact는 공식 팀원만 접근 가능한 공간에서 SHA-256과 함께 관리한다.
+- Public 제출은 팀 리뷰와 standalone 검증을 통과한 한 파일만 지정 담당자가 수행한다.
