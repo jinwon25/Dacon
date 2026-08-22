@@ -1,0 +1,28 @@
+{
+  "protocol": "V101_PITCHER_CONTEXT_ABLATION_V1",
+  "frozen_before_run": "2026-08-22",
+  "hypothesis": "Strict prior-season pitcher deviations by stretch state, inning band and score-difference band add baseball-specific execution resolution beyond hand/count conditional features.",
+  "audit_years": [2022, 2023, 2024],
+  "selection_axis": "v84_full_2022_exact_R_CORE",
+  "locked_axes": ["v84_late_2023_R_CORE", "v84_full_2024_R_CORE"],
+  "route": "R_CORE",
+  "eta_cap": 0.5,
+  "context_strength": {
+    "stretch": 300.0,
+    "inning_band": 300.0,
+    "score_band": 300.0
+  },
+  "selection_gate": {
+    "gain_strictly_positive": true,
+    "minimum_positive_month_fraction": 0.75,
+    "worst_month_gain_strictly_above": -5.0
+  },
+  "prohibited": [
+    "same-season labels in context features",
+    "raw pitcher_id or batter_id as model features",
+    "game_month as model feature",
+    "audit labels in model fitting",
+    "test aggregates, order, frequency or distribution",
+    "Public-score-derived context, weight or route"
+  ]
+}
