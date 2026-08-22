@@ -16,12 +16,12 @@
 
 ## 가장 먼저: 파일과 실행 노트북
 
-현재 수치와 파일 위치는 [`PROJECT_STATUS.md`](PROJECT_STATUS.md), [`../submissions/README.md`](../submissions/README.md)에서 먼저 확인한다. Git에는 제출 ZIP과 모델이 없으므로 동일한 공식 DACON 팀의 private artifact 저장소에서 필요한 파일을 받아 SHA-256을 대조한다.
+현재 수치와 파일 위치는 [`PROJECT_STATUS.md`](PROJECT_STATUS.md), [`../submissions/README.md`](../submissions/README.md)에서 먼저 확인한다. 현재 champion ZIP과 OOF evidence는 private Git LFS에서 받은 뒤 SHA-256을 대조한다.
 
 | 작업 | 받을 파일 |
 |---|---|
-| champion 실행·비교 | `artifacts/standalone_champion_1161/standalone_champion_1161.zip` |
-| 새 후보 로컬 비교 | 현재 champion exact OOF + 후보 exact temporal OOF |
+| champion 실행·비교 | LFS `artifacts/standalone_champion_1161/standalone_champion_1161.zip` |
+| 새 후보 로컬 비교 | LFS `artifacts/oof_champion_1161/`의 fidelity label + 후보 exact temporal OOF |
 | v26 재패키징 | `submit_v25.zip` + `src/package_v26_anchor_weight_probe.py` (기본값 `--probe-eta 0.15`) |
 | v25 기반모형 재학습 | DACON 원본 데이터 + v22 OOF artifact + v25 활성 학습 코드 |
 
@@ -57,10 +57,12 @@ JupyterLab은 노트북을 열 때만 필요한 선택 의존성이다. CI는 �
 | v14/v15 로컬 평가 | `data/train.csv`, v13/v14 OOF cache | 제외 |
 | pressure EB screen | `data/train.csv`, 2022~2024 부모 OOF cache | 제외 |
 | v17 residual 학습 | 위 입력과 선택된 recipe | 결과 제외 |
-| ZIP 재패키징 | 검증된 부모 ZIP, residual spec | 제외 |
-| 제출 검증 | 후보·부모 ZIP, `data/train.csv`, `data/test.csv` | 제외 |
+| ZIP 재패키징 | 검증된 부모 ZIP, residual spec | 현재 champion만 LFS |
+| 제출 검증 | 후보·부모 ZIP, `data/train.csv`, `data/test.csv` | 데이터·후보 제외 |
 
-원본 데이터는 각 팀원이 DACON에서 직접 내려받는다. ZIP·모델·OOF·`artifacts/` 산출물은 Git에 올리지 않고, 공식 팀원만 접근할 수 있는 제한된 artifact 공간에서 SHA-256과 함께 전달한다.
+원본 데이터는 각 팀원이 DACON에서 직접 내려받는다. 현재 champion ZIP과 선별된 OOF
+evidence만 private Git LFS allowlist로 공유한다. 후보·중간 모델·대규모 캐시는 올리지
+않으며 모든 LFS 파일은 SHA-256과 sensitivity manifest를 동반한다.
 
 ## 3. 빠른 상태 점검
 
@@ -210,4 +212,5 @@ clean transfer 관측 3개 전까지 억제하며, 이후에도 승격 근거로
 - 생성한 artifact 경로와 SHA-256
 - 채택·기각 결정 및 다음 행동
 
-코드는 기능 브랜치에 커밋하고, 모델·OOF·제출 ZIP은 커밋하지 않는다. 제출 결과는 [`../reports/submissions.csv`](../reports/submissions.csv)에 즉시 추가한다.
+코드는 기능 브랜치에 커밋한다. 모델·OOF·제출 ZIP은 현재 champion LFS allowlist 외에는
+커밋하지 않는다. 제출 결과는 [`../reports/submissions.csv`](../reports/submissions.csv)에 즉시 추가한다.

@@ -1,7 +1,8 @@
 # 산출물 정책
 
-이 디렉터리는 학습 모델, OOF 예측과 실험 캐시를 보관하며 Git에서는 제외한다.
-예외적으로 `standalone_champion_1161/`만 현재 전달용 릴리스의 로컬 단일 기준이다.
+이 디렉터리는 학습 모델, OOF 예측과 실험 캐시를 보관하며 기본적으로 Git에서 제외한다.
+예외적으로 `standalone_champion_1161/`의 확정 ZIP과 manifest,
+`oof_champion_1161/`의 fidelity-labelled evidence만 private Git LFS에 보관한다.
 `standalone_champion_1159/`과 `standalone_champion_1158/`은 과거 챔피언 감사용으로 보존한다.
 `v61_final_gate_oof_20260822_01/`은 후속 후보를 같은 최종 부모에서 비교하기 위한
 로컬 연구 cache이며 전달·실행 의존성은 아니다.
@@ -14,6 +15,8 @@
 - 계보: v25 → v26 R_ANCHOR `.15` → TrackMan-ASOF `.03` → EXP-021 R_CORE `.10` → shared FM F `.10`
 - 실행·재빌드: [`../docs/STANDALONE_CHAMPION.md`](../docs/STANDALONE_CHAMPION.md)
 - manifest: `standalone_champion_1161/standalone_manifest.json`
+- OOF evidence: [`oof_champion_1161/README.md`](oof_champion_1161/README.md)
+- private artifact 감사: `python -m src.audit_champion_private_artifacts --help`
 
 현재 릴리스 실행에는 `standalone_champion_1161/` 이외의 과거 artifact가 필요하지
 않다. 과거 artifact는 연구 재현이 필요할 때만 개인 보관소에서 사용한다. 실패한
@@ -55,6 +58,6 @@
 
 ## 보관 원칙
 
-- 챔피언 제출 ZIP과 필수 모델: 팀이 합의한 private artifact 저장소
+- 챔피언 제출 ZIP과 선별 OOF evidence: private Git LFS allowlist
 - 중간 OOF와 대규모 캐시: 각 실험 담당자 로컬 또는 DVC/object storage
-- Git에 남길 내용: 생성 명령, 입력 기준선, SHA-256, 크기, 검증 결과
+- 일반 Git에 남길 내용: manifest, 생성 명령, 입력 기준선, SHA-256, 크기, 검증 결과

@@ -2,7 +2,9 @@
 
 이 저장소는 DACON `Aimers 9기: 투구 제구 성공 확률 예측 AI 온라인 해커톤`에 참가하는 3인 팀의 공동 연구 공간이다. 코드, 실험 설정, 테스트, 검증 보고서와 협업 절차를 관리한다.
 
-원본 데이터와 모델 파일은 일반 Git 이력에 넣지 않는다. GitHub에는 재현 가능한 코드와 선별된 실험 기록만 보관하고, 모델·OOF·제출 ZIP은 동일한 공식 DACON 팀원만 접근할 수 있는 별도 private artifact로 관리한다.
+원본 데이터와 인증정보는 GitHub에 올리지 않는다. 현재 비공개 저장소에는 공식 DACON
+팀원 3인만 접근하며, 확정 1161 모델 ZIP과 fidelity-labelled OOF evidence만 Git LFS로
+선별 보관한다. 나머지 모델·OOF·실험 캐시는 일반 Git 이력과 LFS 모두에서 제외한다.
 
 > **2026-08-22 최신 기준**: v82 위 F 도메인에 고정 shared pairwise FM을 적용한 v84가
 > Public **1161.2020600422**를 기록했다. 현재 전달·실행 기준은 과거 ZIP 계보가
@@ -34,6 +36,7 @@
 | 모델 계보 | `v25 → v26(.15) → TrackMan-ASOF → EXP-021 R_CORE(.10) → shared FM F(.10)` |
 | DACON 제출 ID | `59988` |
 | 단일 ZIP SHA-256 | `C033FC38A5F9681E45B0BD2494359B8BD1387EE44E5F318C5B7A5547CFE6C4F7` |
+| private artifact | Git LFS 모델 ZIP + `artifacts/oof_champion_1161/` evidence |
 | 확인 당시 순위 | **13위** |
 | 단일 ZIP 검증 | 71개 파일·CRC·행 독립성 통과, 245,789행 재실행 114.487초, 공식 제출 41초 |
 | 현재 기준 브랜치 | `team/main` (이 릴리스 커밋) |
@@ -86,9 +89,9 @@ python -m src.audit_standalone_release `
   --timeout-seconds 180
 ```
 
-원본 데이터·학습 모델·제출 ZIP은 대회 데이터 보호와 저장소 용량 정책에 따라 공개
-Git에 올리지 않는다. GitHub에는 위 해시, 생성 코드, 검증 코드와 결과 문서를 남기며,
-확정 ZIP은 동일한 DACON 팀원끼리 private artifact로 전달한다.
+원본 데이터와 인증정보는 대회 데이터 보호를 위해 GitHub에 올리지 않는다. 확정 ZIP과
+선별 OOF evidence는 이 비공개 저장소의 Git LFS로 공식 팀원에게만 전달하고, 일반 Git에는
+해시·manifest·생성 코드·검증 코드와 결과 문서를 남긴다.
 
 ### 2026-08-22 평가 재감사
 
@@ -178,6 +181,7 @@ v82는 이 기준선의 R_CORE에 사전 고정 EXP-021 strict를 10% 혼합해 
 ### 1. champion 파일 확인
 
 ```powershell
+git lfs pull --include="artifacts/standalone_champion_1161/*,artifacts/oof_champion_1161/*"
 Get-FileHash -Algorithm SHA256 `
   .\artifacts\standalone_champion_1161\standalone_champion_1161.zip
 ```
@@ -200,7 +204,8 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements-dev.txt
 ```
 
-원본 데이터는 각 팀원이 DACON에서 직접 받아 `data/`에 둔다. 제출 ZIP, 모델, OOF와 인증정보는 Git에 커밋하지 않는다.
+원본 데이터는 각 팀원이 DACON에서 직접 받아 `data/`에 둔다. 인증정보는 절대
+커밋하지 않는다. 모델·OOF는 현재 1161 챔피언의 명시된 LFS allowlist만 허용한다.
 
 ### 3. 검증 또는 연구 시작
 
@@ -552,14 +557,14 @@ output/                 생성된 예측 결과, Git 제외
 
 현재 요금제에서는 private 저장소의 branch protection을 강제할 수 없다. 따라서 `main` 직접 push 금지는 팀 규칙으로 지켜야 한다.
 
-## Git 이력에 넣지 않는 파일
+## Git·LFS 산출물 정책
 
-다음 파일은 private 저장소라도 일반 Git commit에 포함하지 않는다.
+다음 파일은 private 저장소라도 일반 Git이나 Git LFS에 포함하지 않는다.
 
 ```text
 data/ 원본 파일
-model/ 모델 파일
-artifacts/ OOF와 학습 산출물
+model/ 임시 모델 파일
+artifacts/ allowlist 이외 OOF와 학습 산출물
 output/ 예측 결과
 submit*.zip
 submissions/**/*.zip
@@ -567,7 +572,11 @@ submissions/**/*.zip
 개인 쿠키, 인증서와 key 파일
 ```
 
-동일한 공식 DACON 팀으로 등록된 팀원끼리 모델과 OOF를 공유할 때는 Git 이력 대신 [팀 전용 Google Drive]([private reference removed])를 사용한다. Drive의 일반 액세스는 반드시 `제한됨`으로 두고, 공식 팀원 계정만 개별 초대한다. 원본 DACON 데이터와 인증정보는 Drive에도 올리지 않는다. v17 인계 자료는 v19의 부모 계보 재현용으로 보존하며, 현재 로컬 파일 구조는 [`submissions/README.md`](submissions/README.md)를 기준으로 한다.
+현재 예외는 `artifacts/standalone_champion_1161/standalone_champion_1161.zip`과
+`artifacts/oof_champion_1161/*.npz`이며 `.gitattributes`의 Git LFS pointer로만
+커밋한다. OOF에는 target과 선수 ID가 있으므로 저장소를 공개하거나 비팀원을 초대하기
+전에 반드시 제거해야 한다. 과거 계보는 [팀 전용 Google Drive]([private reference removed])를
+`제한됨`으로 유지해 사용한다. 원본 DACON 데이터와 인증정보는 Drive에도 올리지 않는다.
 
 커밋 전에는 항상 다음 명령을 실행한다.
 

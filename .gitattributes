@@ -1,3 +1,5 @@
 * text=auto eol=lf
 *.csv text eol=lf
 *.ipynb text eol=lf
+artifacts/standalone_champion_1161/*.zip filter=lfs diff=lfs merge=lfs -text
+artifacts/oof_champion_1161/*.npz filter=lfs diff=lfs merge=lfs -text

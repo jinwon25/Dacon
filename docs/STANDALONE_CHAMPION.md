@@ -14,6 +14,14 @@ SHA-256은 `C033FC38A5F9681E45B0BD2494359B8BD1387EE44E5F318C5B7A5547CFE6C4F7`,
 크기는 `34,629,670` bytes다. `standalone_manifest.json`에 Public 결과와 71개 파일,
 smoke/compliance 결과가 기록되어 있다.
 
+private 저장소를 clone한 공식 팀원은 먼저 LFS payload를 받는다. OOF evidence는 실행에
+필요하지 않으며 후속 비교·감사용이다.
+
+```powershell
+git lfs install
+git lfs pull --include="artifacts/standalone_champion_1161/*,artifacts/oof_champion_1161/*"
+```
+
 ## 현재 1161 ZIP 재검증
 
 아래 명령은 ZIP을 임시 디렉터리에 풀고 저장소 모델이나 과거 제출물을 참조하지 않은
@@ -25,6 +33,16 @@ python -m src.audit_standalone_release `
   --test-csv data/test.csv `
   --scale-rows 245789 `
   --timeout-seconds 180
+```
+
+모델 계보와 OOF evidence까지 함께 검사하려면 공식 `train.csv`를 준비하고 실행한다.
+
+```powershell
+python -m src.audit_champion_private_artifacts `
+  --model-zip artifacts/standalone_champion_1161/standalone_champion_1161.zip `
+  --model-manifest artifacts/standalone_champion_1161/standalone_manifest.json `
+  --oof-dir artifacts/oof_champion_1161 `
+  --train-csv data/train.csv
 ```
 
 2026-08-22 실물 ZIP 재검증에서는 정적 금지 연산 0건, 5행의 단일행·순서변경·분할

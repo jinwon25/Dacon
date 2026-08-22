@@ -15,7 +15,20 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 ALLOWED_SPECIAL_FILES = {
     ".env.example",
     "artifacts/README.md",
+    "artifacts/oof_champion_1161/README.md",
+    "artifacts/oof_champion_1161/manifest.json",
+    "artifacts/oof_champion_1161/v84_full_2022.npz",
+    "artifacts/oof_champion_1161/v84_full_2024.npz",
+    "artifacts/oof_champion_1161/v84_late_2023.npz",
+    "artifacts/standalone_champion_1161/standalone_champion_1161.zip",
+    "artifacts/standalone_champion_1161/standalone_manifest.json",
     "data/README.md",
+}
+ALLOWED_LFS_FILES = {
+    "artifacts/oof_champion_1161/v84_full_2022.npz",
+    "artifacts/oof_champion_1161/v84_full_2024.npz",
+    "artifacts/oof_champion_1161/v84_late_2023.npz",
+    "artifacts/standalone_champion_1161/standalone_champion_1161.zip",
 }
 FORBIDDEN_SUFFIXES = {
     ".cbm",
@@ -105,11 +118,28 @@ def git_paths(include_untracked: bool) -> list[str]:
     )
 
 
+def lfs_filter(path: str) -> str:
+    command = [
+        "git",
+        "-c",
+        f"safe.directory={REPOSITORY_ROOT.as_posix()}",
+        "-C",
+        str(REPOSITORY_ROOT),
+        "check-attr",
+        "filter",
+        "--",
+        path,
+    ]
+    output = subprocess.check_output(command, text=True).strip()
+    return output.rsplit(":", 1)[-1].strip()
+
+
 def audit(include_untracked: bool, max_bytes: int) -> dict[str, object]:
     paths = git_paths(include_untracked)
     forbidden: list[dict[str, str]] = []
     oversized: list[dict[str, object]] = []
     secrets: list[dict[str, object]] = []
+    lfs_misconfigured: list[dict[str, str]] = []
     checked = 0
     for path_string in paths:
         path = REPOSITORY_ROOT / path_string
@@ -120,9 +150,15 @@ def audit(include_untracked: bool, max_bytes: int) -> dict[str, object]:
         if reason:
             forbidden.append({"path": path_string, "reason": reason})
         size = path.stat().st_size
-        if size > max_bytes:
+        if size > max_bytes and path_string not in ALLOWED_LFS_FILES:
             oversized.append({"path": path_string, "bytes": size})
-        secrets.extend(secret_findings(path_string, path.read_bytes()))
+        if path_string in ALLOWED_LFS_FILES:
+            if lfs_filter(path_string) != "lfs":
+                lfs_misconfigured.append(
+                    {"path": path_string, "reason": "missing filter=lfs"}
+                )
+        else:
+            secrets.extend(secret_findings(path_string, path.read_bytes()))
     return {
         "checked_files": checked,
         "include_untracked": include_untracked,
@@ -130,7 +166,8 @@ def audit(include_untracked: bool, max_bytes: int) -> dict[str, object]:
         "forbidden_paths": forbidden,
         "oversized_files": oversized,
         "secret_findings": secrets,
-        "passed": not forbidden and not oversized and not secrets,
+        "lfs_misconfigured": lfs_misconfigured,
+        "passed": not forbidden and not oversized and not secrets and not lfs_misconfigured,
     }
 
 

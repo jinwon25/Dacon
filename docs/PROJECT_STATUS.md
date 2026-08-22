@@ -126,6 +126,7 @@ TabM 크기·seed, v79/v81 강도·규제·tree 미세탐색은 재개하지 않
 ## Git·artifact 원칙
 
 - 개인 feature branch에서 작업하고 팀 리뷰 후 squash merge한다.
-- 모델·OOF·원본 데이터·제출 ZIP은 일반 Git 이력에 넣지 않는다.
+- 원본 데이터·인증정보는 Git/LFS에 넣지 않는다. 현재 1161 모델 ZIP과 선별 OOF
+  evidence만 private Git LFS allowlist로 관리한다.
 - 팀원 전달 artifact는 공식 팀원만 접근 가능한 공간에서 SHA-256과 함께 관리한다.
 - Public 제출은 팀 리뷰와 standalone 검증을 통과한 한 파일만 지정 담당자가 수행한다.

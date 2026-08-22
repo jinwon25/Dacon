@@ -16,6 +16,20 @@ def test_repository_path_policy_rejects_data_models_and_archives():
     assert forbidden_path_reason(".env") is not None
 
 
+def test_repository_path_policy_allows_only_current_private_lfs_release():
+    assert (
+        forbidden_path_reason(
+            "artifacts/standalone_champion_1161/standalone_champion_1161.zip"
+        )
+        is None
+    )
+    assert (
+        forbidden_path_reason("artifacts/oof_champion_1161/v84_full_2024.npz")
+        is None
+    )
+    assert forbidden_path_reason("artifacts/oof_champion_1159/oof.npz") is not None
+
+
 def test_secret_scanner_accepts_blank_template_and_rejects_tokens():
     assert secret_findings(".env.example", b"DACON_API_TOKEN=\n") == []
     github_token = b"gho_" + b"A" * 30

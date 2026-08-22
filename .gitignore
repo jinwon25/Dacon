@@ -6,6 +6,17 @@ baseline_submit/
 # Generated models, OOF predictions, caches, and submission archives.
 artifacts/*
 !artifacts/README.md
+!artifacts/standalone_champion_1161/
+artifacts/standalone_champion_1161/*
+!artifacts/standalone_champion_1161/standalone_champion_1161.zip
+!artifacts/standalone_champion_1161/standalone_manifest.json
+!artifacts/oof_champion_1161/
+artifacts/oof_champion_1161/*
+!artifacts/oof_champion_1161/README.md
+!artifacts/oof_champion_1161/manifest.json
+!artifacts/oof_champion_1161/v84_full_2022.npz
+!artifacts/oof_champion_1161/v84_late_2023.npz
+!artifacts/oof_champion_1161/v84_full_2024.npz
 model/
 output/
 submit*.zip
@@ -22,6 +33,9 @@ submissions/**/*.zip
 *.pt
 *.pth
 *.ckpt
+!artifacts/oof_champion_1161/v84_full_2022.npz
+!artifacts/oof_champion_1161/v84_late_2023.npz
+!artifacts/oof_champion_1161/v84_full_2024.npz
 
 # Secrets. Track only the key-name template.
 .env
