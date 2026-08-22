@@ -1,0 +1,46 @@
+{
+  "protocol": "V106_PAIRED_PLAYER_IDENTITY_V1",
+  "frozen_before_run": "2026-08-22",
+  "hypothesis": "The paired prediction difference between an ID-aware and ID-free LightGBM, with every other training choice held fixed, isolates portable player/context resolution beyond the champion.",
+  "audit_years": [2020, 2021, 2022, 2023, 2024],
+  "selection_years": [2020, 2021],
+  "locked_years": [2022, 2023, 2024],
+  "routes": {
+    "R_CORE": ["R_CORE"],
+    "R_CORE_F": ["R_CORE", "F"],
+    "ALL": ["R_CORE", "R_ANCHOR", "F"]
+  },
+  "eta_cap": 0.25,
+  "identity_columns": [
+    "pitcher_id",
+    "batter_id",
+    "pitcher_count",
+    "pitcher_batter_hand",
+    "batter_count"
+  ],
+  "recency_half_life": 2.0,
+  "model": {
+    "objective": "binary",
+    "n_estimators": 520,
+    "learning_rate": 0.025,
+    "num_leaves": 31,
+    "max_depth": 5,
+    "min_child_samples": 900,
+    "subsample": 0.85,
+    "subsample_freq": 1,
+    "colsample_bytree": 0.82,
+    "reg_alpha": 3.0,
+    "reg_lambda": 25.0,
+    "max_bin": 127,
+    "random_state": 9701,
+    "n_jobs": 6,
+    "verbosity": -1
+  },
+  "prohibited": [
+    "game_month as a model feature",
+    "same-season or future target aggregates",
+    "audit labels in model fitting or recipe selection",
+    "test aggregates, order, frequency or distribution",
+    "Public-score-derived route or weight"
+  ]
+}
