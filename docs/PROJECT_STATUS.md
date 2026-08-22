@@ -2,24 +2,24 @@
 
 마지막 갱신: `2026-08-22 KST`
 
-최신 후속 검증: [`../reports/target1170_v94_v96_multiorigin_20260822.md`](../reports/target1170_v94_v96_multiorigin_20260822.md). v94에서 2020~2024 fidelity-labelled OOF 계약을 만들고 v95 context transport와 v96 연중 regime을 검증했다. 오래된 origin에서 선택한 효과가 exact 2024에서 반전해 새 ZIP·DACON 제출 없이 champion을 유지한다.
+최신 Public 결과: [`../reports/target1170_v104_public_result_20260822.md`](../reports/target1170_v104_public_result_20260822.md). 사용자 승인 1회 probe에서 v104가 v84 대비 `+1.4282239867` 상승했다. 동일 recipe의 Public 재튜닝은 금지하고 다음 연구는 새 exact parent를 기준으로 한다.
 
 ## 현재 champion
 
 | 항목 | 값 |
 |---|---:|
-| champion | `standalone_champion_1161.zip` |
-| Public | **1161.2020600422** |
-| 1170까지 | **8.7979399578** |
-| 전달 경로 | `artifacts/standalone_champion_1161/standalone_champion_1161.zip` |
-| SHA-256 | `C033FC38A5F9681E45B0BD2494359B8BD1387EE44E5F318C5B7A5547CFE6C4F7` |
+| champion | `standalone_champion_1162.zip` |
+| Public | **1162.6302840289** |
+| 1170까지 | **7.3697159711** |
+| 전달 경로 | `artifacts/standalone_champion_1162/standalone_champion_1162.zip` |
+| SHA-256 | `0C3B6A9D88D31D9AC32FB43FFD642FA07BFCC3367699FA71841E35188FBDA0BA` |
 | 실행 의존성 | ZIP 내부 `script.py`, `requirements.txt`, `model/`만 사용 |
 | 행 독립성 | shuffle/partition 통과, 최대 `0.0` |
 | 현재 브랜치 기준 | `team/main`의 이 릴리스 커밋 |
 
-이 파일은 현재 운영 상태의 단일 원본이다. 직전 `standalone_champion_1159.zip`과
-`standalone_champion_1158.zip`은 역사적 부모이며 현재 전달 파일이 아니다. v84 제출 API는
-성공했고 공개 리더보드에서 13위, 누적 제출 29회를 확인했다. 제출 이력 ID는 `59988`이다.
+이 파일은 현재 운영 상태의 단일 원본이다. 직전 `standalone_champion_1161.zip` 이하 ZIP은
+역사적 부모이며 현재 전달 파일이 아니다. v104 제출 API는 성공했고 공개 리더보드에서
+13위, 누적 제출 30회를 확인했다. 제출 이력 ID는 `60626`이다.
 과거 문서의 “champion” 표현은 작성 당시 기록으로만 읽는다.
 
 ## 계보와 전달 원칙
@@ -34,6 +34,8 @@ v22 domain calibration + row-local ASOF
             → standalone_champion_1159.zip
               → shared pairwise FM 10% on F
                 → standalone_champion_1161.zip
+                  → source-stability majority-two R_CORE
+                    → standalone_champion_1162.zip
 ```
 
 계보는 연구 설명용이다. 실행할 때 과거 ZIP을 연쇄적으로 요구하지 않는다. 새 후보도 처음부터

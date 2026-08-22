@@ -6,6 +6,10 @@ baseline_submit/
 # Generated models, OOF predictions, caches, and submission archives.
 artifacts/*
 !artifacts/README.md
+!artifacts/standalone_champion_1162/
+artifacts/standalone_champion_1162/*
+!artifacts/standalone_champion_1162/standalone_champion_1162.zip
+!artifacts/standalone_champion_1162/standalone_manifest.json
 !artifacts/standalone_champion_1161/
 artifacts/standalone_champion_1161/*
 !artifacts/standalone_champion_1161/standalone_champion_1161.zip

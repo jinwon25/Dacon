@@ -3,16 +3,16 @@
 이 저장소는 DACON `Aimers 9기: 투구 제구 성공 확률 예측 AI 온라인 해커톤`에 참가하는 3인 팀의 공동 연구 공간이다. 코드, 실험 설정, 테스트, 검증 보고서와 협업 절차를 관리한다.
 
 원본 데이터와 인증정보는 GitHub에 올리지 않는다. 현재 비공개 저장소에는 공식 DACON
-팀원 3인만 접근하며, 확정 1161 모델 ZIP과 fidelity-labelled OOF evidence만 Git LFS로
+팀원 3인만 접근하며, 확정 1162 모델 ZIP과 fidelity-labelled OOF evidence만 Git LFS로
 선별 보관한다. 나머지 모델·OOF·실험 캐시는 일반 Git 이력과 LFS 모두에서 제외한다.
 
-> **2026-08-22 최신 기준**: v82 위 F 도메인에 고정 shared pairwise FM을 적용한 v84가
-> Public **1161.2020600422**를 기록했다. 현재 전달·실행 기준은 과거 ZIP 계보가
-> 아니라 [`docs/STANDALONE_CHAMPION.md`](docs/STANDALONE_CHAMPION.md)의
-> `artifacts/standalone_champion_1161/standalone_champion_1161.zip`이다. 아래
+> **2026-08-22 최신 기준**: v84 위 R_CORE 안정 구간에 독립 FM과 paired conditional
+> correction을 적용한 v104가 Public **1162.6302840289**를 기록했다. 현재 전달·실행
+> 기준은 과거 ZIP 계보가 아니라
+> `artifacts/standalone_champion_1162/standalone_champion_1162.zip`이다. 아래
 > 2026-08-18 정정은 v26 이전 계보를 설명하는 역사 기록이며 최신 기준을 대체하지
 > 않는다. 최신 후속 실행 결과와 1170 로드맵은
-> [`reports/target1170_v84_public_result_20260822.md`](reports/target1170_v84_public_result_20260822.md)를 따른다.
+> [`reports/target1170_v104_public_result_20260822.md`](reports/target1170_v104_public_result_20260822.md)를 따른다.
 
 > 다음 작업 세션의 불변 조건은
 > [`docs/PROJECT_MEMORY.md`](docs/PROJECT_MEMORY.md)에 영구 기록한다.
@@ -28,24 +28,24 @@
 | 항목 | 현재 상태 |
 |---|---:|
 | 목표 Public 점수 | **1170** |
-| 현재 최고 Public 점수 | **1161.2020600422** |
-| 1170까지 남은 차이 | **8.7979399578** |
-| 1200까지 남은 차이 | **38.7979399578** |
+| 현재 최고 Public 점수 | **1162.6302840289** |
+| 1170까지 남은 차이 | **7.3697159711** |
+| 1200까지 남은 차이 | **37.3697159711** |
 | 확인 당시 10위 컷 / 격차 | 미확인 (정정 이전 값은 v27 기준 기록이므로 재확인 필요) |
-| champion 전달 파일 | `artifacts/standalone_champion_1161/standalone_champion_1161.zip` |
-| 모델 계보 | `v25 → v26(.15) → TrackMan-ASOF → EXP-021 R_CORE(.10) → shared FM F(.10)` |
-| DACON 제출 ID | `59988` |
-| 단일 ZIP SHA-256 | `C033FC38A5F9681E45B0BD2494359B8BD1387EE44E5F318C5B7A5547CFE6C4F7` |
+| champion 전달 파일 | `artifacts/standalone_champion_1162/standalone_champion_1162.zip` |
+| 모델 계보 | `v25 → v26(.15) → TrackMan-ASOF → EXP-021 R_CORE(.10) → shared FM F(.10) → v104 stable R_CORE` |
+| DACON 제출 ID | `60626` |
+| 단일 ZIP SHA-256 | `0C3B6A9D88D31D9AC32FB43FFD642FA07BFCC3367699FA71841E35188FBDA0BA` |
 | private artifact | Git LFS 모델 ZIP + `artifacts/oof_champion_1161/` evidence |
 | 확인 당시 순위 | **13위** |
-| 단일 ZIP 검증 | 71개 파일·CRC·행 독립성 통과, 245,789행 재실행 114.487초, 공식 제출 41초 |
+| 단일 ZIP 검증 | 83개 파일·CRC·행 독립성 통과, 245,789행 proxy 80.485초, 공식 제출 48초 |
 | 현재 기준 브랜치 | `team/main` (이 릴리스 커밋) |
 | GitHub 운영 | feature branch → 팀 리뷰 → squash merge |
-| 공식 결과 확인 시각 | `2026-08-22 14:59 KST` |
+| 공식 결과 확인 시각 | `2026-08-22 23:06 KST` |
 
 공식 리더보드에서 점수를 확인했다. 순위는 다른 참가자의 제출에
 따라 달라질 수 있다. 상세 근거는
-[`reports/target1170_v84_public_result_20260822.md`](reports/target1170_v84_public_result_20260822.md)에 있다.
+[`reports/target1170_v104_public_result_20260822.md`](reports/target1170_v104_public_result_20260822.md)에 있다.
 
 ### 1158.07 대비 무엇이 달라졌나
 
@@ -57,17 +57,17 @@
 |---|---|---|---:|---:|
 | 1158 기준 | 기존 `R_ANCHOR` TrackMan-ASOF gate 포함 | 기존 계보 | 1158.0745556751 | - |
 | v82 | `R_CORE`만 | 사전 동결 EXP-021 strict, logit `0.10` | 1159.3352239501 | +1.2606682750 |
-| v84 | `F`만 | full-2023+late-2024, source·기간 균형 rank-16 shared pairwise FM, logit `0.10` | **1161.2020600422** | +1.8668360921 |
+| v84 | `F`만 | full-2023+late-2024, source·기간 균형 rank-16 shared pairwise FM, logit `0.10` | 1161.2020600422 | +1.8668360921 |
+| v104 | 안정 `R_CORE`만 | 두 source FM 평균 + paired conditional correction, 각각 `0.10` | **1162.6302840289** | +1.4282239867 |
 
-1158 대비 누적 상승은 **+3.1275043671**이다. `R_ANCHOR`는 그대로 보호했고,
-v82의 `R_CORE`와 v84의 `F`는 서로 배타적인 routing이라 같은 행에 보정을 중복
-적용하지 않는다. 따라서 개선점은 전역 확률 이동이 아니라 검증된 하위 집단별 잔차
-보정 두 개를 안전하게 결합한 것이다.
+1158 대비 누적 상승은 **+4.5557283538**이다. `R_ANCHOR`는 그대로 보호했고,
+v104는 count·pitcher history·platoon 중 두 조건 이상이 안정적인 R_CORE 행만 추가로
+수정했다. 개선점은 전역 확률 이동이 아니라 검증된 하위 집단별 잔차 보정을 결합한 것이다.
 
 ### 최고점 단일 버전 재검증
 
-`standalone_champion_1161.zip`은 루트에 `script.py`, `requirements.txt`, `model/`만
-가진 71개 파일짜리 독립 패키지다. 과거 제출 ZIP이나 저장소 `src/`를 import하지 않는다.
+`standalone_champion_1162.zip`은 루트에 `script.py`, `requirements.txt`, `model/`만
+가진 83개 파일짜리 독립 패키지다. 과거 제출 ZIP이나 저장소 `src/`를 import하지 않는다.
 실제 확정 ZIP을 임시 디렉터리에 풀어 그 안의 코드와 모델만으로 다시 검사한 결과는
 다음과 같다.
 

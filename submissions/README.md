@@ -1,28 +1,29 @@
 # 제출 파일 보관 규칙
 
-현재 DACON Public 챔피언은 `submit_v84_probe.zip`으로 제출한 **1161.2020600422**다.
+현재 DACON Public 챔피언은 `submit_v104_probe.zip`으로 제출한 **1162.6302840289**다.
 전달 기준은 내용과 SHA-256이 동일한
-[`../artifacts/standalone_champion_1161/standalone_champion_1161.zip`](../artifacts/standalone_champion_1161/standalone_champion_1161.zip)이다.
+[`../artifacts/standalone_champion_1162/standalone_champion_1162.zip`](../artifacts/standalone_champion_1162/standalone_champion_1162.zip)이다.
 
 | 항목 | 값 |
 |---|---:|
-| Public 점수 | **1161.2020600422** |
+| Public 점수 | **1162.6302840289** |
 | 확인 당시 순위 | **13위** |
-| 제출 ID | `59988` |
-| 단일 릴리스 SHA-256 | `C033FC38A5F9681E45B0BD2494359B8BD1387EE44E5F318C5B7A5547CFE6C4F7` |
-| 직전 1159 대비 | **+1.8668360921** |
-| 목표 1170까지 | **8.7979399578** |
-| 목표 1200까지 | **38.7979399578** |
+| 제출 ID | `60626` |
+| 단일 릴리스 SHA-256 | `0C3B6A9D88D31D9AC32FB43FFD642FA07BFCC3367699FA71841E35188FBDA0BA` |
+| 직전 1161 대비 | **+1.4282239867** |
+| 목표 1170까지 | **7.3697159711** |
+| 목표 1200까지 | **37.3697159711** |
 
 ## 최신 승격 결과
 
 | 파일 | 상태 | OOF gain full/late-2024 | SHA-256 |
 |---|---|---:|---|
+| `../artifacts/standalone_champion_1162/standalone_champion_1162.zip` | API 성공, Public 1162.6302840289 | +3.2162 / +2.5868 | `0C3B6A9D…FBDA0BA` |
 | `../artifacts/standalone_champion_1161/standalone_champion_1161.zip` | API 성공, Public 1161.2020600422 | +1.0181 / +2.9166 | `C033FC38…FE6C4F7` |
 
-v84는 v83에서 고정한 rank-16 shared FM을 F에 logit 10% 적용한 단일 실행 패키지다.
-Public gain `+1.8668360921`을 확인해 챔피언으로 승격했다. 상세 근거는
-[`../reports/target1170_v84_public_result_20260822.md`](../reports/target1170_v84_public_result_20260822.md)에 있다.
+v104는 v84 위의 안정 R_CORE 행에 독립 FM과 paired conditional correction을 적용한
+단일 실행 패키지다. Public gain `+1.4282239867`을 확인해 챔피언으로 승격했다. 상세
+근거는 [`../reports/target1170_v104_public_result_20260822.md`](../reports/target1170_v104_public_result_20260822.md)에 있다.
 
 ## 제출하지 않을 동일 계열 후보
 
@@ -36,9 +37,10 @@ v22의 Public 변화가 `0 ~ +3` 구간이므로 보수형과 단순 강도 조�
 
 ```text
 프로젝트 루트/
-├─ artifacts/standalone_champion_1161/
-│  ├─ standalone_champion_1161.zip   현재 전달·검증 기준
+├─ artifacts/standalone_champion_1162/
+│  ├─ standalone_champion_1162.zip   현재 전달·검증 기준
 │  ├─ standalone_manifest.json
+├─ artifacts/standalone_champion_1161/  직전 챔피언 감사본
 ├─ artifacts/standalone_champion_1159/  직전 챔피언 감사본
 └─ submissions/
    ├─ README.md            이 안내서

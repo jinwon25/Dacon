@@ -1,5 +1,11 @@
 # 1161.2020600422 단일 실행 챔피언
 
+> **최신 운영 기준 변경(2026-08-22 23:06 KST)**: v104가 Public
+> **1162.6302840289**(제출 ID `60626`)를 기록해 현재 전달 파일은
+> `artifacts/standalone_champion_1162/standalone_champion_1162.zip`이다. 아래 본문은
+> 직전 v84/1161 패키지의 상세 감사 기록으로 보존한다. 최신 근거와 실행 방법은
+> [`../reports/target1170_v104_public_result_20260822.md`](../reports/target1170_v104_public_result_20260822.md)를 따른다.
+
 ## 목적
 
 현재 단일 릴리스는 직전 1159 챔피언과 v56 shared FM을 한 ZIP 안에 완전히
