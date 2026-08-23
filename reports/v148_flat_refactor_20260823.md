@@ -39,13 +39,13 @@ script.py                                                  138줄  v148 진입�
 [after]   최대 경로 깊이 3
 script.py            유일한 진입점 (main 1개)
 requirements.txt     1벌
-ARCHITECTURE.md      레이어 파이프라인과 최종 혼합식
-lib/
-  __init__.py  paths.py
-  base_ensemble.py  strict_asof.py  strict_overlay.py
-  futures_fm_overlay.py  conditional_overlay.py
-  row_local_features.py  form_context_rf.py
 model/
+  lib/
+    __init__.py  paths.py
+    base_ensemble.py  strict_asof.py  strict_overlay.py
+    futures_fm_overlay.py  conditional_overlay.py
+    row_local_features.py  form_context_rf.py
+  ARCHITECTURE.md    레이어 파이프라인과 최종 혼합식
   base_ensemble/  strict_asof/  conditional/  regular_fm/{older,recent}/
   futures_fm/  form_context_rf/rf.pkl  c3_sign_all.joblib
 ```
@@ -62,6 +62,29 @@ model/
 
 4,558줄을 한 파일로 합치지는 않았다 — 가독성이 목적이기 때문이다.
 
+### 공식 제출 구조 제약과 `model/lib/`
+
+대회 공식 규정은 제출 ZIP **최상위에 `model/`, `script.py`, `requirements.txt`
+세 가지만** 허용한다. "추가 최상위 폴더가 zip 구조 내 존재하는 경우 등 구조가
+불일치하는 경우 설치 오류가 발생합니다."
+
+**원본이 6단계로 중첩됐던 이유가 바로 이 제약이다.** 최상위에 셋만 둘 수 있으니
+컴포넌트 코드를 전부 `model/` 안으로 밀어 넣어야 했고, 세대가 쌓일수록 깊이가
+늘어난 것이다. 즉 중첩은 게으름이 아니라 제약에 대한 대응이었다.
+
+첫 평탄화본은 이 규정을 모르고 `lib/`와 `ARCHITECTURE.md`를 최상위에 두어
+**설치 단계에서 거부됐을 구조**였다. 현재 빌드는 컴포넌트 패키지를 `model/lib/`로
+옮겨 최상위를 계약대로 맞췄다. 평탄 구조(깊이 3), 동적 로딩 0개, 기능명은 그대로다.
+
+`script.py`는 컴포넌트를 import하기 **전에** `model/`을 `sys.path`에 넣는다.
+경로는 `Path(__file__).resolve().parent` 기준이며 작업 디렉터리를 쓰지 않는다 —
+평가 서버가 어느 디렉터리에서 실행할지 보장되지 않기 때문이다. 모듈 이름은
+`lib.*`로 유지되므로 컴포넌트 내부 import는 한 줄도 바뀌지 않았다.
+
+빌드 스크립트는 ZIP을 쓰기 직전에 최상위 엔트리 집합을 `ROOT_CONTRACT`와
+대조하고 불일치 시 빌드를 중단한다. `tests/test_v148_flat_parity.py`는 같은 검사를
+평탄화본과 **원본(대조군)** 양쪽에 걸어 회귀를 막는다.
+
 ## 이름 정책
 
 이름은 **기능 또는 도메인**을 가리킨다. 계보(`v82`/`v84`/`v104`/`v124`),
@@ -71,13 +94,13 @@ model/
 
 | 모듈 | 역할 | 가중치 |
 |---|---|---|
-| `lib/base_ensemble.py` | LGB+RF+CatBoost+joint state-mode 기반 앙상블 | `model/base_ensemble/` |
-| `lib/strict_asof.py` | exact as-of 규율 모델 (group/team/lowrank) | `model/strict_asof/` |
-| `lib/strict_overlay.py` | strict를 R_CORE에 10% 오버레이 | — |
-| `lib/futures_fm_overlay.py` | F(퓨처스) 도메인에 FM 보정 eta 0.10 | `model/futures_fm/` |
-| `lib/conditional_overlay.py` | regular FM + 조건부 보정, stability gate | `model/regular_fm/`, `model/conditional/` |
-| `lib/row_local_features.py` | 행 독립 피처 생성 | — |
-| `lib/form_context_rf.py` | 최근 폼·카운트 컨텍스트·platoon RF | `model/form_context_rf/` |
+| `model/lib/base_ensemble.py` | LGB+RF+CatBoost+joint state-mode 기반 앙상블 | `model/base_ensemble/` |
+| `model/lib/strict_asof.py` | exact as-of 규율 모델 (group/team/lowrank) | `model/strict_asof/` |
+| `model/lib/strict_overlay.py` | strict를 R_CORE에 10% 오버레이 | — |
+| `model/lib/futures_fm_overlay.py` | F(퓨처스) 도메인에 FM 보정 eta 0.10 | `model/futures_fm/` |
+| `model/lib/conditional_overlay.py` | regular FM + 조건부 보정, stability gate | `model/regular_fm/`, `model/conditional/` |
+| `model/lib/row_local_features.py` | 행 독립 피처 생성 | — |
+| `model/lib/form_context_rf.py` | 최근 폼·카운트 컨텍스트·platoon RF | `model/form_context_rf/` |
 
 `R`/`R_CORE`/`R_ANCHOR`/`F`는 공식 도메인 코드(1군 정규시즌 / 퓨처스)이고
 `h05`/`l15`/`b075`는 하이퍼파라미터 인코딩이므로 그대로 두었다. 계보가 아니다.
@@ -116,7 +139,7 @@ spec.loader.exec_module(module)
 module.MODEL_DIR = MODEL_DIR / "parent"     # 경로 주입
 ```
 
-평탄화본은 `lib/paths.py`의 `MODEL_ROOT` 하나를 각 모듈이 직접 참조한다.
+평탄화본은 `model/lib/paths.py`의 `MODEL_ROOT` 하나를 각 모듈이 직접 참조한다.
 
 ```python
 MODEL_DIR = MODEL_ROOT / "base_ensemble"     # 정적, 주입 없음
@@ -135,8 +158,8 @@ MODEL_DIR = MODEL_ROOT / "base_ensemble"     # 정적, 주입 없음
 |---|---:|
 | 비교 행 수 | **117,434** |
 | **최대 절대차** | **3.3306690738754696e-16** |
-| 평균 절대차 | 3.89e-18 |
-| 완전 일치(비트 동일) 비율 | 96.59% |
+| 평균 절대차 | 3.29e-18 |
+| 완전 일치(비트 동일) 비율 | 97.19% |
 | 합격 기준 | ≤ 1e-12 |
 | **원본 vs 원본 (재실행) 최대차** | **3.3306690738754696e-16** |
 | 원본 예측 평균 | 0.516231886056267 |
@@ -186,12 +209,13 @@ cold-start는 train에서 뽑을 수 없다(모든 선수가 이미 동결 테�
 
 | 패키지 | 245,789행 | 비고 |
 |---|---:|---|
-| 원본 | 99.195초 | |
-| **평탄화본** | **93.027초** | 원본 대비 **0.938배** |
+| 원본 | 105.624초 | |
+| **평탄화본** | **105.761초** | 원본 대비 **1.001배** |
 | 같은 프레임 최대 절대차 | 4.44e-16 | 전체 규모에서도 동등 |
 
-동적 import 제거로 미세하게 빨라졌다. 내부 soft guard 120초, 공식 제한 600초를
-모두 만족한다.
+구조 변경에 따른 런타임 비용은 없다(비율 1.001). 절대 시간은 측정 시점의 머신
+부하에 좌우되므로 비율만 의미가 있다 — 최상위 구조 수정 전 측정에서는 같은
+방식으로 0.938배가 나왔다. 공식 제한 600초를 크게 밑돈다.
 
 ## 모델 가중치 무결성
 
@@ -205,14 +229,14 @@ cold-start는 train에서 뽑을 수 없다(모든 선수가 이미 동결 테�
 | 파일 | 값 |
 |---|---|
 | 패키지 | `artifacts/v148_flat_20260823_01/submit_v148_flat.zip` |
-| SHA-256 | `FBA0514EDDE19A7FE3F10DA5F16897943675881AC4B27B44BBFA10948FDD810A` |
+| SHA-256 | `83CA670CF68F329B3CC1BAC2B452E5FB4D2F3D0BE39BD49BA71526E9FDC1C8E8` |
 | 크기 | 46,687,175 bytes (90 files) |
 | 빌드 | `src/champion/v148_flat_build_package.py` |
 | 런타임 | `src/champion/v148_flat_runtime_script.py` |
 | 동등성 감사 | `src/champion/v148_flat_parity_audit.py` |
-| 테스트 | `tests/test_v148_flat_parity.py` (13개) |
+| 테스트 | `tests/test_v148_flat_parity.py` (16개) |
 
-전체 테스트: **381 passed, 4 skipped** (기준선 368 + 신규 13).
+전체 테스트: **384 passed, 4 skipped** (기준선 368 + 신규 16).
 
 ## 리팩터링 중 발견한 사항
 
@@ -221,7 +245,7 @@ cold-start는 train에서 뽑을 수 없다(모든 선수가 이미 동결 테�
    (`V84_FIXED_V56_F_ROUTE`, F 라우트에 고정 v56 FM 적용)이고,
    `model/v124/model/parent/components/`(6,234 B)는 **v82**
    (champion + 10% EXP-021 strict on R_CORE)다. 각각
-   `lib/futures_fm_overlay.py`, `lib/strict_overlay.py`로 분리했다.
+   `model/lib/futures_fm_overlay.py`, `model/lib/strict_overlay.py`로 분리했다.
    상위 v124 스크립트가 전자를
    `"v104_parent_component"`라는 이름으로 로드하고 있어 이름과 실제 계층이
    어긋나 있었다.

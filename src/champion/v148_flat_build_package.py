@@ -5,9 +5,18 @@ packages inside each other and wires them together with
 ``importlib.util.spec_from_file_location`` plus post-load ``MODEL_DIR``
 mutation.  This module rewrites that layout into
 
-    script.py / requirements.txt / lib/*.py / model/<component>/
+    script.py / requirements.txt / model/lib/*.py / model/<component>/
 
 without touching a single model weight and without changing any prediction.
+
+The official submission contract fixes the archive root to exactly ``model/``,
+``script.py`` and ``requirements.txt`` -- "추가 최상위 폴더가 zip 구조 내
+존재하는 경우 등 구조가 불일치하는 경우 설치 오류가 발생합니다".  That
+constraint is why the original package buried its component scripts under
+``model/`` in the first place, and it is why the flat component package ships
+as ``model/lib/`` rather than a second root-level directory.  ``script.py``
+puts ``model/`` on ``sys.path`` before importing, so the module names stay
+``lib.*`` and every component import is unchanged.
 Every source transformation below is anchored on an exact string and asserted,
 so an upstream edit fails the build loudly instead of silently drifting.
 """
@@ -26,6 +35,9 @@ from typing import Any
 PROTOCOL = "V148_FLAT_SINGLE_GENERATION_PACKAGE_V1"
 
 ORIGINAL_SHA256 = "7A27BE5878A79934544C741F283C139D40FB20484D52DB494928BCBE27E1E337"
+
+# The official submission contract: the archive root may contain nothing else.
+ROOT_CONTRACT = frozenset({"model/", "script.py", "requirements.txt"})
 
 # Original member prefix -> flat destination prefix.  Model artifacts are copied
 # byte-for-byte; only their path changes.  Each destination is named after the
@@ -70,8 +82,11 @@ from __future__ import annotations
 from pathlib import Path
 
 
-PACKAGE_ROOT = Path(__file__).resolve().parent.parent
-MODEL_ROOT = PACKAGE_ROOT / "model"
+# This module lives at ``model/lib/paths.py``: the official submission contract
+# allows only ``model/``, ``script.py`` and ``requirements.txt`` at the archive
+# root, so the component package ships inside ``model/``.
+MODEL_ROOT = Path(__file__).resolve().parent.parent
+PACKAGE_ROOT = MODEL_ROOT.parent
 '''
 
 INIT_MODULE = '"""Frozen inference components (flat single-generation layout)."""\n'
@@ -80,8 +95,22 @@ ARCHITECTURE_DOC = """# Package architecture
 
 One entry point, one generation, no nested packages.  `script.py` is the only
 file the evaluation server runs; every component below is imported statically
-from `lib/` and loads its weights from the `model/` directory that carries the
-same name.
+from `model/lib/` and loads its weights from the `model/` directory that
+carries the same name.
+
+## Archive layout
+
+The submission contract allows exactly three entries at the archive root:
+
+```
+script.py          the entry point the evaluation server runs
+requirements.txt   the inference environment
+model/             everything else, including the component package
+```
+
+`script.py` puts `model/` on `sys.path` before importing, so components are
+addressed as `lib.<component>` regardless of the working directory the server
+runs from.
 
 ## Layer pipeline
 
@@ -116,13 +145,13 @@ clip(0.85 * parent + 0.15 * form_context_rf + 0.5 * c3, 0.001, 0.999)
 
 | module | weights |
 |---|---|
-| `lib/base_ensemble.py` | `model/base_ensemble/` |
-| `lib/strict_asof.py` | `model/strict_asof/` |
-| `lib/strict_overlay.py` | (blends the two above) |
-| `lib/futures_fm_overlay.py` | `model/futures_fm/` |
-| `lib/conditional_overlay.py` | `model/regular_fm/`, `model/conditional/` |
-| `lib/row_local_features.py` | (feature construction only) |
-| `lib/form_context_rf.py` | `model/form_context_rf/rf.pkl` |
+| `model/lib/base_ensemble.py` | `model/base_ensemble/` |
+| `model/lib/strict_asof.py` | `model/strict_asof/` |
+| `model/lib/strict_overlay.py` | (blends the two above) |
+| `model/lib/futures_fm_overlay.py` | `model/futures_fm/` |
+| `model/lib/conditional_overlay.py` | `model/regular_fm/`, `model/conditional/` |
+| `model/lib/row_local_features.py` | (feature construction only) |
+| `model/lib/form_context_rf.py` | `model/form_context_rf/rf.pkl` |
 | `script.py` | `model/c3_sign_all.joblib` |
 
 ## Domain codes
@@ -439,33 +468,33 @@ def transform_row_local_features(text: str) -> str:
 SOURCE_MAP: tuple[tuple[str, str, Any], ...] = (
     (
         "model/v124/model/parent/parent/components/champion_script.py",
-        "lib/base_ensemble.py",
+        "model/lib/base_ensemble.py",
         transform_base_ensemble,
     ),
     (
         "model/v124/model/parent/parent/components/strict_script.py",
-        "lib/strict_asof.py",
+        "model/lib/strict_asof.py",
         transform_strict_asof,
     ),
     (
         "model/v124/model/parent/components/parent_script.py",
-        "lib/strict_overlay.py",
+        "model/lib/strict_overlay.py",
         transform_strict_overlay,
     ),
     (
         "model/v124/model/components/parent_script.py",
-        "lib/futures_fm_overlay.py",
+        "model/lib/futures_fm_overlay.py",
         transform_futures_fm_overlay,
     ),
     (
         "model/v124/script.py",
-        "lib/conditional_overlay.py",
+        "model/lib/conditional_overlay.py",
         transform_conditional_overlay,
     ),
-    ("model/h1/script.py", "lib/form_context_rf.py", transform_form_context_rf),
+    ("model/h1/script.py", "model/lib/form_context_rf.py", transform_form_context_rf),
     (
         "model/v124/model/components/v104_features.py",
-        "lib/row_local_features.py",
+        "model/lib/row_local_features.py",
         transform_row_local_features,
     ),
 )
@@ -533,9 +562,10 @@ def build(original_zip: Path, runtime_script: Path, output_dir: Path) -> dict[st
             raise ValueError(f"unmapped original members: {sorted(unaccounted)}")
 
         # 3. python components, surgically transformed
-        (stage / "lib").mkdir(parents=True, exist_ok=True)
-        (stage / "lib" / "__init__.py").write_text(INIT_MODULE, encoding="utf-8", newline="\n")
-        (stage / "lib" / "paths.py").write_text(PATHS_MODULE, encoding="utf-8", newline="\n")
+        lib_dir = stage / "model" / "lib"
+        lib_dir.mkdir(parents=True, exist_ok=True)
+        (lib_dir / "__init__.py").write_text(INIT_MODULE, encoding="utf-8", newline="\n")
+        (lib_dir / "paths.py").write_text(PATHS_MODULE, encoding="utf-8", newline="\n")
         for source_name, destination_name, transform in SOURCE_MAP:
             raw = archive.read(source_name).decode("utf-8")
             # The original package mixes CRLF (champion/strict/h1) and LF
@@ -561,12 +591,21 @@ def build(original_zip: Path, runtime_script: Path, output_dir: Path) -> dict[st
         requirements = archive.read("requirements.txt")
         (stage / "requirements.txt").write_bytes(requirements)
 
-    # 5. layer map, so a reader never has to infer the pipeline from imports
-    (stage / "ARCHITECTURE.md").write_text(
+    # 5. layer map, so a reader never has to infer the pipeline from imports.
+    # It ships inside model/ because the archive root is contractually fixed.
+    (stage / "model" / "ARCHITECTURE.md").write_text(
         ARCHITECTURE_DOC, encoding="utf-8", newline="\n"
     )
 
     shutil.copyfile(runtime_script, stage / "script.py")
+
+    # 6. the official contract fixes the archive root; fail the build rather
+    # than ship a package the evaluation server would reject at install time.
+    root_entries = {entry.name if entry.is_file() else entry.name + "/" for entry in stage.iterdir()}
+    if root_entries != ROOT_CONTRACT:
+        raise ValueError(
+            f"archive root must be exactly {sorted(ROOT_CONTRACT)}, found {sorted(root_entries)}"
+        )
 
     package = output_dir / "submit_v148_flat.zip"
     files = sorted(p for p in stage.rglob("*") if p.is_file())

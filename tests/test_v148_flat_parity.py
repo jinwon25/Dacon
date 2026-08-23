@@ -10,6 +10,7 @@ from src.champion.v148_flat_build_package import (
     DROPPED,
     MODEL_MAP,
     ORIGINAL_SHA256,
+    ROOT_CONTRACT,
     transform_base_ensemble,
     transform_strict_asof,
     transform_strict_overlay,
@@ -76,12 +77,30 @@ def test_every_model_artifact_is_byte_identical(manifest: dict) -> None:
     assert identity["verified"] == 78
 
 
+def _root_entries(zip_path: Path) -> set[str]:
+    with zipfile.ZipFile(zip_path) as archive:
+        names = archive.namelist()
+    return {name.split("/")[0] + ("/" if "/" in name else "") for name in names}
+
+
+@pytest.mark.parametrize("package", [FLAT_ZIP, ORIGINAL_ZIP], ids=["flat", "original"])
+def test_archive_root_matches_the_official_submission_contract(package: Path) -> None:
+    """The contract allows only model/, script.py and requirements.txt.
+
+    "추가 최상위 폴더가 zip 구조 내 존재하는 경우 등 구조가 불일치하는 경우
+    설치 오류가 발생합니다."  An earlier flat build shipped ``lib/`` and
+    ``ARCHITECTURE.md`` at the root and would have failed to install; the
+    original package is the control that pins the expected shape.
+    """
+    assert _root_entries(package) == set(ROOT_CONTRACT)
+
+
 def test_flat_layout_is_single_generation() -> None:
     with zipfile.ZipFile(FLAT_ZIP) as archive:
         names = archive.namelist()
     assert "script.py" in names
     assert "requirements.txt" in names
-    assert "lib/paths.py" in names
+    assert "model/lib/paths.py" in names
     # no genealogy nesting survives
     assert not any("parent/parent" in name for name in names)
     assert not any(name.startswith("model/v124/") for name in names)
@@ -92,10 +111,22 @@ def test_flat_layout_is_single_generation() -> None:
     assert "from lib import" in source
 
 
+def test_entry_point_bootstraps_the_component_package_from_its_own_location() -> None:
+    """``model/`` must reach ``sys.path`` via ``__file__``, never via the cwd.
+
+    The evaluation server does not guarantee the working directory it runs
+    ``script.py`` from.
+    """
+    source = zipfile.ZipFile(FLAT_ZIP).read("script.py").decode("utf-8")
+    assert "BASE_DIR = Path(__file__).resolve().parent" in source
+    bootstrap = source.index('sys.path.insert(0, str(BASE_DIR / "model"))')
+    assert bootstrap < source.index("from lib import"), "sys.path set up too late"
+
+
 def test_no_component_retains_a_second_entry_point() -> None:
     with zipfile.ZipFile(FLAT_ZIP) as archive:
         for name in archive.namelist():
-            if not name.startswith("lib/") or not name.endswith(".py"):
+            if not name.startswith("model/lib/") or not name.endswith(".py"):
                 continue
             source = archive.read(name).decode("utf-8")
             assert "__main__" not in source, name
@@ -148,7 +179,7 @@ def test_module_and_directory_names_carry_no_lineage_or_status() -> None:
     checked = [
         name
         for name in names
-        if name.startswith("lib/") or "/" not in name
+        if name.startswith("model/lib/") or "/" not in name
     ]
     checked += sorted({f"model/{name.split('/')[1]}/" for name in names if name.startswith("model/") and "/" in name[6:]})
     offenders = [
@@ -169,15 +200,15 @@ def test_every_component_module_is_present() -> None:
         "row_local_features",
         "form_context_rf",
     ):
-        assert f"lib/{module}.py" in names
+        assert f"model/lib/{module}.py" in names
     for directory in ("base_ensemble", "strict_asof", "futures_fm", "regular_fm", "form_context_rf"):
         assert any(name.startswith(f"model/{directory}/") for name in names), directory
 
 
 def test_architecture_document_describes_the_pipeline() -> None:
     with zipfile.ZipFile(FLAT_ZIP) as archive:
-        assert "ARCHITECTURE.md" in archive.namelist()
-        document = archive.read("ARCHITECTURE.md").decode("utf-8")
+        assert "model/ARCHITECTURE.md" in archive.namelist()
+        document = archive.read("model/ARCHITECTURE.md").decode("utf-8")
     for module in ("base_ensemble", "strict_overlay", "conditional_overlay"):
         assert module in document
     # the blend the package actually applies

@@ -4,23 +4,33 @@ Prediction-identical to the original ``submit_v148.zip`` runtime.  The only
 change is structural: components are imported statically from ``lib`` instead
 of being re-executed through ``importlib.util.spec_from_file_location`` at
 every call, and every model artifact lives one level under ``model/``.
+
+The submission contract fixes the archive root to ``model/``, ``script.py`` and
+``requirements.txt``, so the component package ships as ``model/lib/``.  That
+directory is put on ``sys.path`` below -- before any component import and
+relative to this file rather than the working directory, because the
+evaluation server does not guarantee which directory it runs from.
 """
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 import joblib
 import numpy as np
 import pandas as pd
 
-from lib import conditional_overlay, form_context_rf
-from lib.paths import MODEL_ROOT
+BASE_DIR = Path(__file__).resolve().parent
+if str(BASE_DIR / "model") not in sys.path:
+    sys.path.insert(0, str(BASE_DIR / "model"))
+
+from lib import conditional_overlay, form_context_rf  # noqa: E402
+from lib.paths import MODEL_ROOT  # noqa: E402
 
 
 ID_COL = "row_id"
 TARGET_COL = "control_success"
-BASE_DIR = Path(__file__).resolve().parent
 TEST_PATH = BASE_DIR / "data" / "test.csv"
 SAMPLE_PATH = BASE_DIR / "data" / "sample_submission.csv"
 OUTPUT_PATH = BASE_DIR / "output" / "submission.csv"
