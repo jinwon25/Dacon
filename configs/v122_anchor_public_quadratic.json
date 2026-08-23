@@ -1,0 +1,42 @@
+{
+  "protocol": "V122_ANCHOR_PUBLIC_QUADRATIC_V1",
+  "axis": "v25_postbreak_anchor_blend_eta",
+  "observations": [
+    {
+      "submission_id": 1535141,
+      "name": "submit_v25 postbreak R_ANCHOR",
+      "eta": 0.075,
+      "public_score": 1155.8293405409
+    },
+    {
+      "submission_id": 51775,
+      "name": "submit_v27 R_ANCHOR 10pct probe",
+      "eta": 0.1,
+      "public_score": 1156.6153781694
+    },
+    {
+      "submission_id": 51773,
+      "name": "submit_v26 R_ANCHOR 15pct probe",
+      "eta": 0.15,
+      "public_score": 1157.9736407889
+    }
+  ],
+  "current_eta": 0.15,
+  "eta_bounds": [
+    0.15,
+    0.5
+  ],
+  "current_champion_public": 1162.6302840289,
+  "current_champion_name": "submit_v104_probe.zip",
+  "package_name": "submit_v122.zip",
+  "nested_spec_path": "model/parent/parent/champion/v25_postbreak_anchor_spec.json",
+  "restrictions": {
+    "official_dacon_scores_only": true,
+    "test_csv_used_for_eta": false,
+    "test_aggregate_used": false,
+    "test_distribution_used": false,
+    "sample_identification_used": false,
+    "row_local_inference": true
+  },
+  "authorization": "User explicitly requested continued rule-compliant research until reaching Public 1170; DACON FAQ reply 320256 permits leaderboard interpolation on the same model axis."
+}

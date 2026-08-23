@@ -1,0 +1,23 @@
+{
+  "protocol": "V141_V124_ABSOLUTE_H1_C3_V1",
+  "hypothesis": "The deployable absolute formula 0.85*v124 + 0.15*H1_post4 + 0.5*C3 preserves the v140 target-sized gain without recomputing v104.",
+  "v124_current_point": [1.0, 1.0, 1.0, 1.0, 1.0, 0.15],
+  "v124_selected_point": [1.45, 1.0, 0.75, 0.5, 0.65, 0.36],
+  "h1_weight": 0.15,
+  "c3_weight": 0.5,
+  "route": "R_CORE",
+  "locked_gate": {
+    "gain_min": 5.7,
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "active_domain_gain_min": 0.0
+  },
+  "restrictions": {
+    "external_2025_outcomes_used": false,
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_only_in_frozen_v124_parent": true,
+    "full_2024_used_for_recipe_selection": false,
+    "row_local_inference": true
+  }
+}

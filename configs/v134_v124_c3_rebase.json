@@ -1,0 +1,22 @@
+{
+  "protocol": "V134_V124_C3_REBASE_V1",
+  "hypothesis": "The source-selected v133 H1+C3 correction remains additive above the Public-confirmed v124 parent and preserves a target-sized locked gain.",
+  "v124_current_point": [1.0, 1.0, 1.0, 1.0, 1.0, 0.15],
+  "v124_selected_point": [1.45, 1.0, 0.75, 0.5, 0.65, 0.36],
+  "v133_selected_key": "v131_plus_c3__ALL__d0.25",
+  "rebase_formula": "v124_oof + (v133_selected_oof - v104_oof)",
+  "locked_gate": {
+    "gain_min": 5.7,
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "active_domain_gain_min": 0.0
+  },
+  "restrictions": {
+    "external_2025_outcomes_used": false,
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_only_in_frozen_v124_parent": true,
+    "full_2024_used_for_recipe_selection": false,
+    "row_local_inference": true
+  }
+}

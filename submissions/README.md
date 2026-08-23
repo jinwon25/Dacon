@@ -1,29 +1,38 @@
 # 제출 파일 보관 규칙
 
-현재 DACON Public 챔피언은 `submit_v104_probe.zip`으로 제출한 **1162.6302840289**다.
-전달 기준은 내용과 SHA-256이 동일한
-[`../artifacts/standalone_champion_1162/standalone_champion_1162.zip`](../artifacts/standalone_champion_1162/standalone_champion_1162.zip)이다.
+현재 DACON Public 챔피언은 `submit_v148.zip`으로 제출한 **1170.3014697177**다.
+전달 기준은 [`../artifacts/v148_v142_v138_blend_package_20260823_01/submit_v148.zip`](../artifacts/v148_v142_v138_blend_package_20260823_01/submit_v148.zip)이다.
 
 | 항목 | 값 |
 |---|---:|
-| Public 점수 | **1162.6302840289** |
-| 확인 당시 순위 | **13위** |
-| 제출 ID | `60626` |
-| 단일 릴리스 SHA-256 | `0C3B6A9D88D31D9AC32FB43FFD642FA07BFCC3367699FA71841E35188FBDA0BA` |
-| 직전 1161 대비 | **+1.4282239867** |
-| 목표 1170까지 | **7.3697159711** |
-| 목표 1200까지 | **37.3697159711** |
+| Public 점수 | **1170.3014697177** |
+| 확인 당시 순위 | **9위** |
+| 제출 ID | `1544757` |
+| 단일 릴리스 SHA-256 | `7A27BE5878A79934544C741F283C139D40FB20484D52DB494928BCBE27E1E337` |
+| 직전 v142 대비 | **+0.6736764355** |
+| 목표 1170 초과분 | **0.3014697177** |
+| 목표 1200까지 | **29.6985302823** |
 
 ## 최신 승격 결과
 
 | 파일 | 상태 | OOF gain full/late-2024 | SHA-256 |
 |---|---|---:|---|
+| `../artifacts/v148_v142_v138_blend_package_20260823_01/submit_v148.zip` | API 성공, Public 1170.3014697177 | v142 대비 +0.7192 / +1.2433 | `7A27BE58…E1E337` |
+| `../artifacts/v142_v141_submission_package_20260823_01/submit_v142.zip` | API 성공, Public 1169.6277932822 | v124 대비 +6.9431 / +12.5332 | `E38690AE…693D0A` |
 | `../artifacts/standalone_champion_1162/standalone_champion_1162.zip` | API 성공, Public 1162.6302840289 | +3.2162 / +2.5868 | `0C3B6A9D…FBDA0BA` |
 | `../artifacts/standalone_champion_1161/standalone_champion_1161.zip` | API 성공, Public 1161.2020600422 | +1.0181 / +2.9166 | `C033FC38…FE6C4F7` |
 
 v104는 v84 위의 안정 R_CORE 행에 독립 FM과 paired conditional correction을 적용한
 단일 실행 패키지다. Public gain `+1.4282239867`을 확인해 챔피언으로 승격했다. 상세
 근거는 [`../reports/target1170_v104_public_result_20260822.md`](../reports/target1170_v104_public_result_20260822.md)에 있다.
+
+## 마지막 v154 제출
+
+`submit_v154.zip`은 85% bridge에 outcome-free 5월 maturity delta distillation을 추가한
+마지막 일일 제출이다. API 접수는 성공했고 누적 제출 수는 35회로 증가했지만, best-only
+리더보드는 v148의 1170.3014697177·9위를 유지했다. 따라서 v154는 보관용 연구 결과이며
+현재 전달 파일은 계속 v148이다. 상세 근거는
+[`../reports/target1173_v149_v154_final_submission_20260823.md`](../reports/target1173_v149_v154_final_submission_20260823.md)에 있다.
 
 ## 제출하지 않을 동일 계열 후보
 

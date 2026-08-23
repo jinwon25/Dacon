@@ -1,0 +1,61 @@
+{
+  "protocol": "V78_ENVIRONMENT_STABLE_TRAJECTORY_RESIDUAL_V1",
+  "frozen_before_run": "2026-08-22",
+  "objective": "within-environment centered incumbent residual in probability space",
+  "environment": "domain3 x target-free month band (early=3-5, mid=6-7, late=8-10)",
+  "ridge_alpha": 200.0,
+  "minimum_environment_rows": 1000,
+  "minimum_sign_consistency": 0.75,
+  "minimum_median_abs_standardized_coefficient": 0.0001,
+  "correction_cap": 0.03,
+  "risks": ["uniform", "environment_equal", "worst_third"],
+  "eta_grid": [0.0, 0.25, 0.5, 1.0],
+  "source_selection_gates": {
+    "gain_strictly_positive": true,
+    "minimum_positive_month_fraction": 0.75,
+    "worst_month_gain_strictly_above": -5.0,
+    "minimum_domain_gain": 0.0
+  },
+  "feature_families": {
+    "trajectory": [
+      "pitcher_prev1_minus_career",
+      "pitcher_prev3_minus_career",
+      "pitcher_prev5_minus_career",
+      "pitcher_prev1_minus_prev3",
+      "pitcher_prev3_minus_prev5",
+      "pitcher_success_curvature",
+      "middle_prev1_minus_prev3",
+      "middle_prev3_minus_prev5",
+      "middle_curvature"
+    ],
+    "reliability_command": [
+      "pitcher_log_n",
+      "pitcher_reliability",
+      "batter_log_n",
+      "batter_reliability",
+      "pitchmix_reliability",
+      "strike_ball_margin",
+      "middle_reverse_margin",
+      "pitchmix_entropy"
+    ],
+    "context": [
+      "balls_scaled",
+      "strikes_scaled",
+      "outs_scaled",
+      "runners_scaled",
+      "inning_scaled",
+      "abs_score_diff_scaled",
+      "log_li",
+      "win_expectancy_gap",
+      "pressure",
+      "same_hand",
+      "pressure_x_recent_delta"
+    ]
+  },
+  "prohibited": [
+    "player identity columns",
+    "test aggregates",
+    "current pitch physics or location",
+    "2024-driven feature or hyperparameter changes after this file"
+  ]
+}

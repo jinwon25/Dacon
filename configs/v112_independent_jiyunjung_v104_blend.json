@@ -1,0 +1,24 @@
+{
+  "protocol": "V112_INDEPENDENT_JIYUNJUNG_V104_BLEND_V1",
+  "hypothesis": "A strict-forward LightGBM/CatBoost model rebuilt from an independent feature recipe contributes orthogonal probability residuals to the frozen v104 champion.",
+  "route_domains": ["R_CORE"],
+  "alpha_cap": 0.25,
+  "family_alpha": [0.0, 0.01, 0.025, 0.05, 0.075, 0.1, 0.15, 0.2, 0.25],
+  "bootstrap_resamples": 3000,
+  "block_size": 2000,
+  "seed": 20260823,
+  "selection_gate": {
+    "minimum_positive_month_fraction": 0.75,
+    "worst_month_gain_strictly_above": -5.0,
+    "minimum_domain_gain": 0.0,
+    "reality_check_alpha": 0.1
+  },
+  "restrictions": {
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_for_recipe_or_weight": false,
+    "v104_recipe_retuned": false,
+    "locked_2024_used_for_alpha": false,
+    "row_local_inference": true
+  }
+}

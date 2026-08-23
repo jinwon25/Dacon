@@ -1,0 +1,35 @@
+{
+  "protocol": "V128_CORRECTED_STATE_MODEL_ABLATION_V1",
+  "hypothesis": "The public D/X/H1 current-season state must be exposed during tree fitting, rather than mapped linearly after v104, to recover its nonlinear value while preserving the frozen v19 model structure.",
+  "feature_families": [
+    "missing_state9",
+    "hoo_context14",
+    "full_dxh1_27"
+  ],
+  "routes": ["ALL", "R_CORE", "F"],
+  "eta_grid": [0.1, 0.25, 0.5, 1.0],
+  "state_recipe": {
+    "half_life": 0.5,
+    "leaves": 15,
+    "pitcher_weight": 0.75
+  },
+  "source_gate": {
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "active_domain_gain_min": 0.0
+  },
+  "locked_gate": {
+    "gain_min": 5.7,
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "active_domain_gain_min": 0.0
+  },
+  "restrictions": {
+    "external_2025_outcomes_used": false,
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_for_selection": false,
+    "full_2024_used_for_recipe_selection": false,
+    "row_local_inference": true
+  }
+}

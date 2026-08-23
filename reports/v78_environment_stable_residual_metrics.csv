@@ -1,0 +1,6 @@
+axis,selected_risk,selected_eta,selected_feature_count,gain,positive_month_fraction,worst_month_gain,minimum_domain_gain,mean_abs_shift
+early22_to_late22,uniform,0.0,5,0.0,0.0,0.0,0.0,0.0
+full22_to_full23,uniform,0.0,7,0.0,0.0,0.0,0.0,0.0
+full23_to_full24_historical,uniform,0.5,6,-7.536153067624387,0.25,-58.72905629073446,-9.85656564095702,0.0023457191901819696
+late23_to_full24_exact,uniform,0.0,6,0.0,0.0,0.0,0.0,0.0
+early24_to_late24_exact,uniform,0.0,8,0.0,0.0,0.0,0.0,0.0

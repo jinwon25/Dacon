@@ -1,0 +1,358 @@
+"""Magnitude-coherent cross-season R_CORE FM above exact v84.
+
+v87 showed that averaging independent seasonal FMs reduces temporal variance,
+but sign agreement alone still admits interactions whose magnitudes differ
+substantially by source season.  This bounded follow-up uses the source-only
+coherence ratio ``min(abs(c1), abs(c2)) / max(abs(c1), abs(c2))`` as a
+row-local uncertainty weight.  The three fixed powers below are selected on
+full-2022 and late-2023 before opening the 2024 outer archive.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+from pathlib import Path
+from typing import Any
+
+import numpy as np
+import pandas as pd
+
+from src.v30_diverse_covariance_screen import _cached_v25_axes, diagnostics, v27_parent
+from src.v35_three_stage_multibank import _metadata
+from src.v53_factorization_offset import TARGET
+from src.v57_public_strict_blend import _load_strict
+from src.v80_oof_covariance_stack import (
+    _assert_target,
+    _load_common_candidates,
+    _load_full24_diagnostic_candidates,
+    _load_parent_axis,
+)
+from src.v85_lowrank_policy_replacement import V82_NAME, exact_v84_parent
+from src.v86_reliability_gated_r_fm import ETA, ROUTE, _metric_frame, _strict_parent, apply_reliability_offset
+
+
+PROTOCOL = "V88_COHERENCE_WEIGHTED_CROSS_SEASON_R_FM_V1"
+POLICIES = ("coherence_sqrt", "coherence_linear", "coherence_squared")
+POWERS = {
+    "coherence_sqrt": 0.5,
+    "coherence_linear": 1.0,
+    "coherence_squared": 2.0,
+}
+
+
+def coherence_correction(
+    older: np.ndarray, recent: np.ndarray, policy: str
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Return sign-consensus mean damped by cross-source magnitude coherence."""
+
+    if policy not in POLICIES:
+        raise ValueError(f"unknown coherence policy: {policy}")
+    older = np.asarray(older, dtype=np.float64)
+    recent = np.asarray(recent, dtype=np.float64)
+    if older.shape != recent.shape or older.ndim != 1:
+        raise ValueError("coherence correction shape mismatch")
+    if not (np.isfinite(older).all() and np.isfinite(recent).all()):
+        raise ValueError("coherence correction contains non-finite values")
+    agree = (np.signbit(older) == np.signbit(recent)) & (older != 0.0) & (recent != 0.0)
+    low = np.minimum(np.abs(older), np.abs(recent))
+    high = np.maximum(np.abs(older), np.abs(recent))
+    coherence = np.divide(low, high, out=np.zeros_like(low), where=high > 0.0)
+    weight = np.power(np.clip(coherence, 0.0, 1.0), POWERS[policy])
+    correction = np.where(agree, 0.5 * (older + recent) * weight, 0.0)
+    return np.clip(correction, -0.25, 0.25), agree, weight
+
+
+def _compact(result: dict[str, Any]) -> dict[str, float]:
+    return {
+        "gain": float(result["gain"]),
+        "positive_month_fraction": float(result["positive_month_fraction"]),
+        "worst_month_gain": float(result["worst_month_gain"]),
+        "minimum_domain_gain": float(result["minimum_domain_gain"]),
+        "applied_domain_gain": float(result["domain_gains"][ROUTE]),
+        "mean_abs_shift": float(result["mean_abs_shift"]),
+    }
+
+
+def evaluate_family(
+    frames: dict[str, pd.DataFrame],
+    parents: dict[str, np.ndarray],
+    pairs: dict[str, tuple[np.ndarray, np.ndarray]],
+) -> tuple[pd.DataFrame, dict[str, dict[str, dict[str, Any]]]]:
+    rows: list[dict[str, Any]] = []
+    details: dict[str, dict[str, dict[str, Any]]] = {}
+    for policy in POLICIES:
+        details[policy] = {}
+        for axis in ("full_2022", "late_2023"):
+            correction, agree, weight = coherence_correction(*pairs[axis], policy)
+            candidate, active, _ = apply_reliability_offset(
+                frames[axis], parents[axis], correction, "none", eta=ETA
+            )
+            result = diagnostics(
+                _metric_frame(frames[axis]), parents[axis], candidate, active
+            )
+            result["agreement_fraction_active"] = float(agree[active].mean())
+            result["coherence_weight_mean_active"] = float(weight[active].mean())
+            details[policy][axis] = result
+            rows.append(
+                {
+                    "policy": policy,
+                    "axis": axis,
+                    **_compact(result),
+                    "agreement_fraction_active": result["agreement_fraction_active"],
+                    "coherence_weight_mean_active": result[
+                        "coherence_weight_mean_active"
+                    ],
+                }
+            )
+    return pd.DataFrame(rows), details
+
+
+def select_policy(table: pd.DataFrame) -> tuple[str, pd.DataFrame]:
+    records = []
+    for policy in POLICIES:
+        local = table.loc[table["policy"].eq(policy)].set_index("axis")
+        passed = bool(
+            set(local.index) == {"full_2022", "late_2023"}
+            and (local["gain"] > 0.0).all()
+            and (local["positive_month_fraction"] >= 0.75).all()
+            and (local["worst_month_gain"] > -5.0).all()
+            and (local["minimum_domain_gain"] >= 0.0).all()
+            and (local["applied_domain_gain"] > 0.0).all()
+        )
+        robust = float(
+            min(
+                local["gain"].min(),
+                local["worst_month_gain"].min(),
+                local["applied_domain_gain"].min(),
+            )
+        )
+        records.append(
+            {
+                "policy": policy,
+                "source_gate_passed": passed,
+                "robust_score": robust,
+                "minimum_gain": float(local["gain"].min()),
+                "minimum_month_fraction": float(
+                    local["positive_month_fraction"].min()
+                ),
+                "minimum_worst_month_gain": float(local["worst_month_gain"].min()),
+                "minimum_applied_domain_gain": float(
+                    local["applied_domain_gain"].min()
+                ),
+            }
+        )
+    ranking = pd.DataFrame(records).sort_values(
+        ["source_gate_passed", "robust_score", "minimum_gain"], ascending=False
+    )
+    passing = ranking.loc[ranking["source_gate_passed"]]
+    chosen = str((passing if len(passing) else ranking).iloc[0]["policy"])
+    return chosen, ranking.reset_index(drop=True)
+
+
+def run(
+    project: Path,
+    external_root: Path,
+    final_parent_dir: Path,
+    v87_dir: Path,
+    output_dir: Path,
+) -> dict[str, Any]:
+    project = project.resolve()
+    external_root = external_root.resolve()
+    final_parent_dir = final_parent_dir.resolve()
+    v87_dir = v87_dir.resolve()
+    output_dir = output_dir.resolve()
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    raw = pd.read_csv(project / "data" / "train.csv", low_memory=False)
+    rows22 = raw.loc[raw["season"].eq(2022)].reset_index(drop=True)
+    rows23 = raw.loc[raw["season"].eq(2023)].reset_index(drop=True)
+    axes = _cached_v25_axes(project, raw)
+    frame23 = axes["selection_late_2023"].reset_index(drop=True)
+    frame24 = axes["outer_full_2024"].reset_index(drop=True)
+    late23_mask = rows23["game_month"].ge(8).to_numpy()
+    if not np.array_equal(
+        frame23[TARGET].to_numpy(np.float64),
+        rows23.loc[late23_mask, TARGET].to_numpy(np.float64),
+    ):
+        raise ValueError("late-2023 target/order mismatch")
+
+    with np.load(v87_dir / "source_corrections.npz", allow_pickle=False) as saved:
+        pairs = {
+            "full_2022": (
+                saved["correction22_old"].astype(np.float64),
+                saved["correction22_recent"].astype(np.float64),
+            ),
+            "late_2023": (
+                saved["correction23_old"].astype(np.float64),
+                saved["correction23_recent"].astype(np.float64),
+            ),
+        }
+    meta22 = _metadata(project, 2022)
+    strict, strict_provenance = _load_strict(external_root, raw)
+    source_frames = {"full_2022": rows22, "late_2023": frame23}
+    source_parents = {
+        "full_2022": _strict_parent(rows22, meta22["parent"], strict[2022]),
+        "late_2023": _strict_parent(
+            frame23, v27_parent(frame23), strict[2023][late23_mask]
+        ),
+    }
+    source_table, source_details = evaluate_family(
+        source_frames, source_parents, pairs
+    )
+    selected, ranking = select_policy(source_table)
+    source_passed = bool(
+        ranking.set_index("policy").loc[selected, "source_gate_passed"]
+    )
+    source_table.to_csv(output_dir / "source_policy_metrics.csv", index=False)
+    ranking.to_csv(output_dir / "source_policy_ranking.csv", index=False)
+
+    with np.load(v87_dir / "outer_full_2024.npz", allow_pickle=False) as saved:
+        if not np.array_equal(
+            saved["target"].astype(np.float64), frame24[TARGET].to_numpy(np.float64)
+        ):
+            raise ValueError("v87/full-2024 target mismatch")
+        correction24_old = saved["correction_old"].astype(np.float64)
+        correction24_recent = saved["correction_recent"].astype(np.float64)
+
+    parent_axis = _load_parent_axis(final_parent_dir, "full_2024")
+    common = _load_common_candidates(project, parent_axis, "full_2024")
+    registry = _load_full24_diagnostic_candidates(project, parent_axis, common)
+    v56_path = (
+        project
+        / "artifacts"
+        / "v56_shared_horizon_fm_20260817_01"
+        / "outer_full_2024.npz"
+    )
+    with np.load(v56_path, allow_pickle=True) as saved:
+        _assert_target(parent_axis["target"], saved, "v56/full_2024")
+        v56_candidate = saved["candidate"].astype(np.float64)
+    v84, composition = exact_v84_parent(
+        parent_axis, registry[V82_NAME], v56_candidate
+    )
+    if not np.array_equal(parent_axis["target"], frame24[TARGET].to_numpy(float)):
+        raise ValueError("v84/full-2024 target mismatch")
+
+    correction24, agree24, weight24 = coherence_correction(
+        correction24_old, correction24_recent, selected
+    )
+    candidate24, active24, _ = apply_reliability_offset(
+        frame24, v84, correction24, "none", eta=ETA
+    )
+    metric24 = _metric_frame(frame24)
+    full_audit = diagnostics(metric24, v84, candidate24, active24)
+    late_mask = metric24["game_month"].ge(8).to_numpy()
+    candidate_late, active_late, _ = apply_reliability_offset(
+        frame24.loc[late_mask].reset_index(drop=True),
+        v84[late_mask],
+        correction24[late_mask],
+        "none",
+        eta=ETA,
+    )
+    late_audit = diagnostics(
+        metric24.loc[late_mask].reset_index(drop=True),
+        v84[late_mask],
+        candidate_late,
+        active_late,
+    )
+    point_gates = {
+        "pre2024_source_recipe_passed": source_passed,
+        "full_gain_positive": float(full_audit["gain"]) > 0.0,
+        "late_gain_positive": float(late_audit["gain"]) > 0.0,
+        "full_month_fraction_at_least_075": float(
+            full_audit["positive_month_fraction"]
+        )
+        >= 0.75,
+        "late_month_fraction_at_least_075": float(
+            late_audit["positive_month_fraction"]
+        )
+        >= 0.75,
+        "both_worst_months_above_minus_5": min(
+            float(full_audit["worst_month_gain"]),
+            float(late_audit["worst_month_gain"]),
+        )
+        > -5.0,
+        "both_minimum_domains_nonnegative": min(
+            float(full_audit["minimum_domain_gain"]),
+            float(late_audit["minimum_domain_gain"]),
+        )
+        >= 0.0,
+    }
+    np.savez_compressed(
+        output_dir / "outer_full_2024.npz",
+        target=parent_axis["target"],
+        v84=v84,
+        correction=correction24,
+        sign_agreement=agree24,
+        coherence_weight=weight24,
+        candidate=candidate24,
+        active=active24,
+        domain3=metric24["domain3"].to_numpy(str),
+        game_month=metric24["game_month"].to_numpy(np.int16),
+    )
+    result = {
+        "protocol": PROTOCOL,
+        "parent": "exact v84 OOF analogue / Public 1161.2020600422",
+        "configuration": {
+            "route": ROUTE,
+            "eta": ETA,
+            "policies": list(POLICIES),
+            "selected_policy": selected,
+            "selected_power": POWERS[selected],
+        },
+        "selection": "exact coherence power on full-2022 and late-2023 only",
+        "source_gate_passed": source_passed,
+        "source_policy_ranking": ranking.to_dict(orient="records"),
+        "source_details": source_details,
+        "strict_provenance": strict_provenance,
+        "composition_audit": composition,
+        "audit_coherence": {
+            "sign_agreement_fraction_r_core": float(agree24[active24].mean()),
+            "weight_mean_r_core": float(weight24[active24].mean()),
+            "weight_p10_r_core": float(np.quantile(weight24[active24], 0.10)),
+            "weight_p90_r_core": float(np.quantile(weight24[active24], 0.90)),
+        },
+        "audits": {
+            "outer_full_2024": full_audit,
+            "replication_late_2024": late_audit,
+        },
+        "point_gates": {name: bool(value) for name, value in point_gates.items()},
+        "point_gates_passed": bool(all(point_gates.values())),
+        "eligible_for_packaging": False,
+        "promotion_note": (
+            "point gates authorize dependence-aware bootstrap only; packaging "
+            "also requires all v3 uncertainty gates"
+        ),
+        "same_family_2024_labels_used_for_policy_selection": False,
+        "public_score_used_for_policy_or_weight": False,
+        "test_csv_read": False,
+        "test_aggregate_used": False,
+        "row_local_inference": True,
+    }
+    (output_dir / "summary.json").write_text(
+        json.dumps(result, ensure_ascii=False, indent=2, default=float) + "\n",
+        encoding="utf-8",
+    )
+    print(json.dumps(result, ensure_ascii=False, indent=2, default=float), flush=True)
+    return result
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--project", type=Path, required=True)
+    parser.add_argument("--external-root", type=Path, required=True)
+    parser.add_argument("--final-parent-dir", type=Path, required=True)
+    parser.add_argument("--v87-dir", type=Path, required=True)
+    parser.add_argument("--output-dir", type=Path, required=True)
+    args = parser.parse_args()
+    run(
+        args.project,
+        args.external_root,
+        args.final_parent_dir,
+        args.v87_dir,
+        args.output_dir,
+    )
+
+
+if __name__ == "__main__":
+    main()

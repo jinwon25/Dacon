@@ -1,0 +1,21 @@
+{
+  "protocol": "V138_DOMAIN_SEPARATED_V124_V136_V1",
+  "hypothesis": "Use the source-selected v136 branch only on its validated exact R_CORE domain while preserving the Public-confirmed v124 branch on R_ANCHOR and F.",
+  "v124_current_point": [1.0, 1.0, 1.0, 1.0, 1.0, 0.15],
+  "v124_selected_point": [1.45, 1.0, 0.75, 0.5, 0.65, 0.36],
+  "route": "exact_R_CORE_replace",
+  "locked_gate": {
+    "gain_min": 5.7,
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "active_domain_gain_min": 0.0
+  },
+  "restrictions": {
+    "external_2025_outcomes_used": false,
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_only_in_frozen_v124_parent": true,
+    "full_2024_used_for_recipe_selection": false,
+    "row_local_inference": true
+  }
+}
