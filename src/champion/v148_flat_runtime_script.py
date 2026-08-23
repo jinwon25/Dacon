@@ -14,8 +14,7 @@ import joblib
 import numpy as np
 import pandas as pd
 
-from lib import h1 as h1_component
-from lib import v124
+from lib import conditional_overlay, form_context_rf
 from lib.paths import MODEL_ROOT
 
 
@@ -32,18 +31,18 @@ MEAN_RECENT_WEIGHT = 0.15
 
 
 def _predict_parent(frame: pd.DataFrame) -> np.ndarray:
-    return np.asarray(v124.predict_dataframe(frame), dtype=np.float64)
+    return np.asarray(conditional_overlay.predict_dataframe(frame), dtype=np.float64)
 
 
 def _predict_h1(frame: pd.DataFrame) -> np.ndarray:
-    bundle = joblib.load(MODEL_ROOT / "h1" / "rf.pkl")
-    prepared = h1_component.attach_ctx(frame.copy(), bundle)
-    if any(column in (bundle.get("features") or []) for column in h1_component.CAAFE_COLS):
-        prepared = h1_component.attach_caafe(prepared)
-    if any(column in (bundle.get("features") or []) for column in h1_component.ASOF_COLS):
-        prepared = h1_component.attach_asof_state(prepared, bundle)
-    features = h1_component.build_features(prepared, bundle)
-    return np.asarray(h1_component.predict_proba(bundle, features), dtype=np.float64)
+    bundle = joblib.load(MODEL_ROOT / "form_context_rf" / "rf.pkl")
+    prepared = form_context_rf.attach_ctx(frame.copy(), bundle)
+    if any(column in (bundle.get("features") or []) for column in form_context_rf.CAAFE_COLS):
+        prepared = form_context_rf.attach_caafe(prepared)
+    if any(column in (bundle.get("features") or []) for column in form_context_rf.ASOF_COLS):
+        prepared = form_context_rf.attach_asof_state(prepared, bundle)
+    features = form_context_rf.build_features(prepared, bundle)
+    return np.asarray(form_context_rf.predict_proba(bundle, features), dtype=np.float64)
 
 
 def _window_adjustment(

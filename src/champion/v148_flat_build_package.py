@@ -28,14 +28,22 @@ PROTOCOL = "V148_FLAT_SINGLE_GENERATION_PACKAGE_V1"
 ORIGINAL_SHA256 = "7A27BE5878A79934544C741F283C139D40FB20484D52DB494928BCBE27E1E337"
 
 # Original member prefix -> flat destination prefix.  Model artifacts are copied
-# byte-for-byte; only their path changes.
+# byte-for-byte; only their path changes.  Each destination is named after the
+# ``lib`` module that loads it, so the owner of every weight is obvious.
+#
+# Individual weight *filenames* under ``model/base_ensemble/`` keep their
+# historical prefixes on purpose: ``hybrid.json``,
+# ``v20_target1160_spec.json`` and ``v25_postbreak_anchor_spec.json`` are
+# themselves model artifacts that reference nine of those filenames by value,
+# so renaming the files would require editing artifacts and would forfeit the
+# 78/78 byte-identity guarantee.  See the refactor report.
 MODEL_MAP: tuple[tuple[str, str], ...] = (
-    ("model/v124/model/parent/parent/champion/", "model/champion/"),
-    ("model/v124/model/parent/parent/strict/", "model/strict/"),
+    ("model/v124/model/parent/parent/champion/", "model/base_ensemble/"),
+    ("model/v124/model/parent/parent/strict/", "model/strict_asof/"),
     ("model/v124/model/conditional/", "model/conditional/"),
-    ("model/v124/model/r_fm/", "model/r_fm/"),
-    ("model/v124/model/parent/v56_fm/", "model/v56_fm/"),
-    ("model/h1/model/rf.pkl", "model/h1/rf.pkl"),
+    ("model/v124/model/r_fm/", "model/regular_fm/"),
+    ("model/v124/model/parent/v56_fm/", "model/futures_fm/"),
+    ("model/h1/model/rf.pkl", "model/form_context_rf/rf.pkl"),
     ("model/c3_sign_all.joblib", "model/c3_sign_all.joblib"),
 )
 
@@ -66,7 +74,71 @@ PACKAGE_ROOT = Path(__file__).resolve().parent.parent
 MODEL_ROOT = PACKAGE_ROOT / "model"
 '''
 
-INIT_MODULE = '"""Frozen v148 inference components (flat single-generation layout)."""\n'
+INIT_MODULE = '"""Frozen inference components (flat single-generation layout)."""\n'
+
+ARCHITECTURE_DOC = """# Package architecture
+
+One entry point, one generation, no nested packages.  `script.py` is the only
+file the evaluation server runs; every component below is imported statically
+from `lib/` and loads its weights from the `model/` directory that carries the
+same name.
+
+## Layer pipeline
+
+```
+script.py
+  |
+  +- base_ensemble            LightGBM + RandomForest + CatBoost + joint state-mode
+  |    +- strict_overlay          + strict_asof x 10%        (R_CORE)
+  |         +- futures_fm_overlay     + FM x eta 0.10        (F)
+  |              +- conditional_overlay   + regular-league FM + conditional
+  |                                         correction, source-stability gated
+  |
+  +- form_context_rf          recent form / count context / platoon RF   -> 15%
+  +- c3_sign_all              per-pitcher situational contrast consensus -> 50%
+```
+
+`base_ensemble` through `conditional_overlay` form a single chain: each layer
+takes the previous layer's probability and applies one correction.  The result
+of that chain is the `parent` term below.  `form_context_rf` and `c3_sign_all`
+are independent components blended on top of it.
+
+## Final blend
+
+Applied to the R_CORE domain only (regular-season rows not involving the anchor
+team); every other row passes through as `parent`:
+
+```
+clip(0.85 * parent + 0.15 * form_context_rf + 0.5 * c3, 0.001, 0.999)
+```
+
+## Module to weights
+
+| module | weights |
+|---|---|
+| `lib/base_ensemble.py` | `model/base_ensemble/` |
+| `lib/strict_asof.py` | `model/strict_asof/` |
+| `lib/strict_overlay.py` | (blends the two above) |
+| `lib/futures_fm_overlay.py` | `model/futures_fm/` |
+| `lib/conditional_overlay.py` | `model/regular_fm/`, `model/conditional/` |
+| `lib/row_local_features.py` | (feature construction only) |
+| `lib/form_context_rf.py` | `model/form_context_rf/rf.pkl` |
+| `script.py` | `model/c3_sign_all.joblib` |
+
+## Domain codes
+
+`R` is the KBO regular season (1군) and `F` is the Futures league (2군).
+`R_ANCHOR` marks regular-season rows involving the anchor team; `R_CORE` is the
+remaining regular-season population.  These are official domain codes, not
+version labels.
+
+## Row independence
+
+Every prediction uses only the current row plus frozen training artifacts.  No
+aggregate, frequency, ordering, or distribution of the evaluation set is read.
+Shuffling the input rows or splitting them across calls leaves each prediction
+unchanged.
+"""
 
 
 def _sha256_bytes(payload: bytes) -> str:
@@ -104,36 +176,71 @@ def _inject_import(text: str, statement: str, label: str) -> str:
     )
 
 
-def transform_champion(text: str) -> str:
-    text = _strip_tail(text, "\ndef main() -> None:", "champion")
+def transform_base_ensemble(text: str) -> str:
+    text = _strip_tail(text, "\ndef main() -> None:", "base_ensemble")
+    text = _replace_once(
+        text,
+        '"""Offline evaluation entry point.\n'
+        "\n"
+        "Reads ./data/test.csv relative to this file and writes\n"
+        "./output/submission.csv. Every feature is row-local or uses training artifacts\n"
+        "inside ./model; no test-set aggregate, frequency, order, or distribution is\n"
+        "used.\n"
+        '"""\n',
+        '"""Base ensemble: LightGBM, RandomForest, CatBoost and joint state-mode parts.\n'
+        "\n"
+        "This is the foundation of the prediction chain; the overlay modules refine\n"
+        "its output.  Every feature is row-local or uses frozen training artifacts\n"
+        "under ``model/base_ensemble``; no evaluation-set aggregate, frequency,\n"
+        "order, or distribution is used.\n"
+        '"""\n',
+        "base_ensemble:docstring",
+    )
     text = _replace_once(
         text,
         'BASE_DIR = Path(__file__).resolve().parent\n'
         'MODEL_DIR = BASE_DIR / "model"\n'
         'TEST_PATH = BASE_DIR / "data" / "test.csv"\n'
         'OUTPUT_PATH = BASE_DIR / "output" / "submission.csv"\n',
-        'MODEL_DIR = MODEL_ROOT / "champion"\n',
-        "champion:paths",
+        'MODEL_DIR = MODEL_ROOT / "base_ensemble"\n',
+        "base_ensemble:paths",
     )
-    return _inject_import(text, "from lib.paths import MODEL_ROOT", "champion")
+    return _inject_import(text, "from lib.paths import MODEL_ROOT", "base_ensemble")
 
 
-def transform_strict(text: str) -> str:
-    text = _strip_tail(text, "\ndef main() -> None:", "strict")
+def transform_strict_asof(text: str) -> str:
+    text = _strip_tail(text, "\ndef main() -> None:", "strict_asof")
+    text = _replace_once(
+        text,
+        '"""EXP-021 final candidate inference (copied to the ZIP root as script.py)."""\n',
+        '"""Strict as-of control model: group, team and low-rank pitcher effects.\n'
+        "\n"
+        "Every temporal feature is built from strictly as-of counters, so no value\n"
+        "can depend on the outcome of the row being predicted.  Consumed by\n"
+        "``strict_overlay``.\n"
+        '"""\n',
+        "strict_asof:docstring",
+    )
     text = _replace_once(
         text,
         'MODEL_DIR = Path("./model")\n'
         'TEST_PATH = Path("./data/test.csv")\n'
         'SAMPLE_PATH = Path("./data/sample_submission.csv")\n'
         'OUTPUT_PATH = Path("./output/submission.csv")\n',
-        'MODEL_DIR = MODEL_ROOT / "strict"\n',
-        "strict:paths",
+        'MODEL_DIR = MODEL_ROOT / "strict_asof"\n',
+        "strict_asof:paths",
     )
-    return _inject_import(text, "from lib.paths import MODEL_ROOT", "strict")
+    return _inject_import(text, "from lib.paths import MODEL_ROOT", "strict_asof")
 
 
-def transform_v82(text: str) -> str:
-    text = _strip_tail(text, "\ndef main() -> None:", "v82")
+def transform_strict_overlay(text: str) -> str:
+    text = _strip_tail(text, "\ndef main() -> None:", "strict_overlay")
+    text = _replace_once(
+        text,
+        '"""Standalone v82 wrapper: champion plus 10% EXP-021 strict on R_CORE."""\n',
+        '"""Applies the strict as-of model as a 10% overlay on the R_CORE domain."""\n',
+        "strict_overlay:docstring",
+    )
     text = _replace_once(
         text,
         'BASE_DIR = Path(__file__).resolve().parent\n'
@@ -142,7 +249,7 @@ def transform_v82(text: str) -> str:
         'SAMPLE_PATH = BASE_DIR / "data" / "sample_submission.csv"\n'
         'OUTPUT_PATH = BASE_DIR / "output" / "submission.csv"\n',
         "",
-        "v82:paths",
+        "strict_overlay:paths",
     )
     text = _replace_once(
         text,
@@ -156,22 +263,34 @@ def transform_v82(text: str) -> str:
         "    module.MODEL_DIR = MODEL_DIR / name\n"
         "    return module\n\n\n",
         "",
-        "v82:loader",
+        "strict_overlay:loader",
     )
     text = _replace_once(
         text,
         '    champion = _load_component("champion")\n'
         '    strict = _load_component("strict")\n'
-        "    parent = np.asarray(champion.predict_dataframe(frame), dtype=np.float64)\n",
-        "    parent = np.asarray(champion.predict_dataframe(frame), dtype=np.float64)\n",
-        "v82:predict",
+        "    parent = np.asarray(champion.predict_dataframe(frame), dtype=np.float64)\n"
+        "    challenger = _strict_predict(frame, strict)\n",
+        "    parent = np.asarray(base_ensemble.predict_dataframe(frame), dtype=np.float64)\n"
+        "    challenger = _strict_predict(frame, strict_asof)\n",
+        "strict_overlay:predict",
     )
-    text = _replace_once(text, "import importlib.util\n", "", "v82:importlib")
-    return _inject_import(text, "from lib import champion, strict", "v82")
+    text = _replace_once(text, "import importlib.util\n", "", "strict_overlay:importlib")
+    return _inject_import(
+        text, "from lib import base_ensemble, strict_asof", "strict_overlay"
+    )
 
 
-def transform_v84(text: str) -> str:
-    text = _strip_tail(text, "\ndef main() -> None:", "v84")
+def transform_futures_fm_overlay(text: str) -> str:
+    text = _strip_tail(text, "\ndef main() -> None:", "futures_fm_overlay")
+    text = _replace_once(
+        text,
+        '"""Standalone v84 wrapper: Public-1159 parent plus fixed v56 FM on F."""\n',
+        '"""Applies a frozen factorization-machine correction (eta 0.10) on the\n'
+        "Futures (F) domain.\n"
+        '"""\n',
+        "futures_fm_overlay:docstring",
+    )
     text = _replace_once(
         text,
         'BASE_DIR = Path(__file__).resolve().parent\n'
@@ -180,7 +299,7 @@ def transform_v84(text: str) -> str:
         'SAMPLE_PATH = BASE_DIR / "data" / "sample_submission.csv"\n'
         'OUTPUT_PATH = BASE_DIR / "output" / "submission.csv"\n',
         "",
-        "v84:paths",
+        "futures_fm_overlay:paths",
     )
     text = _replace_once(
         text,
@@ -194,25 +313,35 @@ def transform_v84(text: str) -> str:
         '    module.MODEL_DIR = MODEL_DIR / "parent"\n'
         "    return module\n\n\n",
         "",
-        "v84:loader",
+        "futures_fm_overlay:loader",
     )
     text = _replace_once(
         text,
         "    parent_module = _load_parent()\n"
         "    parent = np.asarray(parent_module.predict_dataframe(frame), dtype=np.float64)\n"
         '    return apply_fixed_v56(parent, frame, MODEL_DIR / "v56_fm")\n',
-        "    parent = np.asarray(v82.predict_dataframe(frame), dtype=np.float64)\n"
-        '    return apply_fixed_v56(parent, frame, MODEL_ROOT / "v56_fm")\n',
-        "v84:predict",
+        "    parent = np.asarray(strict_overlay.predict_dataframe(frame), dtype=np.float64)\n"
+        '    return apply_fixed_v56(parent, frame, MODEL_ROOT / "futures_fm")\n',
+        "futures_fm_overlay:predict",
     )
-    text = _replace_once(text, "import importlib.util\n", "", "v84:importlib")
+    text = _replace_once(text, "import importlib.util\n", "", "futures_fm_overlay:importlib")
     return _inject_import(
-        text, "from lib import v82\nfrom lib.paths import MODEL_ROOT", "v84"
+        text,
+        "from lib import strict_overlay\nfrom lib.paths import MODEL_ROOT",
+        "futures_fm_overlay",
     )
 
 
-def transform_v124(text: str) -> str:
-    text = _strip_tail(text, "\ndef main() -> None:", "v124")
+def transform_conditional_overlay(text: str) -> str:
+    text = _strip_tail(text, "\ndef main() -> None:", "conditional_overlay")
+    text = _replace_once(
+        text,
+        '"""Standalone v104 probe above the frozen Public-1161 v84 package."""\n',
+        '"""Applies regular-league FM and conditional corrections, gated by a\n'
+        "source-stability mask.\n"
+        '"""\n',
+        "conditional_overlay:docstring",
+    )
     text = _replace_once(
         text,
         'BASE_DIR = Path(__file__).resolve().parent\n'
@@ -221,7 +350,7 @@ def transform_v124(text: str) -> str:
         'SAMPLE_PATH = BASE_DIR / "data" / "sample_submission.csv"\n'
         'OUTPUT_PATH = BASE_DIR / "output" / "submission.csv"\n',
         "",
-        "v124:paths",
+        "conditional_overlay:paths",
     )
     text = _replace_once(
         text,
@@ -238,20 +367,20 @@ def transform_v124(text: str) -> str:
         '    module.MODEL_DIR = MODEL_DIR / "parent"\n'
         "    return module\n\n\n",
         "",
-        "v124:loader",
+        "conditional_overlay:loader",
     )
     text = _replace_once(
         text,
         '    root = MODEL_DIR / "r_fm"\n',
-        '    root = MODEL_ROOT / "r_fm"\n',
-        "v124:r_fm",
+        '    root = MODEL_ROOT / "regular_fm"\n',
+        "conditional_overlay:regular_fm",
     )
     text = _replace_once(
         text,
         '    component = _load_component("v104_feature_component", "v104_features.py")\n'
         '    root = MODEL_DIR / "conditional"\n',
         '    root = MODEL_ROOT / "conditional"\n',
-        "v124:conditional",
+        "conditional_overlay:conditional",
     )
     text = _replace_once(
         text,
@@ -259,57 +388,85 @@ def transform_v124(text: str) -> str:
         "    baseline = conditional.drop(columns=list(component.CONDITIONAL_COLUMNS))\n"
         '    conditional = component.apply_model_spec(conditional, spec["conditional"])\n'
         '    baseline = component.apply_model_spec(baseline, spec["baseline"])\n',
-        "    conditional = v104_features.feature_frame(frame, bank)\n"
-        "    baseline = conditional.drop(columns=list(v104_features.CONDITIONAL_COLUMNS))\n"
-        '    conditional = v104_features.apply_model_spec(conditional, spec["conditional"])\n'
-        '    baseline = v104_features.apply_model_spec(baseline, spec["baseline"])\n',
-        "v124:features",
+        "    conditional = row_local_features.feature_frame(frame, bank)\n"
+        "    baseline = conditional.drop(columns=list(row_local_features.CONDITIONAL_COLUMNS))\n"
+        '    conditional = row_local_features.apply_model_spec(conditional, spec["conditional"])\n'
+        '    baseline = row_local_features.apply_model_spec(baseline, spec["baseline"])\n',
+        "conditional_overlay:features",
     )
     text = _replace_once(
         text,
         "    parent = np.asarray(_load_parent().predict_dataframe(frame), dtype=np.float64)\n",
-        "    parent = np.asarray(v84.predict_dataframe(frame), dtype=np.float64)\n",
-        "v124:predict",
+        "    parent = np.asarray(futures_fm_overlay.predict_dataframe(frame), dtype=np.float64)\n",
+        "conditional_overlay:predict",
     )
-    text = _replace_once(text, "import importlib.util\n", "", "v124:importlib")
+    text = _replace_once(text, "import importlib.util\n", "", "conditional_overlay:importlib")
     return _inject_import(
         text,
-        "from lib import v104_features, v84\nfrom lib.paths import MODEL_ROOT",
-        "v124",
+        "from lib import futures_fm_overlay, row_local_features\n"
+        "from lib.paths import MODEL_ROOT",
+        "conditional_overlay",
     )
 
 
-def transform_h1(text: str) -> str:
-    return _strip_tail(text, "\ndef main():", "h1")
+def transform_form_context_rf(text: str) -> str:
+    text = _strip_tail(text, "\ndef main():", "form_context_rf")
+    return _replace_once(
+        text,
+        "# script.py\n",
+        '"""Recent-form, count-context and platoon random forest.\n'
+        "\n"
+        "An independent component blended on top of the overlay chain rather than\n"
+        "a link in it.\n"
+        '"""\n',
+        "form_context_rf:docstring",
+    )
+
+
+def transform_row_local_features(text: str) -> str:
+    return _replace_once(
+        text,
+        '"""Standalone row-local feature component for the v104 public probe."""\n',
+        '"""Row-local feature construction.\n'
+        "\n"
+        "Every feature uses only the current row and frozen training artifacts, so\n"
+        "predictions never depend on any other evaluation row.\n"
+        '"""\n',
+        "row_local_features:docstring",
+    )
 
 
 SOURCE_MAP: tuple[tuple[str, str, Any], ...] = (
     (
         "model/v124/model/parent/parent/components/champion_script.py",
-        "lib/champion.py",
-        transform_champion,
+        "lib/base_ensemble.py",
+        transform_base_ensemble,
     ),
     (
         "model/v124/model/parent/parent/components/strict_script.py",
-        "lib/strict.py",
-        transform_strict,
+        "lib/strict_asof.py",
+        transform_strict_asof,
     ),
     (
         "model/v124/model/parent/components/parent_script.py",
-        "lib/v82.py",
-        transform_v82,
+        "lib/strict_overlay.py",
+        transform_strict_overlay,
     ),
     (
         "model/v124/model/components/parent_script.py",
-        "lib/v84.py",
-        transform_v84,
+        "lib/futures_fm_overlay.py",
+        transform_futures_fm_overlay,
     ),
-    ("model/v124/script.py", "lib/v124.py", transform_v124),
-    ("model/h1/script.py", "lib/h1.py", transform_h1),
+    (
+        "model/v124/script.py",
+        "lib/conditional_overlay.py",
+        transform_conditional_overlay,
+    ),
+    ("model/h1/script.py", "lib/form_context_rf.py", transform_form_context_rf),
     (
         "model/v124/model/components/v104_features.py",
-        "lib/v104_features.py",
-        None,
+        "lib/row_local_features.py",
+        transform_row_local_features,
     ),
 )
 
@@ -403,6 +560,11 @@ def build(original_zip: Path, runtime_script: Path, output_dir: Path) -> dict[st
         # 4. entry point and the effective requirements file, verbatim
         requirements = archive.read("requirements.txt")
         (stage / "requirements.txt").write_bytes(requirements)
+
+    # 5. layer map, so a reader never has to infer the pipeline from imports
+    (stage / "ARCHITECTURE.md").write_text(
+        ARCHITECTURE_DOC, encoding="utf-8", newline="\n"
+    )
 
     shutil.copyfile(runtime_script, stage / "script.py")
 

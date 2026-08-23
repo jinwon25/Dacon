@@ -39,26 +39,71 @@ script.py                                                  138줄  v148 진입�
 [after]   최대 경로 깊이 3
 script.py            유일한 진입점 (main 1개)
 requirements.txt     1벌
+ARCHITECTURE.md      레이어 파이프라인과 최종 혼합식
 lib/
   __init__.py  paths.py
-  champion.py  strict.py  v82.py  v84.py  v104_features.py  v124.py  h1.py
+  base_ensemble.py  strict_asof.py  strict_overlay.py
+  futures_fm_overlay.py  conditional_overlay.py
+  row_local_features.py  form_context_rf.py
 model/
-  champion/  strict/  conditional/  r_fm/{older,recent}/  v56_fm/
-  h1/rf.pkl  c3_sign_all.joblib
+  base_ensemble/  strict_asof/  conditional/  regular_fm/{older,recent}/
+  futures_fm/  form_context_rf/rf.pkl  c3_sign_all.joblib
 ```
 
 | 항목 | before | after |
 |---|---:|---:|
 | 최대 경로 깊이 | 6 | **3** |
-| 파일 수 | 89 | 89 |
+| 파일 수 | 89 | 90 (`ARCHITECTURE.md` 추가) |
 | `main()` 진입점 | 6 | **1** |
 | 동적 로딩(`spec_from_file_location`) | 4곳 | **0** |
 | `requirements.txt` | 3벌 | **1벌** |
-| 패키지 크기 | 46,352,820 B | 46,684,746 B |
+| 모듈·디렉터리의 계보/상태 이름 | 12개 | **0** |
+| 패키지 크기 | 46,352,820 B | 46,687,175 B |
 
-계층 이름(v82/v84/v104/v124)은 모듈명으로 보존했다. 그것은 실제 모델 구조이므로
-제거 대상이 아니었다. 제거한 것은 **디렉터리 중첩과 동적 로딩 사슬**이다.
-4,558줄을 한 파일로 합치지 않은 것도 같은 이유다 — 가독성이 목적이기 때문이다.
+4,558줄을 한 파일로 합치지는 않았다 — 가독성이 목적이기 때문이다.
+
+## 이름 정책
+
+이름은 **기능 또는 도메인**을 가리킨다. 계보(`v82`/`v84`/`v104`/`v124`),
+상태(`champion`/`legacy`), 리더보드 목표(`target1160`)는 이름에 쓰지 않는다.
+`champion`은 챔피언이 바뀌는 순간 거짓이 되는 이름이라 함께 제거했다.
+부수 규칙으로 **아티팩트 디렉터리는 그것을 로드하는 모듈 이름**을 따른다.
+
+| 모듈 | 역할 | 가중치 |
+|---|---|---|
+| `lib/base_ensemble.py` | LGB+RF+CatBoost+joint state-mode 기반 앙상블 | `model/base_ensemble/` |
+| `lib/strict_asof.py` | exact as-of 규율 모델 (group/team/lowrank) | `model/strict_asof/` |
+| `lib/strict_overlay.py` | strict를 R_CORE에 10% 오버레이 | — |
+| `lib/futures_fm_overlay.py` | F(퓨처스) 도메인에 FM 보정 eta 0.10 | `model/futures_fm/` |
+| `lib/conditional_overlay.py` | regular FM + 조건부 보정, stability gate | `model/regular_fm/`, `model/conditional/` |
+| `lib/row_local_features.py` | 행 독립 피처 생성 | — |
+| `lib/form_context_rf.py` | 최근 폼·카운트 컨텍스트·platoon RF | `model/form_context_rf/` |
+
+`R`/`R_CORE`/`R_ANCHOR`/`F`는 공식 도메인 코드(1군 정규시즌 / 퓨처스)이고
+`h05`/`l15`/`b075`는 하이퍼파라미터 인코딩이므로 그대로 두었다. 계보가 아니다.
+
+### 가중치 파일명을 바꾸지 않은 이유
+
+당초 계획은 `model/base_ensemble/` 안의 가중치 16개(`v14_*`, `v20_*`,
+`legacy_cb_*` 등)도 기능명으로 바꾸는 것이었다. **실행하지 않았다.** 조사 결과
+그 파일명들이 파이썬 문자열 리터럴에만 있는 게 아니라 **모델 아티팩트 자신**에
+값으로 들어 있었다.
+
+| 참조하는 아티팩트 | 참조된 파일명 |
+|---|---|
+| `hybrid.json` | `v14_refinement_spec.json`, `v16_residual_spec.json`, `v20_target1160_spec.json`, `v21_context_state_eb_spec.json`, `v22_low_variance_spec.json`, `v25_postbreak_anchor_spec.json` |
+| `v20_target1160_spec.json` | `v20_pfd_control.txt`, `v20_pfd_soft_l050.txt` |
+| `v25_postbreak_anchor_spec.json` | `v25_postbreak_anchor.joblib` |
+
+즉 파일명을 바꾸려면 이 세 아티팩트를 편집해야 하고, 그러면 **78개 전부
+바이트 동일**이라는 보증이 깨진다. 그 보증은 "가중치는 1비트도 건드리지
+않았다"를 증명하는 가장 강한 안전장치이므로, 덜 보이는 곳의 이름 정리와
+맞바꾸지 않았다. `v20_pfd_control.txt`와 `v25_postbreak_anchor.joblib`은
+파이썬 코드에서 아예 참조되지 않고 JSON을 통해서만 로드되므로, 이름 변경이
+사실상 순수한 아티팩트 편집 작업이라는 점도 판단 근거였다.
+
+내부 함수명 `apply_fixed_v56`과 상수 `H1_WEIGHT`도 같은 이유로 두었다. 전자는
+외부에 드러나지 않고, 후자는 값 보존이 명시적으로 요구된 상수다.
 
 ### 핵심 메커니즘 치환
 
@@ -74,7 +119,7 @@ module.MODEL_DIR = MODEL_DIR / "parent"     # 경로 주입
 평탄화본은 `lib/paths.py`의 `MODEL_ROOT` 하나를 각 모듈이 직접 참조한다.
 
 ```python
-MODEL_DIR = MODEL_ROOT / "champion"          # 정적, 주입 없음
+MODEL_DIR = MODEL_ROOT / "base_ensemble"     # 정적, 주입 없음
 ```
 
 정적 import로 바꾸면 모듈이 1회만 실행되고 캐시된다(원본은 매 호출 재실행).
@@ -90,8 +135,8 @@ MODEL_DIR = MODEL_ROOT / "champion"          # 정적, 주입 없음
 |---|---:|
 | 비교 행 수 | **117,434** |
 | **최대 절대차** | **3.3306690738754696e-16** |
-| 평균 절대차 | 3.18e-18 |
-| 완전 일치(비트 동일) 비율 | 97.20% |
+| 평균 절대차 | 3.89e-18 |
+| 완전 일치(비트 동일) 비율 | 96.59% |
 | 합격 기준 | ≤ 1e-12 |
 | **원본 vs 원본 (재실행) 최대차** | **3.3306690738754696e-16** |
 | 원본 예측 평균 | 0.516231886056267 |
@@ -141,8 +186,8 @@ cold-start는 train에서 뽑을 수 없다(모든 선수가 이미 동결 테�
 
 | 패키지 | 245,789행 | 비고 |
 |---|---:|---|
-| 원본 | 97.057초 | |
-| **평탄화본** | **95.889초** | 원본 대비 **0.988배** |
+| 원본 | 99.195초 | |
+| **평탄화본** | **93.027초** | 원본 대비 **0.938배** |
 | 같은 프레임 최대 절대차 | 4.44e-16 | 전체 규모에서도 동등 |
 
 동적 import 제거로 미세하게 빨라졌다. 내부 soft guard 120초, 공식 제한 600초를
@@ -160,14 +205,14 @@ cold-start는 train에서 뽑을 수 없다(모든 선수가 이미 동결 테�
 | 파일 | 값 |
 |---|---|
 | 패키지 | `artifacts/v148_flat_20260823_01/submit_v148_flat.zip` |
-| SHA-256 | `B87E36FC4DEBCA5B10EFDD03599A545B9A0042CD2D665AAA964AC5AB6CB5AD4D` |
-| 크기 | 46,684,746 bytes (89 files) |
+| SHA-256 | `FBA0514EDDE19A7FE3F10DA5F16897943675881AC4B27B44BBFA10948FDD810A` |
+| 크기 | 46,687,175 bytes (90 files) |
 | 빌드 | `src/champion/v148_flat_build_package.py` |
 | 런타임 | `src/champion/v148_flat_runtime_script.py` |
 | 동등성 감사 | `src/champion/v148_flat_parity_audit.py` |
-| 테스트 | `tests/test_v148_flat_parity.py` (10개) |
+| 테스트 | `tests/test_v148_flat_parity.py` (13개) |
 
-전체 테스트: **378 passed, 4 skipped** (기준선 368 + 신규 10).
+전체 테스트: **381 passed, 4 skipped** (기준선 368 + 신규 13).
 
 ## 리팩터링 중 발견한 사항
 
@@ -175,8 +220,9 @@ cold-start는 train에서 뽑을 수 없다(모든 선수가 이미 동결 테�
    `model/v124/model/components/`(6,443 B)는 docstring상 **v84**
    (`V84_FIXED_V56_F_ROUTE`, F 라우트에 고정 v56 FM 적용)이고,
    `model/v124/model/parent/components/`(6,234 B)는 **v82**
-   (champion + 10% EXP-021 strict on R_CORE)다. 각각 `lib/v84.py`,
-   `lib/v82.py`로 분리했다. 상위 v124 스크립트가 전자를
+   (champion + 10% EXP-021 strict on R_CORE)다. 각각
+   `lib/futures_fm_overlay.py`, `lib/strict_overlay.py`로 분리했다.
+   상위 v124 스크립트가 전자를
    `"v104_parent_component"`라는 이름으로 로드하고 있어 이름과 실제 계층이
    어긋나 있었다.
 

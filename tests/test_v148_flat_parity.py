@@ -10,9 +10,9 @@ from src.champion.v148_flat_build_package import (
     DROPPED,
     MODEL_MAP,
     ORIGINAL_SHA256,
-    transform_champion,
-    transform_strict,
-    transform_v82,
+    transform_base_ensemble,
+    transform_strict_asof,
+    transform_strict_overlay,
 )
 
 
@@ -126,6 +126,59 @@ def test_dropped_members_are_only_entry_points_and_duplicate_requirements() -> N
 
 
 def test_transformations_fail_loudly_when_anchors_move() -> None:
-    for transform in (transform_champion, transform_strict, transform_v82):
+    for transform in (
+        transform_base_ensemble,
+        transform_strict_asof,
+        transform_strict_overlay,
+    ):
         with pytest.raises(ValueError):
             transform("def unrelated():\n    return 0\n")
+
+
+# Names describe function or domain, never lineage ("v124"), status
+# ("champion", "legacy"), or a leaderboard goal ("target1160").  Domain codes
+# R/R_CORE/R_ANCHOR/F and hyper-parameter encodings are not lineage.
+LINEAGE_TOKENS = ("v82", "v84", "v104", "v124", "champion", "legacy", "target1160")
+
+
+def test_module_and_directory_names_carry_no_lineage_or_status() -> None:
+    """Weight *filenames* are exempt: see the module docstring in the builder."""
+    with zipfile.ZipFile(FLAT_ZIP) as archive:
+        names = archive.namelist()
+    checked = [
+        name
+        for name in names
+        if name.startswith("lib/") or "/" not in name
+    ]
+    checked += sorted({f"model/{name.split('/')[1]}/" for name in names if name.startswith("model/") and "/" in name[6:]})
+    offenders = [
+        name for name in checked if any(bad in name.lower() for bad in LINEAGE_TOKENS)
+    ]
+    assert offenders == []
+
+
+def test_every_component_module_is_present() -> None:
+    with zipfile.ZipFile(FLAT_ZIP) as archive:
+        names = set(archive.namelist())
+    for module in (
+        "base_ensemble",
+        "strict_asof",
+        "strict_overlay",
+        "futures_fm_overlay",
+        "conditional_overlay",
+        "row_local_features",
+        "form_context_rf",
+    ):
+        assert f"lib/{module}.py" in names
+    for directory in ("base_ensemble", "strict_asof", "futures_fm", "regular_fm", "form_context_rf"):
+        assert any(name.startswith(f"model/{directory}/") for name in names), directory
+
+
+def test_architecture_document_describes_the_pipeline() -> None:
+    with zipfile.ZipFile(FLAT_ZIP) as archive:
+        assert "ARCHITECTURE.md" in archive.namelist()
+        document = archive.read("ARCHITECTURE.md").decode("utf-8")
+    for module in ("base_ensemble", "strict_overlay", "conditional_overlay"):
+        assert module in document
+    # the blend the package actually applies
+    assert "0.85" in document and "0.15" in document and "0.5" in document
