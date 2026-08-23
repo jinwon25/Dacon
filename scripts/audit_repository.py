@@ -22,6 +22,8 @@ ALLOWED_SPECIAL_FILES = {
     "artifacts/oof_champion_1161/v84_late_2023.npz",
     "artifacts/standalone_champion_1161/standalone_champion_1161.zip",
     "artifacts/standalone_champion_1161/standalone_manifest.json",
+    "artifacts/standalone_champion_1162/standalone_champion_1162.zip",
+    "artifacts/standalone_champion_1162/standalone_manifest.json",
     "data/README.md",
 }
 ALLOWED_LFS_FILES = {
@@ -29,6 +31,7 @@ ALLOWED_LFS_FILES = {
     "artifacts/oof_champion_1161/v84_full_2024.npz",
     "artifacts/oof_champion_1161/v84_late_2023.npz",
     "artifacts/standalone_champion_1161/standalone_champion_1161.zip",
+    "artifacts/standalone_champion_1162/standalone_champion_1162.zip",
 }
 FORBIDDEN_SUFFIXES = {
     ".cbm",

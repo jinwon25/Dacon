@@ -134,27 +134,25 @@ v84는 고정 v56 레시피의 조건부 full/late gain이 양수라 사용자 �
 
 실패 cache는 삭제하고 코드·테스트·compact 보고서만 보존한다.
 
-## 다음 연구 순서
+## 종료 상태와 후속 연구 조건
 
-1. 팀원 모델의 동일 row exact temporal OOF와 동일 recipe의 2025 test prediction을 받아
-   constrained blend headroom을 계산한다.
-2. 독립 OOF가 도착하면 analytic headroom과 residual correlation을 먼저 확인하고 v77의
-   source 월·domain 비악화 constrained blend를 실행한다.
-3. 비용이 허용되면 v94 common tier와 별도로 각 origin의 전체 champion ladder를 다시
-   학습해 완전 exact multi-origin nested runner를 만든다.
-4. 완전히 다른 합법적 정보원 또는 새 locked shadow가 생기기 전에는 같은 ASOF·상황·
-   TrackMan 계열의 미세탐색을 재개하지 않는다.
-5. blend가 평가 v3 선행 gate를 통과할 때만 bootstrap·Reality Check를 실행한다.
-6. 새 직교 기반모형을 확보한 뒤에만 cross-fitted beta/logit calibration을 검토한다.
+2026-08-23의 마지막 일일 제출권은 v154에 사용했고 현재 세션의 제출 연구는 종료했다.
+공식 전달 기준은 v148로 동결한다. 대회가 다시 열리거나 독립 OOF가 추가될 때만 다음
+순서로 연구를 재개한다.
+
+1. 팀원 모델의 동일 row exact temporal OOF와 동일 recipe test prediction을 확보한다.
+2. analytic headroom과 residual correlation을 먼저 확인한 뒤 v77 constrained blend를 실행한다.
+3. 평가 v3의 source 월·domain 비악화, bootstrap과 Reality Check를 통과할 때만 패키징한다.
+4. 완전히 다른 합법적 정보원이나 새 locked shadow가 없으면 기존 ASOF·상황·TrackMan
+   계열의 강도·규제·route 미세탐색을 재개하지 않는다.
 
 TrackMan profile 강도, scalar center/spread, domain×count lookup, v78 환경 안정 Ridge,
-TabM 크기·seed, v79/v81 강도·규제·tree 미세탐색은 재개하지 않는다. 최신 상세 근거는
-[`../reports/target1170_v79_v81_followup_20260822.md`](../reports/target1170_v79_v81_followup_20260822.md)에 있다.
+TabM 크기·seed, v79/v81 강도·규제·tree 미세탐색은 종료 상태로 유지한다.
 
 ## Git·artifact 원칙
 
 - 개인 feature branch에서 작업하고 팀 리뷰 후 squash merge한다.
-- 원본 데이터·인증정보는 Git/LFS에 넣지 않는다. 현재 1161 모델 ZIP과 선별 OOF
-  evidence만 private Git LFS allowlist로 관리한다.
+- 원본 데이터·인증정보는 Git/LFS에 넣지 않는다. v148·v154 대용량 ZIP은 일반 Git에
+  포함하지 않고 승인된 비공개 팀 채널에서 SHA-256과 함께 관리한다.
 - 팀원 전달 artifact는 공식 팀원만 접근 가능한 공간에서 SHA-256과 함께 관리한다.
 - Public 제출은 팀 리뷰와 standalone 검증을 통과한 한 파일만 지정 담당자가 수행한다.
