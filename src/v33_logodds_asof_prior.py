@@ -20,12 +20,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.v23_multiyear_direct_screen import _joint_domain
-from src.v30_diverse_covariance_screen import (
-    _cached_v25_axes,
-    diagnostics,
-    v27_parent,
-)
+from src.core.axes import _joint_domain
+from src.core.diagnostics import diagnostics, v27_parent
+from src.core.axes import _cached_v25_axes
 
 
 COEFFICIENTS = {

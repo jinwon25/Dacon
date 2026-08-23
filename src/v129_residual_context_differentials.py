@@ -16,9 +16,9 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from src.v103_fixed_union_robust import _axis_metrics
+from src.core.axis_metrics import _axis_metrics
 from src.v127_hoo_current_state_rebase import apply_correction
-from src.v97_conditional_direct_forward import _load_contract_axis
+from src.core.contract import _load_contract_axis
 
 
 PROTOCOL = "V129_RESIDUAL_CONTEXT_DIFFERENTIALS_V1"

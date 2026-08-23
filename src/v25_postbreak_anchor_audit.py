@@ -8,40 +8,11 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from src.v23_multiyear_direct_screen import _joint_domain
+from src.core.axes import _joint_domain
 from src.v23_postbreak_gam_screen import SPECS, _fit_predict
-from src.v23_structural_residual_screen import (
-    _derived,
-    _load_axis,
-    apply_v22_recipe,
-)
-from src.train_v25_postbreak_anchor import APPLY_DOMAIN, ETA, MODEL_NAME
-
-
-def _early_to_late_2024(project: Path, raw: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
-    year = raw.loc[raw["season"].eq(2024)].reset_index(drop=True)
-    derived = _derived(year, _joint_domain(year))
-    fit = derived.loc[derived["game_month"].le(7)].reset_index(drop=True)
-    audit = derived.loc[derived["game_month"].ge(8)].reset_index(drop=True)
-    with np.load(
-        project / "artifacts" / "champion_oof_20260817_01" / "y2024_early_to_late.npz",
-        allow_pickle=True,
-    ) as saved:
-        target = saved["target"].astype(np.float64)
-        v21 = saved["v21"].astype(np.float64)
-        domain = saved["domain3"].astype(str)
-    if not np.array_equal(target, audit["control_success"].to_numpy(np.float64)):
-        raise ValueError("2024 early-to-late target order mismatch")
-    audit["target"] = target
-    audit["v21"] = v21
-    audit["domain3"] = domain
-    audit["v22"] = apply_v22_recipe(
-        v21,
-        domain,
-        pd.to_numeric(audit["asof_pitcher_success_rate"], errors="coerce").to_numpy(),
-        pd.to_numeric(audit["asof_batter_success_rate"], errors="coerce").to_numpy(),
-    )
-    return fit, audit
+from src.core.axes import _derived, _load_axis, apply_v22_recipe
+from src.core.v25_recipe import APPLY_DOMAIN, ETA, MODEL_NAME
+from src.core.axes import _early_to_late_2024
 
 
 def _evaluate(frame: pd.DataFrame, direct: np.ndarray) -> dict[str, object]:

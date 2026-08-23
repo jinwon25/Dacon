@@ -19,9 +19,9 @@ import pandas as pd
 import torch
 from torch import nn
 
-from src.v20_residual_overlay_screen import _bss
-from src.v23_multiyear_direct_screen import _joint_domain
-from src.v23_structural_residual_screen import _derived, _load_axis
+from src.core.overlay import _bss
+from src.core.axes import _joint_domain
+from src.core.axes import _derived, _load_axis
 
 
 CATEGORICAL = (

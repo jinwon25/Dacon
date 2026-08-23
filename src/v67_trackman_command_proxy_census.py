@@ -20,7 +20,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.v30_diverse_covariance_screen import _cached_v25_axes
+from src.core.axes import _cached_v25_axes
 from src.v65_trackman_data_census import PHYSICAL_COLUMNS, derive_temporal_entity_map
 from src.v66_direct_trackman_gate import _load_pairs
 

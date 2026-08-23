@@ -19,7 +19,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.v20_residual_overlay_screen import _bss
+from src.core.overlay import _bss
 
 
 TARGET = "control_success"

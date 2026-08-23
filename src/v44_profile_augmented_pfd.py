@@ -24,9 +24,9 @@ from src.trackman_privileged_distillation import (
     PHYSICAL_COLUMNS,
     _model,
 )
-from src.v23_structural_residual_screen import _load_axis
-from src.v25_postbreak_anchor_audit import _early_to_late_2024
-from src.v30_diverse_covariance_screen import diagnostics, v27_parent
+from src.core.axes import _load_axis
+from src.core.axes import _early_to_late_2024
+from src.core.diagnostics import diagnostics, v27_parent
 from src.v37_latest_season_catboost_residual import _attach_v25, apply_correction
 from src.v38_latest_trackman_pfd import (
     _bootstrap_audit,

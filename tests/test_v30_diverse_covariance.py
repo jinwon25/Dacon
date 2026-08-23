@@ -2,12 +2,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.v30_diverse_covariance_screen import (
-    _quadratic_gain,
-    compose,
-    diagnostics,
-    v27_parent,
-)
+from src.core.diagnostics import compose, diagnostics, v27_parent
+from src.core.axes import _quadratic_gain
 
 
 def _frame() -> pd.DataFrame:

@@ -17,11 +17,11 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.v23_multiyear_direct_screen import _joint_domain
+from src.core.axes import _joint_domain
 from src.v23_postbreak_gam_screen import SPECS, _fit_predict
-from src.v23_structural_residual_screen import _derived, _load_axis
-from src.v25_postbreak_anchor_audit import _early_to_late_2024
-from src.v30_diverse_covariance_screen import diagnostics
+from src.core.axes import _derived, _load_axis
+from src.core.axes import _early_to_late_2024
+from src.core.diagnostics import diagnostics
 from src.v58_eta15_rebase_audit import CURRENT_ETA, eta_parent
 
 

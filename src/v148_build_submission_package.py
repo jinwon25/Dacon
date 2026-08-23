@@ -9,7 +9,7 @@ from typing import Any
 
 from src.v124_public_quadratic_stack import build_package as build_intermediate
 from src.v142_build_submission_package import audit_package, build_package
-from src.v84_build_public_probe import _sha256
+from src.core.packaging import _sha256
 
 
 PROTOCOL = "V148_V142_V138_BLEND_PACKAGE_V1"

@@ -10,11 +10,11 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from src.v103_fixed_union_robust import _axis_metrics
+from src.core.axis_metrics import _axis_metrics
 from src.v127_hoo_current_state_rebase import apply_correction
 from src.v130_hoo_independent_oof_blend import apply_blend, post4
 from src.v133_hoo_h1_c3_forward import CONTEXT_COLS, c3_adjustment
-from src.v97_conditional_direct_forward import _load_contract_axis
+from src.core.contract import _load_contract_axis
 
 
 PROTOCOL = "V135_C3_RECENT_WINDOW_V1"

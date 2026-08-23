@@ -21,7 +21,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from src.v30_diverse_covariance_screen import diagnostics
+from src.core.diagnostics import diagnostics
 
 
 PROTOCOL = "V95_MULTIORIGIN_CONTEXT_TRANSPORT_ABOVE_V84_V1"

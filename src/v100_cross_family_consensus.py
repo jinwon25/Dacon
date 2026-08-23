@@ -12,7 +12,7 @@ import pandas as pd
 
 from src.v86_reliability_gated_r_fm import apply_reliability_offset
 from src.v87_cross_season_consensus_r_fm import combine_corrections
-from src.v97_conditional_direct_forward import _diagnostics, _load_contract_axis
+from src.core.contract import _diagnostics, _load_contract_axis
 
 
 PROTOCOL = "V100_CROSS_FAMILY_CONSENSUS_V1"

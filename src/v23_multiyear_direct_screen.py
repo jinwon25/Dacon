@@ -18,14 +18,10 @@ import lightgbm as lgb
 import numpy as np
 import pandas as pd
 
-from src.v20_residual_overlay_screen import _bss
-from src.v23_structural_residual_screen import (
-    ETAS,
-    _derived,
-    _feature_columns,
-    _frames,
-    _load_axis,
-)
+from src.core.overlay import _bss
+from src.core.axes import _derived, _load_axis
+from src.v23_structural_residual_screen import ETAS, _feature_columns, _frames
+from src.core.axes import _joint_domain
 
 
 @dataclass(frozen=True)
@@ -52,14 +48,6 @@ DIRECT_SPECS = tuple(
         ("binary", True, 1.0),
     )
 )
-
-
-def _joint_domain(frame: pd.DataFrame) -> np.ndarray:
-    regular = frame["game_type"].astype("string").fillna("__MISSING__").eq("R")
-    anchor = frame["pitcher_team_id"].eq(13) | frame["batter_team_id"].eq(13)
-    return np.where(
-        ~regular.to_numpy(), "F", np.where(anchor.to_numpy(), "R_ANCHOR", "R_CORE")
-    )
 
 
 def _model(spec: DirectSpec, seed: int):

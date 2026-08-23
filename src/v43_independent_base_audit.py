@@ -20,7 +20,8 @@ import numpy as np
 import pandas as pd
 
 from src.data import read_main
-from src.v30_diverse_covariance_screen import _cached_v25_axes, v27_parent
+from src.core.diagnostics import v27_parent
+from src.core.axes import _cached_v25_axes
 
 
 DOMAINS = ("ALL", "R_CORE", "R_ANCHOR", "F")

@@ -20,8 +20,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.v30_diverse_covariance_screen import _cached_v25_axes, diagnostics
-from src.v35_three_stage_multibank import _metadata
+from src.core.diagnostics import diagnostics
+from src.core.axes import _cached_v25_axes
+from src.core.banks import _metadata
 from src.v50_low_rank_pitcher_context import _frame, _load_rows, select_consensus
 
 

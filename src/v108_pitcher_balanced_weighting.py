@@ -11,13 +11,12 @@ import lightgbm as lgb
 import numpy as np
 import pandas as pd
 
+from src.core.contract import _diagnostics, _load_contract_axis
 from src.v97_conditional_direct_forward import (
     CATEGORICAL,
     _align_categories,
     _bank,
-    _diagnostics,
     _feature_frame,
-    _load_contract_axis,
 )
 from src.v106_paired_player_identity import CONDITIONAL_COLUMNS, optimal_eta, paired_axis, subset_axis
 

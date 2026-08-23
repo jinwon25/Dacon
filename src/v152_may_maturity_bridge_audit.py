@@ -9,8 +9,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.v103_fixed_union_robust import _axis_metrics
-from src.v97_conditional_direct_forward import _load_contract_axis
+from src.core.axis_metrics import _axis_metrics
+from src.core.contract import _load_contract_axis
 
 
 PROTOCOL = "V152_MAY_MATURITY_BRIDGE_AUDIT_V1"

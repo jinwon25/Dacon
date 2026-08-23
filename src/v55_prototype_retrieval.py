@@ -27,12 +27,9 @@ os.environ.setdefault("LOKY_MAX_CPU_COUNT", "6")
 from sklearn.cluster import MiniBatchKMeans
 
 from src.temporal_stable_conditional import _add_domain_and_pressure
-from src.v30_diverse_covariance_screen import (
-    _cached_v25_axes,
-    diagnostics,
-    v27_parent,
-)
-from src.v35_three_stage_multibank import _metadata
+from src.core.diagnostics import diagnostics, v27_parent
+from src.core.axes import _cached_v25_axes
+from src.core.banks import _metadata
 from src.v50_low_rank_pitcher_context import select_consensus
 from src.v53_factorization_offset import TARGET, _frame
 

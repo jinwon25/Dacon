@@ -17,12 +17,11 @@ import lightgbm as lgb
 import numpy as np
 import pandas as pd
 
+from src.core.contract import _diagnostics, _load_contract_axis
 from src.v97_conditional_direct_forward import (
     CATEGORICAL as BASE_CATEGORICAL,
     _bank,
-    _diagnostics,
     _feature_frame,
-    _load_contract_axis,
 )
 
 

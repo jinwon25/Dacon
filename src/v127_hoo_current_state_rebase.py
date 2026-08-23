@@ -20,8 +20,8 @@ import numpy as np
 import pandas as pd
 
 from src.recent_shared_exact_asof import _current_season_state, _make_season_bank
-from src.v103_fixed_union_robust import _axis_metrics
-from src.v97_conditional_direct_forward import _load_contract_axis
+from src.core.axis_metrics import _axis_metrics
+from src.core.contract import _load_contract_axis
 
 
 PROTOCOL = "V127_HOO_CURRENT_STATE_REBASE_V1"

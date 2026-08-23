@@ -23,7 +23,7 @@ from src.v23_neural_embedding_screen import (
     prepare,
     train_checkpoints,
 )
-from src.v23_structural_residual_screen import _load_axis
+from src.core.axes import _load_axis
 
 
 WEIGHTING_STRATEGIES = ("uniform", "season_domain_equal")

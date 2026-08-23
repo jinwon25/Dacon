@@ -10,8 +10,8 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from src.v103_fixed_union_robust import _axis_metrics
-from src.v97_conditional_direct_forward import _load_contract_axis
+from src.core.axis_metrics import _axis_metrics
+from src.core.contract import _load_contract_axis
 
 
 PROTOCOL = "V130_HOO_INDEPENDENT_OOF_BLEND_V1"

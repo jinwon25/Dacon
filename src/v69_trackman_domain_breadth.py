@@ -15,7 +15,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.v30_diverse_covariance_screen import _cached_v25_axes
+from src.core.axes import _cached_v25_axes
 from src.v68_trackman_profile_ridge import FEATURE_SETS, _transition
 
 

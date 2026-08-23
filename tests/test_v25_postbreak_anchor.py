@@ -4,8 +4,8 @@ import numpy as np
 import pandas as pd
 
 from src.v10_overlay_script import _v25_postbreak_frame
-from src.v23_multiyear_direct_screen import _joint_domain
-from src.v23_structural_residual_screen import _derived
+from src.core.axes import _joint_domain
+from src.core.axes import _derived
 
 
 def _frame() -> pd.DataFrame:

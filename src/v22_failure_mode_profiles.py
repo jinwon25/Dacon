@@ -27,7 +27,7 @@ import pandas as pd
 from src.failure_mode_privileged_distillation import MODE_NAMES, reconstruct_failure_mode
 from src.multi_year_state_model import _add_categories, _state_features
 from src.temporal_stable_conditional import _add_domain_and_pressure
-from src.v20_residual_overlay_screen import _bss
+from src.core.overlay import _bss
 
 
 PROFILE_SPECS = (

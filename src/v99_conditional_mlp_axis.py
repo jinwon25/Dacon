@@ -14,13 +14,8 @@ import pandas as pd
 import torch
 from torch import nn
 
-from src.v97_conditional_direct_forward import (
-    CATEGORICAL,
-    _bank,
-    _diagnostics,
-    _feature_frame,
-    _load_contract_axis,
-)
+from src.core.contract import _diagnostics, _load_contract_axis
+from src.v97_conditional_direct_forward import CATEGORICAL, _bank, _feature_frame
 
 
 PROTOCOL = "V99_CONDITIONAL_MLP_AXIS_V1"

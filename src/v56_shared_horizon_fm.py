@@ -23,12 +23,9 @@ import pandas as pd
 import torch
 from torch.nn import functional as F
 
-from src.v30_diverse_covariance_screen import (
-    _cached_v25_axes,
-    diagnostics,
-    v27_parent,
-)
-from src.v35_three_stage_multibank import _metadata
+from src.core.diagnostics import diagnostics, v27_parent
+from src.core.axes import _cached_v25_axes
+from src.core.banks import _metadata
 from src.v50_low_rank_pitcher_context import select_consensus
 from src.v53_factorization_offset import (
     BATCH_SIZE,

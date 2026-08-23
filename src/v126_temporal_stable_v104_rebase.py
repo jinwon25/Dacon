@@ -28,7 +28,7 @@ from src.temporal_stable_conditional import (
     build_features,
 )
 from src.v123_public_quadratic_stack import CURRENT, NAMES, _directions
-from src.v97_conditional_direct_forward import _load_contract_axis
+from src.core.contract import _load_contract_axis
 
 
 PROTOCOL = "V126_TEMPORAL_STABLE_V104_REBASE_V1"

@@ -25,16 +25,9 @@ import numpy as np
 import pandas as pd
 from scipy.optimize import minimize
 
-from src.v30_diverse_covariance_screen import (
-    _cached_v25_axes,
-    diagnostics,
-    v27_parent,
-)
-from src.v35_three_stage_multibank import (
-    _load_bank,
-    _metadata,
-    signal_family,
-)
+from src.core.diagnostics import diagnostics, v27_parent
+from src.core.axes import _cached_v25_axes
+from src.core.banks import _load_bank, _metadata, signal_family
 
 
 MODES = ("family", "all")

@@ -23,12 +23,9 @@ import numpy as np
 import pandas as pd
 
 from src.temporal_stable_conditional import _add_domain_and_pressure
-from src.v30_diverse_covariance_screen import (
-    _cached_v25_axes,
-    diagnostics,
-    v27_parent,
-)
-from src.v35_three_stage_multibank import _metadata, grid_rows
+from src.core.diagnostics import diagnostics, v27_parent
+from src.core.axes import _cached_v25_axes
+from src.core.banks import _metadata, grid_rows
 from src.v36_two_origin_consensus import select_consensus
 
 

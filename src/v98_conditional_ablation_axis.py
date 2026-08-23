@@ -10,13 +10,8 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from src.v97_conditional_direct_forward import (
-    _bank,
-    _diagnostics,
-    _feature_frame,
-    _fit_predict,
-    _load_contract_axis,
-)
+from src.core.contract import _diagnostics, _load_contract_axis
+from src.v97_conditional_direct_forward import _bank, _feature_frame, _fit_predict
 
 
 PROTOCOL = "V98_CONDITIONAL_ABLATION_AXIS_V1"

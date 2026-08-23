@@ -25,7 +25,7 @@ import pandas as pd
 
 from src.train_v20_target1160 import OVERLAY_RECIPES
 from src.train_v21_context_state_eb import RECIPES, add_v21_features
-from src.v20_residual_overlay_screen import _bss, _feature_frame
+from src.core.overlay import _bss, _feature_frame
 
 
 MODE_NAME = "conditional_mode_lgb_h0.5_pow1.5"

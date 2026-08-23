@@ -11,8 +11,8 @@ import numpy as np
 import pandas as pd
 
 from src.robust_local_evaluation import grouped_gain_table
-from src.v97_conditional_direct_forward import _load_contract_axis
-from src.v103_fixed_union_robust import _axis_metrics, _robust_axis
+from src.core.contract import _load_contract_axis
+from src.core.axis_metrics import _axis_metrics, _robust_axis
 
 
 PROTOCOL = "V104_SOURCE_STABILITY_MASK_V1"

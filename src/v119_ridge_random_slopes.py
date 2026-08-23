@@ -19,7 +19,7 @@ import pandas as pd
 from scipy import sparse
 from sklearn.linear_model import Ridge
 
-from src.v30_diverse_covariance_screen import diagnostics
+from src.core.diagnostics import diagnostics
 from src.v118_abs_policy_did import add_context
 
 

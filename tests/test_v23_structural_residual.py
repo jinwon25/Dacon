@@ -1,11 +1,8 @@
 import numpy as np
 import pandas as pd
 
-from src.v23_structural_residual_screen import (
-    _derived,
-    _feature_columns,
-    apply_v22_recipe,
-)
+from src.core.axes import _derived, apply_v22_recipe
+from src.v23_structural_residual_screen import _feature_columns
 
 
 def test_apply_v22_recipe_matches_frozen_additive_formula():

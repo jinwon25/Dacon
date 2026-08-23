@@ -27,7 +27,8 @@ from src.latent_pitch_type_state_model import (
 )
 from src.multi_year_state_model import _add_categories, _model, _state_features
 from src.temporal_stable_conditional import _add_domain_and_pressure
-from src.v30_diverse_covariance_screen import _cached_v25_axes, diagnostics
+from src.core.diagnostics import diagnostics
+from src.core.axes import _cached_v25_axes
 
 
 TYPE_TO_LABEL = {name: index for index, name in enumerate(TYPE_NAMES)}

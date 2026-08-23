@@ -21,9 +21,9 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from src.core.overlay import WEIGHTS, _bss, _feature_frame
 
 
-WEIGHTS = (0.025, 0.05, 0.075, 0.10, 0.15, 0.25, 0.50, 1.00)
 ALPHAS = (50.0, 200.0, 800.0, 3200.0, 12800.0)
 DOMAINS = ("ALL", "R_CORE", "R_ANCHOR", "F")
 
@@ -62,32 +62,6 @@ GROUPS = (
     GroupSpec("pitcher_hand_team", ("pitcher_team_id", "batter_hand")),
     GroupSpec("batter_hand_team", ("batter_team_id", "pitcher_hand")),
 )
-
-
-def _bss(target: np.ndarray, prediction: np.ndarray) -> float:
-    rate = float(np.mean(target))
-    reference = rate * (1.0 - rate)
-    return float(100000.0 * (1.0 - np.mean((target - prediction) ** 2) / reference))
-
-
-def _feature_frame(rows: pd.DataFrame) -> pd.DataFrame:
-    frame = rows.copy()
-    balls = frame["balls_before"].to_numpy()
-    strikes = frame["strikes_before"].to_numpy()
-    frame["pressure"] = np.where(
-        balls == 3, "threeball", np.where(strikes == 2, "twostrike", "normal")
-    )
-    frame["inning_band"] = pd.cut(
-        frame["inning"],
-        bins=(-np.inf, 3, 6, 9, np.inf),
-        labels=("early", "middle", "late", "extra"),
-    ).astype("string")
-    frame["li_band"] = pd.cut(
-        frame["li"],
-        bins=(-np.inf, 0.7, 1.2, 2.0, np.inf),
-        labels=("low", "medium", "high", "extreme"),
-    ).astype("string")
-    return frame
 
 
 def _load_folds(project: Path) -> dict[int, pd.DataFrame]:

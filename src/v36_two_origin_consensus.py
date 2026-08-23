@@ -15,12 +15,10 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.v30_diverse_covariance_screen import (
-    _cached_v25_axes,
-    diagnostics,
-    v27_parent,
-)
-from src.v35_three_stage_multibank import _candidate, _load_bank, _metadata
+from src.core.diagnostics import diagnostics, v27_parent
+from src.core.axes import _cached_v25_axes
+from src.core.banks import _load_bank, _metadata
+from src.v35_three_stage_multibank import _candidate
 
 
 KEYS = ("signal", "domain", "weight")

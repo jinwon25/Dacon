@@ -21,91 +21,15 @@ from src.v22_oof_bank_screen import (
     _model_residual_bank,
     _prediction_bank,
 )
-from src.train_v25_postbreak_anchor import ETA as V25_SOURCE_ETA
-from src.v23_structural_residual_screen import _load_axis
-from src.v25_postbreak_anchor_audit import _early_to_late_2024
+from src.core.v25_recipe import ETA as V25_SOURCE_ETA
+from src.core.axes import _load_axis
+from src.core.axes import _early_to_late_2024
+from src.core.diagnostics import compose, diagnostics, v27_parent
+from src.core.axes import _cached_v25_axes, _quadratic_gain
 
 
 DOMAINS = ("ALL", "R_CORE", "R_ANCHOR", "F")
 WEIGHTS = (0.0025, 0.005, 0.01, 0.02, 0.035, 0.05, 0.075, 0.10)
-V25_ETA = 0.075
-V27_ETA = 0.10
-
-
-def v27_parent(frame: pd.DataFrame) -> np.ndarray:
-    """Recover the exact v27 blend from the v22 and v25 OOF columns."""
-    v22 = frame["v22"].to_numpy(np.float64)
-    v25 = frame["v25"].to_numpy(np.float64)
-    return np.clip(v22 + (V27_ETA / V25_ETA) * (v25 - v22), 0.001, 0.999)
-
-
-def compose(
-    parent: np.ndarray,
-    v21: np.ndarray,
-    signal: np.ndarray,
-    mask: np.ndarray,
-    *,
-    kind: str,
-    mode: str,
-    weight: float,
-) -> np.ndarray:
-    """Apply a frozen OOF direction to a disjoint deployment domain."""
-    output = np.asarray(parent, dtype=np.float64).copy()
-    if kind == "delta":
-        direction = np.asarray(signal, dtype=np.float64)
-    elif kind == "prediction" and mode == "toward_parent":
-        direction = np.asarray(signal, dtype=np.float64) - parent
-    elif kind == "prediction" and mode == "delta_v21":
-        direction = np.asarray(signal, dtype=np.float64) - np.asarray(
-            v21, dtype=np.float64
-        )
-    else:
-        raise ValueError(f"invalid composition: kind={kind!r}, mode={mode!r}")
-    output[mask] = np.clip(
-        output[mask] + float(weight) * direction[mask], 0.001, 0.999
-    )
-    return output
-
-
-def diagnostics(
-    frame: pd.DataFrame,
-    parent: np.ndarray,
-    candidate: np.ndarray,
-    apply_mask: np.ndarray,
-) -> dict[str, object]:
-    target = frame["target"].to_numpy(np.float64)
-
-    def gain(mask: np.ndarray) -> float:
-        local_target = target[mask]
-        mse_gain = float(
-            np.mean(np.square(local_target - parent[mask]))
-            - np.mean(np.square(local_target - candidate[mask]))
-        )
-        reference = float(np.mean(local_target) * (1.0 - np.mean(local_target)))
-        return 1_000_000.0 * mse_gain if reference <= 0.0 else 100_000.0 * mse_gain / reference
-
-    months = []
-    for month in sorted(frame["game_month"].unique()):
-        mask = frame["game_month"].eq(month).to_numpy()
-        if np.any(mask & apply_mask):
-            months.append({"month": int(month), "gain": gain(mask)})
-    domain_gains = {}
-    for domain in ("R_CORE", "R_ANCHOR", "F"):
-        mask = frame["domain3"].astype(str).eq(domain).to_numpy()
-        domain_gains[domain] = gain(mask)
-    return {
-        "gain": gain(np.ones(len(frame), dtype=bool)),
-        "positive_month_fraction": float(
-            np.mean([item["gain"] > 0.0 for item in months])
-        ),
-        "worst_month_gain": float(min(item["gain"] for item in months)),
-        "minimum_domain_gain": float(min(domain_gains.values())),
-        "mean_abs_shift": float(np.mean(np.abs(candidate - parent))),
-        "months": months,
-        "domain_gains": domain_gains,
-    }
-
-
 def _year_slice(project: Path, frame: pd.DataFrame, year: int) -> np.ndarray:
     path = (
         project
@@ -124,36 +48,6 @@ def _year_slice(project: Path, frame: pd.DataFrame, year: int) -> np.ndarray:
     if not np.array_equal(target[index], expected):
         raise ValueError(f"OOF target order mismatch for {year}")
     return index
-
-
-def _cached_v25_axes(project: Path, raw: pd.DataFrame) -> dict[str, pd.DataFrame]:
-    """Build the v25 audit frames from frozen direct-prediction caches."""
-    selection = _load_axis(project, "y2023_early_to_late", raw)
-    outer = _load_axis(project, "y2023_to_y2024", raw)
-    _, replication = _early_to_late_2024(project, raw)
-    frames = {
-        "selection_late_2023": selection,
-        "outer_full_2024": outer,
-        "replication_late_2024": replication,
-    }
-    cache_root = project / "artifacts" / "v29_anchor_route_20260817_01"
-    output: dict[str, pd.DataFrame] = {}
-    for name, frame in frames.items():
-        direct = np.load(cache_root / f"{name}_direct.npy").astype(np.float64)
-        if len(direct) != len(frame):
-            raise ValueError(f"v25 direct cache row mismatch: {name}")
-        local = frame.copy()
-        v22 = local["v22"].to_numpy(np.float64)
-        anchor = local["domain3"].astype(str).eq("R_ANCHOR").to_numpy()
-        v25 = v22.copy()
-        v25[anchor] = np.clip(
-            v22[anchor] + V25_SOURCE_ETA * (direct[anchor] - v22[anchor]),
-            0.001,
-            0.999,
-        )
-        local["v25"] = v25
-        output[name] = local
-    return output
 
 
 def _bank(
@@ -177,24 +71,6 @@ def _mask(frame: pd.DataFrame, domain: str) -> np.ndarray:
     if domain == "ALL":
         return np.ones(len(frame), dtype=bool)
     return frame["domain3"].astype(str).eq(domain).to_numpy()
-
-
-def _quadratic_gain(
-    target: np.ndarray,
-    parent: np.ndarray,
-    direction: np.ndarray,
-    mask: np.ndarray,
-    weights: np.ndarray,
-) -> np.ndarray:
-    """Exact Brier-skill gain for an unclipped linear probability direction."""
-    local_target = target[mask]
-    local_direction = direction[mask]
-    local_error = local_target - parent[mask]
-    reference = float(np.mean(local_target) * (1.0 - np.mean(local_target)))
-    scale = 1_000_000.0 if reference <= 0.0 else 100_000.0 / reference
-    linear = 2.0 * float(np.mean(local_error * local_direction))
-    quadratic = float(np.mean(np.square(local_direction)))
-    return scale * (weights * linear - np.square(weights) * quadratic)
 
 
 def _selection_rows(

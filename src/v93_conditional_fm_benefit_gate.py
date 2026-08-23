@@ -25,7 +25,7 @@ import pandas as pd
 from sklearn.linear_model import Ridge
 from sklearn.preprocessing import StandardScaler
 
-from src.v30_diverse_covariance_screen import diagnostics
+from src.core.diagnostics import diagnostics
 from src.v53_factorization_offset import _expit, _logit
 from src.v86_reliability_gated_r_fm import ETA, ROUTE, _metric_frame
 from src.v87_cross_season_consensus_r_fm import combine_corrections

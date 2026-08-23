@@ -23,7 +23,8 @@ from sklearn.linear_model import Ridge
 from sklearn.model_selection import KFold
 from sklearn.preprocessing import StandardScaler
 
-from src.v30_diverse_covariance_screen import _cached_v25_axes, diagnostics
+from src.core.diagnostics import diagnostics
+from src.core.axes import _cached_v25_axes
 from src.v67_trackman_command_proxy_census import pitcher_residual_table
 
 

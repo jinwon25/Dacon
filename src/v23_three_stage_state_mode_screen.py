@@ -15,8 +15,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.v20_residual_overlay_screen import _bss
-from src.v23_structural_residual_screen import _load_axis
+from src.core.overlay import _bss
+from src.core.axes import _load_axis
 
 
 ETAS = (0.0025, 0.005, 0.01, 0.02, 0.035, 0.05, 0.075, 0.10, 0.15, 0.20, 0.35, 0.50)

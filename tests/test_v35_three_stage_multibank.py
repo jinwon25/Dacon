@@ -1,11 +1,8 @@
 import numpy as np
 import pandas as pd
 
-from src.v35_three_stage_multibank import (
-    _candidate,
-    family_prefilter,
-    signal_family,
-)
+from src.core.banks import signal_family
+from src.v35_three_stage_multibank import _candidate, family_prefilter
 
 
 def test_signal_family_uses_stable_prefix():

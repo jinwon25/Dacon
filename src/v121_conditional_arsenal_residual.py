@@ -18,9 +18,9 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from src.v103_fixed_union_robust import _axis_metrics
+from src.core.axis_metrics import _axis_metrics
 from src.v113_fine_pitch_failure_prior_v104 import PITCH_TYPE_NORMALISATION
-from src.v97_conditional_direct_forward import _load_contract_axis
+from src.core.contract import _load_contract_axis
 
 
 PROTOCOL = "V121_CONDITIONAL_ARSENAL_RESIDUAL_V1"

@@ -14,7 +14,7 @@ from sklearn.linear_model import Ridge
 from sklearn.preprocessing import StandardScaler
 
 from src.v78_environment_stable_residual import build_features
-from src.v97_conditional_direct_forward import _diagnostics, _load_contract_axis
+from src.core.contract import _diagnostics, _load_contract_axis
 
 
 PROTOCOL = "V102_CONSENSUS_BENEFIT_GATE_V1"

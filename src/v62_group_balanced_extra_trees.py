@@ -24,8 +24,8 @@ import pandas as pd
 from sklearn.ensemble import ExtraTreesRegressor
 
 from src.temporal_stable_conditional import _add_domain_and_pressure
-from src.v30_diverse_covariance_screen import diagnostics
-from src.v35_three_stage_multibank import _metadata
+from src.core.diagnostics import diagnostics
+from src.core.banks import _metadata
 
 
 TARGET = "control_success"

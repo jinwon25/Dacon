@@ -10,9 +10,9 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from src.v103_fixed_union_robust import _axis_metrics
+from src.core.axis_metrics import _axis_metrics
 from src.v148_contract import reconstruct_deployed_v148
-from src.v97_conditional_direct_forward import _load_contract_axis
+from src.core.contract import _load_contract_axis
 
 
 PROTOCOL = "V149_JOINT_H1_C3_RESPONSE_AUDIT_V1"

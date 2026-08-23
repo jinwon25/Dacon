@@ -19,11 +19,12 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from src.v30_diverse_covariance_screen import _cached_v25_axes, diagnostics, v27_parent
-from src.v35_three_stage_multibank import _metadata
+from src.core.diagnostics import diagnostics, v27_parent
+from src.core.axes import _cached_v25_axes
+from src.core.banks import _metadata
 from src.v53_factorization_offset import TARGET, fit_predict_offset
 from src.v57_public_strict_blend import _load_strict
-from src.v80_oof_covariance_stack import (
+from src.core.oof_bank import (
     _assert_target,
     _load_common_candidates,
     _load_full24_diagnostic_candidates,

@@ -26,12 +26,9 @@ from src.recent_shared_exact_asof import (
     _row_state,
 )
 from src.temporal_stable_conditional import _add_domain_and_pressure
-from src.v30_diverse_covariance_screen import (
-    diagnostics,
-    v27_parent,
-)
-from src.v23_structural_residual_screen import _load_axis
-from src.v25_postbreak_anchor_audit import _early_to_late_2024
+from src.core.diagnostics import diagnostics, v27_parent
+from src.core.axes import _load_axis
+from src.core.axes import _early_to_late_2024
 
 
 VARIANTS = ("context", "player_ids")

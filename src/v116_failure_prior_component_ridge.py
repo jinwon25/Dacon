@@ -10,9 +10,9 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from src.v103_fixed_union_robust import _axis_metrics, _robust_axis
+from src.core.axis_metrics import _axis_metrics, _robust_axis
 from src.v104_source_stability_mask import _point_pass
-from src.v97_conditional_direct_forward import _load_contract_axis
+from src.core.contract import _load_contract_axis
 
 
 PROTOCOL = "V116_FAILURE_PRIOR_COMPONENT_RIDGE_V1"

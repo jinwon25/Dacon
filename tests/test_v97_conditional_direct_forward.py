@@ -1,7 +1,8 @@
 import numpy as np
 import pandas as pd
 
-from src.v97_conditional_direct_forward import _apply, _bank, _feature_frame
+from src.core.contract import _apply
+from src.v97_conditional_direct_forward import _bank, _feature_frame
 
 
 def _rows() -> pd.DataFrame:

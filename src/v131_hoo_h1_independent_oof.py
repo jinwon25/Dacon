@@ -23,10 +23,10 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OrdinalEncoder
 
-from src.v103_fixed_union_robust import _axis_metrics
+from src.core.axis_metrics import _axis_metrics
 from src.v127_hoo_current_state_rebase import apply_correction
 from src.v130_hoo_independent_oof_blend import apply_blend, post4
-from src.v97_conditional_direct_forward import _load_contract_axis
+from src.core.contract import _load_contract_axis
 
 
 PROTOCOL = "V131_HOO_H1_INDEPENDENT_OOF_V1"

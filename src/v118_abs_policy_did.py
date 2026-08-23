@@ -22,7 +22,7 @@ import numpy as np
 import pandas as pd
 
 from src.temporal_stable_conditional import _add_domain_and_pressure
-from src.v30_diverse_covariance_screen import diagnostics
+from src.core.diagnostics import diagnostics
 
 
 PROTOCOL = "V118_ABS_POLICY_DID_V1"

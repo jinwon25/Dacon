@@ -15,7 +15,7 @@ import joblib
 import numpy as np
 import pandas as pd
 
-from src.v84_build_public_probe import (
+from src.core.packaging import (
     _safe_extract,
     _safe_remove_generated,
     _sha256,

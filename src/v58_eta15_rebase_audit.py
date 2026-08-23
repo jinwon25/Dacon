@@ -22,13 +22,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.v30_diverse_covariance_screen import (
-    V25_ETA,
-    V27_ETA,
-    _cached_v25_axes,
-    diagnostics,
-    v27_parent,
-)
+from src.core.diagnostics import V25_ETA, V27_ETA, diagnostics, v27_parent
+from src.core.axes import _cached_v25_axes
 
 
 CURRENT_ETA = 0.15

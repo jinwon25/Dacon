@@ -20,7 +20,8 @@ from src.metrics import (
     brier_skill_score_unclipped,
     calibration_intercept_slope,
 )
-from src.v30_diverse_covariance_screen import _cached_v25_axes, diagnostics
+from src.core.diagnostics import diagnostics
+from src.core.axes import _cached_v25_axes
 
 
 PUBLIC_CHAMPION = 1158.0745556751

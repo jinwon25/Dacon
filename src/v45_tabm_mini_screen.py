@@ -23,16 +23,16 @@ import pandas as pd
 import torch
 from torch import nn
 
-from src.v23_multiyear_direct_screen import _joint_domain
+from src.core.axes import _joint_domain
 from src.v23_neural_embedding_screen import (
     CATEGORICAL,
     Prepared,
     _category_codes,
     _numeric_columns,
 )
-from src.v23_structural_residual_screen import _derived, _load_axis
-from src.v25_postbreak_anchor_audit import _early_to_late_2024
-from src.v30_diverse_covariance_screen import diagnostics, v27_parent
+from src.core.axes import _derived, _load_axis
+from src.core.axes import _early_to_late_2024
+from src.core.diagnostics import diagnostics, v27_parent
 from src.v37_latest_season_catboost_residual import _attach_v25
 
 

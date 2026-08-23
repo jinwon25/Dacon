@@ -9,8 +9,8 @@ from typing import Any
 
 import numpy as np
 
-from src.v103_fixed_union_robust import _axis_metrics
-from src.v97_conditional_direct_forward import _load_contract_axis
+from src.core.axis_metrics import _axis_metrics
+from src.core.contract import _load_contract_axis
 
 
 PROTOCOL = "V143_V142_SOURCE_ONLY_DOSE_V1"

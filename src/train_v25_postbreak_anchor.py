@@ -16,15 +16,10 @@ import joblib
 import numpy as np
 import pandas as pd
 
-from src.v23_multiyear_direct_screen import _joint_domain
+from src.core.axes import _joint_domain
 from src.v23_postbreak_gam_screen import SPECS, _pipeline
-from src.v23_structural_residual_screen import _derived
-
-
-SOURCE_YEAR = 2024
-MODEL_NAME = "logistic_c01"
-ETA = 0.075
-APPLY_DOMAIN = "R_ANCHOR"
+from src.core.axes import _derived
+from src.core.v25_recipe import SOURCE_YEAR, MODEL_NAME, ETA, APPLY_DOMAIN
 
 
 def _sha256(path: Path) -> str:

@@ -20,13 +20,13 @@ import pandas as pd
 
 from src.multi_year_state_model import _add_categories, _model, _state_features
 from src.temporal_stable_conditional import _add_domain_and_pressure
-from src.v103_fixed_union_robust import _axis_metrics
+from src.core.axis_metrics import _axis_metrics
 from src.v127_hoo_current_state_rebase import (
     FAMILIES,
     apply_correction,
     current_state_features,
 )
-from src.v97_conditional_direct_forward import _load_contract_axis
+from src.core.contract import _load_contract_axis
 
 
 PROTOCOL = "V128_CORRECTED_STATE_MODEL_ABLATION_V1"

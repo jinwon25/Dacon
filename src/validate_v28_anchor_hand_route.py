@@ -15,8 +15,8 @@ import pandas as pd
 
 from src.package import verify_package
 from src.train_v20_target1160 import _read_season
-from src.v23_multiyear_direct_screen import _joint_domain
-from src.v23_structural_residual_screen import _derived
+from src.core.axes import _joint_domain
+from src.core.axes import _derived
 from src.validate_candidate import EVALUATION_ROWS, _extract, _run_package
 
 

@@ -10,11 +10,11 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from src.core.overlay import WEIGHTS
 from src.v20_residual_overlay_screen import (
     ALPHAS,
     DOMAINS,
     GROUPS,
-    WEIGHTS,
     _load_folds,
     _quadratic_gain_grid,
     _splits,

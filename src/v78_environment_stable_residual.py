@@ -19,7 +19,8 @@ import numpy as np
 import pandas as pd
 
 from src.temporal_stable_conditional import _add_domain_and_pressure
-from src.v30_diverse_covariance_screen import _cached_v25_axes, diagnostics
+from src.core.diagnostics import diagnostics
+from src.core.axes import _cached_v25_axes
 from src.v58_eta15_rebase_audit import CURRENT_ETA, eta_parent
 from src.v61_final_gate_oof import _source_global_rate, apply_final_gate
 

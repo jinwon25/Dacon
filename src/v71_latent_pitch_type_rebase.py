@@ -19,7 +19,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.v30_diverse_covariance_screen import _cached_v25_axes, diagnostics
+from src.core.diagnostics import diagnostics
+from src.core.axes import _cached_v25_axes
 
 
 PRIMARY_WEIGHT = 0.05

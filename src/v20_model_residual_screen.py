@@ -19,7 +19,7 @@ import numpy as np
 import pandas as pd
 
 from src.temporal_stable_conditional import _add_domain_and_pressure
-from src.v20_residual_overlay_screen import WEIGHTS, _bss
+from src.core.overlay import WEIGHTS, _bss
 
 
 CATEGORICAL = (

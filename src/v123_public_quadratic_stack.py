@@ -20,10 +20,10 @@ import numpy as np
 import pandas as pd
 from scipy.optimize import minimize
 
-from src.train_v25_postbreak_anchor import MODEL_NAME
-from src.v23_multiyear_direct_screen import _joint_domain
+from src.core.v25_recipe import MODEL_NAME
+from src.core.axes import _joint_domain
 from src.v23_postbreak_gam_screen import SPECS, _fit_predict
-from src.v23_structural_residual_screen import _derived, _load_axis
+from src.core.axes import _derived, _load_axis
 
 
 PROTOCOL = "V123_PUBLIC_QUADRATIC_STACK_RESEARCH_V1"

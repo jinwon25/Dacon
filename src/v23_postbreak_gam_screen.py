@@ -20,9 +20,9 @@ from sklearn.linear_model import LogisticRegression, Ridge
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, SplineTransformer, StandardScaler
 
-from src.v23_multiyear_direct_screen import _joint_domain
+from src.core.axes import _joint_domain
 from src.v23_neural_embedding_screen import DOMAIN_SUBSETS, ETAS, _diagnostics
-from src.v23_structural_residual_screen import _derived, _load_axis
+from src.core.axes import _derived, _load_axis
 
 
 CATEGORICAL = (

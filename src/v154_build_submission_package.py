@@ -17,7 +17,7 @@ import pandas as pd
 from src.package import verify_package
 from src.v124_public_quadratic_stack import build_package as build_intermediate
 from src.v142_build_submission_package import build_package as build_h1_c3
-from src.v84_build_public_probe import (
+from src.core.packaging import (
     _safe_extract,
     _safe_remove_generated,
     _sha256,

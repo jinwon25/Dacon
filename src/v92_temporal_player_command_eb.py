@@ -28,8 +28,8 @@ import numpy as np
 import pandas as pd
 
 from src.metrics import brier_score, brier_skill_score_unclipped
-from src.v30_diverse_covariance_screen import diagnostics
-from src.v35_three_stage_multibank import _metadata
+from src.core.diagnostics import diagnostics
+from src.core.banks import _metadata
 from src.v53_factorization_offset import apply_offset, prepare_fields
 from src.v57_public_strict_blend import _load_strict, blend_candidate
 

@@ -20,7 +20,7 @@ from scipy import sparse
 from scipy.optimize import minimize
 from sklearn.preprocessing import OneHotEncoder
 
-from src.v30_diverse_covariance_screen import diagnostics
+from src.core.diagnostics import diagnostics
 from src.v78_environment_stable_residual import _current_axes, _historical_frame
 
 

@@ -12,7 +12,7 @@ import lightgbm as lgb
 import numpy as np
 import pandas as pd
 
-from src.v30_diverse_covariance_screen import diagnostics
+from src.core.diagnostics import diagnostics
 from src.v78_environment_stable_residual import (
     _center_residual,
     _current_axes,

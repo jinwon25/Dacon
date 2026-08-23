@@ -23,8 +23,9 @@ import pandas as pd
 
 from src.temporal_stable_conditional import _add_domain_and_pressure
 from src.trackman_privileged_distillation import PHYSICAL_COLUMNS
-from src.v30_diverse_covariance_screen import _cached_v25_axes, diagnostics
-from src.v35_three_stage_multibank import _metadata
+from src.core.diagnostics import diagnostics
+from src.core.axes import _cached_v25_axes
+from src.core.banks import _metadata
 from src.v38_latest_trackman_pfd import _prepare_pair, _teacher_delta
 from src.v44_profile_augmented_pfd import (
     _aligned_source,

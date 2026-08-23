@@ -23,10 +23,10 @@ import lightgbm as lgb
 import numpy as np
 import pandas as pd
 
-from src.v20_residual_overlay_screen import _bss
+from src.core.overlay import _bss
+from src.core.axes import _load_axis
 
 
-CHAMPION_DIR = Path("artifacts/champion_oof_20260817_01")
 ETAS = (0.025, 0.05, 0.10, 0.15, 0.20, 0.30)
 CATEGORICAL_BASE = (
     "game_dayofweek",
@@ -67,68 +67,6 @@ MODEL_SPECS = (
     ModelSpec("identity_l3", True, 3, 1600),
     ModelSpec("identity_l7", True, 7, 1200),
 )
-
-
-def apply_v22_recipe(
-    v21: np.ndarray,
-    domain: np.ndarray,
-    pitcher_rate: np.ndarray,
-    batter_rate: np.ndarray,
-) -> np.ndarray:
-    """Apply the exact balanced v22 correction used in the submitted ZIP."""
-    parent = np.asarray(v21, dtype=np.float64)
-    domain = np.asarray(domain).astype(str)
-    pitcher = np.nan_to_num(np.asarray(pitcher_rate, dtype=np.float64), nan=0.5)
-    batter = np.nan_to_num(np.asarray(batter_rate, dtype=np.float64), nan=0.5)
-    correction = np.zeros(len(parent), dtype=np.float64)
-    parameters = {
-        "R_CORE": (0.44, 0.035),
-        "R_ANCHOR": (0.48, 0.020),
-        "F": (0.52, 0.020),
-    }
-    for name, (anchor, weight) in parameters.items():
-        selected = domain == name
-        correction[selected] += weight * (anchor - parent[selected])
-    prior = 0.75 * pitcher + 0.25 * batter
-    correction += 0.050 * (prior - parent)
-    return np.clip(parent + correction, 0.001, 0.999)
-
-
-def _derived(frame: pd.DataFrame, domain: np.ndarray) -> pd.DataFrame:
-    output = frame.copy()
-    output["domain3"] = np.asarray(domain).astype(str)
-    output["count_state"] = (
-        output["balls_before"].astype("Int64").astype(str)
-        + "-"
-        + output["strikes_before"].astype("Int64").astype(str)
-    )
-    output["hand_matchup"] = (
-        output["pitcher_hand"].astype("string").fillna("__MISSING__")
-        + "-"
-        + output["batter_hand"].astype("string").fillna("__MISSING__")
-    )
-    output["inning_bucket"] = pd.cut(
-        pd.to_numeric(output["inning"], errors="coerce"),
-        bins=(-np.inf, 3, 6, np.inf),
-        labels=("early", "middle", "late"),
-    ).astype("string")
-    for column in ("asof_pitcher_n", "asof_batter_n", "asof_pitcher_pitchmix_n"):
-        output[f"log1p_{column}"] = np.log1p(
-            pd.to_numeric(output[column], errors="coerce").clip(lower=0.0)
-        )
-    output["recent_success_delta_1_5"] = (
-        pd.to_numeric(output["asof_pitcher_prev1_game_success_rate"], errors="coerce")
-        - pd.to_numeric(output["asof_pitcher_prev5_game_success_rate"], errors="coerce")
-    )
-    output["recent_middle_delta_1_5"] = (
-        pd.to_numeric(output["asof_pitcher_prev1_game_middle_rate"], errors="coerce")
-        - pd.to_numeric(output["asof_pitcher_prev5_game_middle_rate"], errors="coerce")
-    )
-    output["pitcher_batter_rate_gap"] = (
-        pd.to_numeric(output["asof_pitcher_success_rate"], errors="coerce")
-        - pd.to_numeric(output["asof_batter_success_rate"], errors="coerce")
-    )
-    return output
 
 
 def _feature_columns(frame: pd.DataFrame, include_ids: bool) -> list[str]:
@@ -249,33 +187,6 @@ def _diagnostics(frame: pd.DataFrame, raw: np.ndarray, eta: float) -> dict[str, 
         "months": months,
         "domains": domains,
     }
-
-
-def _load_axis(project: Path, axis: str, raw: pd.DataFrame) -> pd.DataFrame:
-    with np.load(project / CHAMPION_DIR / f"{axis}.npz", allow_pickle=True) as saved:
-        target = saved["target"].astype(np.float64)
-        v21 = saved["v21"].astype(np.float64)
-        domain = saved["domain3"].astype(str)
-    if axis == "y2023_early_to_late":
-        frame = raw.loc[
-            raw["season"].eq(2023) & raw["game_month"].ge(8)
-        ].reset_index(drop=True)
-    elif axis == "y2023_to_y2024":
-        frame = raw.loc[raw["season"].eq(2024)].reset_index(drop=True)
-    else:
-        raise ValueError(axis)
-    if not np.array_equal(target, frame["control_success"].to_numpy(np.float64)):
-        raise ValueError(f"target order mismatch for {axis}")
-    frame = _derived(frame, domain)
-    frame["target"] = target
-    frame["v21"] = v21
-    frame["v22"] = apply_v22_recipe(
-        v21,
-        domain,
-        pd.to_numeric(frame["asof_pitcher_success_rate"], errors="coerce").to_numpy(),
-        pd.to_numeric(frame["asof_batter_success_rate"], errors="coerce").to_numpy(),
-    )
-    return frame
 
 
 def run(project: Path, output_dir: Path) -> dict[str, object]:

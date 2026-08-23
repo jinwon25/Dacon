@@ -10,14 +10,14 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from src.v103_fixed_union_robust import _axis_metrics, _robust_axis
+from src.core.axis_metrics import _axis_metrics, _robust_axis
 from src.v104_source_stability_mask import (
     _learn_safe_levels,
     _point_pass,
     context_labels,
     policy_mask,
 )
-from src.v97_conditional_direct_forward import _load_contract_axis
+from src.core.contract import _load_contract_axis
 
 
 PROTOCOL = "V115_FAILURE_PRIOR_SOURCE_STABILITY_MASK_V1"

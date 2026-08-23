@@ -20,11 +20,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.v30_diverse_covariance_screen import (
-    _cached_v25_axes,
-    diagnostics,
-    v27_parent,
-)
+from src.core.diagnostics import diagnostics, v27_parent
+from src.core.axes import _cached_v25_axes
 
 
 FAMILIES = ("global", "slope", "beta", "domain", "domain_slope")
