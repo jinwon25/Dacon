@@ -202,6 +202,17 @@ v84는 고정 v56 레시피의 조건부 full/late gain이 양수라 사용자 �
 
 실패 cache는 삭제하고 코드·테스트·compact 보고서만 보존한다.
 
+2026-08-23 저장소 구조를 버전별 단독 실행 기준으로 정리했다. 일회성 실험 스크립트
+안에 private 심볼로 파묻혀 있던 공용 인프라를 `src/core/`의 9개 모듈로 추출했고,
+버전간 import 엣지가 `394`에서 `182`로 줄었다. 이어서 171개 버전 모듈을 제출 이력이
+있는 버전에서 도달 가능한 `src/champion/` 37개와 종료된 실험 `src/archive/` 134개로
+분리했다. `src/champion`은 `src/archive`를 import하지 않고 `src/core`도 양쪽을
+import하지 않는다. hoo H1/C3 사슬, 공유 pairwise FM, post-break GAM·semantic screen
+10개는 죽은 screen처럼 보였지만 실제로는 챔피언 의존성이라 아카이브하지 않고 승격했다.
+함수 본문은 줄 단위로 그대로 옮겼고 전체 테스트는 `378 passed, 4 skipped`로 동일하다.
+각 세대의 단독 실행 명령줄은 `src/champion/README.md`에 있다. 공식 전달본은 계속
+`submit_v148.zip`이며 SHA-256도 변하지 않았다.
+
 ## 종료 상태와 후속 연구 조건
 
 2026-08-23의 마지막 일일 제출권은 v154에 사용했고 실측 Public `1168.4038526829`로
