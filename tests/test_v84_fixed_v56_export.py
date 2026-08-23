@@ -1,8 +1,8 @@
 import numpy as np
 import torch
 
-from src.v53_factorization_offset import DROPOUT, FIELDS, PairwiseFM, _predict_raw
-from src.v84_fixed_v56_export import numpy_raw
+from src.champion.v53_factorization_offset import DROPOUT, FIELDS, PairwiseFM, _predict_raw
+from src.champion.v84_fixed_v56_export import numpy_raw
 
 
 def test_numpy_raw_matches_torch_eval() -> None:

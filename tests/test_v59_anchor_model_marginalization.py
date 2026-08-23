@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v59_anchor_model_marginalization import (
+from src.archive.v59_anchor_model_marginalization import (
     apply_anchor_direct,
     disagreement_eta,
     marginal_prediction,

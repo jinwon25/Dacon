@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.v24_semantic_signal_screen import level_history_signal, shape_signal
+from src.champion.v24_semantic_signal_screen import level_history_signal, shape_signal
 
 
 def test_shape_signal_is_centered_within_level_and_row_local():

@@ -60,7 +60,7 @@ full-2024 도메인 gain은 `R_CORE -6.6507`, `R_ANCHOR 0`, `F 0`이었다. 선�
 ## 재현
 
 ```powershell
-python -m src.v52_failure_aux_logit
+python -m src.archive.v52_failure_aux_logit
 python -m pytest tests/test_v52_failure_aux_logit.py -q
 ```
 

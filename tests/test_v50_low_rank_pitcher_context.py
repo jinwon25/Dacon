@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v50_low_rank_pitcher_context import (
+from src.champion.v50_low_rank_pitcher_context import (
     build_audit_bank,
     eligible_source_years,
     fit_source_matrix,

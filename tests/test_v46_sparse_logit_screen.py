@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.v46_sparse_logit_screen import interaction_frame, matrix_pair
+from src.archive.v46_sparse_logit_screen import interaction_frame, matrix_pair
 
 
 def test_interaction_frame_is_row_local_and_preserves_order():

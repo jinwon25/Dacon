@@ -3,8 +3,8 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v53_factorization_offset import _expit, _logit
-from src.v86_reliability_gated_r_fm import (
+from src.champion.v53_factorization_offset import _expit, _logit
+from src.archive.v86_reliability_gated_r_fm import (
     apply_reliability_offset,
     reliability_gate,
     select_source_policy,

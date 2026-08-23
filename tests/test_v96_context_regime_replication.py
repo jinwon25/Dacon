@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v96_context_regime_replication import early_late_masks
+from src.archive.v96_context_regime_replication import early_late_masks
 
 
 def test_early_late_masks_are_fixed_and_row_local() -> None:

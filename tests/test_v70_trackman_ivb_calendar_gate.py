@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from src.v70_trackman_ivb_calendar_gate import calendar_mask
+from src.archive.v70_trackman_ivb_calendar_gate import calendar_mask
 
 
 def test_calendar_mask_uses_only_april_through_september() -> None:

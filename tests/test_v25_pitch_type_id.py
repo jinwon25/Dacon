@@ -1,6 +1,6 @@
 import pandas as pd
 
-from src.v25_pitch_type_id_student import feature_frame
+from src.champion.v25_pitch_type_id_student import feature_frame
 
 
 def test_feature_frame_contains_pitcher_count_interactions() -> None:

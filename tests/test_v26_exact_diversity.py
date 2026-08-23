@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.v26_exact_diversity_screen import compose
+from src.champion.v26_exact_diversity_screen import compose
 
 
 def test_compose_modes_are_domain_local() -> None:

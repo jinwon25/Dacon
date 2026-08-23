@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v91_late_season_strict_dose import apply_late_strict_weight
+from src.archive.v91_late_season_strict_dose import apply_late_strict_weight
 
 
 def test_late_strict_replaces_only_august_r_core() -> None:

@@ -61,7 +61,7 @@ late-2023 `371`개였다. 평가 버킷 coverage는 모든 origin에서 100%였�
 ## 재현
 
 ```powershell
-python -m src.v55_prototype_retrieval
+python -m src.archive.v55_prototype_retrieval
 python -m pytest tests/test_v55_prototype_retrieval.py -q
 ```
 

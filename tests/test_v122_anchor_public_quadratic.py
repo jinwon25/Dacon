@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from src.v122_anchor_public_quadratic import fit_public_quadratic
+from src.archive.v122_anchor_public_quadratic import fit_public_quadratic
 
 
 OBSERVATIONS = [

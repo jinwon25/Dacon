@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.v82_probe_wrapper import blend_predictions, probe_mask
+from src.archive.v82_probe_wrapper import blend_predictions, probe_mask
 
 
 def test_probe_mask_is_regular_non_anchor_only() -> None:

@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 from src.core.axes import _joint_domain
-from src.v23_multiyear_direct_screen import _candidate
+from src.archive.v23_multiyear_direct_screen import _candidate
 
 
 def test_joint_domain_is_row_local_and_matches_champion_routing():

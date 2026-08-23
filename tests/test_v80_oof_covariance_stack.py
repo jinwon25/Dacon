@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 from src.core.oof_bank import rebase_frozen_candidate
-from src.v80_oof_covariance_stack import _fit_transition
+from src.archive.v80_oof_covariance_stack import _fit_transition
 
 
 def test_rebase_preserves_frozen_probability_shift() -> None:

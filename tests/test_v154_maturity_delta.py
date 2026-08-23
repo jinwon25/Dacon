@@ -3,9 +3,9 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-import src.v154_runtime_script as runtime
-from src.v148_contract import reconstruct_deployed_v148
-from src.v154_maturity_delta_distillation_audit import _feature_frame
+import src.archive.v154_runtime_script as runtime
+from src.champion.v148_contract import reconstruct_deployed_v148
+from src.archive.v154_maturity_delta_distillation_audit import _feature_frame
 
 
 def test_distillation_and_runtime_feature_contract_match() -> None:

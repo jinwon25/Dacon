@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.v105_cross_architecture_ablation import combine_deltas
+from src.archive.v105_cross_architecture_ablation import combine_deltas
 
 
 def test_cross_architecture_delta_policies():

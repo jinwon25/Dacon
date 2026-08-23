@@ -98,8 +98,8 @@ row_id/target 정렬, 학습 cutoff, v27 오차 공분산을 검사한 뒤 고�
 ## 재현
 
 ```powershell
-python -m src.v46_sparse_logit_screen --project . --output-dir artifacts/v46_sparse_logit_20260817_01
-python -m src.v47_pitcher_role_hierarchy --project . --output-dir artifacts/v47_pitcher_role_20260817_01
+python -m src.archive.v46_sparse_logit_screen --project . --output-dir artifacts/v46_sparse_logit_20260817_01
+python -m src.archive.v47_pitcher_role_hierarchy --project . --output-dir artifacts/v47_pitcher_role_20260817_01
 python -m pytest -q
 ```
 

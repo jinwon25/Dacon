@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.v64_frozen_physical_teacher_student import (
+from src.archive.v64_frozen_physical_teacher_student import (
     FROZEN_DOMAIN,
     FROZEN_VARIANT,
     FROZEN_WEIGHT,

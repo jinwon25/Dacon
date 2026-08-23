@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.v23_three_stage_state_mode_screen import _diagnostics
+from src.archive.v23_three_stage_state_mode_screen import _diagnostics
 
 
 def test_diagnostics_prefers_perfect_signal():

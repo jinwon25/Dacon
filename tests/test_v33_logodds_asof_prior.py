@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.v33_logodds_asof_prior import (
+from src.archive.v33_logodds_asof_prior import (
     apply_direction,
     logodds_matchup,
     posterior_rate,

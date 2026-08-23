@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v65_trackman_data_census import (
+from src.archive.v65_trackman_data_census import (
     derive_temporal_entity_map,
     within_group_correlation,
 )

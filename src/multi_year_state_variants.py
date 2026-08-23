@@ -14,7 +14,7 @@ import pandas as pd
 from src.multi_year_state_model import _add_categories, _state_features
 from src.temporal_stable_conditional import _add_domain_and_pressure
 from src.trackman_privileged_distillation import V17_NAME
-from src.v16_residual_calibration_screen import load_v14_folds
+from src.archive.v16_residual_calibration_screen import load_v14_folds
 
 
 RECIPES = {

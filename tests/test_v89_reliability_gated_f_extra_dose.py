@@ -3,8 +3,8 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v53_factorization_offset import _expit, _logit
-from src.v89_reliability_gated_f_extra_dose import apply_extra_dose, select_recipe
+from src.champion.v53_factorization_offset import _expit, _logit
+from src.archive.v89_reliability_gated_f_extra_dose import apply_extra_dose, select_recipe
 
 
 def _rows() -> pd.DataFrame:

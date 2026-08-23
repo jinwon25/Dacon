@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.v106_paired_player_identity import add_identity_features, optimal_eta
+from src.archive.v106_paired_player_identity import add_identity_features, optimal_eta
 
 
 def test_identity_features_are_row_local_and_expected() -> None:

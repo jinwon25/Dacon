@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from src.v66_direct_trackman_gate import (
+from src.archive.v66_direct_trackman_gate import (
     attach_legacy_id,
     build_direct_profiles,
     combine_profiles,

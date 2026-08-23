@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.v25_low_dof_failure_three_stage import _conditional_success
+from src.champion.v25_low_dof_failure_three_stage import _conditional_success
 
 
 def test_conditional_success_uses_recency_weight() -> None:

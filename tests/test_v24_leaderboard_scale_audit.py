@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.v24_leaderboard_scale_audit import (
+from src.archive.v24_leaderboard_scale_audit import (
     infer_linear_terms,
     optimal_scales,
     score_curvature,

@@ -1,6 +1,6 @@
 import pandas as pd
 
-from src.v23_postbreak_gam_screen import _columns
+from src.champion.v23_postbreak_gam_screen import _columns
 
 
 def test_columns_separate_rate_splines_from_linear_context():

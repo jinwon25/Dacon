@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v62_group_balanced_extra_trees import (
+from src.archive.v62_group_balanced_extra_trees import (
     blend_candidate,
     group_weights,
     matrix_pair,

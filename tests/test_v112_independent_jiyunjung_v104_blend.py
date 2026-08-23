@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from src.v110_v104_cross_architecture_rebase import apply_correction, fit_alpha
+from src.archive.v110_v104_cross_architecture_rebase import apply_correction, fit_alpha
 
 
 def test_fit_alpha_recovers_bounded_probability_dose() -> None:

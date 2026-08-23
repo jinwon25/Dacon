@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.v77_team_oof_constrained_blend import (
+from src.archive.v77_team_oof_constrained_blend import (
     align_bundles,
     fit_robust_blend,
     load_bundle,

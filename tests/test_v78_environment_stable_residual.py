@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v78_environment_stable_residual import (
+from src.archive.v78_environment_stable_residual import (
     StableSpec,
     build_features,
     environment_labels,

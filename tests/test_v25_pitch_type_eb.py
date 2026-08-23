@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.v25_pitch_type_eb_student import _group_probability, _normalise
+from src.champion.v25_pitch_type_eb_student import _group_probability, _normalise
 
 
 def test_group_probability_shrinks_to_row_prior() -> None:

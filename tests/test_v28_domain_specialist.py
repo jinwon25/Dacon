@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.v28_domain_specialist_screen import _v27_parent
+from src.archive.v28_domain_specialist_screen import _v27_parent
 
 
 def test_v27_parent_only_rescales_existing_anchor_delta() -> None:

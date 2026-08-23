@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.v104_source_stability_mask import context_labels, policy_mask
+from src.champion.v104_source_stability_mask import context_labels, policy_mask
 
 
 def test_context_labels_are_row_local():

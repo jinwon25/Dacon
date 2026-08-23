@@ -117,9 +117,9 @@ Public 점수 세 개로 추정한 목적면이 데이터 전이축과 모순되
 ## 재현
 
 ```powershell
-python -m src.v24_semantic_eda --project . --output-dir artifacts/v24_semantic_eda_20260817_01
-python -m src.v24_semantic_signal_screen --project . --output-dir artifacts/v24_semantic_signal_20260817_01
-python -m src.v24_leaderboard_scale_audit --project . --output-dir artifacts/v24_leaderboard_scale_audit_20260817_01
+python -m src.archive.v24_semantic_eda --project . --output-dir artifacts/v24_semantic_eda_20260817_01
+python -m src.champion.v24_semantic_signal_screen --project . --output-dir artifacts/v24_semantic_signal_20260817_01
+python -m src.archive.v24_leaderboard_scale_audit --project . --output-dir artifacts/v24_leaderboard_scale_audit_20260817_01
 python -m pytest -q
 ```
 

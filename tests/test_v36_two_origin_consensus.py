@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from src.v36_two_origin_consensus import select_consensus
+from src.archive.v36_two_origin_consensus import select_consensus
 
 
 def _rows(year_gain_a, year_gain_b):

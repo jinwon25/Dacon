@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from src.v22_domain_calibration_screen import _candidate
+from src.champion.v22_domain_calibration_screen import _candidate
 
 
 def test_domain_calibration_is_row_local_and_domain_specific() -> None:

@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v113_fine_pitch_failure_prior_v104 import reconstruct_failure_components
+from src.archive.v113_fine_pitch_failure_prior_v104 import reconstruct_failure_components
 
 
 def test_reconstruct_failure_components_uses_next_asof_snapshot() -> None:

@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v25_postbreak_anchor_audit import _evaluate
+from src.champion.v25_postbreak_anchor_audit import _evaluate
 
 
 def test_evaluate_changes_only_anchor_rows() -> None:

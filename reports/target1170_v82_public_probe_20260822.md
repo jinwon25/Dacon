@@ -101,7 +101,7 @@ rolling·lag·누적값을 사용하지 않는다. 공식 행 독립성 공지�
 ## 재현
 
 ```powershell
-python -m src.v82_build_public_probe `
+python -m src.archive.v82_build_public_probe `
   --project "<private_project>" `
   --external-root "<private_project>/artifacts/external_mk_lg9" `
   --champion-zip artifacts/standalone_champion_1158/standalone_champion_1158.zip `

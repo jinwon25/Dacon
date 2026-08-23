@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v92_temporal_player_command_eb import (
+from src.archive.v92_temporal_player_command_eb import (
     apply_probability_correction,
     fit_eb_effect,
     group_keys,

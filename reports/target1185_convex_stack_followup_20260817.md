@@ -114,7 +114,7 @@ v27의 F 평균이 target에 이미 가까워졌고 direct 방향과 v27 잔차�
 ## 재현
 
 ```powershell
-python -m src.v49_temporal_convex_stack --project . --output-dir artifacts/v49_temporal_convex_stack_20260817_01
+python -m src.archive.v49_temporal_convex_stack --project . --output-dir artifacts/v49_temporal_convex_stack_20260817_01
 python -m pytest -q
 ```
 

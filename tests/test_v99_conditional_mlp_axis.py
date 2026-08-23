@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.v99_conditional_mlp_axis import _optimal_eta
+from src.archive.v99_conditional_mlp_axis import _optimal_eta
 
 
 def test_optimal_eta_is_capped_and_nonnegative():

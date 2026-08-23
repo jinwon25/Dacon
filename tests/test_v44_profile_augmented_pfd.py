@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.v44_profile_augmented_pfd import (
+from src.archive.v44_profile_augmented_pfd import (
     attach_profiles,
     profile_columns,
     student_columns,

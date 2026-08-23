@@ -116,9 +116,9 @@ pitch/failure, TrackMan student 신호는 v27 위에서 거의 포화됐다. 다
 ## 재현
 
 ```powershell
-python -m src.v39_hierarchical_season_forecast --project .
-python -m src.v40_reliability_gated_hierarchy --project .
-python -m src.v41_joint_pitch_failure_student --project .
+python -m src.archive.v39_hierarchical_season_forecast --project .
+python -m src.archive.v40_reliability_gated_hierarchy --project .
+python -m src.archive.v41_joint_pitch_failure_student --project .
 python -m pytest -q
 ```
 

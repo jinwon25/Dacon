@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from src.v56_shared_horizon_fm import (
+from src.champion.v56_shared_horizon_fm import (
     equal_period_domain_centres,
     source_domain_weights,
 )

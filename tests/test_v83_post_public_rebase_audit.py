@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from src.v83_post_public_rebase_audit import add_frozen_shift
+from src.archive.v83_post_public_rebase_audit import add_frozen_shift
 
 
 def test_add_frozen_shift_preserves_declared_direction() -> None:

@@ -3,11 +3,11 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v117_failure_prior_component import (
+from src.archive.v117_failure_prior_component import (
     build_failure_bank,
     predict_failure_components,
 )
-from src.v117_v116_probe_wrapper import apply_v116
+from src.archive.v117_v116_probe_wrapper import apply_v116
 
 
 def _history() -> pd.DataFrame:

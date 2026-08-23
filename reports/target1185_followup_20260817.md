@@ -136,11 +136,11 @@ xCTRL은 현재 투구 위치와 의도 위치가 필요한 접근이다. 이 �
 ## 재현 명령
 
 ```powershell
-python -m src.v30_diverse_covariance_screen --project .
-python -m src.v31_dynamic_hierarchical_residual --project .
-python -m src.v32_temporal_consensus_eb --project .
-python -m src.v33_logodds_asof_prior --project .
-python -m src.v34_temporal_v27_calibration --project .
+python -m src.archive.v30_diverse_covariance_screen --project .
+python -m src.archive.v31_dynamic_hierarchical_residual --project .
+python -m src.archive.v32_temporal_consensus_eb --project .
+python -m src.archive.v33_logodds_asof_prior --project .
+python -m src.archive.v34_temporal_v27_calibration --project .
 python -m pytest -q
 ```
 

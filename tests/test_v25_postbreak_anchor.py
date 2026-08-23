@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v10_overlay_script import _v25_postbreak_frame
+from src.archive.v10_overlay_script import _v25_postbreak_frame
 from src.core.axes import _joint_domain
 from src.core.axes import _derived
 

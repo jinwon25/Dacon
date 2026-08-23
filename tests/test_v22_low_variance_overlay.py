@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v22_joint_low_variance_screen import _candidate, _gains, _quadratic
+from src.champion.v22_joint_low_variance_screen import _candidate, _gains, _quadratic
 
 
 def test_quadratic_gain_matches_direct_brier_gain() -> None:

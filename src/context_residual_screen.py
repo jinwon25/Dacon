@@ -16,7 +16,7 @@ import numpy as np
 import pandas as pd
 
 from src.temporal_stable_conditional import _add_domain_and_pressure
-from src.v16_residual_calibration_screen import EPSILON, _bss_gain, _keys, load_v14_folds
+from src.archive.v16_residual_calibration_screen import EPSILON, _bss_gain, _keys, load_v14_folds
 
 
 V17_NAME = "multi_pitcher_batter_hand_pressure_d1_a3200_w1.5"

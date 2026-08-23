@@ -73,7 +73,7 @@ ensemble의 regularization만으로는 F의 target/수집 체계 변화에 대�
 ## 재현
 
 ```powershell
-python -m src.v45_tabm_mini_screen --project .
+python -m src.archive.v45_tabm_mini_screen --project .
 python -m pytest -q
 ```
 

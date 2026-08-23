@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.v61_final_gate_oof import (
+from src.archive.v61_final_gate_oof import (
     apply_final_gate,
     compare_profiles,
     gate_weights,

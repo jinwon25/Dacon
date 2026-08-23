@@ -83,7 +83,7 @@ MODEL_DIR = MODEL_ROOT / "champion"          # 정적, 주입 없음
 
 ## 동등성 검증
 
-`src/v148_flat_parity_audit.py`. 두 패키지는 컴포넌트 모듈명이 겹쳐 한 인터프리터에
+`src/champion/v148_flat_parity_audit.py`. 두 패키지는 컴포넌트 모듈명이 겹쳐 한 인터프리터에
 공존할 수 없으므로 **각각 별도 서브프로세스**에서 실행하고 확률 벡터를 비교했다.
 
 | 항목 | 값 |
@@ -162,9 +162,9 @@ cold-start는 train에서 뽑을 수 없다(모든 선수가 이미 동결 테�
 | 패키지 | `artifacts/v148_flat_20260823_01/submit_v148_flat.zip` |
 | SHA-256 | `B87E36FC4DEBCA5B10EFDD03599A545B9A0042CD2D665AAA964AC5AB6CB5AD4D` |
 | 크기 | 46,684,746 bytes (89 files) |
-| 빌드 | `src/v148_flat_build_package.py` |
-| 런타임 | `src/v148_flat_runtime_script.py` |
-| 동등성 감사 | `src/v148_flat_parity_audit.py` |
+| 빌드 | `src/champion/v148_flat_build_package.py` |
+| 런타임 | `src/champion/v148_flat_runtime_script.py` |
+| 동등성 감사 | `src/champion/v148_flat_parity_audit.py` |
 | 테스트 | `tests/test_v148_flat_parity.py` (10개) |
 
 전체 테스트: **378 passed, 4 skipped** (기준선 368 + 신규 10).

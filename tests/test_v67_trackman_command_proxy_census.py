@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v67_trackman_command_proxy_census import (
+from src.archive.v67_trackman_command_proxy_census import (
     build_trackman_physical_profile,
     pitcher_residual_table,
     weighted_correlation,

@@ -111,7 +111,7 @@ python -m src.audit_standalone_release `
 재구축 인수 계약은 다음 명령으로 확인한다.
 
 ```powershell
-python -m src.v148_build_submission_package --help
+python -m src.champion.v148_build_submission_package --help
 ```
 
 재구축 결과는 기존 챔피언을 덮어쓰지 않고 새 출력 디렉터리에 만든 뒤, SHA·수식 parity·

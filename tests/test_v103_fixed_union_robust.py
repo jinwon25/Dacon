@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.v103_fixed_union_robust import fixed_union_candidate
+from src.archive.v103_fixed_union_robust import fixed_union_candidate
 
 
 def test_fixed_union_is_row_local_and_r_core_only():

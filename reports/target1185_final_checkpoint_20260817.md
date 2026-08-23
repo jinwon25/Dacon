@@ -55,7 +55,7 @@
 ## 재현과 산출물 정책
 
 ```powershell
-python -m src.v57_public_strict_blend
+python -m src.archive.v57_public_strict_blend
 python -m pytest -q
 ```
 

@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.v47_pitcher_role_hierarchy import _prepare, role_bank
+from src.archive.v47_pitcher_role_hierarchy import _prepare, role_bank
 
 
 def test_prepare_maps_baseball_role_buckets():

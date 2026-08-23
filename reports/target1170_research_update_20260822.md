@@ -49,7 +49,7 @@
 
 ### 재현 무결성
 
-`src/v61_final_gate_oof.py`는 공식 train과 TrackMan history에서 2023·2024·2025
+`src/archive/v61_final_gate_oof.py`는 공식 train과 TrackMan history에서 2023·2024·2025
 시점 profile을 strict pre-origin 방식으로 다시 만든다. 2025 결과를 배포 payload와
 비교한 뒤에만 과거 OOF를 신뢰한다.
 
@@ -246,11 +246,11 @@ v62 ExtraTrees가 모두 최종 외부 게이트를 통과하지 못했으므로
 ## 11. 재현 명령
 
 ```powershell
-python -m src.v63_pitcher_balls_ahead_interaction `
+python -m src.archive.v63_pitcher_balls_ahead_interaction `
   --project <private-project> --final-parent-dir artifacts/v61_final_gate_oof_20260822_01 `
   --output-dir artifacts/v63_pitcher_balls_ahead_20260822_01 --v50-dir <private-v50-dir>
 
-python -m src.v64_frozen_physical_teacher_student `
+python -m src.archive.v64_frozen_physical_teacher_student `
   --project <private-project> --alignment-dir <private-alignment-dir> `
   --final-parent-dir artifacts/v61_final_gate_oof_20260822_01 `
   --selection-metrics <private-v44-selection-metrics.csv> `

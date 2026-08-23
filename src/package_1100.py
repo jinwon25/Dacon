@@ -158,7 +158,7 @@ def main() -> None:
     parser.add_argument("--parent", type=Path, default=Path("submit_v10_1015.zip"))
     parser.add_argument("--expected-parent-sha256", required=True)
     parser.add_argument(
-        "--inference-script", type=Path, default=Path("src/v10_overlay_script.py")
+        "--inference-script", type=Path, default=Path("src/archive/v10_overlay_script.py")
     )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--mode", choices=["weight", "catboost"], required=True)

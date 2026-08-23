@@ -121,9 +121,9 @@ TrackMan teacher/student, 초기 tree base는 실질적으로 포화됐다. 같�
 ## 재현 명령
 
 ```powershell
-python -m src.v42_forward_nested_state_mode --project .
-python -m src.v43_independent_base_audit --project .
-python -m src.v44_profile_augmented_pfd --project .
+python -m src.archive.v42_forward_nested_state_mode --project .
+python -m src.archive.v43_independent_base_audit --project .
+python -m src.archive.v44_profile_augmented_pfd --project .
 python -m pytest -q
 ```
 

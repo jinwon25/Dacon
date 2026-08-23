@@ -106,10 +106,10 @@ teacher가 현재 투구의 물리 정보로 성공 결과를 더 잘 설명하�
 ## 재현 명령
 
 ```powershell
-python -m src.v35_three_stage_multibank --project .
-python -m src.v36_two_origin_consensus --project .
-python -m src.v37_latest_season_catboost_residual --project .
-python -m src.v38_latest_trackman_pfd --project .
+python -m src.archive.v35_three_stage_multibank --project .
+python -m src.archive.v36_two_origin_consensus --project .
+python -m src.archive.v37_latest_season_catboost_residual --project .
+python -m src.archive.v38_latest_trackman_pfd --project .
 python -m pytest -q
 ```
 

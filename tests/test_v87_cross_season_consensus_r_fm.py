@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v87_cross_season_consensus_r_fm import (
+from src.archive.v87_cross_season_consensus_r_fm import (
     combine_corrections,
     select_policy,
 )

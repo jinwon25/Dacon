@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.v23_neural_embedding_screen import (
+from src.champion.v23_neural_embedding_screen import (
     _category_codes,
     _diagnostics,
     _numeric_columns,

@@ -109,10 +109,10 @@ jupyter lab notebooks/experiment_workbench.ipynb
 ### 5.1 후보 축 screen
 
 ```powershell
-python -m src.v16_residual_calibration_screen `
+python -m src.archive.v16_residual_calibration_screen `
   --output-dir artifacts/v19_residual_calibration_<run_id>
 
-python -m src.v16_multiseason_screen `
+python -m src.archive.v16_multiseason_screen `
   --output-dir artifacts/v19_multiseason_<run_id>
 ```
 
@@ -195,7 +195,7 @@ clean transfer 관측 3개 전까지 억제하며, 이후에도 승격 근거로
 결과는 모델 선택 규칙이나 blend weight를 사후 미세조정하는 학습 데이터로 쓰지 않는다.
 
 팀원 모델을 혼합할 때는 `configs/oof_bundle_contract_v1.json` 형식의 exact temporal OOF만
-받고 `src/v77_team_oof_constrained_blend.py`로 정렬·SHA-256·strict-forward 경계와 source
+받고 `src/archive/v77_team_oof_constrained_blend.py`로 정렬·SHA-256·strict-forward 경계와 source
 월·domain 비악화 제약을 검증한다. 제출 ZIP이나 Public 점수만 있는 모델의 weight는 정하지
 않는다. v77 결과도 bootstrap·Reality Check를 통과하기 전에는 승격 근거가 아니다.
 

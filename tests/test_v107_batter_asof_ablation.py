@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from src.v107_batter_asof_ablation import drop_batter_asof
+from src.archive.v107_batter_asof_ablation import drop_batter_asof
 
 
 def test_drop_batter_asof_preserves_legitimate_context() -> None:

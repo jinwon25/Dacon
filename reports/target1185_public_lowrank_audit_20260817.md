@@ -78,7 +78,7 @@ R_CORE에서 반복적으로 음수였다. 2024 결과를 본 뒤 F route나 더
 ## 재현
 
 ```powershell
-python -m src.v50_low_rank_pitcher_context
+python -m src.champion.v50_low_rank_pitcher_context
 python -m pytest tests/test_v50_low_rank_pitcher_context.py -q
 ```
 

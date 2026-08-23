@@ -240,8 +240,8 @@ xCTRL처럼 의도와 실행을 분리하는 모델은 실제 위치와 intended
 6. 통과하면 처음부터 standalone ZIP으로 패키징하고 공식 규칙·600초·내부 120초·행 독립성을
    모두 검증한다.
 
-재현 코드는 `src/v75_evaluation_headroom_audit.py`,
-`src/v76_domain_count_contrast.py`이고, compact 결과는
+재현 코드는 `src/archive/v75_evaluation_headroom_audit.py`,
+`src/archive/v76_domain_count_contrast.py`이고, compact 결과는
 `reports/v75_evaluation_headroom_metrics.csv`,
 `reports/v76_domain_count_contrast_metrics.csv`에 남겼다. 대형 예측 cache는 판단 확정 후
 삭제해 혼선을 막는다.

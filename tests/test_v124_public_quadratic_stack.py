@@ -4,7 +4,7 @@ import copy
 
 import numpy as np
 
-from src.v124_public_quadratic_stack import patch_specifications
+from src.champion.v124_public_quadratic_stack import patch_specifications
 
 
 def _specs() -> dict:

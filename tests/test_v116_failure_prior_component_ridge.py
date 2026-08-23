@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from src.v116_failure_prior_component_ridge import apply_components, fit_ridge
+from src.archive.v116_failure_prior_component_ridge import apply_components, fit_ridge
 
 
 def test_fit_ridge_recovers_unregularized_coefficients() -> None:

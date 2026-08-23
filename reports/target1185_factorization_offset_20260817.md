@@ -60,7 +60,7 @@ cold-start 영향을 줄였지만, 선수 구성 변화와 월별 잔차 반전�
 ## 재현
 
 ```powershell
-python -m src.v53_factorization_offset
+python -m src.champion.v53_factorization_offset
 python -m pytest tests/test_v53_factorization_offset.py -q
 ```
 

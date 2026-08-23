@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from src.v49_temporal_convex_stack import (
+from src.archive.v49_temporal_convex_stack import (
     applied_domain_gain,
     bank_matrix,
     fit_simplex,

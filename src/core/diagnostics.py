@@ -1,6 +1,6 @@
 """Month/domain gain diagnostics and frozen-direction composition.
 
-Moved verbatim from ``src/v30_diverse_covariance_screen.py`` during the core extraction.
+Moved verbatim from ``src/archive/v30_diverse_covariance_screen.py`` during the core extraction.
 """
 
 from __future__ import annotations

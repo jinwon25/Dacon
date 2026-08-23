@@ -80,12 +80,12 @@ v21→v22의 Public gain과 2024 로컬 보정 크기를 단순 이차 손실로
 ## 재현 명령과 산출물
 
 ```powershell
-python -m src.v23_structural_residual_screen --project . --output-dir artifacts/v23_structural_residual_20260817_01
-python -m src.v23_multiyear_direct_screen --project . --output-dir artifacts/v23_multiyear_direct_20260817_01
-python -m src.v23_three_stage_state_mode_screen --project . --output-dir artifacts/v23_three_stage_state_mode_20260817_01
-python -m src.v23_neural_embedding_screen --project . --output-dir artifacts/v23_neural_embedding_20260817_02
-python -m src.v23_neural_group_robust_screen --project . --output-dir artifacts/v23_neural_group_robust_20260817_01
-python -m src.v23_postbreak_gam_screen --project . --output-dir artifacts/v23_postbreak_gam_20260817_01
+python -m src.archive.v23_structural_residual_screen --project . --output-dir artifacts/v23_structural_residual_20260817_01
+python -m src.archive.v23_multiyear_direct_screen --project . --output-dir artifacts/v23_multiyear_direct_20260817_01
+python -m src.archive.v23_three_stage_state_mode_screen --project . --output-dir artifacts/v23_three_stage_state_mode_20260817_01
+python -m src.champion.v23_neural_embedding_screen --project . --output-dir artifacts/v23_neural_embedding_20260817_02
+python -m src.archive.v23_neural_group_robust_screen --project . --output-dir artifacts/v23_neural_group_robust_20260817_01
+python -m src.champion.v23_postbreak_gam_screen --project . --output-dir artifacts/v23_postbreak_gam_20260817_01
 python -m pytest -q
 ```
 

@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 
-from src.v110_v104_cross_architecture_rebase import apply_correction, fit_alpha
-from src.v104_source_stability_mask import context_labels, policy_mask
+from src.archive.v110_v104_cross_architecture_rebase import apply_correction, fit_alpha
+from src.champion.v104_source_stability_mask import context_labels, policy_mask
 
 
 def test_fit_alpha_recovers_bounded_probability_dose():

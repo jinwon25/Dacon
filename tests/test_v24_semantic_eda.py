@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.v24_semantic_eda import career_counter_audit, level_mobility_summary
+from src.archive.v24_semantic_eda import career_counter_audit, level_mobility_summary
 
 
 def test_career_counter_audit_recognizes_exact_pre_pitch_counts():

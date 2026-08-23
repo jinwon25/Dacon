@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from src.v73_trackman_label_pitch_type_student import trackman_training_labels
+from src.archive.v73_trackman_label_pitch_type_student import trackman_training_labels
 
 
 def test_trackman_training_labels_preserve_unaligned_and_other_as_missing() -> None:

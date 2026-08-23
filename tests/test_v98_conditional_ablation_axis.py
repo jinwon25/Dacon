@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.v98_conditional_ablation_axis import _optimal_eta
+from src.archive.v98_conditional_ablation_axis import _optimal_eta
 
 
 def test_eta_uses_only_paired_correction():

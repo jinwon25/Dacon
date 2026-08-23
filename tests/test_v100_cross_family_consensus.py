@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.v100_cross_family_consensus import cross_family_candidate
+from src.archive.v100_cross_family_consensus import cross_family_candidate
 
 
 def test_only_same_sign_core_rows_move():

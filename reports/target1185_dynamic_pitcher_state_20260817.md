@@ -51,7 +51,7 @@ exact current-season 상태 피처가 이미 대부분의 투수 정보를 흡�
 ## 재현
 
 ```powershell
-python -m src.v51_dynamic_pitcher_state
+python -m src.archive.v51_dynamic_pitcher_state
 python -m pytest tests/test_v51_dynamic_pitcher_state.py -q
 ```
 

@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.v58_eta15_rebase_audit import eta_parent, rebase_frozen_shift
+from src.archive.v58_eta15_rebase_audit import eta_parent, rebase_frozen_shift
 
 
 def test_eta_parent_recovers_same_signal_weight() -> None:

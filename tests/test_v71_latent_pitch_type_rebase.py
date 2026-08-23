@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from src.v71_latent_pitch_type_rebase import _evaluate
+from src.archive.v71_latent_pitch_type_rebase import _evaluate
 
 
 def test_evaluate_adds_frozen_shift_to_new_parent() -> None:

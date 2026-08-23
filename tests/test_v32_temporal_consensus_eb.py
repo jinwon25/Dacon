@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.v32_temporal_consensus_eb import _split_month, consensus_effect
+from src.archive.v32_temporal_consensus_eb import _split_month, consensus_effect
 
 
 def _frame(residual):

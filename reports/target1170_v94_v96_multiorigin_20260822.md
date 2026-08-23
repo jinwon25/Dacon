@@ -131,9 +131,9 @@ v95의 count별 champion residual 정답을 제공하지 않는다. 숨은 test 
 ## 재현
 
 ```powershell
-python -m src.v94_multi_origin_champion_contract --help
-python -m src.v95_multiorigin_context_transport --help
-python -m src.v96_context_regime_replication --help
+python -m src.archive.v94_multi_origin_champion_contract --help
+python -m src.archive.v95_multiorigin_context_transport --help
+python -m src.archive.v96_context_regime_replication --help
 
 python -m pytest -q `
   tests/test_v94_multi_origin_champion_contract.py `

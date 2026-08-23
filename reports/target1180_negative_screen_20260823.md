@@ -31,10 +31,10 @@
 | 가설 | 대응하는 기존 구현/평가 | 상태 |
 |---|---|---|
 | `base_state` 8분류를 세분화한 잔차 축 | `context_residual_screen.py`의 `domain_teams` 등 다중 그룹, `base_state`는 이미 챔피언 categorical feature이자 `situation_state` 파생 카테고리에 포함 | 이미 존재, 재탕 |
-| `home_win_expectancy`/`away_win_expectancy` 비대칭도 | `configs/v78_environment_stable_residual.json`의 `win_expectancy_gap`, `src/v79_champion_offset_context.py`의 `ctx_win_gap = home_win_expectancy - away_win_expectancy` — 변수명까지 동일. PROJECT_STATUS: "v78 ... primary 두 축 모두 source eta 0", "v79 ... primary 두 축 모두 eta 0; 기각" | 이미 시도·기각 (eta=0, 양쪽 축 모두) |
-| `asof_batter_*`를 주 신호로 쓰는 축 | `src/v107_batter_asof_ablation.py` "Strict-forward paired removal of batter cumulative ASOF summaries" — 가설 자체가 "타자 누적 요약을 제거하면 비이식 노이즈가 줄어든다"로, 타자 축이 이미 순신호가 아니라 잡음으로 판정됨 | 이미 시도·기각 (역방향 확인: 강화가 아니라 제거가 이득) |
+| `home_win_expectancy`/`away_win_expectancy` 비대칭도 | `configs/v78_environment_stable_residual.json`의 `win_expectancy_gap`, `src/archive/v79_champion_offset_context.py`의 `ctx_win_gap = home_win_expectancy - away_win_expectancy` — 변수명까지 동일. PROJECT_STATUS: "v78 ... primary 두 축 모두 source eta 0", "v79 ... primary 두 축 모두 eta 0; 기각" | 이미 시도·기각 (eta=0, 양쪽 축 모두) |
+| `asof_batter_*`를 주 신호로 쓰는 축 | `src/archive/v107_batter_asof_ablation.py` "Strict-forward paired removal of batter cumulative ASOF summaries" — 가설 자체가 "타자 누적 요약을 제거하면 비이식 노이즈가 줄어든다"로, 타자 축이 이미 순신호가 아니라 잡음으로 판정됨 | 이미 시도·기각 (역방향 확인: 강화가 아니라 제거가 이득) |
 | `game_dayofweek` 패턴 | 챔피언 `categorical_columns`에 처음부터 포함, `v10`/`v14`/`v20`/`v23`/`v24`/`v37`/`v62`/`v97`/`v109` 등 다수 스크립트에서 이미 표준 카테고리로 사용 | 이미 base feature, 별도 신규 축 아님 |
-| `asof_pitcher_pitchmix_n`/fastball·breaking·offspeed rate의 다양성(엔트로피) 축 | `src/v26_exact_diversity_screen.py`, `src/v30_diverse_covariance_screen.py`, `src/trackman_domain.py` — PROJECT_STATUS v65~v74 "TrackMan 1,793,078행 전수조사"에 구종/다양성 계열 포함, 기각 | 이미 시도·기각 |
+| `asof_pitcher_pitchmix_n`/fastball·breaking·offspeed rate의 다양성(엔트로피) 축 | `src/champion/v26_exact_diversity_screen.py`, `src/archive/v30_diverse_covariance_screen.py`, `src/trackman_domain.py` — PROJECT_STATUS v65~v74 "TrackMan 1,793,078행 전수조사"에 구종/다양성 계열 포함, 기각 | 이미 시도·기각 |
 
 5개 전부 1차 스크리닝 이전에 "이미 시도됨"으로 확정돼 실행 자체를 생략했다 (문서·코드 증거가
 명확해 중복 계산으로 컴퓨팅을 낭비하지 않기 위함).

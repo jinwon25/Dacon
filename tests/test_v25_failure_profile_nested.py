@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.v25_failure_profile_nested_screen import compose, diagnostics
+from src.champion.v25_failure_profile_nested_screen import compose, diagnostics
 
 
 def test_compose_directions_preserve_v22_at_zero_weight() -> None:

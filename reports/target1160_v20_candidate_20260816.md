@@ -109,9 +109,9 @@ v19의 local 2024 gain 대비 실제 Public gain 전달률은 다음과 같다.
 ## 재현 명령
 
 ```powershell
-python -m src.v20_residual_overlay_screen --project .
-python -m src.v20_model_residual_screen --project .
-python -m src.v20_recency_eb_screen --project .
+python -m src.archive.v20_residual_overlay_screen --project .
+python -m src.archive.v20_model_residual_screen --project .
+python -m src.archive.v20_recency_eb_screen --project .
 python -m src.train_v20_target1160 --project .
 python -m src.package_v20_target1160 --project . --parent submissions/history/submit_v19.zip --output submit_v20.zip
 python -m src.validate_v20_target1160 --project . --candidate submit_v20.zip --parent submissions/history/submit_v19.zip

@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from src.v148_flat_build_package import (
+from src.champion.v148_flat_build_package import (
     DROPPED,
     MODEL_MAP,
     ORIGINAL_SHA256,
@@ -103,7 +103,7 @@ def test_no_component_retains_a_second_entry_point() -> None:
 
 
 def test_original_package_is_untouched() -> None:
-    from src.v148_flat_build_package import _sha256_file
+    from src.champion.v148_flat_build_package import _sha256_file
 
     assert _sha256_file(ORIGINAL_ZIP) == ORIGINAL_SHA256
 

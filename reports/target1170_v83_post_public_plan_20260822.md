@@ -103,7 +103,7 @@ domain×count lookup은 다시 탐색하지 않는다.
 ## 재현
 
 ```powershell
-python -m src.v83_post_public_rebase_audit `
+python -m src.archive.v83_post_public_rebase_audit `
   --project <private-project> `
   --final-parent-dir artifacts/v61_final_gate_oof_20260822_01 `
   --output-dir artifacts/v83_post_public_rebase_20260822_01

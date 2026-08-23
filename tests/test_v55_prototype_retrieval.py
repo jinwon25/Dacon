@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v55_prototype_retrieval import (
+from src.archive.v55_prototype_retrieval import (
     NUMERIC_COLUMNS,
     PrototypeBucket,
     PrototypeRetriever,

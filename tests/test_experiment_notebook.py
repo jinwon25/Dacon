@@ -62,7 +62,7 @@ def test_experiment_notebook_routes_to_authoritative_modules() -> None:
         "DRY_RUN = True",
         "RUN_HEAVY = False",
         "RUN_PACKAGING = False",
-        "src.v16_multiseason_screen",
+        "src.archive.v16_multiseason_screen",
         "src.evaluate_v16_robust",
         "src.train_v16_residual",
         "src.package_v16_residual",

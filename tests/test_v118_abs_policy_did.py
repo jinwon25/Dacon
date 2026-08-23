@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.v118_abs_policy_did import (
+from src.archive.v118_abs_policy_did import (
     difference_in_differences,
     map_effect,
 )

@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import torch
 
-from src.v53_factorization_offset import (
+from src.champion.v53_factorization_offset import (
     FIELDS,
     FieldEncoder,
     PairwiseFM,

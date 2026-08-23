@@ -17,7 +17,7 @@ import numpy as np
 import pandas as pd
 
 from src.core.axes import _joint_domain
-from src.v23_postbreak_gam_screen import SPECS, _pipeline
+from src.champion.v23_postbreak_gam_screen import SPECS, _pipeline
 from src.core.axes import _derived
 from src.core.v25_recipe import SOURCE_YEAR, MODEL_NAME, ETA, APPLY_DOMAIN
 

@@ -93,7 +93,7 @@ bootstrap 경고를 무시하고 제출한 것"이었으므로, 새 알고리즘
 
 ### 임무 4: 신경망(TabM) 오차 상관
 
-`src/v45_tabm_mini_screen.py`가 존재하지만 OOF/artifact는 저장소 정책("실패 cache는
+`src/archive/v45_tabm_mini_screen.py`가 존재하지만 OOF/artifact는 저장소 정책("실패 cache는
 삭제")에 따라 보존되지 않았다. `reports/evaluation_reaudit_20260822.md`와
 `reports/target1185_final_checkpoint_20260817.md`에 남은 기록: v45 TabM-mini는
 late-2023 selection 게이트를 통과하지 못했고 full-2024 gain **-8.271**로 절대 성능 자체가

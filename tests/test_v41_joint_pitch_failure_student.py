@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.v41_joint_pitch_failure_student import (
+from src.archive.v41_joint_pitch_failure_student import (
     N_CLASSES,
     _load_year_cache,
     _save_year_cache,

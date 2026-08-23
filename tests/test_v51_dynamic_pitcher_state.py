@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v51_dynamic_pitcher_state import (
+from src.archive.v51_dynamic_pitcher_state import (
     CareerState,
     dynamic_deltas,
     fit_transition,

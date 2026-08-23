@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from src.v22_hierarchical_posterior_screen import _posterior, _rounded_count
+from src.champion.v22_hierarchical_posterior_screen import _posterior, _rounded_count
 
 
 def test_rounded_count_and_posterior() -> None:

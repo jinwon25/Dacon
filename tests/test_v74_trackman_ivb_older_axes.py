@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from src.v74_trackman_ivb_older_axes import independent_gate
+from src.archive.v74_trackman_ivb_older_axes import independent_gate
 
 
 def _audit(gain: float, month_fraction: float, domain_gain: float, eta: float) -> dict[str, float]:

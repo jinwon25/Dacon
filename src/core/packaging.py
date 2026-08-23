@@ -1,6 +1,6 @@
 """Submission package build, extraction, and hashing helpers.
 
-Moved verbatim from ``src/v84_build_public_probe.py`` during the core extraction.
+Moved verbatim from ``src/champion/v84_build_public_probe.py`` during the core extraction.
 """
 
 from __future__ import annotations

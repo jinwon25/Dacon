@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.v84_probe_wrapper import apply_fixed_v56
+from src.champion.v84_probe_wrapper import apply_fixed_v56
 
 
 FIELDS = [

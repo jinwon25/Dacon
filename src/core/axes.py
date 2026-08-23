@@ -1,6 +1,6 @@
 """Champion OOF axis loading and derived residual features.
 
-Moved verbatim from ``src/v23_structural_residual_screen.py`` during the core extraction.
+Moved verbatim from ``src/archive/v23_structural_residual_screen.py`` during the core extraction.
 """
 
 from __future__ import annotations

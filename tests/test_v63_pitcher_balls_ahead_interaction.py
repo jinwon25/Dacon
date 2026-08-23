@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v63_pitcher_balls_ahead_interaction import (
+from src.archive.v63_pitcher_balls_ahead_interaction import (
     build_audit_bank,
     eligible_source_years,
     fit_source_interaction,

@@ -82,7 +82,7 @@ weight 자체는 late-2022/late-2023에서만 선택됐고, late-2024 반전은 
 ## 재현
 
 ```powershell
-python -m src.v48_level_transition_contrast --project . --output-dir artifacts/v48_level_transition_20260817_01
+python -m src.archive.v48_level_transition_contrast --project . --output-dir artifacts/v48_level_transition_20260817_01
 python -m pytest -q
 ```
 

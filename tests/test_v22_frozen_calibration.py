@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from src.v22_frozen_calibration_screen import _apply_map, _bin, _fit_map
+from src.champion.v22_frozen_calibration_screen import _apply_map, _bin, _fit_map
 
 
 def test_fixed_bins_and_frozen_map() -> None:

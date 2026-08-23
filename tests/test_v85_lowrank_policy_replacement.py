@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.v85_lowrank_policy_replacement import (
+from src.archive.v85_lowrank_policy_replacement import (
     exact_v84_parent,
     replace_strict_policy,
 )

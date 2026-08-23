@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.v43_independent_base_audit import _compose, diagnostics
+from src.archive.v43_independent_base_audit import _compose, diagnostics
 
 
 def test_compose_changes_only_selected_rows():

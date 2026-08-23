@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.v94_multi_origin_champion_contract import (
+from src.archive.v94_multi_origin_champion_contract import (
     domain3,
     sha256_array,
     sha256_strings,

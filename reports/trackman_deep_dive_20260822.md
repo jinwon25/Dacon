@@ -198,12 +198,12 @@ v65~v73은 test CSV를 읽지 않은 OOF 연구이며, 모든 TrackMan profile�
 
 ## 재현 위치
 
-- 데이터 전수조사: `src/v65_trackman_data_census.py`
-- 127개 profile 조사: `src/v67_trackman_command_proxy_census.py`
-- IVB calendar gate: `src/v70_trackman_ivb_calendar_gate.py`
-- 고정 recipe 과거축 반증: `src/v74_trackman_ivb_older_axes.py`
-- pitch label 감사/재학습: `src/v72_trackman_pitch_type_label_audit.py`,
-  `src/v73_trackman_label_pitch_type_student.py`
+- 데이터 전수조사: `src/archive/v65_trackman_data_census.py`
+- 127개 profile 조사: `src/archive/v67_trackman_command_proxy_census.py`
+- IVB calendar gate: `src/archive/v70_trackman_ivb_calendar_gate.py`
+- 고정 recipe 과거축 반증: `src/archive/v74_trackman_ivb_older_axes.py`
+- pitch label 감사/재학습: `src/archive/v72_trackman_pitch_type_label_audit.py`,
+  `src/archive/v73_trackman_label_pitch_type_student.py`
 - 원시 요약: `reports/trackman_census_20260822_01/`,
   `reports/trackman_command_proxy_census_20260822_01/`,
   `reports/trackman_pitch_type_label_audit_20260822_01/`

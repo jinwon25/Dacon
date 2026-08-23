@@ -1,6 +1,6 @@
 """Residual overlay feature frame and Brier skill helper.
 
-Moved verbatim from ``src/v20_residual_overlay_screen.py`` during the core extraction.
+Moved verbatim from ``src/archive/v20_residual_overlay_screen.py`` during the core extraction.
 """
 
 from __future__ import annotations

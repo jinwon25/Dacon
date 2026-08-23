@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v60_frozen_spread_scaling import apply_route, spread_scale
+from src.archive.v60_frozen_spread_scaling import apply_route, spread_scale
 
 
 def test_linear_spread_scaling_is_row_local() -> None:

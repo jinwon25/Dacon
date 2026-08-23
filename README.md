@@ -128,10 +128,10 @@ python -m src.audit_standalone_release `
 
 ZIP 실행과 소스 재구축은 다른 작업이다. 실행에는 ZIP 하나면 충분하지만, 동일 ZIP을
 처음부터 다시 만들려면 해시가 고정된 부모 artifact와 공식 train/OOF가 필요하다.
-재구축 진입점은 `src.v148_build_submission_package`이며 인수 계약은 아래처럼 확인한다.
+재구축 진입점은 `src.champion.v148_build_submission_package`이며 인수 계약은 아래처럼 확인한다.
 
 ```powershell
-python -m src.v148_build_submission_package --help
+python -m src.champion.v148_build_submission_package --help
 ```
 
 대용량 ZIP과 공식 원본 데이터는 Git에 올리지 않는다. 따라서 GitHub clone만으로 ZIP이
@@ -238,8 +238,8 @@ python -m pytest -q `
 v154 연구 재현의 진입점:
 
 ```powershell
-python -m src.v154_maturity_delta_distillation_audit --help
-python -m src.v154_build_submission_package --help
+python -m src.archive.v154_maturity_delta_distillation_audit --help
+python -m src.archive.v154_build_submission_package --help
 ```
 
 최종 제출 이력과 해시는 [`reports/submissions.csv`](reports/submissions.csv)에 기록한다.

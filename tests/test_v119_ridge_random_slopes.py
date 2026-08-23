@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.v119_ridge_random_slopes import design_matrix, fit_state
+from src.archive.v119_ridge_random_slopes import design_matrix, fit_state
 
 
 def _rows(pitchers):

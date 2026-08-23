@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from src.v72_trackman_pitch_type_label_audit import label_agreement_rows
+from src.archive.v72_trackman_pitch_type_label_audit import label_agreement_rows
 
 
 def test_label_agreement_separates_other_and_additional_labels() -> None:

@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.v37_latest_season_catboost_residual import (
+from src.archive.v37_latest_season_catboost_residual import (
     _cat_frame,
     apply_correction,
     categorical_columns,

@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 from src.core.axes import _derived, apply_v22_recipe
-from src.v23_structural_residual_screen import _feature_columns
+from src.archive.v23_structural_residual_screen import _feature_columns
 
 
 def test_apply_v22_recipe_matches_frozen_additive_formula():

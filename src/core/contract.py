@@ -1,6 +1,6 @@
 """Frozen OOF contract loading and route diagnostics.
 
-Moved verbatim from ``src/v97_conditional_direct_forward.py`` during the core extraction.
+Moved verbatim from ``src/archive/v97_conditional_direct_forward.py`` during the core extraction.
 """
 
 from __future__ import annotations

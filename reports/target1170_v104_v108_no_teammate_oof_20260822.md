@@ -77,9 +77,9 @@ SHA256 C033FC38A5F9681E45B0BD2494359B8BD1387EE44E5F318C5B7A5547CFE6C4F7
 신규 실험 재현 예시:
 
 ```powershell
-python -m src.v106_paired_player_identity --help
-python -m src.v107_batter_asof_ablation --help
-python -m src.v108_pitcher_balanced_weighting --help
+python -m src.archive.v106_paired_player_identity --help
+python -m src.archive.v107_batter_asof_ablation --help
+python -m src.archive.v108_pitcher_balanced_weighting --help
 python -m pytest tests/test_v104_source_stability_mask.py `
   tests/test_v105_cross_architecture_ablation.py `
   tests/test_v106_paired_player_identity.py `

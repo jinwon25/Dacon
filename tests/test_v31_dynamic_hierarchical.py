@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.v31_dynamic_hierarchical_residual import (
+from src.archive.v31_dynamic_hierarchical_residual import (
     _apply,
     _prepare,
     hierarchical_effect,

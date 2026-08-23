@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from src.v54_horizon_factorization import combine_horizons
+from src.archive.v54_horizon_factorization import combine_horizons
 
 
 def test_mean_horizon_is_equal_weight_average() -> None:

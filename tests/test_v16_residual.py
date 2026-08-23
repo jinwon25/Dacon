@@ -5,7 +5,7 @@ import json
 import numpy as np
 import pandas as pd
 
-import src.v10_overlay_script as inference
+import src.archive.v10_overlay_script as inference
 
 
 def test_v16_residual_is_row_local_and_core_only(tmp_path, monkeypatch):

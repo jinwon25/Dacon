@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from src.v75_evaluation_headroom_audit import (
+from src.archive.v75_evaluation_headroom_audit import (
     apply_brier_calibrator,
     fit_brier_calibrator,
 )

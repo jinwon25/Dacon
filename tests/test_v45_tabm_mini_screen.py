@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import torch
 
-from src.v45_tabm_mini_screen import TabMMini, apply_direct, recent_history
+from src.archive.v45_tabm_mini_screen import TabMMini, apply_direct, recent_history
 
 
 def test_tabm_mini_outputs_one_probability_per_member():

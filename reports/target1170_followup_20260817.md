@@ -70,9 +70,9 @@ v27 신호를 단일 이진 분기로만 조절한 336개 후보 중 3개가 사
 ## 재현 파일
 
 - `src/package_v26_anchor_weight_probe.py`
-- `src/v26_exact_diversity_screen.py`
-- `src/v28_domain_specialist_screen.py`
-- `src/v29_anchor_route_screen.py`
+- `src/champion/v26_exact_diversity_screen.py`
+- `src/archive/v28_domain_specialist_screen.py`
+- `src/archive/v29_anchor_route_screen.py`
 - `src/package_v28_anchor_hand_route.py`
 - `src/validate_v28_anchor_hand_route.py`
 - `artifacts/v26_exact_diversity_20260817_01/`

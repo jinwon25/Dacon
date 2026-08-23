@@ -1,6 +1,6 @@
 """Frozen OOF signal banks and stage-one gain grids.
 
-Moved verbatim from ``src/v35_three_stage_multibank.py`` during the core extraction.
+Moved verbatim from ``src/archive/v35_three_stage_multibank.py`` during the core extraction.
 """
 
 from __future__ import annotations

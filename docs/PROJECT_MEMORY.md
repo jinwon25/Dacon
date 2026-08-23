@@ -144,7 +144,7 @@ standalone 후보 생성 최소 조건:
 ## 9. v77 팀 OOF·v78 환경 안정 잔차 불변 결론 — 2026-08-22
 
 - 팀 OOF 전달·비교는 `configs/oof_bundle_contract_v1.json`과
-  `src/v77_team_oof_constrained_blend.py`만 사용한다. 동일 `(axis,row_id)` 정렬, SHA-256,
+  `src/archive/v77_team_oof_constrained_blend.py`만 사용한다. 동일 `(axis,row_id)` 정렬, SHA-256,
   strict-forward 학습 경계, 행 독립성과 원본 데이터 parity가 없는 prediction은 혼합하지 않는다.
 - 현재 팀 브랜치와 로컬 artifact에는 champion과 독립적인 exact final OOF가 없다. Public 점수나
   제출 파일만으로 blend weight를 정하지 않는다.

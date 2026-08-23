@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from src.v52_failure_aux_logit import (
+from src.archive.v52_failure_aux_logit import (
     failure_targets,
     fit_offset,
     offset_direction,

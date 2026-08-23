@@ -7,7 +7,7 @@ import pytest
 
 from src.temporal_stable_conditional import _add_domain_and_pressure
 from src.train_v14_refinement import _trend_features
-from src.v10_overlay_script import _v14_trend_matrix
+from src.archive.v10_overlay_script import _v14_trend_matrix
 
 
 def test_v14_trend_training_and_inference_features_match(project_dir=None):

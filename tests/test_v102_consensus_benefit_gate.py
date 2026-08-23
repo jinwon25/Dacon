@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.v102_consensus_benefit_gate import apply_gate, GateModel
+from src.archive.v102_consensus_benefit_gate import apply_gate, GateModel
 
 
 class _IdentityScaler:

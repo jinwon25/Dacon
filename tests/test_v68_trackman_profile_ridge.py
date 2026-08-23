@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v68_trackman_profile_ridge import (
+from src.archive.v68_trackman_profile_ridge import (
     apply_pitcher_correction,
     fit_source_only_ridge,
 )

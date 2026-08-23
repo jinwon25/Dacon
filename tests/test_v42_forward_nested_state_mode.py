@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.v42_forward_nested_state_mode import search_domain, top_configs
+from src.archive.v42_forward_nested_state_mode import search_domain, top_configs
 
 
 def test_top_configs_ignores_later_audit_labels():
@@ -18,17 +18,17 @@ def test_top_configs_ignores_later_audit_labels():
 
 def test_search_domain_uses_only_declared_selection_years(monkeypatch):
     monkeypatch.setattr(
-        "src.v42_forward_nested_state_mode.STATE_MULTIPLIERS", np.array([1.0])
+        "src.archive.v42_forward_nested_state_mode.STATE_MULTIPLIERS", np.array([1.0])
     )
     monkeypatch.setattr(
-        "src.v42_forward_nested_state_mode.MODE_MULTIPLIERS", np.array([0.0])
+        "src.archive.v42_forward_nested_state_mode.MODE_MULTIPLIERS", np.array([0.0])
     )
 
     def fake_state(fold, domain, config):
         return np.asarray(fold["directions"][config], dtype=float)
 
     monkeypatch.setattr(
-        "src.v42_forward_nested_state_mode._state_correction", fake_state
+        "src.archive.v42_forward_nested_state_mode._state_correction", fake_state
     )
     state_folds = {
         2022: {

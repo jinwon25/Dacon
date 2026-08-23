@@ -1,6 +1,6 @@
 """Exact-axis gain metrics and cluster/reality-check robustness.
 
-Moved verbatim from ``src/v103_fixed_union_robust.py`` during the core extraction.
+Moved verbatim from ``src/archive/v103_fixed_union_robust.py`` during the core extraction.
 """
 
 from __future__ import annotations

@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v88_coherence_weighted_r_fm import coherence_correction, select_policy
+from src.archive.v88_coherence_weighted_r_fm import coherence_correction, select_policy
 
 
 def test_coherence_correction_requires_sign_and_magnitude_agreement() -> None:

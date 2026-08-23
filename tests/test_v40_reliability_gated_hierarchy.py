@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.v40_reliability_gated_hierarchy import (
+from src.archive.v40_reliability_gated_hierarchy import (
     formula_family,
     gated_name,
     reliability_raw,

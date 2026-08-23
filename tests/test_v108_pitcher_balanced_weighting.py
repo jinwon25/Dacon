@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.v108_pitcher_balanced_weighting import pitcher_balance_weights
+from src.archive.v108_pitcher_balanced_weighting import pitcher_balance_weights
 
 
 def test_pitcher_balance_is_inverse_sqrt_and_season_normalized() -> None:

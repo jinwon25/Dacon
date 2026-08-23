@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.v81_stable_shallow_gbdt import (
+from src.archive.v81_stable_shallow_gbdt import (
     TreeSpec,
     predict_correction,
     rolling_month_splits,

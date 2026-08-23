@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.v57_public_strict_blend import (
+from src.archive.v57_public_strict_blend import (
     _axis_diversity,
     _mode_from_signal,
     blend_candidate,

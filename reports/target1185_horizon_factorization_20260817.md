@@ -59,7 +59,7 @@ full-2024의 R_ANCHOR active gain은 `+4.8887`, late-2024는 `+12.1439`였다. �
 ## 재현
 
 ```powershell
-python -m src.v54_horizon_factorization
+python -m src.archive.v54_horizon_factorization
 python -m pytest tests/test_v54_horizon_factorization.py -q
 ```
 

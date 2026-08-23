@@ -1,6 +1,6 @@
 """Frozen OOF candidate bank loading and rebasing.
 
-Moved verbatim from ``src/v80_oof_covariance_stack.py`` during the core extraction.
+Moved verbatim from ``src/archive/v80_oof_covariance_stack.py`` during the core extraction.
 """
 
 from __future__ import annotations

@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v22_failure_mode_profiles import _group_probability
+from src.champion.v22_failure_mode_profiles import _group_probability
 
 
 def test_group_probability_uses_hierarchical_prior_for_unknown_group() -> None:

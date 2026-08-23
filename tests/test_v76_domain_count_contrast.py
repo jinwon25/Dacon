@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.v76_domain_count_contrast import (
+from src.archive.v76_domain_count_contrast import (
     apply_domain_count_contrast,
     fit_domain_count_contrast,
 )

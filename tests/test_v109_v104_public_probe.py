@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
 
-from src.v97_conditional_direct_forward import _bank
-from src.v109_v104_feature_component import build_bank
-from src.v109_v104_probe_wrapper import apply_v104, stability_mask
+from src.archive.v97_conditional_direct_forward import _bank
+from src.archive.v109_v104_feature_component import build_bank
+from src.archive.v109_v104_probe_wrapper import apply_v104, stability_mask
 
 
 def test_standalone_bank_matches_research_bank() -> None:

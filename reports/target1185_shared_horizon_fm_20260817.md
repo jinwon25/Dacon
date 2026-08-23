@@ -55,7 +55,7 @@ epoch·rank를 조정하면 반복 사용한 2024에 과적합된다.
 ## 재현
 
 ```powershell
-python -m src.v56_shared_horizon_fm
+python -m src.champion.v56_shared_horizon_fm
 python -m pytest tests/test_v56_shared_horizon_fm.py -q
 ```
 
