@@ -58,7 +58,7 @@ model/
 | 동적 로딩(`spec_from_file_location`) | 4곳 | **0** |
 | `requirements.txt` | 3벌 | **1벌** |
 | 모듈·디렉터리의 계보/상태 이름 | 12개 | **0** |
-| 패키지 크기 | 46,352,820 B | 46,687,175 B |
+| 패키지 크기 | 46,352,820 B | 46,687,840 B |
 
 4,558줄을 한 파일로 합치지는 않았다 — 가독성이 목적이기 때문이다.
 
@@ -230,7 +230,7 @@ cold-start는 train에서 뽑을 수 없다(모든 선수가 이미 동결 테�
 |---|---|
 | 패키지 | `artifacts/v148_flat_20260823_01/submit_v148_flat.zip` |
 | SHA-256 | `83CA670CF68F329B3CC1BAC2B452E5FB4D2F3D0BE39BD49BA71526E9FDC1C8E8` |
-| 크기 | 46,687,175 bytes (90 files) |
+| 크기 | 46,687,840 bytes (90 files) |
 | 빌드 | `src/champion/v148_flat_build_package.py` |
 | 런타임 | `src/champion/v148_flat_runtime_script.py` |
 | 동등성 감사 | `src/champion/v148_flat_parity_audit.py` |
