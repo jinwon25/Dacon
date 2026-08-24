@@ -21,6 +21,11 @@ artifacts/oof_champion_1161/*
 !artifacts/oof_champion_1161/v84_full_2022.npz
 !artifacts/oof_champion_1161/v84_late_2023.npz
 !artifacts/oof_champion_1161/v84_full_2024.npz
+!artifacts/oof_champion_1170/
+artifacts/oof_champion_1170/*
+!artifacts/oof_champion_1170/README.md
+!artifacts/oof_champion_1170/manifest.json
+!artifacts/oof_champion_1170/v148_full_2024.npz
 model/
 output/
 submit*.zip
@@ -40,6 +45,7 @@ submissions/**/*.zip
 !artifacts/oof_champion_1161/v84_full_2022.npz
 !artifacts/oof_champion_1161/v84_late_2023.npz
 !artifacts/oof_champion_1161/v84_full_2024.npz
+!artifacts/oof_champion_1170/v148_full_2024.npz
 
 # Secrets. Track only the key-name template.
 .env
