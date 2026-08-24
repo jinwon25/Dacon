@@ -1,0 +1,37 @@
+{
+  "protocol": "V167_H1_AFFINE_SUBMISSION_PACKAGE_V1",
+  "package_name": "submit_v167.zip",
+  "parent_package_sha256": "7A27BE5878A79934544C741F283C139D40FB20484D52DB494928BCBE27E1E337",
+  "parent_package_bytes": 46352820,
+  "source_h1_package_sha256": "D338E9EEF715C3CC84C0C5CD9C830925A93D85BF9518BFB0DCD0D0B052F995D6",
+  "source_h1_model_member": "model/rf.pkl",
+  "expected_file_count": 89,
+  "deterministic_zip_timestamp": [2026, 8, 25, 0, 0, 0],
+  "h1_model_member": "model/h1/model/rf.pkl",
+  "parent_affine": {
+    "alpha": 1.0,
+    "center": 0.5
+  },
+  "candidate_affine": {
+    "alpha": 1.09,
+    "center": 0.5854452601930041
+  },
+  "h1_weight": 0.15,
+  "runtime_limit_seconds": 120.0,
+  "scale_proxy_rows": 245789,
+  "evidence": {
+    "protocol": "V160_ORIGINAL_H1_AFFINE_AUDIT_V1",
+    "locked_2024_gain": 2.1532287779680246,
+    "selection_note": "User-authorized exploratory submission: highest locked exact-v148 gain among the new low-complexity candidates, despite failing the predeclared stability promotion gate."
+  },
+  "restrictions": {
+    "external_2025_outcomes_used": false,
+    "test_aggregate_used_for_prediction": false,
+    "test_distribution_used_for_prediction": false,
+    "leaderboard_score_used_for_parameter_search": false,
+    "affine_search_performed": false,
+    "row_local_inference": true,
+    "official_train_only_for_fitting": true,
+    "local_test_rows_used_only_for_runtime_validation": true
+  }
+}

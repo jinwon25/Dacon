@@ -1,29 +1,29 @@
-# v148 단일 실행 챔피언
+# v167 단일 실행 챔피언
 
-마지막 갱신: `2026-08-23 KST`
+마지막 갱신: `2026-08-25 KST`
 
 ## 확정 릴리스
 
 | 항목 | 값 |
 |---|---:|
-| Public | **1170.3014697177** |
-| 순위 / 제출 ID | **9위** / `1544757` |
-| 파일 | `artifacts/v148_v142_v138_blend_package_20260823_01/submit_v148.zip` |
-| SHA-256 | `7A27BE5878A79934544C741F283C139D40FB20484D52DB494928BCBE27E1E337` |
-| 크기 / 파일 수 | `46,352,820 bytes` / `89` |
+| Public | **1172.0772380321** |
+| 순위 / 제출 ID | **11위** (확인 시점) / `1547707` |
+| 파일 | `artifacts/v167_h1_affine_submission_package_20260825_01/submit_v167.zip` |
+| SHA-256 | `30DD28F56723EC0F560C9101FC5A94EF78568F874DCA88BF808879831E61C8C1` |
+| 크기 / 파일 수 | `46,354,018 bytes` / `89` |
 | 루트 | `script.py`, `requirements.txt`, `model/` |
 
-v154는 API 접수됐지만 best-only 리더보드가 v148을 유지했고 개별 점수를 확인할 수 없어
-승격하지 않았다. 현재 실행·전달·검증 기준은 v148 하나다.
+v167은 v148 대비 Public `+1.7757683144`를 기록했다. 현재 실행·전달·검증 기준은
+v167 하나다.
 
 ## 독립 실행 계약
 
-v148 ZIP은 과거 제출 ZIP, 저장소 `src/`, 학습 코드나 외부 모델 경로를 요구하지 않는다.
+v167 ZIP은 과거 제출 ZIP, 저장소 `src/`, 학습 코드나 외부 모델 경로를 요구하지 않는다.
 모든 추론 코드는 `script.py`, 모든 모델과 고정 통계는 `model/`에 포함돼 있다. 실행 시
 필요한 외부 입력은 공식 `test.csv`와 `sample_submission.csv`뿐이다.
 
 ```text
-run_v148/
+run_v167/
 ├─ script.py
 ├─ requirements.txt
 ├─ model/
@@ -38,19 +38,19 @@ run_v148/
 
 ```powershell
 Get-FileHash -Algorithm SHA256 `
-  artifacts/v148_v142_v138_blend_package_20260823_01/submit_v148.zip
+  artifacts/v167_h1_affine_submission_package_20260825_01/submit_v167.zip
 ```
 
 결과가
-`7A27BE5878A79934544C741F283C139D40FB20484D52DB494928BCBE27E1E337`와 정확히 같아야 한다.
+`30DD28F56723EC0F560C9101FC5A94EF78568F874DCA88BF808879831E61C8C1`와 정확히 같아야 한다.
 
 ### 2. 깨끗한 폴더에서 실행
 
 ```powershell
-$release = Join-Path $PWD "run_v148"
+$release = Join-Path $PWD "run_v167"
 New-Item -ItemType Directory -Force $release | Out-Null
 Expand-Archive `
-  artifacts/v148_v142_v138_blend_package_20260823_01/submit_v148.zip `
+  artifacts/v167_h1_affine_submission_package_20260825_01/submit_v167.zip `
   $release -Force
 New-Item -ItemType Directory -Force (Join-Path $release "data") | Out-Null
 Copy-Item data/test.csv (Join-Path $release "data/test.csv")
@@ -59,14 +59,14 @@ python -m pip install -r (Join-Path $release "requirements.txt")
 python (Join-Path $release "script.py")
 ```
 
-결과는 `run_v148/output/submission.csv`에 생성된다. 원본 데이터와 결과 파일은 Git에
+결과는 `run_v167/output/submission.csv`에 생성된다. 원본 데이터와 결과 파일은 Git에
 추가하지 않는다.
 
 ### 3. 저장소 감사기로 재검증
 
 ```powershell
 python -m src.audit_standalone_release `
-  --package artifacts/v148_v142_v138_blend_package_20260823_01/submit_v148.zip `
+  --package artifacts/v167_h1_affine_submission_package_20260825_01/submit_v167.zip `
   --test-csv data/test.csv `
   --scale-rows 245789 `
   --timeout-seconds 300
@@ -83,35 +83,33 @@ python -m src.audit_standalone_release `
 
 ## 재감사 결과
 
-2026-08-23 공식 test 사본으로 다시 검사한 결과다.
+2026-08-25 공식 test 사본으로 다시 검사한 결과다.
 
 | 검사 | 결과 |
 |---|---:|
 | ZIP SHA / bytes / 파일 수 | 일치 |
 | CRC | 통과 |
 | 정적 금지 연산 | `0건` |
-| 단일행 vs 전체 최대 오차 | `0.0` |
-| shuffle vs 전체 최대 오차 | `0.0` |
-| partition vs 전체 최대 오차 | `0.0` |
-| 깨끗한 폴더 직접 실행 | 로컬 제공 5행 `38.574초`, ID 순서·유한·범위 통과 |
-| 5행 smoke | `16.329초`, 유한·범위 통과 |
-| 245,789행 현재 부하 실행 | `252.472초`, 유한·범위 통과 |
-| 배포 manifest의 정상 실행 | `88.890초` |
+| 수식 parity 최대 오차 | `1.11e-16` |
+| 비활성 경로 보존 최대 오차 | `1.11e-16` |
+| shuffle vs 전체 최대 오차 | `1.11e-16` |
+| partition vs 전체 최대 오차 | `1.11e-16` |
+| 30행 mixed-route smoke | `5.544초`, 유한·범위 통과 |
+| 245,789행 현재 부하 실행 | `88.498초`, 유한·범위 통과 |
 | DACON 공식 제한 | `600초` |
 
-현재 로컬 부하는 배포 감사 때보다 느렸지만 공식 제한보다 `347.528초` 여유가 있었다.
 저장소의 120초는 후보 비교용 내부 soft guard이며 공식 제한을 대체하지 않는다.
 
 ## 실행과 재구축의 차이
 
-- **실행**: 확정 v148 ZIP과 공식 test/sample 두 파일만 있으면 된다.
+- **실행**: 확정 v167 ZIP과 공식 test/sample 두 파일만 있으면 된다.
 - **재검증**: 위 항목에 저장소의 `src.audit_standalone_release`만 추가로 필요하다.
 - **재구축**: 공식 train/OOF와 해시가 고정된 v104·H1 부모 artifact가 추가로 필요하다.
 
 재구축 인수 계약은 다음 명령으로 확인한다.
 
 ```powershell
-python -m src.champion.v148_build_submission_package --help
+python -m src.archive.v167_build_h1_affine_submission_package --help
 ```
 
 재구축 결과는 기존 챔피언을 덮어쓰지 않고 새 출력 디렉터리에 만든 뒤, SHA·수식 parity·
@@ -123,9 +121,9 @@ python -m src.champion.v148_build_submission_package --help
 코드·config·manifest 기반 연구 재현용이며 확정 ZIP의 배포 채널이 아니다. 팀 전달 시에는
 다음 항목을 함께 제공한다.
 
-1. `submit_v148.zip`
+1. `submit_v167.zip`
 2. 위 SHA-256
-3. 이 문서와 [`../reports/target1170_v142_v148_public_result_20260823.md`](../reports/target1170_v142_v148_public_result_20260823.md)
+3. 이 문서와 [`../reports/target1180_v167_public_result_20260825.md`](../reports/target1180_v167_public_result_20260825.md)
 
-과거 `standalone_champion_1161.zip`, `standalone_champion_1162.zip`과 v142 이하는 계보
+과거 `submit_v148.zip`, `standalone_champion_1161.zip`, `standalone_champion_1162.zip`과 v142 이하는 계보
 감사용일 뿐 현재 실행 대상이 아니다.

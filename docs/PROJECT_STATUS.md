@@ -1,26 +1,27 @@
 # 프로젝트 현황
 
-마지막 갱신: `2026-08-23 KST`
+마지막 갱신: `2026-08-25 KST`
 
-최신 최종 연구: [`../reports/target1173_v149_v154_final_submission_20260823.md`](../reports/target1173_v149_v154_final_submission_20260823.md) (실측 결과는 문서 끝 addendum 참고). v154 마지막 제출 후에도 best-only 리더보드 기준 v148이 **1170.3014697177**, 공개 **9위** 챔피언이다. v154 개별 점수는 이후 제출 이력 ID `61440`으로 확인됐고 **1168.4038526829**로 v148 대비 `-1.8976170348`, v142 대비 `-1.2239405993`이며 **가설이 기각**됐다 (아래 참고).
+최신 최종 연구: [`../reports/target1180_v167_public_result_20260825.md`](../reports/target1180_v167_public_result_20260825.md). v167은 v148의 H1 모델 번들만 원 공개 구현의 고정 affine으로 복원했고, 공식 Public **1172.0772380321**로 기존 챔피언보다 **+1.7757683144** 개선됐다.
 
 ## 현재 champion
 
 | 항목 | 값 |
 |---|---:|
-| champion | `submit_v148.zip` |
-| Public | **1170.3014697177** |
-| 1170 초과분 | **0.3014697177** |
-| 전달 경로 | `artifacts/v148_v142_v138_blend_package_20260823_01/submit_v148.zip` |
-| SHA-256 | `7A27BE5878A79934544C741F283C139D40FB20484D52DB494928BCBE27E1E337` |
+| champion | `submit_v167.zip` |
+| Public | **1172.0772380321** |
+| 1170 초과분 | **2.0772380321** |
+| 1180까지 | **7.9227619679** |
+| 제출 ID / 확인 순위 | `1547707` / `11위` |
+| 전달 경로 | `artifacts/v167_h1_affine_submission_package_20260825_01/submit_v167.zip` |
+| SHA-256 | `30DD28F56723EC0F560C9101FC5A94EF78568F874DCA88BF808879831E61C8C1` |
 | 실행 의존성 | ZIP 내부 `script.py`, `requirements.txt`, `model/`만 사용 |
-| 행 독립성 | shuffle/partition 통과, 최대 `0.0` |
+| 행 독립성 | shuffle/partition 통과, 최대 `1.11e-16` |
 | 현재 브랜치 기준 | `team/main`의 이 릴리스 커밋 |
 
-이 파일은 현재 운영 상태의 단일 원본이다. 직전 v142 이하 ZIP은 역사적 부모이며 현재
-전달 파일이 아니다. v148 제출 API는 성공했고 공개 리더보드에서 9위, 누적 제출 34회를
-확인했다. 제출 이력 ID는 `1544757`이다. v154 API 제출 후 누적 제출은 35회로 증가했지만
-best-only 리더보드는 갱신되지 않아 v154를 챔피언으로 승격하지 않았다.
+이 파일은 현재 운영 상태의 단일 원본이다. v167 제출 API는 2026-08-25 01:39:32 KST에
+성공했고, 공식 리더보드에서 제출 ID `1547707`, Public `1172.0772380321`, 확인 시점
+11위를 재확인했다. ZIP 89개 구성 중 `model/h1/model/rf.pkl` 하나만 v148과 다르다.
 
 **정정 (사후 확정):** 애초 "리더보드 미갱신이라 개별 점수 미확인"으로 기록했던 것은
 관측 시점의 한계였을 뿐이다. 이후 제출 이력 ID `61440`으로 v154의 실제 Public 점수가
@@ -57,6 +58,7 @@ v22 domain calibration + row-local ASOF
                       → v124 Public-quadratic stack
                         → v142 independent H1 + sign-stable C3
                           → submit_v148.zip (Public 1170.3014697177)
+                            → submit_v167.zip (Public 1172.0772380321)
 ```
 
 계보는 연구 설명용이다. 실행할 때 과거 ZIP을 연쇄적으로 요구하지 않는다. 새 후보도 처음부터
@@ -64,8 +66,8 @@ standalone으로 만들며, 평가 v3를 통과하기 전에는 champion 파일�
 
 ## 바로 읽을 문서
 
-1. [`../reports/target1170_v142_v148_public_result_20260823.md`](../reports/target1170_v142_v148_public_result_20260823.md)
-2. [`../reports/target1170_v83_post_public_plan_20260822.md`](../reports/target1170_v83_post_public_plan_20260822.md)
+1. [`../reports/target1180_v167_public_result_20260825.md`](../reports/target1180_v167_public_result_20260825.md)
+2. [`../reports/target1170_v142_v148_public_result_20260823.md`](../reports/target1170_v142_v148_public_result_20260823.md)
 3. [`../reports/evaluation_reaudit_20260822.md`](../reports/evaluation_reaudit_20260822.md)
 4. [`PROJECT_MEMORY.md`](PROJECT_MEMORY.md)
 5. [`STANDALONE_CHAMPION.md`](STANDALONE_CHAMPION.md)

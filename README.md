@@ -6,26 +6,25 @@ LG Aimers 9기 `투구 제구 성공 확률 예측 AI 온라인 해커톤`의 �
 
 ## 최종 현황
 
-마지막 갱신: `2026-08-23 15:22 KST`
+마지막 갱신: `2026-08-25 01:44 KST`
 
 | 항목 | 값 |
 |---|---:|
-| 공식 Public 챔피언 | **v148 / 1170.3014697177** |
-| 공개 순위 | **9위** |
-| 제출 ID | `1544757` |
-| 목표 1170 초과분 | **+0.3014697177** |
-| 직전 v142 대비 | **+0.6736764355** |
-| v104 대비 | **+7.6711856888** |
-| 챔피언 파일 | `artifacts/v148_v142_v138_blend_package_20260823_01/submit_v148.zip` |
-| SHA-256 | `7A27BE5878A79934544C741F283C139D40FB20484D52DB494928BCBE27E1E337` |
-| ZIP 크기 / 파일 수 | `46,352,820 bytes` / `89` |
-| 공식 제출 후 최종 테스트 | `368 passed, 4 skipped` |
+| 공식 Public 챔피언 | **v167 / 1172.0772380321** |
+| 공개 순위 | **11위** (확인 시점) |
+| 제출 ID | `1547707` |
+| 목표 1170 초과분 | **+2.0772380321** |
+| 직전 v148 대비 | **+1.7757683144** |
+| 1180까지 | **7.9227619679** |
+| 챔피언 파일 | `artifacts/v167_h1_affine_submission_package_20260825_01/submit_v167.zip` |
+| SHA-256 | `30DD28F56723EC0F560C9101FC5A94EF78568F874DCA88BF808879831E61C8C1` |
+| ZIP 크기 / 파일 수 | `46,354,018 bytes` / `89` |
+| 공식 제출 후 최종 테스트 | `394 passed, 4 skipped` |
 
-v154는 2026-08-23 15:09:43 KST에 마지막 제출권으로 API 접수됐다. 누적 제출 수는
-34회에서 35회로 늘었지만, 이후 best-only 리더보드는 v148의 점수·ID·9위를 유지했다.
-로그인 세션 없이 v154의 개별 점수나 실패 사유를 조회할 수 없으므로 **v154가 실패했다고
-단정하지 않으며**, 공식 전달 기준도 v148에서 변경하지 않는다. 상세 기록은
-[`reports/target1173_v149_v154_final_submission_20260823.md`](reports/target1173_v149_v154_final_submission_20260823.md)에 있다.
+v167은 v148의 89개 ZIP 구성 중 H1 모델 번들 하나만 원본 고정 affine 버전으로 교체한다.
+2026-08-25 01:39:32 KST에 DACON API가 접수했고, 공식 리더보드에서 제출 ID `1547707`과
+Public `1172.0772380321`을 확인했다. 상세 근거와 재현 절차는
+[`reports/target1180_v167_public_result_20260825.md`](reports/target1180_v167_public_result_20260825.md)에 있다.
 
 ## 가장 먼저 할 일
 
@@ -52,12 +51,12 @@ data/sample_submission.csv
 [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md), 장기 인계 메모는
 [`docs/PROJECT_MEMORY.md`](docs/PROJECT_MEMORY.md)가 단일 원본이다.
 
-## v148은 단일 버전으로 실행되는가
+## v167은 단일 버전으로 실행되는가
 
-그렇다. 확정 `submit_v148.zip`은 루트에 아래 세 항목만 가진 독립 릴리스다.
+그렇다. 확정 `submit_v167.zip`은 루트에 아래 세 항목만 가진 독립 릴리스다.
 
 ```text
-submit_v148.zip
+submit_v167.zip
 ├─ script.py
 ├─ requirements.txt
 └─ model/                 # v124 부모, H1, C3와 모든 하위 모델 포함
@@ -72,10 +71,10 @@ submit_v148.zip
 아래 예시는 챔피언 ZIP 하나만 깨끗한 폴더에 풀어 실행한다.
 
 ```powershell
-$release = Join-Path $PWD "run_v148"
+$release = Join-Path $PWD "run_v167"
 New-Item -ItemType Directory -Force $release | Out-Null
 Expand-Archive `
-  artifacts/v148_v142_v138_blend_package_20260823_01/submit_v148.zip `
+  artifacts/v167_h1_affine_submission_package_20260825_01/submit_v167.zip `
   $release -Force
 New-Item -ItemType Directory -Force (Join-Path $release "data") | Out-Null
 Copy-Item data/test.csv (Join-Path $release "data/test.csv")
@@ -84,7 +83,7 @@ python -m pip install -r (Join-Path $release "requirements.txt")
 python (Join-Path $release "script.py")
 ```
 
-성공하면 `run_v148/output/submission.csv`가 생성된다. 확정 패키지 의존성은 ZIP 내부
+성공하면 `run_v167/output/submission.csv`가 생성된다. 확정 패키지 의존성은 ZIP 내부
 `requirements.txt`에 고정돼 있다.
 
 ```text
@@ -103,7 +102,7 @@ scikit-learn==1.6.1
 
 ```powershell
 python -m src.audit_standalone_release `
-  --package artifacts/v148_v142_v138_blend_package_20260823_01/submit_v148.zip `
+  --package artifacts/v167_h1_affine_submission_package_20260825_01/submit_v167.zip `
   --test-csv data/test.csv `
   --scale-rows 245789 `
   --timeout-seconds 300
@@ -117,21 +116,19 @@ python -m src.audit_standalone_release `
 | 정적 금지 연산 | `0건` |
 | 수식 parity 최대 오차 | `1.11e-16` |
 | 비활성 영역 보존 최대 오차 | `1.11e-16` |
-| 2026-08-23 재감사 단일행/shuffle/partition 오차 | 모두 `0.0` |
-| 배포 시점 245,789행 추론 | `88.890초` |
-| 2026-08-23 현재 부하 재감사 | `252.472초` |
+| 2026-08-25 formula/shuffle/partition 최대 오차 | `1.11e-16` |
+| 배포 시점 245,789행 추론 | `88.498초` |
 | 확률 범위 | `0.3699093 ~ 0.5122415` |
 | 공식 제한 | `600초` |
 
-현재 부하 재감사는 배포 시점보다 느렸지만 공식 제한보다 `347.528초` 여유가 있었다.
 내부 120초는 후보 간 비교용 soft guard이며 대회 공식 제한은 600초다.
 
 ZIP 실행과 소스 재구축은 다른 작업이다. 실행에는 ZIP 하나면 충분하지만, 동일 ZIP을
 처음부터 다시 만들려면 해시가 고정된 부모 artifact와 공식 train/OOF가 필요하다.
-재구축 진입점은 `src.champion.v148_build_submission_package`이며 인수 계약은 아래처럼 확인한다.
+재구축 진입점은 `src.archive.v167_build_h1_affine_submission_package`이며 인수 계약은 아래처럼 확인한다.
 
 ```powershell
-python -m src.champion.v148_build_submission_package --help
+python -m src.archive.v167_build_h1_affine_submission_package --help
 ```
 
 대용량 ZIP과 공식 원본 데이터는 Git에 올리지 않는다. 따라서 GitHub clone만으로 ZIP이
@@ -165,30 +162,34 @@ v22  도메인 calibration + row-local 선수 ASOF prior
             → v124 Public-quadratic stack (1164.2949)
               → v142 H1 + sign-stable C3 (1169.6278)
                 → v148 conservative bridge (1170.3015)
+                  → v167 fixed original H1 affine (1172.0772)
 ```
 
-계보는 연구 설명용이며 실행 의존성 체인이 아니다. v148 ZIP 안에는 최종 추론에 필요한
+계보는 연구 설명용이며 실행 의존성 체인이 아니다. v167 ZIP 안에는 최종 추론에 필요한
 구성요소가 모두 들어 있다.
 
-### v148의 핵심
+### v167의 핵심
 
 - `R_CORE`: 1군 정규시즌 중 익명 anchor team 13이 관여하지 않는 안정 영역이다.
 - `R_ANCHOR`: team 13이 관여한 정규시즌 영역으로, 불안정한 변화점을 보호한다.
 - `F`: 퓨처스리그 영역이며 별도 source-balanced FM 계보를 사용한다.
 - H1은 공식 train으로 재학습한 독립 확률 모델이다.
 - C3는 여러 과거 창에서 투수 맥락 잔차의 부호가 합의될 때만 작은 보정을 적용한다.
-- v148은 v142에서 고해상도 v138 방향으로 15%만 이동한 저자유도 bridge다.
+- v148의 저자유도 bridge를 그대로 보존한다.
+- R_CORE의 H1만 원 공개 구현의 고정 affine `center + 1.09 × (p - center)`,
+  `center=0.5854452601930041`로 복원한다.
+- R_ANCHOR와 F는 v148과 수치적으로 동일하다.
 
 패키지 manifest에 고정된 최종 수식은 다음과 같다.
 
 ```text
 0.85 × intermediate(v124→v104, w=.15)
-+ 0.15 × H1
++ 0.15 × clip(0.5854452601930041 + 1.09 × (H1_raw - 0.5854452601930041))
 + 0.5 × (0.85 × sign_all_C3 + 0.15 × mean_recent_C3), R_CORE only
 ```
 
 모델 변화, 로컬 증분과 실제 Public 전이는
-[`reports/target1170_v142_v148_public_result_20260823.md`](reports/target1170_v142_v148_public_result_20260823.md)에 정리돼 있다.
+[`reports/target1180_v167_public_result_20260825.md`](reports/target1180_v167_public_result_20260825.md)에 정리돼 있다.
 
 ## 마지막 v154 연구
 
@@ -226,7 +227,7 @@ python scripts/audit_repository.py --include-untracked
 git diff --check
 ```
 
-v148 수치 계약과 패키징 회귀 테스트:
+챔피언 수치 계약과 패키징 회귀 테스트:
 
 ```powershell
 python -m pytest -q `
@@ -235,11 +236,13 @@ python -m pytest -q `
   tests/test_audit_standalone_release.py
 ```
 
-v154 연구 재현의 진입점:
+v167 연구·패키징 재현의 진입점:
 
 ```powershell
-python -m src.archive.v154_maturity_delta_distillation_audit --help
-python -m src.archive.v154_build_submission_package --help
+python -m src.archive.v157_exact_deployed_h1_oof --help
+python -m src.archive.v158_exact_h1_c3_contract --help
+python -m src.archive.v160_original_h1_affine_audit --help
+python -m src.archive.v167_build_h1_affine_submission_package --help
 ```
 
 최종 제출 이력과 해시는 [`reports/submissions.csv`](reports/submissions.csv)에 기록한다.
@@ -262,15 +265,16 @@ artifacts/     모델·OOF·패키지 산출물, 원칙적으로 Git 제외
 
 과거 v11~v146의 상세 실험과 실패 기록은 삭제하지 않고 `reports/`와
 [`docs/PROJECT_MEMORY.md`](docs/PROJECT_MEMORY.md)에 보존한다. 현재 판단에는 최신 상태 문서와
-v148/v154 최종 보고서를 우선한다.
+v167 최종 보고서와 현재 상태 문서를 우선한다.
 
 ## 주요 문서
 
 | 문서 | 용도 |
 |---|---|
 | [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) | 현재 챔피언과 운영 기준 |
-| [`docs/STANDALONE_CHAMPION.md`](docs/STANDALONE_CHAMPION.md) | v148 단일 ZIP 실행·감사·전달 |
-| [`reports/target1170_v142_v148_public_result_20260823.md`](reports/target1170_v142_v148_public_result_20260823.md) | 1170 달성 근거 |
+| [`docs/STANDALONE_CHAMPION.md`](docs/STANDALONE_CHAMPION.md) | v167 단일 ZIP 실행·감사·전달 |
+| [`reports/target1180_v167_public_result_20260825.md`](reports/target1180_v167_public_result_20260825.md) | 1172 갱신 근거 |
+| [`reports/target1170_v142_v148_public_result_20260823.md`](reports/target1170_v142_v148_public_result_20260823.md) | 직전 1170 달성 근거 |
 | [`reports/target1173_v149_v154_final_submission_20260823.md`](reports/target1173_v149_v154_final_submission_20260823.md) | 마지막 제출 연구와 비승격 판정 |
 | [`reports/submissions.csv`](reports/submissions.csv) | 제출 ID·점수·해시 원장 |
 | [`submissions/README.md`](submissions/README.md) | 제출 파일 보관 규칙과 계보 |
@@ -286,5 +290,5 @@ v148/v154 최종 보고서를 우선한다.
 - 챔피언을 덮어쓰지 않고 버전별 새 디렉터리에 패키징한다.
 - DACON 제출은 검증된 단일 ZIP 하나를 지정 담당자가 수행하고 결과를 즉시 원장에 남긴다.
 
-2026-08-23 최종 코드·문서 감사 결과는 `368 passed, 4 skipped`이며, 현재 공식 기준은
-v148 Public **1170.3014697177**이다.
+2026-08-25 최종 코드·문서 감사 결과는 `394 passed, 4 skipped`이며, 현재 공식 기준은
+v167 Public **1172.0772380321**이다.

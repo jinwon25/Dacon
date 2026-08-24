@@ -1,38 +1,35 @@
 # 제출 파일 보관 규칙
 
-마지막 갱신: `2026-08-23 KST`
+마지막 갱신: `2026-08-25 KST`
 
 ## 현재 기준
 
 | 항목 | 값 |
 |---|---:|
-| Public 챔피언 | `submit_v148.zip` |
-| 점수 / 순위 | **1170.3014697177** / **9위** |
-| 제출 ID | `1544757` |
-| SHA-256 | `7A27BE5878A79934544C741F283C139D40FB20484D52DB494928BCBE27E1E337` |
-| 로컬 전달 경로 | `artifacts/v148_v142_v138_blend_package_20260823_01/submit_v148.zip` |
-| v142 대비 / 1170 초과 | **+0.6736764355** / **+0.3014697177** |
+| Public 챔피언 | `submit_v167.zip` |
+| 점수 / 순위 | **1172.0772380321** / **11위** (확인 시점) |
+| 제출 ID | `1547707` |
+| SHA-256 | `30DD28F56723EC0F560C9101FC5A94EF78568F874DCA88BF808879831E61C8C1` |
+| 로컬 전달 경로 | `artifacts/v167_h1_affine_submission_package_20260825_01/submit_v167.zip` |
+| v148 대비 / 1170 초과 | **+1.7757683144** / **+2.0772380321** |
 
-v148 ZIP은 `script.py`, `requirements.txt`, `model/`만으로 실행되는 89파일 독립 패키지다.
+v167 ZIP은 `script.py`, `requirements.txt`, `model/`만으로 실행되는 89파일 독립 패키지다.
 과거 ZIP을 실행 시 참조하지 않는다. 실행·검증 방법은
 [`../docs/STANDALONE_CHAMPION.md`](../docs/STANDALONE_CHAMPION.md)를 따른다.
 
-## 마지막 v154 제출
+## 최신 v167 제출
 
-`submit_v154.zip`은 85% bridge에 outcome-free 5월 maturity delta distillation을 추가한
-마지막 일일 제출이다. 2026-08-23 15:09:43 KST API 접수는 성공했고 누적 제출은 35회가
-됐다. 이후 best-only 리더보드는 v148의 점수·ID·9위를 유지했다.
-
-로그인 세션 없이는 v154의 개별 점수나 실패 사유를 확인할 수 없으므로 실패로 단정하지
-않는다. 다만 챔피언 승격 증거가 없어 v148을 계속 전달한다. v154의 SHA-256은
-`979904DB258A15DDEC65024359DB152269B103567D59C93F75E57DA3E39A5C42`다. 상세 판단은
-[`../reports/target1173_v149_v154_final_submission_20260823.md`](../reports/target1173_v149_v154_final_submission_20260823.md)에 있다.
+`submit_v167.zip`은 v148의 H1에 원 공개 구현의 고정 affine만 복원한 후보다.
+2026-08-25 01:39:32 KST API 접수 후 공식 리더보드에서 ID `1547707`, Public
+`1172.0772380321`을 확인했다. v148 대비 `+1.7757683144`라 챔피언으로 승격했다.
+상세 판단은 [`../reports/target1180_v167_public_result_20260825.md`](../reports/target1180_v167_public_result_20260825.md)에 있다.
 
 ## 주요 Public 계보
 
 | 제출 | Public | 제출 ID | 상태 |
 |---|---:|---:|---|
-| `submit_v148.zip` | **1170.3014697177** | `1544757` | 현재 챔피언 |
+| `submit_v167.zip` | **1172.0772380321** | `1547707` | 현재 챔피언 |
+| `submit_v148.zip` | 1170.3014697177 | `1544757` | v167 직접 부모 |
 | `submit_v142.zip` | 1169.6277932822 | `1544738` | v148 직접 부모 |
 | `submit_v124.zip` | 1164.2949203402 | `1544631` | v142 직접 부모 |
 | `submit_v116.zip` | 1161.5978783152 | `61030` | 교차-origin failure prior, 기각 |
@@ -59,11 +56,13 @@ v148 ZIP은 `script.py`, `requirements.txt`, `model/`만으로 실행되는 89�
 
 ```text
 프로젝트 루트/
-├─ artifacts/v148_v142_v138_blend_package_20260823_01/
-│  ├─ submit_v148.zip       현재 로컬 전달 파일, Git 제외
+├─ artifacts/v167_h1_affine_submission_package_20260825_01/
+│  ├─ submit_v167.zip       현재 로컬 전달 파일, Git 제외
 │  └─ manifest.json         빌드·감사 결과, Git 제외
+├─ artifacts/v148_v142_v138_blend_package_20260823_01/
+│  └─ submit_v148.zip       v167 직접 부모, Git 제외
 ├─ artifacts/v154_maturity_delta_submission_package_20260823_01/
-│  └─ submit_v154.zip       마지막 비승격 제출, Git 제외
+│  └─ submit_v154.zip       과거 비승격 제출, Git 제외
 └─ submissions/
    ├─ README.md             이 안내서
    └─ history/              과거 제출 계보, ZIP은 Git 제외
@@ -79,4 +78,4 @@ v148 ZIP은 `script.py`, `requirements.txt`, `model/`만으로 실행되는 89�
 - 중복 ZIP은 파일명이 아니라 SHA-256으로 판별한다.
 - DACON에 제출한 파일의 해시와 API 결과는 즉시 `reports/submissions.csv`에 기록한다.
 - 챔피언 승격은 공식 점수 또는 명시된 검증 근거가 있을 때만 한다.
-- 개별 점수가 확인되지 않은 v154는 성공·실패를 추정하지 않고 비승격 상태로 보존한다.
+- v154는 확인된 Public `1168.4038526829`로 기각 상태를 보존한다.
