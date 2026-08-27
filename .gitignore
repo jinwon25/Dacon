@@ -34,6 +34,8 @@ submissions/**/*.zip
 !submissions/releases/
 !submissions/releases/v167/
 !submissions/releases/v167/submit_v167.zip
+!submissions/releases/jy_runners_high_li_bridge027/
+!submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip
 *.npy
 *.npz
 *.parquet
