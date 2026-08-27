@@ -1,8 +1,8 @@
 # 팀 실험 실행 워크플로
 
-> **2026-08-27 현재 기준**: 운영 champion은 v167 Public
-> `1172.0772380321`이며 전달 파일은 PRIVATE 저장소의
-> `submissions/releases/v167/submit_v167.zip`이다. 아래 v26·v1161 절차는 역사
+> **2026-08-28 현재 기준**: 운영 champion은 `jy_runners_high_li_bridge027` Public
+> `1172.1373858439`이며 전달 파일은 PRIVATE 저장소의
+> `submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip`이다. 아래 v26·v1161 절차는 역사
 > 재현용이다. 새 후보 평가는
 > [`../configs/evaluation_v3.json`](../configs/evaluation_v3.json)과
 > [`../reports/evaluation_reaudit_20260822.md`](../reports/evaluation_reaudit_20260822.md)를
@@ -20,7 +20,8 @@
 
 | 작업 | 받을 파일 |
 |---|---|
-| champion 실행·비교 | `submissions/releases/v167/submit_v167.zip` |
+| champion 실행·비교 | `submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip` |
+| v167 기준선 비교 | `submissions/releases/v167/submit_v167.zip` |
 | 새 후보 로컬 비교 | LFS `artifacts/oof_champion_1161/`의 fidelity label + 후보 exact temporal OOF |
 | v26 재패키징 | `submit_v25.zip` + `src/package_v26_anchor_weight_probe.py` (기본값 `--probe-eta 0.15`) |
 | v25 기반모형 재학습 | DACON 원본 데이터 + v22 OOF artifact + v25 활성 학습 코드 |

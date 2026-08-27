@@ -1,27 +1,28 @@
 # 프로젝트 현황
 
-마지막 갱신: `2026-08-27 KST`
+마지막 갱신: `2026-08-28 KST`
 
-최신 최종 연구: [`../reports/target1180_v167_public_result_20260825.md`](../reports/target1180_v167_public_result_20260825.md). v167은 v148의 H1 모델 번들만 원 공개 구현의 고정 affine으로 복원했고, 공식 Public **1172.0772380321**로 기존 챔피언보다 **+1.7757683144** 개선됐다.
+최신 최종 연구: [`../reports/jy_runners_high_li_bridge027_public_result_20260828.md`](../reports/jy_runners_high_li_bridge027_public_result_20260828.md). `jy_runners_high_li_bridge027`은 v167/main submit을 기준으로 row-local runners/high-LI gate만 열었고, 공식 Public **1172.1373858439**로 v167보다 **+0.0601478118** 개선됐다.
 
 ## 현재 champion
 
 | 항목 | 값 |
 |---|---:|
-| champion | `submit_v167.zip` |
-| Public | **1172.0772380321** |
-| 1170 초과분 | **2.0772380321** |
-| 1180까지 | **7.9227619679** |
-| 제출 ID / 확인 순위 | `1547707` / `11위` |
-| 전달 경로 | `submissions/releases/v167/submit_v167.zip` |
-| SHA-256 | `30DD28F56723EC0F560C9101FC5A94EF78568F874DCA88BF808879831E61C8C1` |
+| champion | `submit_jy_runners_high_li_bridge027.zip` |
+| Public | **1172.1373858439** |
+| 1170 초과분 | **2.1373858439** |
+| 1180까지 | **7.8626141561** |
+| 제출 ID / 확인 순위 | DACON UI 확인값 미기록 / 제출 이력 기준 확인 |
+| 전달 경로 | `submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip` |
+| SHA-256 | `4C924E046091304BFC73B50BE51110BDF1351DFD9B577738CC6B65A8DFF43C9E` |
 | 실행 의존성 | ZIP 내부 `script.py`, `requirements.txt`, `model/`만 사용 |
 | 행 독립성 | shuffle/partition 통과, 최대 `1.11e-16` |
 | 현재 브랜치 기준 | `team/main`의 이 릴리스 커밋 |
 
-이 파일은 현재 운영 상태의 단일 원본이다. v167 제출 API는 2026-08-25 01:39:32 KST에
-성공했고, 공식 리더보드에서 제출 ID `1547707`, Public `1172.0772380321`, 확인 시점
-11위를 재확인했다. ZIP 89개 구성 중 `model/h1/model/rf.pkl` 하나만 v148과 다르다.
+이 파일은 현재 운영 상태의 단일 원본이다. 최신 JY 제출은 2026-08-28 03:38:21 KST에
+Public `1172.1373858439`를 확인했다. v167/main submit을 먼저 재현한 뒤 `R_CORE` 중
+`num_runners_on > 0` 또는 `li >= 1.5`인 행에만 bridge025/H1/C3 recent 조합을 덮어쓴다.
+비활성 행은 기준 main submit과 수치적으로 동일하다.
 
 **정정 (사후 확정):** 애초 "리더보드 미갱신이라 개별 점수 미확인"으로 기록했던 것은
 관측 시점의 한계였을 뿐이다. 이후 제출 이력 ID `61440`으로 v154의 실제 Public 점수가
@@ -59,6 +60,7 @@ v22 domain calibration + row-local ASOF
                         → v142 independent H1 + sign-stable C3
                           → submit_v148.zip (Public 1170.3014697177)
                             → submit_v167.zip (Public 1172.0772380321)
+                              → submit_jy_runners_high_li_bridge027.zip (Public 1172.1373858439)
 ```
 
 계보는 연구 설명용이다. 실행할 때 과거 ZIP을 연쇄적으로 요구하지 않는다. 새 후보도 처음부터
@@ -66,14 +68,14 @@ standalone으로 만들며, 평가 v3를 통과하기 전에는 champion 파일�
 
 ## 바로 읽을 문서
 
-1. [`../reports/target1180_v167_public_result_20260825.md`](../reports/target1180_v167_public_result_20260825.md)
-2. [`../reports/target1170_v142_v148_public_result_20260823.md`](../reports/target1170_v142_v148_public_result_20260823.md)
-3. [`../reports/evaluation_reaudit_20260822.md`](../reports/evaluation_reaudit_20260822.md)
-4. [`PROJECT_MEMORY.md`](PROJECT_MEMORY.md)
-5. [`STANDALONE_CHAMPION.md`](STANDALONE_CHAMPION.md)
-6. [`../reports/trackman_deep_dive_20260822.md`](../reports/trackman_deep_dive_20260822.md)
-7. [`../reports/target1170_v79_v81_followup_20260822.md`](../reports/target1170_v79_v81_followup_20260822.md)
-8. [`../reports/target1170_research_update_20260822.md`](../reports/target1170_research_update_20260822.md)
+1. [`../reports/jy_runners_high_li_bridge027_public_result_20260828.md`](../reports/jy_runners_high_li_bridge027_public_result_20260828.md)
+2. [`../reports/target1180_v167_public_result_20260825.md`](../reports/target1180_v167_public_result_20260825.md)
+3. [`../reports/target1170_v142_v148_public_result_20260823.md`](../reports/target1170_v142_v148_public_result_20260823.md)
+4. [`../reports/evaluation_reaudit_20260822.md`](../reports/evaluation_reaudit_20260822.md)
+5. [`PROJECT_MEMORY.md`](PROJECT_MEMORY.md)
+6. [`STANDALONE_CHAMPION.md`](STANDALONE_CHAMPION.md)
+7. [`../reports/trackman_deep_dive_20260822.md`](../reports/trackman_deep_dive_20260822.md)
+8. [`../reports/target1170_v79_v81_followup_20260822.md`](../reports/target1170_v79_v81_followup_20260822.md)
 9. [`../reports/submissions.csv`](../reports/submissions.csv)
 
 ## 평가 상태

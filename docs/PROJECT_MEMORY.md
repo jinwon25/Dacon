@@ -8,20 +8,24 @@
 - 모든 새 모델은 처음부터 **standalone**으로 설계한다.
 - 최종 ZIP 안의 `script.py`, `requirements.txt`, `model/`만으로 실행되어야 한다.
 - 과거 `submit_v*.zip`, 저장소 `src/`, 다른 후보 artifact를 실행 시 요구하면 안 된다.
-- 현재 단일 릴리스는 `artifacts/standalone_champion_1161/`에 보존한다.
+- 현재 단일 릴리스는
+  `submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip`에
+  보존한다.
 - 후보는 현재 champion을 덮어쓰지 않는다. 자동 승격 게이트를 통과한 뒤에만 별도
   standalone 후보를 만들고, Public 결과가 확인된 뒤 champion 포인터를 바꾼다.
 
 ## 2. 현재 기준선
 
-- Public: **1161.2020600422**
-- 계보: `v25 → v26 R_ANCHOR eta=.15 → TrackMan-ASOF → v82 strict R_CORE .10 → v84 shared FM F .10`
-- TrackMan gate: R_ANCHOR 전용, eta/cap `0.03`, train 고정 profile과 행별 ASOF prior
+- Public: **1172.1373858439**
+- 계보: `v25 → v26 R_ANCHOR eta=.15 → TrackMan-ASOF → v82 strict R_CORE .10 → v84 shared FM F .10 → v104 → v124 → v142 → v148 → v167 → jy_runners_high_li_bridge027`
+- 최신 JY gate: v167/main submit을 기준 출력으로 재현한 뒤 `R_CORE` 중
+  `num_runners_on > 0` 또는 `li >= 1.5`인 행만 bridge025/H1/C3 recent 조합으로 덮어쓴다.
+- 전달 ZIP:
+  `submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip`
 - 전달 ZIP SHA-256:
-  `C033FC38A5F9681E45B0BD2494359B8BD1387EE44E5F318C5B7A5547CFE6C4F7`
-- v29~v56과 v57 다수는 eta `0.10` 부모에서 평가됐으므로 현재 기준선 위 개선으로 보지
-  않는다. 예외적으로 v57 EXP-021 strict 레시피 하나만 최종 부모 위에서 exact 재계산해
-  v82 탐색적 Public probe로 고정했다.
+  `4C924E046091304BFC73B50BE51110BDF1351DFD9B577738CC6B65A8DFF43C9E`
+- v167 Public `1172.0772380321`은 최신 JY 후보의 기준선이다. 최신 Public은 v167 대비
+  `+0.0601478118`, 1180까지 `7.8626141561` 남았다.
 
 ## 3. DACON 규칙 불변 조건
 
