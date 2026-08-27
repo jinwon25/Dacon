@@ -45,6 +45,10 @@ PINNED_REGULAR_BINARY_FILES = {
         "bytes": 46_354_018,
         "sha256": "30DD28F56723EC0F560C9101FC5A94EF78568F874DCA88BF808879831E61C8C1",
     },
+    "submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip": {
+        "bytes": 83_675_308,
+        "sha256": "4C924E046091304BFC73B50BE51110BDF1351DFD9B577738CC6B65A8DFF43C9E",
+    },
 }
 FORBIDDEN_SUFFIXES = {
     ".cbm",

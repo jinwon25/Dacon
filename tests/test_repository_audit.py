@@ -42,9 +42,15 @@ def test_repository_path_policy_allows_explicit_private_lfs_releases():
     assert forbidden_path_reason("artifacts/oof_champion_1159/oof.npz") is not None
 
 
-def test_repository_path_policy_allows_only_pinned_v167_delivery_zip():
+def test_repository_path_policy_allows_only_pinned_delivery_zips():
     assert (
         forbidden_path_reason("submissions/releases/v167/submit_v167.zip") is None
+    )
+    assert (
+        forbidden_path_reason(
+            "submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip"
+        )
+        is None
     )
     assert (
         forbidden_path_reason("submissions/releases/v167/submit_v167_rebuild.zip")
