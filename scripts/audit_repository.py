@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import subprocess
@@ -20,6 +21,8 @@ ALLOWED_SPECIAL_FILES = {
     "artifacts/oof_champion_1161/v84_full_2022.npz",
     "artifacts/oof_champion_1161/v84_full_2024.npz",
     "artifacts/oof_champion_1161/v84_late_2023.npz",
+    "artifacts/oof_champion_1170/README.md",
+    "artifacts/oof_champion_1170/manifest.json",
     "artifacts/standalone_champion_1161/standalone_champion_1161.zip",
     "artifacts/standalone_champion_1161/standalone_manifest.json",
     "artifacts/standalone_champion_1162/standalone_champion_1162.zip",
@@ -32,6 +35,16 @@ ALLOWED_LFS_FILES = {
     "artifacts/oof_champion_1161/v84_late_2023.npz",
     "artifacts/standalone_champion_1161/standalone_champion_1161.zip",
     "artifacts/standalone_champion_1162/standalone_champion_1162.zip",
+}
+PINNED_REGULAR_BINARY_FILES = {
+    "artifacts/oof_champion_1170/v148_full_2024.npz": {
+        "bytes": 8_168_945,
+        "sha256": "972383D4DE481DCF8A27FCC497C9C88BC08FCD6612B08C4E3F0E37A824EDF2F9",
+    },
+    "submissions/releases/v167/submit_v167.zip": {
+        "bytes": 46_354_018,
+        "sha256": "30DD28F56723EC0F560C9101FC5A94EF78568F874DCA88BF808879831E61C8C1",
+    },
 }
 FORBIDDEN_SUFFIXES = {
     ".cbm",
@@ -65,7 +78,10 @@ SECRET_PATTERNS = {
 def forbidden_path_reason(path: str) -> str | None:
     normalized = path.replace("\\", "/")
     lower = normalized.lower()
-    if normalized in ALLOWED_SPECIAL_FILES:
+    if (
+        normalized in ALLOWED_SPECIAL_FILES
+        or normalized in PINNED_REGULAR_BINARY_FILES
+    ):
         return None
     if lower == ".env" or lower.startswith(".env."):
         return "environment credential file"
@@ -137,12 +153,21 @@ def lfs_filter(path: str) -> str:
     return output.rsplit(":", 1)[-1].strip()
 
 
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest().upper()
+
+
 def audit(include_untracked: bool, max_bytes: int) -> dict[str, object]:
     paths = git_paths(include_untracked)
     forbidden: list[dict[str, str]] = []
     oversized: list[dict[str, object]] = []
     secrets: list[dict[str, object]] = []
     lfs_misconfigured: list[dict[str, str]] = []
+    pinned_binary_mismatches: list[dict[str, object]] = []
     checked = 0
     for path_string in paths:
         path = REPOSITORY_ROOT / path_string
@@ -153,12 +178,29 @@ def audit(include_untracked: bool, max_bytes: int) -> dict[str, object]:
         if reason:
             forbidden.append({"path": path_string, "reason": reason})
         size = path.stat().st_size
-        if size > max_bytes and path_string not in ALLOWED_LFS_FILES:
+        if (
+            size > max_bytes
+            and path_string not in ALLOWED_LFS_FILES
+            and path_string not in PINNED_REGULAR_BINARY_FILES
+        ):
             oversized.append({"path": path_string, "bytes": size})
         if path_string in ALLOWED_LFS_FILES:
             if lfs_filter(path_string) != "lfs":
                 lfs_misconfigured.append(
                     {"path": path_string, "reason": "missing filter=lfs"}
+                )
+        elif path_string in PINNED_REGULAR_BINARY_FILES:
+            expected = PINNED_REGULAR_BINARY_FILES[path_string]
+            actual_sha256 = sha256_file(path)
+            if size != expected["bytes"] or actual_sha256 != expected["sha256"]:
+                pinned_binary_mismatches.append(
+                    {
+                        "path": path_string,
+                        "expected_bytes": expected["bytes"],
+                        "actual_bytes": size,
+                        "expected_sha256": expected["sha256"],
+                        "actual_sha256": actual_sha256,
+                    }
                 )
         else:
             secrets.extend(secret_findings(path_string, path.read_bytes()))
@@ -170,7 +212,12 @@ def audit(include_untracked: bool, max_bytes: int) -> dict[str, object]:
         "oversized_files": oversized,
         "secret_findings": secrets,
         "lfs_misconfigured": lfs_misconfigured,
-        "passed": not forbidden and not oversized and not secrets and not lfs_misconfigured,
+        "pinned_binary_mismatches": pinned_binary_mismatches,
+        "passed": not forbidden
+        and not oversized
+        and not secrets
+        and not lfs_misconfigured
+        and not pinned_binary_mismatches,
     }
 
 

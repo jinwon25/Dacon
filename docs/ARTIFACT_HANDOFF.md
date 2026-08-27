@@ -128,7 +128,9 @@ jupyter lab notebooks/experiment_workbench.ipynb
 ## 공유·보안 원칙
 
 - Drive의 `일반 액세스`는 `제한됨`으로 유지하고 공식 DACON 팀원 계정만 개별 초대한다.
-- 현재 1161 allowlist 이외의 모델·OOF·제출 ZIP은 Git commit이나 Git LFS에 넣지 않는다.
+- PRIVATE 팀 전달용 `submissions/releases/v167/submit_v167.zip`, 기존 1161 allowlist와
+  해시가 고정된 `artifacts/oof_champion_1170/` 번들 이외의 모델·OOF·제출 ZIP은 Git
+  commit이나 Git LFS에 넣지 않는다.
 - LFS OOF에는 target과 선수 ID가 있으므로 저장소는 private·공식 팀원 3인으로 유지한다.
 - DACON 원본 데이터와 토큰·쿠키·키 같은 인증정보는 Drive에도 올리지 않는다.
 - 파일을 교체할 때 기존 버전을 덮어쓰지 않고 새 버전 폴더와 manifest를 만든다.

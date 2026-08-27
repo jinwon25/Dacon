@@ -68,7 +68,8 @@ standalone 후보 생성 최소 조건:
 - 실패한 대형 cache, 임시 압축 해제본, 중복 ZIP, `__pycache__`, `.pytest_cache`는 삭제한다.
 - 과거 코드·보고서는 재현 근거가 있으면 지우지 않고 역사 자료로 표시한다.
 - 원본 데이터·개인정보·인증정보는 Git/LFS에 올리지 않는다. 모델·OOF·제출 ZIP은
-  현재 1161 private LFS allowlist만 허용한다.
+  PRIVATE 팀 전달용 `submissions/releases/v167/submit_v167.zip`, 기존 1161 private LFS
+  allowlist와 해시가 고정된 `artifacts/oof_champion_1170/` 번들만 허용한다.
 
 ## 6. 현재 최우선 연구
 

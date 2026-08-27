@@ -16,10 +16,10 @@ LG Aimers 9기 `투구 제구 성공 확률 예측 AI 온라인 해커톤`의 �
 | 목표 1170 초과분 | **+2.0772380321** |
 | 직전 v148 대비 | **+1.7757683144** |
 | 1180까지 | **7.9227619679** |
-| 챔피언 파일 | `artifacts/v167_h1_affine_submission_package_20260825_01/submit_v167.zip` |
+| 챔피언 파일 | `submissions/releases/v167/submit_v167.zip` |
 | SHA-256 | `30DD28F56723EC0F560C9101FC5A94EF78568F874DCA88BF808879831E61C8C1` |
 | ZIP 크기 / 파일 수 | `46,354,018 bytes` / `89` |
-| 공식 제출 후 최종 테스트 | `394 passed, 4 skipped` |
+| 현재 저장소 테스트 | `396 passed, 4 skipped` |
 
 v167은 v148의 89개 ZIP 구성 중 H1 모델 번들 하나만 원본 고정 affine 버전으로 교체한다.
 2026-08-25 01:39:32 KST에 DACON API가 접수했고, 공식 리더보드에서 제출 ID `1547707`과
@@ -74,7 +74,7 @@ submit_v167.zip
 $release = Join-Path $PWD "run_v167"
 New-Item -ItemType Directory -Force $release | Out-Null
 Expand-Archive `
-  artifacts/v167_h1_affine_submission_package_20260825_01/submit_v167.zip `
+  submissions/releases/v167/submit_v167.zip `
   $release -Force
 New-Item -ItemType Directory -Force (Join-Path $release "data") | Out-Null
 Copy-Item data/test.csv (Join-Path $release "data/test.csv")
@@ -102,7 +102,7 @@ scikit-learn==1.6.1
 
 ```powershell
 python -m src.audit_standalone_release `
-  --package artifacts/v167_h1_affine_submission_package_20260825_01/submit_v167.zip `
+  --package submissions/releases/v167/submit_v167.zip `
   --test-csv data/test.csv `
   --scale-rows 245789 `
   --timeout-seconds 300
@@ -131,9 +131,11 @@ ZIP 실행과 소스 재구축은 다른 작업이다. 실행에는 ZIP 하나�
 python -m src.archive.v167_build_h1_affine_submission_package --help
 ```
 
-대용량 ZIP과 공식 원본 데이터는 Git에 올리지 않는다. 따라서 GitHub clone만으로 ZIP이
-생긴다고 가정하면 안 된다. 지정된 팀 보관소에서 SHA-256을 대조해 전달받고, 실행 및
-감사는 위 절차로 수행한다. 자세한 인계 규칙은
+공식 원본 데이터, 인증정보와 일반 대용량 ZIP·OOF는 Git에 올리지 않는다. 다만 PRIVATE
+협업 저장소에서 팀원에게 전달하기 위해 검증된 v167 ZIP 하나는
+`submissions/releases/v167/submit_v167.zip`으로 명시 추적한다. clone 후 SHA-256을 대조하고,
+기존 1161 LFS 및 1170 OOF 번들은 문서화된 해시 고정 allowlist로 유지한다. 실행 및 감사는
+위 절차로 수행한다. 자세한 인계 규칙은
 [`docs/STANDALONE_CHAMPION.md`](docs/STANDALONE_CHAMPION.md)에 있다.
 
 ## 문제와 평가
@@ -258,7 +260,7 @@ notebooks/     과거 및 탐색 워크벤치
 reports/       실험 결과와 제출 원장
 scripts/       저장소 보조 감사
 src/           학습·평가·패키징·추론 구현
-submissions/   제출 계보 안내, ZIP은 Git 제외
+submissions/   제출 계보와 PRIVATE 전달용 v167 확정 ZIP
 tests/         데이터 비의존 및 로컬 통합 테스트
 artifacts/     모델·OOF·패키지 산출물, 원칙적으로 Git 제외
 ```
@@ -285,10 +287,11 @@ v167 최종 보고서와 현재 상태 문서를 우선한다.
 ## Git·데이터 정책
 
 - 원본 DACON 데이터, 인증정보, 개인 쿠키·키는 Git과 LFS에 올리지 않는다.
-- 대용량 모델 ZIP·OOF·임시 cache는 승인된 비공개 전달 경로에서 해시와 함께 관리한다.
+- 모델 ZIP·OOF·임시 cache는 원칙적으로 Git에서 제외한다. PRIVATE 팀 전달용 v167 ZIP과
+  문서화된 기존 1161 LFS·1170 OOF 번들만 해시가 고정된 예외다.
 - `main`은 검증된 기준선으로 유지하고 새 연구는 별도 브랜치에서 수행한다.
 - 챔피언을 덮어쓰지 않고 버전별 새 디렉터리에 패키징한다.
 - DACON 제출은 검증된 단일 ZIP 하나를 지정 담당자가 수행하고 결과를 즉시 원장에 남긴다.
 
-2026-08-25 최종 코드·문서 감사 결과는 `394 passed, 4 skipped`이며, 현재 공식 기준은
+2026-08-27 전달 정책 반영 후 감사 결과는 `396 passed, 4 skipped`이며, 현재 공식 기준은
 v167 Public **1172.0772380321**이다.

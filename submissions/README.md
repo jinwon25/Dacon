@@ -1,6 +1,6 @@
 # 제출 파일 보관 규칙
 
-마지막 갱신: `2026-08-25 KST`
+마지막 갱신: `2026-08-27 KST`
 
 ## 현재 기준
 
@@ -10,7 +10,7 @@
 | 점수 / 순위 | **1172.0772380321** / **11위** (확인 시점) |
 | 제출 ID | `1547707` |
 | SHA-256 | `30DD28F56723EC0F560C9101FC5A94EF78568F874DCA88BF808879831E61C8C1` |
-| 로컬 전달 경로 | `artifacts/v167_h1_affine_submission_package_20260825_01/submit_v167.zip` |
+| GitHub 전달 경로 | `submissions/releases/v167/submit_v167.zip` |
 | v148 대비 / 1170 초과 | **+1.7757683144** / **+2.0772380321** |
 
 v167 ZIP은 `script.py`, `requirements.txt`, `model/`만으로 실행되는 89파일 독립 패키지다.
@@ -56,25 +56,30 @@ v167 ZIP은 `script.py`, `requirements.txt`, `model/`만으로 실행되는 89�
 
 ```text
 프로젝트 루트/
+├─ submissions/
+│  ├─ README.md             이 안내서
+│  ├─ releases/v167/
+│  │  ├─ submit_v167.zip    PRIVATE 저장소 전달용 확정 파일
+│  │  └─ README.md          해시·실행·예외 범위
+│  └─ history/              과거 제출 계보, ZIP은 Git 제외
 ├─ artifacts/v167_h1_affine_submission_package_20260825_01/
-│  ├─ submit_v167.zip       현재 로컬 전달 파일, Git 제외
+│  ├─ submit_v167.zip       로컬 빌드 원본, Git 제외
 │  └─ manifest.json         빌드·감사 결과, Git 제외
 ├─ artifacts/v148_v142_v138_blend_package_20260823_01/
 │  └─ submit_v148.zip       v167 직접 부모, Git 제외
-├─ artifacts/v154_maturity_delta_submission_package_20260823_01/
-│  └─ submit_v154.zip       과거 비승격 제출, Git 제외
-└─ submissions/
-   ├─ README.md             이 안내서
-   └─ history/              과거 제출 계보, ZIP은 Git 제외
+└─ artifacts/v154_maturity_delta_submission_package_20260823_01/
+   └─ submit_v154.zip       과거 비승격 제출, Git 제외
 ```
 
-새 후보는 기존 챔피언을 덮어쓰지 않고 별도 버전 디렉터리에 만든다. 로컬 artifact 경로는
-코드와 문서가 참조할 수 있지만, ZIP 자체가 GitHub에 있다고 가정하면 안 된다.
+새 후보는 기존 챔피언을 덮어쓰지 않고 별도 버전 디렉터리에 만든다. v167 외의 로컬
+artifact ZIP은 GitHub에 있다고 가정하면 안 된다.
 
 ## 보관 원칙
 
 - 공식 데이터, 인증정보, 쿠키·키는 Git/LFS에 올리지 않는다.
-- 대용량 제출 ZIP과 모델은 승인된 비공개 팀 채널에서 SHA-256과 함께 전달한다.
+- 검증된 v167 ZIP 하나만 PRIVATE 저장소 전달을 위한 명시적 예외로 추적한다.
+- 다른 제출 ZIP·모델·OOF는 문서화된 기존 1161 LFS·1170 OOF allowlist 또는 별도 승인
+  없이는 Git/LFS에 올리지 않는다.
 - 중복 ZIP은 파일명이 아니라 SHA-256으로 판별한다.
 - DACON에 제출한 파일의 해시와 API 결과는 즉시 `reports/submissions.csv`에 기록한다.
 - 챔피언 승격은 공식 점수 또는 명시된 검증 근거가 있을 때만 한다.

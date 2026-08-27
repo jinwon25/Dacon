@@ -58,6 +58,8 @@
 
 ## 보관 원칙
 
-- 챔피언 제출 ZIP과 선별 OOF evidence: private Git LFS allowlist
+- 확정 v167 제출 ZIP: PRIVATE 저장소의 `submissions/releases/v167/submit_v167.zip`
+- 기존 1161 챔피언과 선별 OOF evidence: private Git LFS allowlist
+- v148 full-2024 OOF evidence: 해시 고정 `oof_champion_1170/` 일반 Git 예외
 - 중간 OOF와 대규모 캐시: 각 실험 담당자 로컬 또는 DVC/object storage
 - 일반 Git에 남길 내용: manifest, 생성 명령, 입력 기준선, SHA-256, 크기, 검증 결과

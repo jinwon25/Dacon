@@ -42,6 +42,32 @@ def test_repository_path_policy_allows_explicit_private_lfs_releases():
     assert forbidden_path_reason("artifacts/oof_champion_1159/oof.npz") is not None
 
 
+def test_repository_path_policy_allows_only_pinned_v167_delivery_zip():
+    assert (
+        forbidden_path_reason("submissions/releases/v167/submit_v167.zip") is None
+    )
+    assert (
+        forbidden_path_reason("submissions/releases/v167/submit_v167_rebuild.zip")
+        is not None
+    )
+    assert (
+        forbidden_path_reason("submissions/releases/v168/submit_v168.zip") is not None
+    )
+
+
+def test_repository_path_policy_allows_existing_pinned_v148_oof_bundle():
+    assert forbidden_path_reason("artifacts/oof_champion_1170/README.md") is None
+    assert forbidden_path_reason("artifacts/oof_champion_1170/manifest.json") is None
+    assert (
+        forbidden_path_reason("artifacts/oof_champion_1170/v148_full_2024.npz")
+        is None
+    )
+    assert (
+        forbidden_path_reason("artifacts/oof_champion_1170/extra_oof.npz")
+        is not None
+    )
+
+
 def test_secret_scanner_accepts_blank_template_and_rejects_tokens():
     assert secret_findings(".env.example", b"DACON_API_TOKEN=\n") == []
     github_token = b"gho_" + b"A" * 30

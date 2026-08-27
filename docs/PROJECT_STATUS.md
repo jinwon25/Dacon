@@ -1,6 +1,6 @@
 # 프로젝트 현황
 
-마지막 갱신: `2026-08-25 KST`
+마지막 갱신: `2026-08-27 KST`
 
 최신 최종 연구: [`../reports/target1180_v167_public_result_20260825.md`](../reports/target1180_v167_public_result_20260825.md). v167은 v148의 H1 모델 번들만 원 공개 구현의 고정 affine으로 복원했고, 공식 Public **1172.0772380321**로 기존 챔피언보다 **+1.7757683144** 개선됐다.
 
@@ -13,7 +13,7 @@
 | 1170 초과분 | **2.0772380321** |
 | 1180까지 | **7.9227619679** |
 | 제출 ID / 확인 순위 | `1547707` / `11위` |
-| 전달 경로 | `artifacts/v167_h1_affine_submission_package_20260825_01/submit_v167.zip` |
+| 전달 경로 | `submissions/releases/v167/submit_v167.zip` |
 | SHA-256 | `30DD28F56723EC0F560C9101FC5A94EF78568F874DCA88BF808879831E61C8C1` |
 | 실행 의존성 | ZIP 내부 `script.py`, `requirements.txt`, `model/`만 사용 |
 | 행 독립성 | shuffle/partition 통과, 최대 `1.11e-16` |
@@ -243,7 +243,8 @@ TabM 크기·seed, v79/v81 강도·규제·tree 미세탐색은 종료 상태로
 ## Git·artifact 원칙
 
 - 개인 feature branch에서 작업하고 팀 리뷰 후 squash merge한다.
-- 원본 데이터·인증정보는 Git/LFS에 넣지 않는다. v148·v154 대용량 ZIP은 일반 Git에
-  포함하지 않고 승인된 비공개 팀 채널에서 SHA-256과 함께 관리한다.
+- 원본 데이터·인증정보는 Git/LFS에 넣지 않는다. PRIVATE 팀 전달용 확정 v167 ZIP과 기존
+  1161 LFS·1170 OOF 번들만 해시 고정 예외로 추적하며, v148·v154와 다른 대용량
+  ZIP·모델·OOF는 승인된 비공개 팀 채널에서 SHA-256과 함께 관리한다.
 - 팀원 전달 artifact는 공식 팀원만 접근 가능한 공간에서 SHA-256과 함께 관리한다.
 - Public 제출은 팀 리뷰와 standalone 검증을 통과한 한 파일만 지정 담당자가 수행한다.

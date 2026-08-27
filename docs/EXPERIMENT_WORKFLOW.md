@@ -1,9 +1,9 @@
 # 팀 실험 실행 워크플로
 
-> **2026-08-22 현재 기준**: 운영 champion은 standalone Public
-> `1161.2020600422`이며 전달 파일은
-> `artifacts/standalone_champion_1161/standalone_champion_1161.zip`이다. 아래 v26
-> 절차는 역사 재현용이다. 새 후보 평가는
+> **2026-08-27 현재 기준**: 운영 champion은 v167 Public
+> `1172.0772380321`이며 전달 파일은 PRIVATE 저장소의
+> `submissions/releases/v167/submit_v167.zip`이다. 아래 v26·v1161 절차는 역사
+> 재현용이다. 새 후보 평가는
 > [`../configs/evaluation_v3.json`](../configs/evaluation_v3.json)과
 > [`../reports/evaluation_reaudit_20260822.md`](../reports/evaluation_reaudit_20260822.md)를
 > 우선한다.
@@ -16,11 +16,11 @@
 
 ## 가장 먼저: 파일과 실행 노트북
 
-현재 수치와 파일 위치는 [`PROJECT_STATUS.md`](PROJECT_STATUS.md), [`../submissions/README.md`](../submissions/README.md)에서 먼저 확인한다. 현재 champion ZIP과 OOF evidence는 private Git LFS에서 받은 뒤 SHA-256을 대조한다.
+현재 수치와 파일 위치는 [`PROJECT_STATUS.md`](PROJECT_STATUS.md), [`../submissions/README.md`](../submissions/README.md)에서 먼저 확인한다. 현재 champion ZIP은 clone에 포함되며, OOF evidence는 승인된 private 저장소에서 받은 뒤 각각 SHA-256을 대조한다.
 
 | 작업 | 받을 파일 |
 |---|---|
-| champion 실행·비교 | LFS `artifacts/standalone_champion_1161/standalone_champion_1161.zip` |
+| champion 실행·비교 | `submissions/releases/v167/submit_v167.zip` |
 | 새 후보 로컬 비교 | LFS `artifacts/oof_champion_1161/`의 fidelity label + 후보 exact temporal OOF |
 | v26 재패키징 | `submit_v25.zip` + `src/package_v26_anchor_weight_probe.py` (기본값 `--probe-eta 0.15`) |
 | v25 기반모형 재학습 | DACON 원본 데이터 + v22 OOF artifact + v25 활성 학습 코드 |

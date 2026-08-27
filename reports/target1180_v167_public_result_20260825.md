@@ -19,7 +19,8 @@
 
 ## 최종 패키지
 
-- 파일: `artifacts/v167_h1_affine_submission_package_20260825_01/submit_v167.zip`
+- GitHub 전달 파일: `submissions/releases/v167/submit_v167.zip`
+- 로컬 빌드 원본: `artifacts/v167_h1_affine_submission_package_20260825_01/submit_v167.zip`
 - SHA-256: `30DD28F56723EC0F560C9101FC5A94EF78568F874DCA88BF808879831E61C8C1`
 - 크기: `46,354,018 bytes`
 - 구성: `89`개 파일, 루트 `model/`, `script.py`, `requirements.txt`
@@ -72,8 +73,9 @@ R_CORE에서 `+3.0566942300`이었다. 새 저복잡도 후보 중 locked gain�
 
 ## 재구축
 
-대용량 부모 ZIP, 원 H1 ZIP, OOF와 공식 데이터는 Git에서 제외한다. 팀 보관소에서 아래
-해시의 두 부모를 준비한 뒤 실행한다.
+확정 v167 ZIP 한 개는 PRIVATE 저장소 전달 예외로 추적하지만, 대용량 부모 ZIP, 원 H1 ZIP,
+OOF와 공식 데이터는 계속 Git에서 제외한다. 팀 보관소에서 아래 해시의 두 부모를 준비한 뒤
+재구축을 실행한다.
 
 - v148 ZIP: `7A27BE5878A79934544C741F283C139D40FB20484D52DB494928BCBE27E1E337`
 - 원 H1 ZIP: `D338E9EEF715C3CC84C0C5CD9C830925A93D85BF9518BFB0DCD0D0B052F995D6`

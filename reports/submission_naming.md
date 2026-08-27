@@ -6,7 +6,9 @@
 - 파일명은 제출 버전을 즉시 확인할 수 있도록 `submit_vN.zip` 형식을 기본으로 한다.
 - 모델 구성·실험명은 `artifacts/candidates/*/manifest.json`과 보고서에 기록하고, 최종 파일명에는 넣지 않는다.
 - 다음 사용 가능한 제출은 `submit_v19.zip`이다. 기존 제출 파일은 덮어쓰지 않는다. 새 ZIP은 고정 promotion gate와 팀 리뷰를 통과할 때만 만든다.
-- ZIP, 모델과 OOF는 Git에 커밋하지 않는다. Git에는 코드, 설정, 검증 요약과 SHA-256만 남긴다.
+- ZIP, 모델과 OOF는 원칙적으로 Git에 커밋하지 않는다. PRIVATE 팀 전달용으로 승인된
+  `submissions/releases/v167/submit_v167.zip`과 문서화된 기존 1161 LFS·1170 OOF
+  allowlist만 해시가 고정된 예외다.
 - 같은 버전의 재현 검사용 로컬 출력은 `submit_v17_rebuild.zip`처럼 목적을 붙이고 DACON 제출 파일과 구분한다.
 
 ## 최근 의사결정 기록

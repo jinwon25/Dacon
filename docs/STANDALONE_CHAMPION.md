@@ -1,6 +1,6 @@
 # v167 단일 실행 챔피언
 
-마지막 갱신: `2026-08-25 KST`
+마지막 갱신: `2026-08-27 KST`
 
 ## 확정 릴리스
 
@@ -8,7 +8,7 @@
 |---|---:|
 | Public | **1172.0772380321** |
 | 순위 / 제출 ID | **11위** (확인 시점) / `1547707` |
-| 파일 | `artifacts/v167_h1_affine_submission_package_20260825_01/submit_v167.zip` |
+| 파일 | `submissions/releases/v167/submit_v167.zip` |
 | SHA-256 | `30DD28F56723EC0F560C9101FC5A94EF78568F874DCA88BF808879831E61C8C1` |
 | 크기 / 파일 수 | `46,354,018 bytes` / `89` |
 | 루트 | `script.py`, `requirements.txt`, `model/` |
@@ -38,7 +38,7 @@ run_v167/
 
 ```powershell
 Get-FileHash -Algorithm SHA256 `
-  artifacts/v167_h1_affine_submission_package_20260825_01/submit_v167.zip
+  submissions/releases/v167/submit_v167.zip
 ```
 
 결과가
@@ -50,7 +50,7 @@ Get-FileHash -Algorithm SHA256 `
 $release = Join-Path $PWD "run_v167"
 New-Item -ItemType Directory -Force $release | Out-Null
 Expand-Archive `
-  artifacts/v167_h1_affine_submission_package_20260825_01/submit_v167.zip `
+  submissions/releases/v167/submit_v167.zip `
   $release -Force
 New-Item -ItemType Directory -Force (Join-Path $release "data") | Out-Null
 Copy-Item data/test.csv (Join-Path $release "data/test.csv")
@@ -66,7 +66,7 @@ python (Join-Path $release "script.py")
 
 ```powershell
 python -m src.audit_standalone_release `
-  --package artifacts/v167_h1_affine_submission_package_20260825_01/submit_v167.zip `
+  --package submissions/releases/v167/submit_v167.zip `
   --test-csv data/test.csv `
   --scale-rows 245789 `
   --timeout-seconds 300
@@ -117,11 +117,13 @@ python -m src.archive.v167_build_h1_affine_submission_package --help
 
 ## 전달 정책
 
-대용량 모델 ZIP, 공식 DACON 데이터, 인증정보는 일반 Git에 커밋하지 않는다. GitHub clone은
-코드·config·manifest 기반 연구 재현용이며 확정 ZIP의 배포 채널이 아니다. 팀 전달 시에는
-다음 항목을 함께 제공한다.
+이 저장소가 PRIVATE임을 확인한 뒤, 팀 전달을 위해 검증된 v167 ZIP 한 개만
+`submissions/releases/v167/submit_v167.zip`으로 추적한다. GitHub clone에는 이 확정 ZIP이
+포함된다. 공식 DACON 데이터, 인증정보, 부모 ZIP과 승인되지 않은 다른 모델·OOF는 계속
+Git에서 제외한다. 기존 1161 LFS·1170 OOF 번들은 문서화된 allowlist로 유지하고, 새 ZIP을
+추가하려면 별도 승인과 SHA-256 기록이 필요하다. 팀 전달 시에는 다음 항목을 함께 확인한다.
 
-1. `submit_v167.zip`
+1. `submissions/releases/v167/submit_v167.zip`
 2. 위 SHA-256
 3. 이 문서와 [`../reports/target1180_v167_public_result_20260825.md`](../reports/target1180_v167_public_result_20260825.md)
 
