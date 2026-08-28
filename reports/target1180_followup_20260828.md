@@ -417,3 +417,85 @@ python scripts/audit_repository.py --include-untracked
 최종 검증은 `425 passed, 21 skipped`, 저장소 감사 879개 파일 전체 통과다. 전역
 `pytest -q`는 ignored 공개 연구 복제본 아래의 타 저장소 테스트까지 자동 수집하므로 공식
 회귀 명령은 `pytest -q tests`로 고정한다.
+
+## 11. v194--v196 야구 상황별 hierarchy transport 감사
+
+v184의 투수 hierarchy + 상황 잔차 신호가 2022와 2023에서는 강했지만 2024 전체로는
+하락했던 원인을 다시 분해했다. 투수-수비팀 점수 차, 이닝, 주자, 아웃카운트, 타석 좌우,
+레버리지 등 사전에 정의한 저카디널리티 야구 상황 게이트 130개와 고정 가중치 7개를
+검토했다. 테스트 데이터와 Public 점수는 선택이나 보정에 사용하지 않았다.
+
+`v194`의 strict leave-one-origin-out 선택은 2022·2023에서 고른 후보가 2024에서
+`-4.251`로 무너져 기각했다. 세 공식 OOF origin을 모두 사용했을 때는
+`score__li=close|li_mid`, 가중치 `0.05`가 선택됐다. 이는 투수팀 관점 점수 차가
+`-1~+1`이고 `0.7 < li <= 1.5`인 중간 레버리지 접전만 hierarchy 잔차를 적용한다.
+
+`v195`는 같은 130개 게이트 전체를 White Reality Check에 넣어 선택 편향을 감사했다.
+leave-one-origin-month-out 18개 블록에서 같은 게이트가 18회 모두 선택됐고 held month의
+`83.3%`에서 이득이었다. 2024년 3--6월만으로 선택한 별도 forward 감사에서는
+초반 이닝·중간 LI 게이트가 7--10월에 `+0.181`을 냈다. 그러나 v192 위에 더해지는
+순수 증분의 강건성 하방과 다중검정은 통과하지 못해 단독 증분은 기각했다.
+
+`v196`은 최종 합성 예측 `v192 + 접전·중간-LI hierarchy` 전체를 원래 JY 챔피언과
+직접 비교했다.
+
+| 검증 축 | JY 대비 BSS gain | 양수 월 | 최악 월 |
+|---|---:|---:|---:|
+| full-2022 | `+2.722121` | 7/7 | `+0.412541` |
+| late-2023 | `+2.320557` | 3/3 | `+0.369931` |
+| full-2024 | `+0.734403` | 6/8 | `-0.151612` |
+
+2024 pitcher, crossed pitcher-batter, chronological bootstrap p05는 각각
+`+0.699033`, `+0.203465`, `+0.735069`이었다. 선택 게이트는 2024에서도 130개 중
+1위였지만, no-op과 v192를 포함한 132개 후보 Reality Check가 `p=0.148926`으로
+사전 기준 `0.10`을 넘었다. 따라서 point gate는 통과했지만 robust gate는 실패했고,
+공식 챔피언은 교체하지 않는다. 다만 여러 연도에서 합산 효과가 일관되고 v180보다
+Public 기대 개선 폭이 큰 점을 근거로 탐색 제출 후보의 최종 학습·패키징은 진행했다.
+
+## 12. v197--v198 최종 학습과 독립 실행 패키지
+
+`v197`은 공식 train의 2019--2024년 1,475,092행만 사용해 2025용 투수 hierarchy
+스냅샷과 101개 피처 CatBoost 잔차 모델을 학습했다. 테스트 CSV를 읽지 않았고,
+다른 테스트 행이나 테스트 전체 분포가 필요하지 않은 행 단위 추론이다.
+
+| 항목 | 결과 |
+|---|---:|
+| 학습 행 / 시즌 | `1,475,092` / `2019--2024` |
+| 피처 / 범주형 | 101 / 15 |
+| 투수 스냅샷 | 792명 |
+| 2023 opening snapshot → 2024 hierarchy parity | `0.0` |
+| 학습 시간 | `792.335초` |
+| 모델 SHA-256 | `B3D57DB9D64F7EEAF78AC799BB2C51544774AA05383116468569DC83ABFC5DBE` |
+| 스냅샷 SHA-256 | `EC6A3F7A1166B85538112A0C5AABB491929F25E8643BB7248B377B25038E256F` |
+
+첫 v198 내부 빌드에서는 잔차 출력을 확률로 해석한 결함이 패키지 감사에서 발견됐다.
+해당 빌드는 즉시 폐기·덮어썼고 Downloads로 복사하거나 제출하지 않았다. runtime을
+`hierarchy base + residual`로 수정하고 회귀 테스트를 추가한 뒤 최종 ZIP을 다시 만들었다.
+
+| 항목 | 최종 결과 |
+|---|---:|
+| ZIP | `artifacts/v198_total_context_stack_package_20260828_01/submit_v198_total_context_stack.zip` |
+| 크기 / 파일 수 | `169,594,297 bytes` / 182 |
+| SHA-256 | `1EA2B7AE928FD1FF2F725ACC98D444613C21C97E85D0B005B45143538187865E` |
+| 챔피언·공식 수식 parity 최대 오차 | `5.55e-17` / `5.55e-17` |
+| shuffle·partition·singleton 최대 오차 | `1.67e-16` / `1.67e-16` / `0` |
+| 245,789행 실행 시간 | `217.798초` / 제한 600초 |
+| 금지된 test 행 집계 연산 | 0건 |
+| 출력 유한성·범위 | 통과 |
+
+최종 전체 검증은 `435 passed, 21 skipped`, 저장소 감사 890개 파일 전체 통과다.
+Public 제출 전 사전 추정은 중심 `1172.7`, 주 구간 `1172.5--1173.1`, 현실적 넓은
+구간 `1171.8--1173.6`으로 기록한다. 이는 2024 OOF `+0.734`와 v180에서 관찰한
+OOF→Public 낙관 편차를 함께 반영한 값이며, 1180을 기대한다는 의미는 아니다.
+
+재현 명령:
+
+```powershell
+python -m src.champion.v197_finalize_hier_context --help
+python -m src.champion.v198_build_total_context_package --help
+python -m src.audit_standalone_release `
+  --package artifacts/v198_total_context_stack_package_20260828_01/submit_v198_total_context_stack.zip `
+  --test-csv data/test.csv --sample-rows 5 --scale-rows 245789 --timeout-seconds 600
+python -m pytest -q tests
+python scripts/audit_repository.py --include-untracked
+```
