@@ -27,15 +27,15 @@ def test_noncore_delta_changes_only_requested_exact_domain() -> None:
 
 def test_noncore_change_is_scored_outside_rcore() -> None:
     axis = {
-        "target": np.array([1.0, 0.0]),
-        "parent": np.array([0.4, 0.4]),
-        "exact_mask": np.array([True, True]),
-        "domain3": np.array(["F", "R_CORE"]),
-        "game_month": np.array([4, 4]),
+        "target": np.array([1.0, 0.0, 1.0, 0.0]),
+        "parent": np.array([0.4, 0.4, 0.4, 0.4]),
+        "exact_mask": np.array([True, True, True, True]),
+        "domain3": np.array(["F", "F", "R_CORE", "R_CORE"]),
+        "game_month": np.array([4, 4, 4, 4]),
     }
-    candidate = np.array([0.5, 0.4])
+    candidate = np.array([0.5, 0.3, 0.4, 0.4])
     result = paired_metrics(
-        axis, axis["parent"], candidate, np.array([True, False])
+        axis, axis["parent"], candidate, np.array([True, True, False, False])
     )
     assert result["overall_gain"] > 0.0
     assert result["active_domain_gain"] > 0.0
