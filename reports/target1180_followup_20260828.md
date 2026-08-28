@@ -279,7 +279,7 @@ python -m src.audit_standalone_release --package artifacts/v180_signed_stack_pac
 최종 회귀 검증은 `402 passed, 21 skipped`, 저장소 감사 852개 파일 전체 통과,
 신규 모듈 `compileall` 통과다.
 
-## 8. DACON 제출 상태
+## 8. DACON 제출 결과
 
 `2026-08-28 14:52 KST`에 v180 ZIP을 API 제출하려 했으나, 서버의 사전 검증이 저장된
 토큰을 유효하지 않은 토큰으로 거부했다.
@@ -292,3 +292,21 @@ python -m src.audit_standalone_release --package artifacts/v180_signed_stack_pac
 
 새 DACON API 토큰을 git 비추적 `.env`에 갱신한 뒤 같은 SHA의 ZIP을 그대로 제출해야 한다.
 그 전에는 v180을 챔피언으로 승격하거나 `reports/submissions.csv`에 점수를 기록하지 않는다.
+
+이후 사용자가 Downloads에 복사된 동일 ZIP을 `submit_v180.zip`으로 직접 제출해 결과를
+확인했다.
+
+| 항목 | 결과 |
+|---|---:|
+| 제출 ID | `71754` |
+| 제출 시각 | `2026-08-28 14:59:16 KST` |
+| v180 Public | `1172.0987352738` |
+| 현재 챔피언 Public | `1172.1373858439` |
+| 챔피언 대비 | `-0.0386505701` |
+| v167 대비 | `+0.0214972417` |
+| 1180까지 gap | `7.9012647262` |
+
+결론은 **기각·미승격**이다. v180은 v167보다 소폭 높았지만 직접 부모인 현재 JY 챔피언보다
+낮았다. 작은 차이를 근거로 같은 signed-stack scale을 Public에 재적합하지 않는다. 현재 공식
+챔피언과 release ZIP은 변경하지 않고, v180 코드·OOF 감사·재학습 패키지는 재현 가능한 음성
+결과로 보존한다.
