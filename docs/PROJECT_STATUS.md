@@ -2,7 +2,7 @@
 
 마지막 갱신: `2026-08-28 KST`
 
-최신 최종 연구: [`../reports/jy_runners_high_li_bridge027_public_result_20260828.md`](../reports/jy_runners_high_li_bridge027_public_result_20260828.md). `jy_runners_high_li_bridge027`은 v167/main submit을 기준으로 row-local runners/high-LI gate만 열었고, 공식 Public **1172.1373858439**로 v167보다 **+0.0601478118** 개선됐다.
+최신 후속 연구: [`../reports/target1180_followup_20260828.md`](../reports/target1180_followup_20260828.md). v198 total-context stack은 제출 ID `72462`, Public **1171.054280386**으로 현재 챔피언보다 **-1.0831054579** 하락해 기각됐다. `jy_runners_high_li_bridge027`과 공식 Public **1172.1373858439**는 변경 없이 유지한다.
 
 ## 현재 champion
 
