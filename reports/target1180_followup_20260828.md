@@ -223,3 +223,72 @@ artifacts/v176_train_only_exposure_level_audit_20260828_01
 현 시점의 가장 큰 병목은 새 피처 하나가 아니라 **2025로 전달되는 독립 OOF 방향의 부재**다.
 새 팀원 모델 OOF나 완전히 다른 학습 구조가 생기기 전에는 2024 양수만 보고 제출을 늘리는
 것보다 1172.137 챔피언을 보존하는 편이 합리적이다.
+
+## 7. 추가 후속 결과: v178/v180
+
+위 6절의 판단 뒤 독립 OOF 축을 하나씩 더 만드는 대신, 이미 서로 다른 오차를 가진 고정
+컴포넌트의 **signed stack을 현재 JY 부모 위에 재기준화**했다. 계수는 v165에서 이미 동결된
+값을 그대로 사용하고, source-only 두 축(full-2022, late-2023)에서 강도 `0.25`를 선택했다.
+잠금 2024는 선택에 사용하지 않고 최종 감사에만 사용했다.
+
+### v178 다축 OOF 감사
+
+| 축 | 현재 JY 대비 BSS gain | 세부 안정성 |
+|---|---:|---|
+| full-2022 | `+0.748373` | 7개월 중 6개월 양수, 최악 `-0.718773` |
+| late-2023 | `+0.617614` | 3개월 모두 양수, 최악 `+0.306289` |
+| locked 2024 | `+0.193590` | 8개월 중 5개월 양수, R_CORE `+0.274818` |
+
+잠금 2024 행을 대상으로 한 2,000회 재표집 결과도 모두 양수였다.
+
+- pitcher cluster bootstrap p05: `+0.203039`
+- crossed pitcher-batter bootstrap p05: `+0.006789`
+- chronological moving-block bootstrap p05: `+0.251453`
+- White Reality Check: 최종 후보 `0.25`와 no-op 부모만 비교, `p=0.002499`
+
+v179 ablation에서는 Jiyun 컴포넌트를 제거하면 이 안정성이 사라졌다. 따라서 v180은 Jiyun을
+포함한 v178 공식을 그대로 배포하는 것으로 고정했고, Public 점수에 맞춰 계수를 다시 조정하지
+않았다.
+
+### v180 최종 재학습과 독립 실행 패키지
+
+Jiyun LightGBM/CatBoost의 iteration은 2019--2023 학습/2024 검증으로만 정한 뒤,
+2019--2024 전체에 각각 `193`/`324` iteration으로 최종 재학습했다. 2025 test의 다른 행,
+전체 분포, 예측 평균 또는 Public 점수는 학습·보정·선택에 사용하지 않았다.
+
+- ZIP: `artifacts/v180_signed_stack_package_20260828_01/submit_v180_signed_stack.zip`
+- 크기: `86,084,812 bytes`
+- 파일 수와 루트: 179개, `model/`, `script.py`, `requirements.txt`
+- SHA-256: `91CA020EFA776BA12BF50630FCE533A06EE6E6984FD89C26E5C20BB5FFB5AAC4`
+- 현재 챔피언 재구성 오차: `5.55e-17`
+- v178 공식 재현 오차: `5.55e-17`
+- singleton/shuffle/partition 최대 오차: `1.67e-16`
+- 245,789행 환산 실행: `177.248초` (공식 제한 600초 이내)
+- 상태: `eligible_for_api_submission`
+
+재현 진입점은 현재 저장소 구조를 유지한다.
+
+```powershell
+python -m src.archive.v178_jy_signed_stack_rebase --help
+python -m src.archive.v179_deployable_signed_stack_ablation --help
+python -m src.champion.v180_finalize_jiyun --help
+python -m src.champion.v180_build_signed_stack_package --help
+python -m src.audit_standalone_release --package artifacts/v180_signed_stack_package_20260828_01/submit_v180_signed_stack.zip --test-csv data/test.csv --sample-rows 5 --scale-rows 245789 --timeout-seconds 600
+```
+
+최종 회귀 검증은 `402 passed, 21 skipped`, 저장소 감사 852개 파일 전체 통과,
+신규 모듈 `compileall` 통과다.
+
+## 8. DACON 제출 상태
+
+`2026-08-28 14:52 KST`에 v180 ZIP을 API 제출하려 했으나, 서버의 사전 검증이 저장된
+토큰을 유효하지 않은 토큰으로 거부했다.
+
+- API 응답: `isSubmitted=false`
+- 업로드: 시작되지 않음
+- 일일 quota: 차감되지 않음
+- v180 Public 점수: 아직 없음
+- 기존 챔피언: Public `1172.1373858439` 및 release ZIP 그대로 보존
+
+새 DACON API 토큰을 git 비추적 `.env`에 갱신한 뒤 같은 SHA의 ZIP을 그대로 제출해야 한다.
+그 전에는 v180을 챔피언으로 승격하거나 `reports/submissions.csv`에 점수를 기록하지 않는다.
