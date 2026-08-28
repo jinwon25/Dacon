@@ -19,9 +19,8 @@ import pandas as pd
 from src.archive.v168_jy_exact_contract_reaudit import (
     _load_year_context,
     affine,
-    metrics,
 )
-from src.archive.v173_h1_noncore_extension_audit import _robustness
+from src.archive.v173_h1_noncore_extension_audit import _robustness, paired_metrics
 from src.archive.v177_forward_context_residual_eb import exact_jy_parents
 from src.archive.v209_h1_workload_multiseed_audit import (
     SEEDS,
@@ -58,10 +57,10 @@ def apply_noncore_delta(
 
 def source_gate(result: dict[str, Any]) -> bool:
     return bool(
-        result["gain"] > 0.0
+        result["overall_gain"] > 0.0
         and result["positive_month_fraction"] >= 0.50
         and result["worst_month_gain"] > -3.0
-        and result["minimum_domain_gain"] >= 0.0
+        and result["active_domain_gain"] >= 0.0
     )
 
 
@@ -137,9 +136,11 @@ def run(
             )
             candidates[scale][axis_name] = candidate
             active_masks[scale][axis_name] = active
-            result = metrics(axes[axis_name], parents[axis_name], candidate)
+            result = paired_metrics(
+                axes[axis_name], parents[axis_name], candidate, active
+            )
             details[str(scale)][axis_name] = result
-            row[f"{axis_name}_gain"] = result["gain"]
+            row[f"{axis_name}_gain"] = result["overall_gain"]
             row[f"{axis_name}_month_fraction"] = result[
                 "positive_month_fraction"
             ]
@@ -148,7 +149,7 @@ def run(
             source_gate(details[str(scale)][axis]) for axis in SOURCE_AXES
         )
         row["source_min_gain"] = min(
-            details[str(scale)][axis]["gain"] for axis in SOURCE_AXES
+            details[str(scale)][axis]["overall_gain"] for axis in SOURCE_AXES
         )
         rows.append(row)
 
@@ -166,12 +167,12 @@ def run(
     for scale in SCALES:
         anchor_diagnostic[str(scale)] = {}
         for axis_name in ("late_2023", "full_2024"):
-            candidate, _active = apply_noncore_delta(
+            candidate, active = apply_noncore_delta(
                 parents[axis_name], directions[axis_name], axes[axis_name],
                 "R_ANCHOR", scale,
             )
-            anchor_diagnostic[str(scale)][axis_name] = metrics(
-                axes[axis_name], parents[axis_name], candidate
+            anchor_diagnostic[str(scale)][axis_name] = paired_metrics(
+                axes[axis_name], parents[axis_name], candidate, active
             )
 
     if passing.empty:
@@ -199,10 +200,10 @@ def run(
             active, family,
         )
         point_pass = bool(
-            locked["gain"] > 0.0
+            locked["overall_gain"] > 0.0
             and locked["positive_month_fraction"] >= 0.625
             and locked["worst_month_gain"] > -3.0
-            and locked["minimum_domain_gain"] >= 0.0
+            and locked["active_domain_gain"] >= 0.0
         )
         robust_pass = bool(
             robust["pitcher"]["p05"] > 0.0

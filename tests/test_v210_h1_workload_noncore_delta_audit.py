@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 
+from src.archive.v173_h1_noncore_extension_audit import paired_metrics
 from src.archive.v210_h1_workload_noncore_delta_audit import (
     apply_noncore_delta,
     restrictions,
@@ -22,6 +23,22 @@ def test_noncore_delta_changes_only_requested_exact_domain() -> None:
     )
     assert active.tolist() == [True, False, False, False]
     assert np.allclose(output, [0.41, 0.4, 0.4, 0.4])
+
+
+def test_noncore_change_is_scored_outside_rcore() -> None:
+    axis = {
+        "target": np.array([1.0, 0.0]),
+        "parent": np.array([0.4, 0.4]),
+        "exact_mask": np.array([True, True]),
+        "domain3": np.array(["F", "R_CORE"]),
+        "game_month": np.array([4, 4]),
+    }
+    candidate = np.array([0.5, 0.4])
+    result = paired_metrics(
+        axis, axis["parent"], candidate, np.array([True, False])
+    )
+    assert result["overall_gain"] > 0.0
+    assert result["active_domain_gain"] > 0.0
 
 
 def test_v210_anchor_cannot_promote_and_test_batch_is_forbidden() -> None:
