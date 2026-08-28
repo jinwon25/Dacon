@@ -5,6 +5,7 @@ import pandas as pd
 
 from src.archive.v205_h1_workload_strict_forward_audit import (
     apply_component_delta,
+    load_batter_ids_by_year,
     restrictions,
     strict_axis,
 )
@@ -25,6 +26,23 @@ def test_component_delta_is_a_convex_paired_dose() -> None:
         np.array([0.4, 0.6]), np.array([0.6, 0.4]), 0.25
     )
     assert np.allclose(candidate, [0.45, 0.55])
+
+
+def test_load_batter_ids_preserves_csv_row_alignment(tmp_path) -> None:
+    train_csv = tmp_path / "train.csv"
+    pd.DataFrame(
+        {
+            "season": [2022, 2023, 2022, 2024],
+            "batter_id": [11, 21, 12, 31],
+        }
+    ).to_csv(train_csv, index=False)
+    loaded = load_batter_ids_by_year(
+        train_csv,
+        np.array([2022, 2023, 2022, 2024]),
+    )
+    assert loaded[2022].tolist() == [11, 12]
+    assert loaded[2023].tolist() == [21]
+    assert loaded[2024].tolist() == [31]
 
 
 def test_v205_primary_is_strict_and_contaminated_axes_only_veto() -> None:

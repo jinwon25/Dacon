@@ -30,6 +30,26 @@ SOURCE_AXES = ("full_2022", "full_2023")
 SCALES = (0.25, 0.5, 1.0)
 
 
+def load_batter_ids_by_year(
+    train_csv: Path,
+    expected_season: np.ndarray,
+) -> dict[int, np.ndarray]:
+    """Load the robustness grouping key without changing the shared context loader."""
+    identity = pd.read_csv(
+        train_csv,
+        usecols=["season", "batter_id"],
+        low_memory=False,
+    )
+    season = identity["season"].to_numpy(np.int16)
+    if not np.array_equal(season, np.asarray(expected_season, dtype=np.int16)):
+        raise ValueError("batter identity rows are not aligned with the audit context")
+    batter_id = identity["batter_id"].to_numpy(np.int64)
+    return {
+        year: batter_id[season == year]
+        for year in (2022, 2023, 2024)
+    }
+
+
 def strict_axis(
     frame: pd.DataFrame,
     target: np.ndarray,
@@ -101,6 +121,9 @@ def run(
     season = context["season"].to_numpy(np.int16)
     target_all = context["control_success"].to_numpy(np.float64)
     years = (2022, 2023, 2024)
+    batter_ids = load_batter_ids_by_year(train_csv, season)
+    for year in years:
+        raw_frames[year] = raw_frames[year].assign(batter_id=batter_ids[year])
     baseline_raw = {
         year: np.load(
             baseline_checkpoint_dir / f"h1_year{year}_seed42.npy",
