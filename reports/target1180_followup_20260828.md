@@ -310,3 +310,110 @@ python -m src.audit_standalone_release --package artifacts/v180_signed_stack_pac
 낮았다. 작은 차이를 근거로 같은 signed-stack scale을 Public에 재적합하지 않는다. 현재 공식
 챔피언과 release ZIP은 변경하지 않고, v180 코드·OOF 감사·재학습 패키지는 재현 가능한 음성
 결과로 보존한다.
+
+## 9. v180 Public 이후 독립 후속 연구: v181--v192
+
+v180의 Public 하락을 계수 재적합 신호로 사용하지 않았다. 대신 기존에 고정된 공식
+strict-forward OOF 계약을 유지하면서, 계층 잔차·상황별 제구 프로필·연도 완전 분리
+stacking을 새로 검증했다. 공개 저장소의 예측은 어떤 배포 ZIP에도 포함하지 않았다.
+
+| 실험 | 핵심 방향 | 판정 근거 |
+|---|---|---|
+| v181 | 공개 구현 독립 OOF screen | 최신 공개 저장소에 명시적 라이선스가 없어 연구 전용 |
+| v182 | v178 + 공개 shallow-context 보완축 | 세 축에서 양수였지만 라이선스·로컬 재현 계약 미충족으로 배포 금지 |
+| v183 | all-month signed-stack 재기준화 | locked 2024 `-0.602`, 기각 |
+| v184 | 선수 계층 base + Hoo 잔차 CatBoost | 2022 `+8.968`, late-2023 `+5.381`이나 2024 `-1.541`, 기각 |
+| v185 | 공개 보완축 성분 분해 | hierarchy가 아니라 얕은 상황 잔차가 보완 신호라는 진단만 채택 |
+| v186 | 선수 identity-free shallow adaptive residual | early-2022→late-2022 `-14.6`, 소스 기각 |
+| v187 | 전년도 선수별 압박 상황 프로필 | 최선 소스도 `-0.337/+0.344`로 부호 반전 |
+| v188 | 압박 프로필 soft transition | locked 2024 총 `+0.255`지만 월 4/8, crossed p05 음수 |
+| v189 | 압박 프로필 route screen | locked 2024 총 `+0.322`지만 active subset 하방 음수 |
+| v190 | context-adjusted season-stable profile | 소스 평균이 모두 음수 |
+| v191 | leave-one-year-out minimax stack | 세 held-out 전체 이득은 양수, 월 안정성 strict gate 미달 |
+| v192 | 사전 고정 soft-LOO gate + 3개년 최종 stack | 세 연도 전체 이득 양수, 2024 강건성 통과; 탐색 제출 후보로 승격 |
+
+v184처럼 단일 연도에서 큰 수치를 만드는 모델은 다른 해로 전달되지 않았다. 선수의 제구는
+고정된 능력뿐 아니라 시즌별 구종 운용, 부상·피로, 역할 및 공인구/ABS 환경 변화가 섞인
+상태이므로, 과거 선수 효과를 강하게 외삽하는 후보보다 서로 다른 기존 축의 작은 signed
+조합이 더 안정적이었다.
+
+### v192 연도 완전 분리 결과
+
+`v192`는 각 held-out 연도를 전혀 보지 않고 나머지 두 연도에서 L1 budget을 선택하는
+leave-one-year-out 절차를 사용했다. 사전에 고정한 soft gate를 유일하게 통과한 budget은
+`0.15`였다. 최종 계수는 Public 점수를 사용하지 않고 세 공식 연도 OOF만으로 다시 적합했다.
+
+| 검증 축 | 현재 JY 대비 BSS gain | 양수 월 | 최악 월 |
+|---|---:|---:|---:|
+| full-2022 | `+0.621225` | 5/7 | `-0.730234` |
+| late-2023 | `+1.031696` | 3/3 | `+0.526391` |
+| full-2024 | `+0.219884` | 5/8 | `-0.574667` |
+
+2024의 2,000회 강건성 감사도 모두 양수였다.
+
+- pitcher cluster bootstrap p05: `+0.396169`
+- crossed pitcher-batter bootstrap p05: `+0.101447`
+- chronological moving-block bootstrap p05: `+0.487605`
+- White Reality Check: no-op 포함 최종 2개 후보, `p=0.0009995`
+
+다만 full-2022의 양수 월이 기존 strict point gate `6/7`이 아니라 `5/7`이어서 자동 챔피언
+승격 조건은 통과하지 못했다. v180보다 leave-one-year-out 하방과 2024 cluster bootstrap이
+개선됐고 세 held-out 전체 이득이 모두 양수라는 점을 근거로, 사용자가 직접 Public을 확인할
+수 있는 **탐색 제출 후보**로만 승격했다. 현재 1172.137 챔피언은 그대로 유지한다.
+
+최종 순계수는 다음과 같다.
+
+```text
+v135_c3_recent_window:                  +0.0724597608649307
+v114_independent_source_stability_mask: +0.015483964114884825
+v131_hoo_h1_independent_oof:            -0.062056275020207705
+v160_original_h1_affine:                 0.0
+```
+
+## 10. v193 독립 실행 제출 패키지
+
+`v193`은 `v192`의 고정 계수를 실제 단일 실행 ZIP에 이식한 버전이다. `v180` 패키지의 179개
+모델·테이블·요구사항 파일을 그대로 보존하고, fail-closed 빌더가 루트 `script.py`의 stack
+상수와 후보 라벨만 정확히 한 번씩 치환한다. 원본 챔피언과 v180 ZIP은 수정하지 않았다.
+
+| 항목 | 결과 |
+|---|---:|
+| ZIP | `artifacts/v193_triyear_stack_package_20260828_01/submit_v193_triyear_stack.zip` |
+| 크기 | `86,084,836 bytes` |
+| SHA-256 | `AEF4FA45CDF0908ACEEDCE06135C04151CC3BAD0A7FCEB5CD851097DDC126DB4` |
+| 파일 수 / 루트 | 179 / `model`, `requirements.txt`, `script.py` |
+| 현재 챔피언 재구성 최대 오차 | `5.55e-17` |
+| v192 공식 재현 최대 오차 | `5.55e-17` |
+| shuffle 최대 오차 | `0` |
+| partition 최대 오차 | `0` |
+| singleton 최대 오차 | `1.67e-16` |
+| 금지된 test 행 집계 연산 | 0건 |
+| 245,789행 실행 시간 | `197.306초` / 제한 600초 |
+| 출력 유한성·범위 | 통과 |
+
+`scikit-learn 1.7.2`에서 직렬화된 일부 기존 객체를 공식 패키지 요구 버전 `1.6.1`에서
+읽을 때 호환성 경고가 발생한다. 이는 v180에도 존재한 알려진 위험이며, 이번 패키지는 같은
+객체를 바이트 그대로 유지했다. 1.6.1 환경의 챔피언 parity와 전체 규모 추론은 모두
+통과했다.
+
+재현 명령:
+
+```powershell
+python -m src.archive.v192_soft_loo_triyear_stack --help
+python -m src.champion.v193_build_triyear_stack_package `
+  --source-package artifacts/v180_signed_stack_package_20260828_01/submit_v180_signed_stack.zip `
+  --champion-zip submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip `
+  --v192-summary artifacts/v192_soft_loo_triyear_stack_20260828_01/summary.json `
+  --data-dir data `
+  --output-dir artifacts/v193_triyear_stack_package_20260828_01 `
+  --timeout 600
+python -m src.audit_standalone_release `
+  --package artifacts/v193_triyear_stack_package_20260828_01/submit_v193_triyear_stack.zip `
+  --test-csv data/test.csv --sample-rows 5 --scale-rows 245789 --timeout-seconds 600
+python -m pytest -q tests
+python scripts/audit_repository.py --include-untracked
+```
+
+최종 검증은 `425 passed, 21 skipped`, 저장소 감사 879개 파일 전체 통과다. 전역
+`pytest -q`는 ignored 공개 연구 복제본 아래의 타 저장소 테스트까지 자동 수집하므로 공식
+회귀 명령은 `pytest -q tests`로 고정한다.
