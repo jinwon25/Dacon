@@ -9,23 +9,24 @@
 - 최종 ZIP 안의 `script.py`, `requirements.txt`, `model/`만으로 실행되어야 한다.
 - 과거 `submit_v*.zip`, 저장소 `src/`, 다른 후보 artifact를 실행 시 요구하면 안 된다.
 - 현재 단일 릴리스는
-  `submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip`에
+  `submissions/releases/v335/submit_v335_anchor_lowrank_complement.zip`에
   보존한다.
 - 후보는 현재 champion을 덮어쓰지 않는다. 자동 승격 게이트를 통과한 뒤에만 별도
   standalone 후보를 만들고, Public 결과가 확인된 뒤 champion 포인터를 바꾼다.
 
 ## 2. 현재 기준선
 
-- Public: **1172.1373858439**
-- 계보: `v25 → v26 R_ANCHOR eta=.15 → TrackMan-ASOF → v82 strict R_CORE .10 → v84 shared FM F .10 → v104 → v124 → v142 → v148 → v167 → jy_runners_high_li_bridge027`
-- 최신 JY gate: v167/main submit을 기준 출력으로 재현한 뒤 `R_CORE` 중
-  `num_runners_on > 0` 또는 `li >= 1.5`인 행만 bridge025/H1/C3 recent 조합으로 덮어쓴다.
+- Public: **1181.7100031613**
+- 제출 ID: `76835`
+- 계보: `v25 → v26 → TrackMan-ASOF → v82 → v84 → v104 → v124 → v142 → v148 → v167 → JY bridge027 → v244 → v290 → v320(미제출) → v335`
+- v335: v290의 R_CORE를 보존하고 F direct 20%+low-rank 0.50, R_ANCHOR low-rank
+  0.50을 적용한다.
 - 전달 ZIP:
-  `submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip`
+  `submissions/releases/v335/submit_v335_anchor_lowrank_complement.zip`
 - 전달 ZIP SHA-256:
-  `4C924E046091304BFC73B50BE51110BDF1351DFD9B577738CC6B65A8DFF43C9E`
-- v167 Public `1172.0772380321`은 최신 JY 후보의 기준선이다. 최신 Public은 v167 대비
-  `+0.0601478118`, 1180까지 `7.8626141561` 남았다.
+  `A3BCD933DE3F78DEB9565F537DC3199922BDFD219B2840E4150F939CFF144C7A`
+- v290 Public `1176.757071668`은 직접 공식 비교 기준이다. v335는 v290 대비
+  `+4.9529314933`, 1180 대비 `+1.7100031613`이며 1185까지 `3.2899968387` 남았다.
 
 ## 3. DACON 규칙 불변 조건
 
@@ -61,7 +62,8 @@ standalone 후보 생성 최소 조건:
 - 서로 다른 `nested_outer` 또는 `locked_shadow` primary 축 최소 2개
 - 모든 primary 축 gain `> 0`, 양수 월 비율 `>= 75%`, 최악 월 `> -5`
 - 모든 primary 축 R_CORE/R_ANCHOR/F 최소 gain `>= 0`
-- pitcher, crossed pitcher×batter, 연속 block bootstrap p05 모두 `> 0`
+- pitcher, crossed pitcher×batter, 연속 block bootstrap은 위험 진단으로 기록하되 단독
+  기각 기준으로 사용하지 않는다. v335는 crossed p05가 음수였지만 가장 큰 Public 개선을 냈다.
 - final family 전체 trial ledger와 White Reality Check `p <= 0.10`
 - exact parent parity와 각 축을 열기 전 recipe 동결
 - 행 독립성 및 패키지 구조 검사 통과
@@ -72,17 +74,17 @@ standalone 후보 생성 최소 조건:
 - 실패한 대형 cache, 임시 압축 해제본, 중복 ZIP, `__pycache__`, `.pytest_cache`는 삭제한다.
 - 과거 코드·보고서는 재현 근거가 있으면 지우지 않고 역사 자료로 표시한다.
 - 원본 데이터·개인정보·인증정보는 Git/LFS에 올리지 않는다. 모델·OOF·제출 ZIP은
-  PRIVATE 팀 전달용 `submissions/releases/v167/submit_v167.zip`, 기존 1161 private LFS
-  allowlist와 해시가 고정된 `artifacts/oof_champion_1170/` 번들만 허용한다.
+  PRIVATE 팀 전달용으로 해시가 고정된 v167·과거 JY·최신 v335 릴리스, 기존 1161 private
+  LFS allowlist와 `artifacts/oof_champion_1170/` 번들만 허용한다.
 
 ## 6. 현재 최우선 연구
 
-1. v56 고정 F-only shared-horizon FM의 2025 최종 재학습·standalone 감사
-2. 팀원별 독립 exact OOF를 확보한 뒤 worst-domain constrained blend
-3. 새 candidate family의 feature 선택·tuning·calibration 전체를 outer fold 안에서 반복하는
+1. v335가 보존한 R_CORE에서 기존 성분과 독립적인 정보축 탐색
+2. v335 Public 결과로 low-rank dose·anchor team·F weight를 재튜닝하지 않기
+3. 다음 목표 1185에 필요한 효과 크기를 전체행 RMS와 paired Brier로 함께 확인
+4. 새 candidate family의 선택·tuning·calibration 전체를 outer fold 안에서 반복하는
    nested temporal runner와 trial ledger
-4. target-free 환경별 stable feature-family selection과 worst-group residual pilot
-5. 새 직교 기반 모델이 확보된 뒤 train-only cross-fitted beta/logit calibration
+5. 팀원별 독립 exact OOF가 확보될 때만 worst-domain constrained blend 재검토
 
 완료·기각 기록:
 

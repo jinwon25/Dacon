@@ -37,6 +37,10 @@ ALLOWED_LFS_FILES = {
     "artifacts/standalone_champion_1162/standalone_champion_1162.zip",
 }
 PINNED_REGULAR_BINARY_FILES = {
+    "JY_fallback_XGB_active50_w030/fallback_lookups.joblib": {
+        "bytes": 862_763,
+        "sha256": "374E7BA22AD181F488A082C04A0BBCE456B164F45D05F62FEF3AF209030DB3C5",
+    },
     "artifacts/oof_champion_1170/v148_full_2024.npz": {
         "bytes": 8_168_945,
         "sha256": "972383D4DE481DCF8A27FCC497C9C88BC08FCD6612B08C4E3F0E37A824EDF2F9",
@@ -48,6 +52,10 @@ PINNED_REGULAR_BINARY_FILES = {
     "submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip": {
         "bytes": 83_675_308,
         "sha256": "4C924E046091304BFC73B50BE51110BDF1351DFD9B577738CC6B65A8DFF43C9E",
+    },
+    "submissions/releases/v335/submit_v335_anchor_lowrank_complement.zip": {
+        "bytes": 91_469_892,
+        "sha256": "A3BCD933DE3F78DEB9565F537DC3199922BDFD219B2840E4150F939CFF144C7A",
     },
 }
 FORBIDDEN_SUFFIXES = {

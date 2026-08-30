@@ -1,5 +1,8 @@
 # 보고서 빠른 안내
 
+- [`v335_public_result_20260831.md`](v335_public_result_20260831.md): **현재 공식 챔피언** — Public 1181.7100031613, v290 대비 +4.9529314933, v335 구조·감사·귀속 한계
+- [`target1185_v328_v335_multiexpert_followup_20260830.md`](target1185_v328_v335_multiexpert_followup_20260830.md): v328~v335 다중 전문가 스크린과 v335 제출 전 근거
+- [`target1180_structural_followup_20260830.md`](target1180_structural_followup_20260830.md): **최신 1180 후속 연구** — v264 배포계약 기각, pseudo-deployment v277 탐색 challenger, 독립 실행 감사
 - [`target1170_v94_v96_multiorigin_20260822.md`](target1170_v94_v96_multiorigin_20260822.md): **최신 multi-origin 감사** — v94 fidelity 계약, v95 context 연도 전이 반전, v96 연중 적응 진단과 공개 자료 재감사
 - [`target1170_v92_v93_pipeline_audit_20260822.md`](target1170_v92_v93_pipeline_audit_20260822.md): **최신 데이터·파이프라인 전수 감사** — v92/v93 기각, v87 의존성 bootstrap, TrackMan 한계와 exact multi-origin runner 우선순위
 

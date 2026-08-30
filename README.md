@@ -6,27 +6,26 @@ LG Aimers 9기 `투구 제구 성공 확률 예측 AI 온라인 해커톤`의 �
 
 ## 최종 현황
 
-마지막 갱신: `2026-08-28 03:45 KST`
+마지막 갱신: `2026-08-31 00:00 KST`
 
 | 항목 | 값 |
 |---|---:|
-| 공식 Public 챔피언 | **jy_runners_high_li_bridge027 / 1172.1373858439** |
+| 공식 Public 챔피언 | **submit_v335 / 1181.7100031613** |
 | 공개 순위 | 제출 이력 기준 확인 |
-| 제출 ID | DACON UI 확인값 미기록 |
-| 목표 1170 초과분 | **+2.1373858439** |
-| 직전 v167 대비 | **+0.0601478118** |
-| 1180까지 | **7.8626141561** |
-| 챔피언 파일 | `submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip` |
-| SHA-256 | `4C924E046091304BFC73B50BE51110BDF1351DFD9B577738CC6B65A8DFF43C9E` |
-| ZIP 크기 / 파일 수 | `83,675,308 bytes` / `172` |
-| 현재 CI 기준 검사 | data-free pytest `57 passed` 로컬 재현 |
+| 제출 ID | `76835` |
+| 목표 1180 초과분 | **+1.7100031613** |
+| 직전 v290 대비 | **+4.9529314933** |
+| 1185까지 | **3.2899968387** |
+| 챔피언 파일 | `submissions/releases/v335/submit_v335_anchor_lowrank_complement.zip` |
+| SHA-256 | `A3BCD933DE3F78DEB9565F537DC3199922BDFD219B2840E4150F939CFF144C7A` |
+| ZIP 크기 / 파일 수 | `91,469,892 bytes` / `188` |
+| 현재 CI 기준 검사 | data-free pytest `685 passed, 21 skipped` 로컬 재현 |
 
-최신 챔피언은 v167/main submit을 기준으로, `R_CORE` 중 `num_runners_on > 0` 또는
-`li >= 1.5`인 행에만 bridge025를 약 `0.27` 강도로 키우고 H1/C3 recent 조합을 덮어쓴
-row-local 후속 패키지다. 다른 행은 기준 main submit과 수치적으로 동일하게 보존한다.
-2026-08-28 03:38:21 KST 제출에서 Public `1172.1373858439`를 확인했다. 상세 근거와
-재현 절차는
-[`reports/jy_runners_high_li_bridge027_public_result_20260828.md`](reports/jy_runners_high_li_bridge027_public_result_20260828.md)에 있다.
+최신 챔피언은 v290 계보를 기준으로 `F`에 최근 direct expert 20%와 frozen low-rank
+상호작용을 결합하고, `R_ANCHOR`에만 동일한 low-rank 방향을 추가한 row-local 패키지다.
+`R_CORE`는 v290과 동일하게 보존한다. 2026-08-31 00:00:45 KST 제출에서 Public
+`1181.7100031613`을 확인해 목표 1180을 달성했다. 상세 근거와 재현 절차는
+[`reports/v335_public_result_20260831.md`](reports/v335_public_result_20260831.md)에 있다.
 
 ## 가장 먼저 할 일
 
@@ -55,14 +54,14 @@ data/sample_submission.csv
 
 ## 최신 챔피언은 단일 ZIP으로 실행되는가
 
-그렇다. 확정 `submit_jy_runners_high_li_bridge027.zip`은 루트에 아래 세 항목만 가진
+그렇다. 확정 `submit_v335_anchor_lowrank_complement.zip`은 루트에 아래 세 항목만 가진
 독립 릴리스다.
 
 ```text
-submit_jy_runners_high_li_bridge027.zip
+submit_v335_anchor_lowrank_complement.zip
 ├─ script.py
 ├─ requirements.txt
-└─ model/                 # v124 부모, H1, C3와 모든 하위 모델 포함
+└─ model/                 # v290 계보, F 전문가와 frozen low-rank lookup 포함
 ```
 
 실행할 때 v104·v124·v142 같은 과거 ZIP, 저장소의 `src/`, 학습 코드, 인터넷 연결을
@@ -74,10 +73,10 @@ submit_jy_runners_high_li_bridge027.zip
 아래 예시는 챔피언 ZIP 하나만 깨끗한 폴더에 풀어 실행한다.
 
 ```powershell
-$release = Join-Path $PWD "run_jy_runners_high_li_bridge027"
+$release = Join-Path $PWD "run_v335"
 New-Item -ItemType Directory -Force $release | Out-Null
 Expand-Archive `
-  submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip `
+  submissions/releases/v335/submit_v335_anchor_lowrank_complement.zip `
   $release -Force
 New-Item -ItemType Directory -Force (Join-Path $release "data") | Out-Null
 Copy-Item data/test.csv (Join-Path $release "data/test.csv")
@@ -86,7 +85,7 @@ python -m pip install -r (Join-Path $release "requirements.txt")
 python (Join-Path $release "script.py")
 ```
 
-성공하면 `run_jy_runners_high_li_bridge027/output/submission.csv`가 생성된다. 확정
+성공하면 `run_v335/output/submission.csv`가 생성된다. 확정
 패키지 의존성은 ZIP 내부 `requirements.txt`에 고정돼 있다.
 
 ```text
@@ -96,6 +95,7 @@ joblib==1.5.1
 numpy==2.2.6
 pandas==2.2.3
 scikit-learn==1.6.1
+xgboost==3.2.0
 ```
 
 ### 단일 릴리스 감사
@@ -105,42 +105,42 @@ scikit-learn==1.6.1
 
 ```powershell
 python -m src.audit_standalone_release `
-  --package submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip `
+  --package submissions/releases/v335/submit_v335_anchor_lowrank_complement.zip `
   --test-csv data/test.csv `
   --scale-rows 245789 `
   --timeout-seconds 300
 ```
 
-최종 후보의 구조 감사는 `reports/jy_runners_high_li_bridge027_package_audit.json`에
-보존했다. 제출 전 probe 감사 결과는 다음과 같다.
+v335의 route별 감사는 로컬 생성 artifact에 보존했다. 제출 전·공식 실행 결과는 다음과 같다.
 
 | 검사 | 결과 |
 |---|---:|
 | 구조 감사 | 통과 |
-| 기준 main submit 대비 보호 행 최대 차이 | `0.0` |
-| 후보 active fraction, probe | `0.625` |
-| 이전 runners 후보 active fraction, probe | `0.375` |
-| 새로 열린 fraction, probe | `0.25` |
-| 3,600행 probe 추론 | `9.723초` |
+| v320 대비 F parity | `0.0` |
+| v320 대비 R_CORE parity | `0.0` |
+| R_ANCHOR 공식 최대 오차 | `0.0` |
+| shuffle / partition 최대 오차 | `0.0` / `5.55e-17` |
+| DACON 공식 추론 | `111초` |
 | 공식 제한 | `600초` |
 
 내부 120초는 후보 간 비교용 soft guard이며 대회 공식 제한은 600초다.
 
 ZIP 실행과 소스 재구축은 다른 작업이다. 실행에는 ZIP 하나면 충분하지만, 동일 ZIP을
-처음부터 다시 만들려면 해시가 고정된 부모 artifact와 공식 train/OOF가 필요하다.
-재구축 진입점은 `scripts/build_jy_next_variants.py`이며, 순차 감사와 최종 패키지 감사는
-아래 스크립트로 재현한다.
+처음부터 다시 만들려면 v290 부모, v319 low-rank lookup, 공식 train과 forward OOF가
+필요하다. 핵심 재구축·감사 진입점은 다음과 같다.
 
 ```powershell
-python scripts\build_jy_next_variants.py
-python scripts\audit_jy_sequential_gates.py
-python scripts\audit_jy_next_final.py
+python -m src.champion.v319_finalize_futures_lowrank --help
+python -m src.champion.v320_build_futures_portfolio_package --help
+python -m src.archive.v335_anchor_lowrank_complement_audit --help
+python -m src.champion.v335_build_anchor_lowrank_package --help
+python -m src.audit_v335_anchor_lowrank --help
 ```
 
 공식 원본 데이터, 인증정보와 일반 대용량 ZIP·OOF는 Git에 올리지 않는다. 다만 PRIVATE
-협업 저장소에서 팀원에게 전달하기 위해 검증된 v167 ZIP과 최신 JY champion ZIP은 해시
-고정 예외로 명시 추적한다. clone 후 SHA-256을 대조하고, 기존 1161 LFS 및 1170 OOF 번들은
-문서화된 해시 고정 allowlist로 유지한다. 실행 및 감사는 위 절차로 수행한다. 자세한 인계 규칙은
+협업 저장소에서 팀원에게 전달하기 위해 검증된 v167과 과거 JY ZIP, 최신 v335 champion
+ZIP은 해시 고정 예외로 명시 추적한다. clone 후 SHA-256을 대조하고, 기존 1161 LFS 및
+1170 OOF 번들은 문서화된 해시 고정 allowlist로 유지한다. 자세한 인계 규칙은
 [`docs/STANDALONE_CHAMPION.md`](docs/STANDALONE_CHAMPION.md)에 있다.
 
 ## 문제와 평가
@@ -171,35 +171,37 @@ v22  도메인 calibration + row-local 선수 ASOF prior
                 → v148 conservative bridge (1170.3015)
                   → v167 fixed original H1 affine (1172.0772)
                     → jy_runners_high_li_bridge027 (1172.1374)
+                      → v244 mechanism-aware fallback (1175.9747)
+                        → v290 exact-anchor + recent F (1176.7571)
+                          → v320 F direct + low-rank portfolio (미제출)
+                            → v335 R_ANCHOR low-rank complement (1181.7100)
 ```
 
 계보는 연구 설명용이며 실행 의존성 체인이 아니다. 최신 champion ZIP 안에는 최종 추론에
 필요한 구성요소가 모두 들어 있다.
 
-### 최신 JY champion의 핵심
+### 최신 v335 champion의 핵심
 
-- `R_CORE`: 1군 정규시즌 중 익명 anchor team 13이 관여하지 않는 안정 영역이다.
-- `R_ANCHOR`: team 13이 관여한 정규시즌 영역으로, 불안정한 변화점을 보호한다.
-- `F`: 퓨처스리그 영역이며 별도 source-balanced FM 계보를 사용한다.
-- v167/main submit을 기준 출력으로 먼저 재현한다.
-- `R_CORE` 중 `num_runners_on > 0` 또는 `li >= 1.5`인 행만 추가 보정한다.
-- active 행에서는 bridge025 방향을 `1.2`배로 키워 effective bridge를 만들고,
-  H1 `0.16`, C3 recent `0.25` 조합을 적용한다.
-- active가 아닌 행은 기준 main submit과 수치적으로 동일하게 보존한다.
+- `R_CORE`: v290의 exact-anchor/fallback 계보를 수치적으로 보존한다.
+- `R_ANCHOR`: team 13이 관여한 정규시즌 행에 frozen `lowrank_s300_r2`를 0.50 추가한다.
+- `F`: 최근 5-seed direct expert를 총 20% 혼합하고 같은 low-rank 신호를 0.50 추가한다.
+- low-rank는 투수 ID와 현재 count·타자손을 행별로 매핑하며 test 집계를 사용하지 않는다.
+- 중간 v320을 제출하지 않았으므로 Public 개선을 F와 R_ANCHOR에 분해해 귀속하지 않는다.
 
 패키지 manifest에 고정된 최종 수식은 다음과 같다.
 
 ```text
-active = R_CORE and (num_runners_on > 0 or li >= 1.5)
-effective_bridge = parent + 1.2 × (bridge025 - parent)
-output[active] = 0.84 × effective_bridge + 0.16 × H1 + 0.50 × C3_recent025
-output[~active] = main submit output
+F = game_type == "F"
+R_ANCHOR = game_type == "R" and (pitcher_team_id == 13 or batter_team_id == 13)
+output[F] = v290_pre_F + 0.20 × (recent_F - v290_pre_F) + 0.50 × lowrank
+output[R_ANCHOR] = v320[R_ANCHOR] + 0.50 × lowrank
+output[R_CORE] = v290[R_CORE]
 ```
 
 모델 변화, 로컬 증분과 실제 Public 전이는
-[`reports/jy_runners_high_li_bridge027_public_result_20260828.md`](reports/jy_runners_high_li_bridge027_public_result_20260828.md)에 정리돼 있다.
+[`reports/v335_public_result_20260831.md`](reports/v335_public_result_20260831.md)에 정리돼 있다.
 
-## 최신 JY 순차 게이트 연구
+## 과거 JY 순차 게이트 연구
 
 v167은 Public `1172.0772380321`의 기준 main submit으로 고정했다. 이후 같은 계열을
 무작정 넓히지 않고, 제출권을 아끼기 위해 `runners_on`에서 시작해 순차적으로 추가 여부를
@@ -288,8 +290,9 @@ JY champion 최종 보고서를 우선한다.
 
 | 문서 | 용도 |
 |---|---|
-| [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) | 현재 챔피언과 운영 기준 |
+| [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) | 현재 v335 챔피언과 운영 기준 |
 | [`docs/STANDALONE_CHAMPION.md`](docs/STANDALONE_CHAMPION.md) | 최신 단일 ZIP 실행·감사·전달 |
+| [`reports/v335_public_result_20260831.md`](reports/v335_public_result_20260831.md) | 1180 달성과 v335 승격 근거 |
 | [`reports/jy_runners_high_li_bridge027_public_result_20260828.md`](reports/jy_runners_high_li_bridge027_public_result_20260828.md) | 1172.137 갱신 근거 |
 | [`reports/target1180_v167_public_result_20260825.md`](reports/target1180_v167_public_result_20260825.md) | v167 기준선 근거 |
 | [`reports/target1170_v142_v148_public_result_20260823.md`](reports/target1170_v142_v148_public_result_20260823.md) | 직전 1170 달성 근거 |
@@ -303,11 +306,11 @@ JY champion 최종 보고서를 우선한다.
 ## Git·데이터 정책
 
 - 원본 DACON 데이터, 인증정보, 개인 쿠키·키는 Git과 LFS에 올리지 않는다.
-- 모델 ZIP·OOF·임시 cache는 원칙적으로 Git에서 제외한다. PRIVATE 팀 전달용 v167 ZIP,
-  최신 JY champion ZIP, 문서화된 기존 1161 LFS·1170 OOF 번들만 해시가 고정된 예외다.
+- 모델 ZIP·OOF·임시 cache는 원칙적으로 Git에서 제외한다. PRIVATE 팀 전달용 v167·과거
+  JY·최신 v335 champion ZIP, 문서화된 기존 1161 LFS·1170 OOF 번들만 해시 고정 예외다.
 - `main`은 검증된 기준선으로 유지하고 새 연구는 별도 브랜치에서 수행한다.
 - 챔피언을 덮어쓰지 않고 버전별 새 디렉터리에 패키징한다.
 - DACON 제출은 검증된 단일 ZIP 하나를 지정 담당자가 수행하고 결과를 즉시 원장에 남긴다.
 
-2026-08-28 전달 정책 반영 후 data-free CI 묶음은 로컬에서 `57 passed`로 재현됐으며,
-현재 공식 기준은 jy_runners_high_li_bridge027 Public **1172.1373858439**이다.
+2026-08-31 v335 승격 반영 후 전체 테스트는 로컬에서 `685 passed, 21 skipped`로
+재현됐으며, 현재 공식 기준은 v335 Public **1181.7100031613**이다.

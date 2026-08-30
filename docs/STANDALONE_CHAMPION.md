@@ -1,36 +1,38 @@
 # 최신 단일 실행 챔피언
 
-마지막 갱신: `2026-08-28 KST`
+마지막 갱신: `2026-08-31 KST`
 
 ## 확정 릴리스
 
 | 항목 | 값 |
 |---|---:|
-| Public | **1172.1373858439** |
-| 순위 / 제출 ID | 제출 이력 기준 확인 / DACON UI 확인값 미기록 |
-| 파일 | `submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip` |
-| SHA-256 | `4C924E046091304BFC73B50BE51110BDF1351DFD9B577738CC6B65A8DFF43C9E` |
-| 크기 / 파일 수 | `83,675,308 bytes` / `172` |
+| Public | **1181.7100031613** |
+| 제출 ID | `76835` |
+| DACON 업로드명 | `submit_v335.zip` |
+| 파일 | `submissions/releases/v335/submit_v335_anchor_lowrank_complement.zip` |
+| SHA-256 | `A3BCD933DE3F78DEB9565F537DC3199922BDFD219B2840E4150F939CFF144C7A` |
+| 크기 / 파일 수 | `91,469,892 bytes` / `188` |
+| 공식 runtime | `111초` |
 | 루트 | `script.py`, `requirements.txt`, `model/` |
 
-최신 JY champion은 v167 대비 Public `+0.0601478118`를 기록했다. 현재 실행·전달·검증
-기준은 `submit_jy_runners_high_li_bridge027.zip`이다.
+v335는 이전 챔피언 v290 `1176.757071668`보다 `+4.9529314933` 개선됐고 목표 1180을
+`+1.7100031613` 상회했다. 현재 실행·전달·검증 기준은 이 ZIP이다.
 
 ## 독립 실행 계약
 
-최신 champion ZIP은 과거 제출 ZIP, 저장소 `src/`, 학습 코드나 외부 모델 경로를 요구하지 않는다.
-모든 추론 코드는 `script.py`, 모든 모델과 고정 통계는 `model/`에 포함돼 있다. 실행 시
-필요한 외부 입력은 공식 `test.csv`와 `sample_submission.csv`뿐이다.
+최신 ZIP은 과거 제출 ZIP, 저장소 `src/`, 학습 코드나 외부 모델 경로를 요구하지 않는다.
+모든 추론 코드는 `script.py`, 모든 모델과 고정 통계는 `model/`에 포함돼 있다. 필요한 외부
+입력은 공식 `test.csv`와 `sample_submission.csv`뿐이다.
 
 ```text
-run_jy_runners_high_li_bridge027/
+run_v335/
 ├─ script.py
 ├─ requirements.txt
 ├─ model/
 ├─ data/
 │  ├─ test.csv
 │  └─ sample_submission.csv
-└─ output/               # 실행 시 생성
+└─ output/
    └─ submission.csv
 ```
 
@@ -38,19 +40,19 @@ run_jy_runners_high_li_bridge027/
 
 ```powershell
 Get-FileHash -Algorithm SHA256 `
-  submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip
+  submissions/releases/v335/submit_v335_anchor_lowrank_complement.zip
 ```
 
 결과가
-`4C924E046091304BFC73B50BE51110BDF1351DFD9B577738CC6B65A8DFF43C9E`와 정확히 같아야 한다.
+`A3BCD933DE3F78DEB9565F537DC3199922BDFD219B2840E4150F939CFF144C7A`와 정확히 같아야 한다.
 
 ### 2. 깨끗한 폴더에서 실행
 
 ```powershell
-$release = Join-Path $PWD "run_jy_runners_high_li_bridge027"
+$release = Join-Path $PWD "run_v335"
 New-Item -ItemType Directory -Force $release | Out-Null
 Expand-Archive `
-  submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip `
+  submissions/releases/v335/submit_v335_anchor_lowrank_complement.zip `
   $release -Force
 New-Item -ItemType Directory -Force (Join-Path $release "data") | Out-Null
 Copy-Item data/test.csv (Join-Path $release "data/test.csv")
@@ -59,73 +61,72 @@ python -m pip install -r (Join-Path $release "requirements.txt")
 python (Join-Path $release "script.py")
 ```
 
-결과는 `run_jy_runners_high_li_bridge027/output/submission.csv`에 생성된다. 원본 데이터와 결과 파일은 Git에
-추가하지 않는다.
+결과는 `run_v335/output/submission.csv`에 생성된다. 원본 데이터와 출력은 Git에 추가하지 않는다.
 
 ### 3. 저장소 감사기로 재검증
 
 ```powershell
 python -m src.audit_standalone_release `
-  --package submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip `
+  --package submissions/releases/v335/submit_v335_anchor_lowrank_complement.zip `
   --test-csv data/test.csv `
   --scale-rows 245789 `
   --timeout-seconds 300
 ```
 
-감사기는 임시 디렉터리에 ZIP을 풀고 ZIP 내부의 코드·모델만 실행한다. 다음 조건 중 하나라도
-어기면 실패한다.
+감사기는 ZIP CRC·루트 구조·금지된 배치 집계·출력 스키마·확률 범위·셔플/분할 행 독립성·
+전체 규모 runtime을 검사한다.
 
-1. ZIP CRC 또는 허용 루트 구조가 잘못됐다.
-2. 실행 스크립트에서 평가 배치 집계를 유발할 수 있는 금지 연산을 발견했다.
-3. 같은 행의 단일행·셔플·분할 예측 차이가 `1e-12`를 넘는다.
-4. 출력 ID, 길이, 유한성 또는 `[0, 1]` 확률 범위가 잘못됐다.
-5. 지정한 timeout을 넘는다.
+## 모델 변경과 재감사 결과
 
-## 재감사 결과
+v335는 v290 계보의 R_CORE를 보존하고 다음 두 disjoint 보완을 추가한다.
 
-2026-08-28 최종 후보 probe 감사 결과다.
+- `F`: 최근 direct expert 총 20% + finalized `lowrank_s300_r2` 0.50
+- `R_ANCHOR`: team 13 연관 정규시즌 행에 같은 low-rank 0.50
+- `R_CORE`: v290과 동일
 
 | 검사 | 결과 |
 |---|---:|
 | ZIP SHA / bytes / 파일 수 | 일치 |
-| 구조 감사 | 통과 |
-| 기준 main submit 대비 보호 행 최대 차이 | `0.0` |
-| 후보 active fraction, probe | `0.625` |
-| 이전 runners 후보 active fraction, probe | `0.375` |
-| 새로 열린 fraction, probe | `0.25` |
-| 3,600행 probe 실행 | `9.723초`, 유한·범위 통과 |
+| ZIP CRC | 통과 |
+| v320 대비 F parity | `0.0` |
+| v320 대비 R_CORE parity | `0.0` |
+| R_ANCHOR 공식 최대 오차 | `0.0` |
+| shuffle / partition | `0.0` / `5.55e-17` |
+| 확률 유한성·범위 | 통과 |
+| DACON 공식 runtime | `111초` |
 | DACON 공식 제한 | `600초` |
 
-저장소의 120초는 후보 비교용 내부 soft guard이며 공식 제한을 대체하지 않는다.
+중간 F-only v320은 제출하지 않았으므로 Public `+4.9529314933`을 F와 R_ANCHOR에 분해해
+귀속하지 않는다. 자세한 판단은
+[`../reports/v335_public_result_20260831.md`](../reports/v335_public_result_20260831.md)에 있다.
 
 ## 실행과 재구축의 차이
 
-- **실행**: 확정 최신 champion ZIP과 공식 test/sample 두 파일만 있으면 된다.
-- **재검증**: 위 항목에 저장소의 `src.audit_standalone_release`만 추가로 필요하다.
-- **재구축**: 공식 train/OOF와 해시가 고정된 v104·H1 부모 artifact가 추가로 필요하다.
+- **실행**: v335 ZIP과 공식 test/sample만 필요하다.
+- **재검증**: 위 항목에 저장소 감사 코드가 추가로 필요하다.
+- **재구축**: 공식 train/forward OOF, v290 부모 ZIP과 v319 low-rank lookup이 필요하다.
 
-재구축 인수 계약은 다음 명령으로 확인한다.
+핵심 진입점:
 
 ```powershell
-python scripts\build_jy_next_variants.py
-python scripts\audit_jy_sequential_gates.py
-python scripts\audit_jy_next_final.py
+python -m src.champion.v319_finalize_futures_lowrank --help
+python -m src.champion.v320_build_futures_portfolio_package --help
+python -m src.archive.v335_anchor_lowrank_complement_audit --help
+python -m src.champion.v335_build_anchor_lowrank_package --help
+python -m src.audit_v335_anchor_lowrank --help
 ```
 
-재구축 결과는 기존 챔피언을 덮어쓰지 않고 새 출력 디렉터리에 만든 뒤, SHA·수식 parity·
-행 독립성·전체 런타임이 모두 통과할 때만 비교한다.
+재구축 결과는 기존 챔피언을 덮어쓰지 않고 새 디렉터리에 만든 뒤 SHA·수식 parity·행 독립성·
+runtime을 모두 확인한다.
 
 ## 전달 정책
 
-이 저장소가 PRIVATE임을 확인한 뒤, 팀 전달을 위해 검증된 v167 ZIP과 최신 JY champion ZIP만
-해시 고정 예외로 추적한다. GitHub clone에는 이 확정 ZIP들이 포함된다. 공식 DACON 데이터,
-인증정보, 부모 ZIP과 승인되지 않은 다른 모델·OOF는 계속 Git에서 제외한다. 기존 1161
-LFS·1170 OOF 번들은 문서화된 allowlist로 유지하고, 새 ZIP을 추가하려면 별도 승인과
-SHA-256 기록이 필요하다. 팀 전달 시에는 다음 항목을 함께 확인한다.
+이 저장소가 PRIVATE임을 확인한 뒤, 최신 v335 ZIP을 해시 고정 예외로 추적한다. 공식 DACON
+데이터, 인증정보, 부모 ZIP, 일반 모델·OOF는 계속 제외한다. 기존 v167·JY 릴리스와 1161
+LFS·1170 OOF allowlist는 역사적 재현 자산으로 보존한다.
 
-1. `submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip`
+팀 전달 시 함께 확인할 항목:
+
+1. `submissions/releases/v335/submit_v335_anchor_lowrank_complement.zip`
 2. 위 SHA-256
-3. 이 문서와 [`../reports/jy_runners_high_li_bridge027_public_result_20260828.md`](../reports/jy_runners_high_li_bridge027_public_result_20260828.md)
-
-과거 `submit_v148.zip`, `standalone_champion_1161.zip`, `standalone_champion_1162.zip`과 v142 이하는 계보
-감사용일 뿐 현재 실행 대상이 아니다.
+3. 이 문서와 [`../reports/v335_public_result_20260831.md`](../reports/v335_public_result_20260831.md)

@@ -1,28 +1,30 @@
 # 프로젝트 현황
 
-마지막 갱신: `2026-08-28 KST`
+마지막 갱신: `2026-08-31 KST`
 
-최신 후속 연구: [`../reports/target1180_followup_20260828.md`](../reports/target1180_followup_20260828.md). v198 total-context stack은 제출 ID `72462`, Public **1171.054280386**으로 현재 챔피언보다 **-1.0831054579** 하락해 기각됐다. `jy_runners_high_li_bridge027`과 공식 Public **1172.1373858439**는 변경 없이 유지한다.
+최신 공식 결과: [`../reports/v335_public_result_20260831.md`](../reports/v335_public_result_20260831.md).
+v335는 제출 ID `76835`, Public **1181.7100031613**으로 v290보다 **+4.9529314933**
+개선돼 목표 1180을 달성했다.
 
 ## 현재 champion
 
 | 항목 | 값 |
 |---|---:|
-| champion | `submit_jy_runners_high_li_bridge027.zip` |
-| Public | **1172.1373858439** |
-| 1170 초과분 | **2.1373858439** |
-| 1180까지 | **7.8626141561** |
-| 제출 ID / 확인 순위 | DACON UI 확인값 미기록 / 제출 이력 기준 확인 |
-| 전달 경로 | `submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip` |
-| SHA-256 | `4C924E046091304BFC73B50BE51110BDF1351DFD9B577738CC6B65A8DFF43C9E` |
+| champion | `submit_v335_anchor_lowrank_complement.zip` |
+| Public | **1181.7100031613** |
+| 1180 초과분 | **1.7100031613** |
+| 1185까지 | **3.2899968387** |
+| 제출 ID / 확인 순위 | `76835` / 제출 이력 기준 확인 |
+| 전달 경로 | `submissions/releases/v335/submit_v335_anchor_lowrank_complement.zip` |
+| SHA-256 | `A3BCD933DE3F78DEB9565F537DC3199922BDFD219B2840E4150F939CFF144C7A` |
 | 실행 의존성 | ZIP 내부 `script.py`, `requirements.txt`, `model/`만 사용 |
-| 행 독립성 | shuffle/partition 통과, 최대 `1.11e-16` |
+| 행 독립성 | shuffle/partition 통과, 최대 `5.55e-17` |
 | 현재 브랜치 기준 | `team/main`의 이 릴리스 커밋 |
 
-이 파일은 현재 운영 상태의 단일 원본이다. 최신 JY 제출은 2026-08-28 03:38:21 KST에
-Public `1172.1373858439`를 확인했다. v167/main submit을 먼저 재현한 뒤 `R_CORE` 중
-`num_runners_on > 0` 또는 `li >= 1.5`인 행에만 bridge025/H1/C3 recent 조합을 덮어쓴다.
-비활성 행은 기준 main submit과 수치적으로 동일하다.
+이 파일은 현재 운영 상태의 단일 원본이다. v335는 2026-08-31 00:00:45 KST에 Public
+`1181.7100031613`을 확인했다. v290의 R_CORE를 보존하고, F direct+low-rank 포트폴리오와
+R_ANCHOR low-rank 보완을 결합한다. 중간 v320을 제출하지 않았으므로 공식 이득을 두 축에
+나눠 귀속하지 않는다.
 
 **정정 (사후 확정):** 애초 "리더보드 미갱신이라 개별 점수 미확인"으로 기록했던 것은
 관측 시점의 한계였을 뿐이다. 이후 제출 이력 ID `61440`으로 v154의 실제 Public 점수가
@@ -61,6 +63,10 @@ v22 domain calibration + row-local ASOF
                           → submit_v148.zip (Public 1170.3014697177)
                             → submit_v167.zip (Public 1172.0772380321)
                               → submit_jy_runners_high_li_bridge027.zip (Public 1172.1373858439)
+                                → submit_v244.zip (Public 1175.9746833121)
+                                  → submit_v290.zip (Public 1176.757071668)
+                                    → v320 F portfolio (미제출)
+                                      → submit_v335.zip (Public 1181.7100031613)
 ```
 
 계보는 연구 설명용이다. 실행할 때 과거 ZIP을 연쇄적으로 요구하지 않는다. 새 후보도 처음부터
@@ -68,20 +74,19 @@ standalone으로 만들며, 평가 v3를 통과하기 전에는 champion 파일�
 
 ## 바로 읽을 문서
 
-1. [`../reports/jy_runners_high_li_bridge027_public_result_20260828.md`](../reports/jy_runners_high_li_bridge027_public_result_20260828.md)
-2. [`../reports/target1180_v167_public_result_20260825.md`](../reports/target1180_v167_public_result_20260825.md)
-3. [`../reports/target1170_v142_v148_public_result_20260823.md`](../reports/target1170_v142_v148_public_result_20260823.md)
-4. [`../reports/evaluation_reaudit_20260822.md`](../reports/evaluation_reaudit_20260822.md)
-5. [`PROJECT_MEMORY.md`](PROJECT_MEMORY.md)
-6. [`STANDALONE_CHAMPION.md`](STANDALONE_CHAMPION.md)
-7. [`../reports/trackman_deep_dive_20260822.md`](../reports/trackman_deep_dive_20260822.md)
-8. [`../reports/target1170_v79_v81_followup_20260822.md`](../reports/target1170_v79_v81_followup_20260822.md)
-9. [`../reports/submissions.csv`](../reports/submissions.csv)
+1. [`../reports/v335_public_result_20260831.md`](../reports/v335_public_result_20260831.md)
+2. [`../reports/target1185_v328_v335_multiexpert_followup_20260830.md`](../reports/target1185_v328_v335_multiexpert_followup_20260830.md)
+3. [`../reports/target1180_v320_futures_portfolio_candidate_20260830.md`](../reports/target1180_v320_futures_portfolio_candidate_20260830.md)
+4. [`../reports/target1180_v290_evaluation_reaudit_20260830.md`](../reports/target1180_v290_evaluation_reaudit_20260830.md)
+5. [`STANDALONE_CHAMPION.md`](STANDALONE_CHAMPION.md)
+6. [`PROJECT_MEMORY.md`](PROJECT_MEMORY.md)
+7. [`../reports/submissions.csv`](../reports/submissions.csv)
 
 ## 평가 상태
 
 - 공식 점수 구현은 DACON BSS 식과 일치한다.
-- 1170은 테스트 양성률을 `0.4861`로 놓으면 평균 Brier 약 `2.1978e-05` 감소가 필요하다.
+- 1180 목표는 v335의 공식 Public `1181.7100031613`으로 달성했다.
+- 다음 목표 1185까지 공식 점수 `3.2899968387`이 남아 있다.
 - 2024 label은 반복 연구에 사용돼 `development_contaminated`다. 독립 holdout으로 부르지 않는다.
 - 새 후보는 `configs/evaluation_v3.json`과 `src/evaluation_contract.py`를 통과해야 한다.
 - primary evidence는 서로 다른 `nested_outer` 또는 `locked_shadow` 축 최소 2개다.

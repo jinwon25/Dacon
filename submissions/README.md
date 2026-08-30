@@ -1,35 +1,37 @@
 # 제출 파일 보관 규칙
 
-마지막 갱신: `2026-08-28 KST`
+마지막 갱신: `2026-08-31 KST`
 
 ## 현재 기준
 
 | 항목 | 값 |
 |---|---:|
-| Public 챔피언 | `submit_jy_runners_high_li_bridge027.zip` |
-| 점수 / 순위 | **1172.1373858439** / 제출 이력 기준 확인 |
-| 제출 ID | DACON UI 확인값 미기록 |
-| SHA-256 | `4C924E046091304BFC73B50BE51110BDF1351DFD9B577738CC6B65A8DFF43C9E` |
-| GitHub 전달 경로 | `submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip` |
-| v167 대비 / 1170 초과 | **+0.0601478118** / **+2.1373858439** |
+| Public 챔피언 | `submit_v335_anchor_lowrank_complement.zip` |
+| 점수 / 순위 | **1181.7100031613** / 제출 이력 기준 확인 |
+| 제출 ID | `76835` |
+| SHA-256 | `A3BCD933DE3F78DEB9565F537DC3199922BDFD219B2840E4150F939CFF144C7A` |
+| GitHub 전달 경로 | `submissions/releases/v335/submit_v335_anchor_lowrank_complement.zip` |
+| v290 대비 / 1180 초과 | **+4.9529314933** / **+1.7100031613** |
 
-최신 JY ZIP은 `script.py`, `requirements.txt`, `model/`만으로 실행되는 172파일 독립 패키지다.
+최신 v335 ZIP은 `script.py`, `requirements.txt`, `model/`만으로 실행되는 188파일 독립 패키지다.
 과거 ZIP을 실행 시 참조하지 않는다. 실행·검증 방법은
 [`../docs/STANDALONE_CHAMPION.md`](../docs/STANDALONE_CHAMPION.md)를 따른다.
 
-## 최신 JY 제출
+## 최신 v335 제출
 
-`submit_jy_runners_high_li_bridge027.zip`은 v167/main submit을 기준으로 `R_CORE` 중
-`num_runners_on > 0` 또는 `li >= 1.5`인 행만 추가 보정한 후보다. 2026-08-28 03:38:21 KST
-제출에서 Public `1172.1373858439`를 확인했고 v167 대비 `+0.0601478118`이라 챔피언으로
-승격했다. 상세 판단은
-[`../reports/jy_runners_high_li_bridge027_public_result_20260828.md`](../reports/jy_runners_high_li_bridge027_public_result_20260828.md)에 있다.
+`submit_v335.zip`은 v290 계보 위에 F direct+low-rank 포트폴리오와 R_ANCHOR low-rank
+보완을 결합한 후보다. R_CORE는 v290과 동일하다. 2026-08-31 00:00:45 KST 제출에서
+Public `1181.7100031613`을 확인했고 v290 대비 `+4.9529314933`이라 챔피언으로 승격했다.
+상세 판단은 [`../reports/v335_public_result_20260831.md`](../reports/v335_public_result_20260831.md)에 있다.
 
 ## 주요 Public 계보
 
 | 제출 | Public | 제출 ID | 상태 |
 |---|---:|---:|---|
-| `submit_jy_runners_high_li_bridge027.zip` | **1172.1373858439** | - | 현재 챔피언 |
+| `submit_v335.zip` | **1181.7100031613** | `76835` | 현재 챔피언 |
+| `submit_v290.zip` | 1176.7570716680 | `75638` | v335의 공식 비교 기준 |
+| `submit_v244.zip` | 1175.9746833121 | `73881` | v290 계보 부모 |
+| `submit_jy_runners_high_li_bridge027.zip` | 1172.1373858439 | - | 과거 JY 챔피언 |
 | `submit_v167.zip` | 1172.0772380321 | `1547707` | JY 후보 기준선 |
 | `submit_v148.zip` | 1170.3014697177 | `1544757` | v167 직접 부모 |
 | `submit_v142.zip` | 1169.6277932822 | `1544738` | v148 직접 부모 |
@@ -65,6 +67,9 @@
 │  │  └─ README.md          해시·실행·예외 범위
 │  ├─ releases/jy_runners_high_li_bridge027/
 │  │  └─ submit_jy_runners_high_li_bridge027.zip
+│  ├─ releases/v335/
+│  │  ├─ submit_v335_anchor_lowrank_complement.zip
+│  │  └─ README.md
 │  └─ history/              과거 제출 계보, ZIP은 Git 제외
 ├─ artifacts/v167_h1_affine_submission_package_20260825_01/
 │  ├─ submit_v167.zip       로컬 빌드 원본, Git 제외
@@ -81,7 +86,7 @@
 ## 보관 원칙
 
 - 공식 데이터, 인증정보, 쿠키·키는 Git/LFS에 올리지 않는다.
-- 검증된 v167 ZIP과 최신 JY champion ZIP만 PRIVATE 저장소 전달을 위한 명시적 예외로 추적한다.
+- 검증된 v167·과거 JY·최신 v335 champion ZIP만 PRIVATE 저장소 전달을 위한 명시적 예외로 추적한다.
 - 다른 제출 ZIP·모델·OOF는 문서화된 기존 1161 LFS·1170 OOF allowlist 또는 별도 승인
   없이는 Git/LFS에 올리지 않는다.
 - 중복 ZIP은 파일명이 아니라 SHA-256으로 판별한다.

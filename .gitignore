@@ -30,12 +30,14 @@ model/
 output/
 submit*.zip
 submissions/**/*.zip
-# PRIVATE 저장소 팀 전달 예외: 검증된 v167 챔피언 한 개만 추적한다.
+# Track only reviewed, hash-pinned release archives listed in the repository audit allowlist.
 !submissions/releases/
 !submissions/releases/v167/
 !submissions/releases/v167/submit_v167.zip
 !submissions/releases/jy_runners_high_li_bridge027/
 !submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip
+!submissions/releases/v335/
+!submissions/releases/v335/submit_v335_anchor_lowrank_complement.zip
 *.npy
 *.npz
 *.parquet
