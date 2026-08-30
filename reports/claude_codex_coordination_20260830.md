@@ -1470,3 +1470,42 @@ dose 는 source 축으로만 선택할 가치가 있다.**
 · 완전히 새로운 축을 **동시에** 굴리고, 격차 8.29 는 서로 직교하는 후보 3~5개 누적으로 계획한다.
 
 1190 필요 RMS = **0.004551** (v320 의 0.0017257 대비 2.6배).
+
+---
+
+# 11차 — v335 재기준화와 v343 전이·workload 후보 (2026-08-31)
+
+Codex가 과거 강한 성분을 v335 위에서 다시 측정했다. 결론은 과거 부모의 숫자를 그대로
+재사용하면 안 된다는 것이다.
+
+- v216 joint-workload H1: source 안정성 붕괴, locked 미개봉
+- 고정 Beta-Binomial 셀: full-2024 `+0.422936`, 너무 작은 RMS와 월 꼬리 위험
+- v261 달력 성분: full-2024 `-0.9351`, 역전
+- v293 ID-free F LightGBM: full-2024 `-1.517144`, 역전
+- ID-free 상황 셀 lookup: late-2023 최고 `-15.9753`, 세 스키마 모두 전 월 음수
+
+남은 두 성분은 v330 선수 전이와 v209 3시드 workload-H1이다.
+
+| 구성 | v335 대비 full-2024 gain | 양수 월 | RMS |
+|---|---:|---:|---:|
+| 선수 전이 | `+1.754498` | `6/8` | `0.00184554` |
+| 3시드 workload | `+1.172970` | `4/8` | `0.00079211` |
+| **결합 v343** | **`+2.944474`** | **`7/8`** | **`0.00199774`** |
+
+증분 상관은 `-0.014279`다. 투수 bootstrap p05 `+0.1663`, 시간 블록 p05 `+0.3674`,
+crossed p05 `-2.5858`, 제한된 Reality Check `p=0.04798`이다.
+
+배포 자산:
+
+- ZIP: `artifacts/v343_transition_workload_package_20260831_01/submit_v343_transition_workload.zip`
+- SHA-256: `165C074AF6E37C995EC7CAEAB1AAD195EB2C0B03E996036BC96F0BE69FD2A7C9`
+- 크기/멤버: `101,116,438 bytes` / `190`
+- 수식 parity `5.55e-17`, 보호 라우트 `0`, workload 피처 `0`, 셔플/분할 `1.11e-16`
+- 공식 5행 root-script smoke `7.323초`
+- 전체 테스트 `701 passed, 22 skipped, 1 existing warning`
+
+다음 제출 1순위는 v343 하나다. 공식 결과 전에는 v335가 챔피언이고 v343은 challenger다.
+상세 근거: `reports/target1190_v343_transition_workload_candidate_20260831.md`.
+
+사실 정정: Futures ABS 시작은 2020년이다. 2023년은 경험적 F 분포 변화점일 뿐 ABS 도입
+시점으로 해석하지 않는다.

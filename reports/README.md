@@ -1,5 +1,6 @@
 # 보고서 빠른 안내
 
+- [`target1190_v343_transition_workload_candidate_20260831.md`](target1190_v343_transition_workload_candidate_20260831.md): **다음 제출 1순위** — v335 위 선수 전이+3시드 workload, full-2024 `+2.944474`, 7/8개월 개선, v343 런타임 감사
 - [`v335_public_result_20260831.md`](v335_public_result_20260831.md): **현재 공식 챔피언** — Public 1181.7100031613, v290 대비 +4.9529314933, v335 구조·감사·귀속 한계
 - [`target1185_v328_v335_multiexpert_followup_20260830.md`](target1185_v328_v335_multiexpert_followup_20260830.md): v328~v335 다중 전문가 스크린과 v335 제출 전 근거
 - [`target1180_structural_followup_20260830.md`](target1180_structural_followup_20260830.md): **최신 1180 후속 연구** — v264 배포계약 기각, pseudo-deployment v277 탐색 challenger, 독립 실행 감사
