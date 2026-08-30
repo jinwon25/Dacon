@@ -1,0 +1,19 @@
+{
+  "version": "v277",
+  "submitted_at": "2026-08-30 02:04:58",
+  "uploaded_filename": "submit_v277.zip",
+  "public_score": 1175.3125589868,
+  "official_runtime_seconds": 116,
+  "package_sha256": "CFC28C9C9EEB5D041CAA3D7120C472D97BD9133CA40F7D9A152276583D39CD57",
+  "champion": {
+    "version": "v244",
+    "public_score": 1175.9746833121,
+    "delta": -0.6621243253
+  },
+  "target": {
+    "score": 1180.0,
+    "gap": 4.6874410132
+  },
+  "decision": "rejected_not_promoted",
+  "same_family_public_retuning": false
+}

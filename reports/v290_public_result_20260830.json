@@ -1,0 +1,21 @@
+{
+  "protocol": "V290_PUBLIC_RESULT_V1",
+  "submission_id": 75638,
+  "filename": "submit_v290.zip",
+  "submitted_at_kst": "2026-08-30 14:12:07",
+  "public_score": 1176.757071668,
+  "runtime_seconds": 111,
+  "previous_champion": {
+    "version": "v244",
+    "public_score": 1175.9746833121,
+    "delta": 0.7823883559
+  },
+  "target": {
+    "score": 1180.0,
+    "gap": 3.242928332
+  },
+  "local_full_2024_gain": 4.514975900227228,
+  "naive_local_to_public_ratio": 0.1732873821,
+  "decision": "promoted_as_new_public_champion",
+  "research_policy": "retain structural direction; invalidate 1:1 local magnitude forecast; do not Public-retune the exact-anchor or futures weights"
+}

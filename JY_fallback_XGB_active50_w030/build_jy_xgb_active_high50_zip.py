@@ -2,10 +2,10 @@
 from pathlib import Path
 import shutil, tempfile, zipfile
 
-ROOT=Path(__file__).resolve().parents[1]
+ROOT=Path(__file__).resolve().parent
 SOURCE=ROOT/'parent'/'submit_jy_runners_high_li_bridge027_public1172.zip'
-ASSET=ROOT/'frozen_asset'
-RUNTIME=ROOT/'scripts'/'fallback_xgb_frozen_runtime.py'
+ASSET=ROOT
+RUNTIME=ROOT/'fallback_xgb_frozen_runtime.py'
 OUT=ROOT/'rebuilt'/'submit_jy_fallback_xgb_active50_w030.zip'
 
 def main():

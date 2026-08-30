@@ -1,0 +1,25 @@
+{
+  "protocol": "V244_PUBLIC_RESULT_V1",
+  "submission_id": 73881,
+  "filename": "submit_v244.zip",
+  "submitted_at_kst": "2026-08-29 17:23:03",
+  "public_score": 1175.9746833121,
+  "runtime_seconds": 110,
+  "target_score": 1180.0,
+  "target_gap": 4.0253166879,
+  "package_sha256": "E745AD6632E880771BE075672743DBA5F22814DA5355E476B201FB08E0B60162",
+  "pre_submission_forecast": {
+    "low": 1176.6694243479,
+    "center": 1178.3227258660,
+    "high": 1180.2322895066,
+    "actual_minus_low": -0.6947410358,
+    "actual_minus_center": -2.3480425539,
+    "actual_minus_high": -4.2576061945
+  },
+  "incumbent_submission_id": 72710,
+  "incumbent_filename": "bridge027_active50_w030.zip",
+  "incumbent_exact_public_score": 1175.2737119427,
+  "incumbent_delta": 0.7009713694,
+  "decision": "target_1180_failed; promoted_as_new_public_champion",
+  "research_policy": "invalidate_same_family_transfer_calibration; do_not_retune_routes_or_weights_from_this_public_result"
+}
