@@ -1,0 +1,25 @@
+{
+  "submission_id": 78710,
+  "submitted_at_kst": "2026-08-31 22:17:29",
+  "uploaded_filename": "submit_v345.zip",
+  "public_score": 1182.94969702,
+  "runtime_seconds": 130,
+  "package_sha256": "D44578DC50220CE84DD4B8489BBAE680AFDCF93F931ED4236287B5A9E6F5AAAA",
+  "package_bytes": 101139163,
+  "package_members": 191,
+  "previous_champion": {
+    "name": "submit_v335.zip",
+    "submission_id": 76835,
+    "public_score": 1181.7100031613,
+    "delta": 1.2396938587
+  },
+  "local_full_2024_gain_vs_v335": 3.390593124685779,
+  "diagnostic_transfer_ratio": 0.36562743246138713,
+  "targets": {
+    "gap_to_1185": 2.05030298,
+    "gap_to_1190": 7.05030298
+  },
+  "status": "promoted_public_champion",
+  "attribution_warning": "v343 was not submitted, so the observed gain cannot be split among transition, workload-H1, and the Beta cell",
+  "selection_rule": "Do not use this Public result to retune the same family, route, weight, support cut, pitchmix cut, or seeds"
+}
