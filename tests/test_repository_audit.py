@@ -16,61 +16,51 @@ def test_repository_path_policy_rejects_data_models_and_archives():
     assert forbidden_path_reason(".env") is not None
 
 
-def test_repository_path_policy_allows_explicit_private_lfs_releases():
+def test_repository_path_policy_rejects_dacon_derived_artifacts():
+    """The repository is public, so nothing derived from the provided data is tracked.
+
+    OOF bundles carry the train target and player ids, the delivery archives
+    embed per-player count/success priors, and the linkage tables reconstruct
+    the pitcher and game id mapping.
+    """
+    assert (
+        forbidden_path_reason("artifacts/oof_champion_1161/v84_full_2024.npz")
+        is not None
+    )
+    assert (
+        forbidden_path_reason("artifacts/oof_champion_1170/v148_full_2024.npz")
+        is not None
+    )
     assert (
         forbidden_path_reason(
             "artifacts/standalone_champion_1161/standalone_champion_1161.zip"
         )
-        is None
+        is not None
     )
     assert (
-        forbidden_path_reason("artifacts/oof_champion_1161/v84_full_2024.npz")
-        is None
+        forbidden_path_reason("submissions/releases/v167/submit_v167.zip") is not None
+    )
+    assert (
+        forbidden_path_reason("submissions/releases/v345/submit_v345.zip") is not None
     )
     assert (
         forbidden_path_reason(
-            "artifacts/standalone_champion_1162/standalone_champion_1162.zip"
+            "src/team_assets/JY_fallback_XGB_active50_w030/fallback_lookups.joblib"
         )
-        is None
+        is not None
     )
+
+
+def test_repository_path_policy_still_allows_artifact_manifests():
+    """Manifests record what the private artifacts are; they hold no data."""
+    assert forbidden_path_reason("artifacts/oof_champion_1161/README.md") is None
+    assert forbidden_path_reason("artifacts/oof_champion_1161/manifest.json") is None
+    assert forbidden_path_reason("artifacts/oof_champion_1170/manifest.json") is None
     assert (
         forbidden_path_reason(
             "artifacts/standalone_champion_1162/standalone_manifest.json"
         )
         is None
-    )
-    assert forbidden_path_reason("artifacts/oof_champion_1159/oof.npz") is not None
-
-
-def test_repository_path_policy_allows_only_pinned_delivery_zips():
-    assert (
-        forbidden_path_reason("submissions/releases/v167/submit_v167.zip") is None
-    )
-    assert (
-        forbidden_path_reason(
-            "submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip"
-        )
-        is None
-    )
-    assert (
-        forbidden_path_reason("submissions/releases/v167/submit_v167_rebuild.zip")
-        is not None
-    )
-    assert (
-        forbidden_path_reason("submissions/releases/v168/submit_v168.zip") is not None
-    )
-
-
-def test_repository_path_policy_allows_existing_pinned_v148_oof_bundle():
-    assert forbidden_path_reason("artifacts/oof_champion_1170/README.md") is None
-    assert forbidden_path_reason("artifacts/oof_champion_1170/manifest.json") is None
-    assert (
-        forbidden_path_reason("artifacts/oof_champion_1170/v148_full_2024.npz")
-        is None
-    )
-    assert (
-        forbidden_path_reason("artifacts/oof_champion_1170/extra_oof.npz")
-        is not None
     )
 
 

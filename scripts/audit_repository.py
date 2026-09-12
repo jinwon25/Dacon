@@ -13,59 +13,21 @@ from pathlib import Path
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 
 
+# The repository is public, so no DACON-derived binary is tracked: only the
+# manifests that record what the private artifacts are and where they live.
 ALLOWED_SPECIAL_FILES = {
     ".env.example",
     "artifacts/README.md",
     "artifacts/oof_champion_1161/README.md",
     "artifacts/oof_champion_1161/manifest.json",
-    "artifacts/oof_champion_1161/v84_full_2022.npz",
-    "artifacts/oof_champion_1161/v84_full_2024.npz",
-    "artifacts/oof_champion_1161/v84_late_2023.npz",
     "artifacts/oof_champion_1170/README.md",
     "artifacts/oof_champion_1170/manifest.json",
-    "artifacts/standalone_champion_1161/standalone_champion_1161.zip",
     "artifacts/standalone_champion_1161/standalone_manifest.json",
-    "artifacts/standalone_champion_1162/standalone_champion_1162.zip",
     "artifacts/standalone_champion_1162/standalone_manifest.json",
     "data/README.md",
 }
-ALLOWED_LFS_FILES = {
-    "artifacts/oof_champion_1161/v84_full_2022.npz",
-    "artifacts/oof_champion_1161/v84_full_2024.npz",
-    "artifacts/oof_champion_1161/v84_late_2023.npz",
-    "artifacts/standalone_champion_1161/standalone_champion_1161.zip",
-    "artifacts/standalone_champion_1162/standalone_champion_1162.zip",
-}
-PINNED_REGULAR_BINARY_FILES = {
-    "src/team_assets/JY_fallback_XGB_active50_w030/fallback_lookups.joblib": {
-        "bytes": 862_763,
-        "sha256": "374E7BA22AD181F488A082C04A0BBCE456B164F45D05F62FEF3AF209030DB3C5",
-    },
-    "artifacts/oof_champion_1170/v148_full_2024.npz": {
-        "bytes": 8_168_945,
-        "sha256": "972383D4DE481DCF8A27FCC497C9C88BC08FCD6612B08C4E3F0E37A824EDF2F9",
-    },
-    "submissions/releases/v167/submit_v167.zip": {
-        "bytes": 46_354_018,
-        "sha256": "30DD28F56723EC0F560C9101FC5A94EF78568F874DCA88BF808879831E61C8C1",
-    },
-    "submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip": {
-        "bytes": 83_675_308,
-        "sha256": "4C924E046091304BFC73B50BE51110BDF1351DFD9B577738CC6B65A8DFF43C9E",
-    },
-    "submissions/releases/v335/submit_v335_anchor_lowrank_complement.zip": {
-        "bytes": 91_469_892,
-        "sha256": "A3BCD933DE3F78DEB9565F537DC3199922BDFD219B2840E4150F939CFF144C7A",
-    },
-    "submissions/releases/v345/submit_v345.zip": {
-        "bytes": 101_139_163,
-        "sha256": "D44578DC50220CE84DD4B8489BBAE680AFDCF93F931ED4236287B5A9E6F5AAAA",
-    },
-    "final_submission/code/fallback_xgb/fallback_lookups.joblib": {
-        "bytes": 876_202,
-        "sha256": "C1626D440D04E926328F7E44966F089F84218EB8FF29986561A3BBECF01239CD",
-    },
-}
+ALLOWED_LFS_FILES: set[str] = set()
+PINNED_REGULAR_BINARY_FILES: dict[str, dict[str, object]] = {}
 FORBIDDEN_SUFFIXES = {
     ".cbm",
     ".ckpt",

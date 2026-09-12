@@ -6,40 +6,11 @@ baseline_submit/
 # Generated models, OOF predictions, caches, and submission archives.
 artifacts/*
 !artifacts/README.md
-!artifacts/standalone_champion_1162/
-artifacts/standalone_champion_1162/*
-!artifacts/standalone_champion_1162/standalone_champion_1162.zip
-!artifacts/standalone_champion_1162/standalone_manifest.json
-!artifacts/standalone_champion_1161/
-artifacts/standalone_champion_1161/*
-!artifacts/standalone_champion_1161/standalone_champion_1161.zip
-!artifacts/standalone_champion_1161/standalone_manifest.json
-!artifacts/oof_champion_1161/
-artifacts/oof_champion_1161/*
-!artifacts/oof_champion_1161/README.md
-!artifacts/oof_champion_1161/manifest.json
-!artifacts/oof_champion_1161/v84_full_2022.npz
-!artifacts/oof_champion_1161/v84_late_2023.npz
-!artifacts/oof_champion_1161/v84_full_2024.npz
-!artifacts/oof_champion_1170/
-artifacts/oof_champion_1170/*
-!artifacts/oof_champion_1170/README.md
-!artifacts/oof_champion_1170/manifest.json
-!artifacts/oof_champion_1170/v148_full_2024.npz
 model/
 output/
 submit*.zip
 submissions/**/*.zip
 # Track only reviewed, hash-pinned release archives listed in the repository audit allowlist.
-!submissions/releases/
-!submissions/releases/v167/
-!submissions/releases/v167/submit_v167.zip
-!submissions/releases/jy_runners_high_li_bridge027/
-!submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip
-!submissions/releases/v335/
-!submissions/releases/v335/submit_v335_anchor_lowrank_complement.zip
-!submissions/releases/v345/
-!submissions/releases/v345/submit_v345.zip
 *.npy
 *.npz
 *.parquet
@@ -52,10 +23,6 @@ submissions/**/*.zip
 *.pt
 *.pth
 *.ckpt
-!artifacts/oof_champion_1161/v84_full_2022.npz
-!artifacts/oof_champion_1161/v84_late_2023.npz
-!artifacts/oof_champion_1161/v84_full_2024.npz
-!artifacts/oof_champion_1170/v148_full_2024.npz
 
 # Secrets. Track only the key-name template.
 .env
@@ -97,7 +64,25 @@ final_submission/code/data/*
 !final_submission/code/data/README.md
 # Frozen lookup the reproduction package needs; the repository copy under
 # src/team_assets/ is pinned by the same hash in scripts/audit_repository.py.
-!final_submission/code/fallback_xgb/fallback_lookups.joblib
 
 # Internal audit evidence bundle: kept locally, not in history.
 research/reports/internal_audit_20260906/*.zip
+# Public repository: never track DACON-derived data.
+#
+# The competition forbids redistributing the provided data, and these files
+# carry it in derived form - OOF arrays hold the train target and player ids,
+# the submission archives embed per-player count/success priors, and the
+# linkage tables reconstruct the pitcher and game id mapping. They stay local
+# and reach official teammates through the private channel in
+# docs/ARTIFACT_HANDOFF.md.
+artifacts/oof_champion_*/
+artifacts/standalone_champion_*/
+submissions/releases/
+**/fallback_lookups.joblib
+final_submission/code/fallback_xgb/pitcher_map.csv
+final_submission/code/h1/pitcher_id_map.csv
+research/reports/top1100/player_mapping_by_origin.csv
+research/reports/top1100/alignment_game_candidates.csv
+research/reports/trackman_linkage.csv
+research/reports/trackman_domain_linkage.csv
+research/reports/trackman_command_proxy_census_*/origin_physical_profiles.csv
