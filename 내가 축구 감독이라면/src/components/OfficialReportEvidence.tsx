@@ -24,7 +24,7 @@ export default function OfficialReportEvidence({ scenario }: { scenario: GuidedS
   return (
     <section className="official-report panel" aria-label="FIFA 공식 경기 보고서 분석">
       <header className="official-report-heading">
-        <div className="panel-title"><span>04</span><div><small>경기 양상 · FIFA 전체 경기 보고서</small><h2>점유의 양보다 점유 이후의 행동을 읽습니다</h2></div></div>
+        <div className="panel-title"><span>REPORT</span><div><small>경기 양상 · FIFA 전체 경기 보고서</small><h2>점유의 양보다 점유 이후의 행동을 읽습니다</h2></div></div>
         <span className="report-badge">사후 코칭 리뷰</span>
       </header>
 

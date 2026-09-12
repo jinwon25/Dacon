@@ -52,11 +52,11 @@ export default function TacticalSequence({ hwangOn, formation, tactics }: { hwan
   return (
     <section className="tactical-sequence panel">
       <header className="sequence-heading">
-        <div className="panel-title"><span>05</span><div><small>2차원 전술 움직임</small><h2>변경 전후의 움직임을 비교합니다</h2></div></div>
+        <div className="panel-title"><span>MOVE</span><div><small>2차원 전술 움직임</small><h2>변경 전후의 움직임을 비교합니다</h2></div></div>
         <div className="sequence-controls">
-          <div role="tablist" aria-label="전술 시퀀스 선택">
-            <button type="button" className={view === 'actual' ? 'active' : ''} onClick={() => setView('actual')}>실제 55분</button>
-            <button type="button" className={view === 'proposal' ? 'active' : ''} onClick={() => setView('proposal')}>내 개입안</button>
+          <div role="group" aria-label="전술 시퀀스 선택">
+            <button type="button" aria-pressed={view === 'actual'} className={view === 'actual' ? 'active' : ''} onClick={() => setView('actual')}>실제 55분</button>
+            <button type="button" aria-pressed={view === 'proposal'} className={view === 'proposal' ? 'active' : ''} onClick={() => setView('proposal')}>내 개입안</button>
           </div>
           <button className="play-sequence" type="button" onClick={play}>▶ 재생</button>
         </div>

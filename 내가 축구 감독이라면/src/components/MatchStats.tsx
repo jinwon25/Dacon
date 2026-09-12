@@ -38,6 +38,13 @@ function DetailRow({ row }: { row: StatRowData }) {
 
 export default function MatchStats({ scenario }: { scenario: GuidedScenario }) {
   const [view, setView] = useState<DetailView>('passing')
+  const changeViewWithKeyboard = (event: React.KeyboardEvent<HTMLButtonElement>, next: DetailView) => {
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return
+    event.preventDefault()
+    const target = next === 'passing' ? 'defending' : 'passing'
+    setView(target)
+    document.getElementById(`match-stat-tab-${target}`)?.focus()
+  }
   const ours = scenario.evidence.ours
   const opponent = scenario.evidence.opponent
   const report = scenario.officialReport
@@ -119,7 +126,7 @@ export default function MatchStats({ scenario }: { scenario: GuidedScenario }) {
   return (
     <article className="analysis-card match-stats-card pitch-analysis">
       <div className="card-heading">
-        <span>01</span>
+        <span>DATA</span>
         <div><small>경기 통계 · {scenario.windowLabel}</small><h2>{scenario.briefing.diagnosisTitle}</h2></div>
       </div>
 
@@ -139,10 +146,10 @@ export default function MatchStats({ scenario }: { scenario: GuidedScenario }) {
       </div>
 
       <div className="match-stat-tabs" role="tablist" aria-label="세부 통계 분류">
-        <button type="button" role="tab" aria-selected={view === 'passing'} className={view === 'passing' ? 'active' : ''} onClick={() => setView('passing')}>패스·전개</button>
-        <button type="button" role="tab" aria-selected={view === 'defending'} className={view === 'defending' ? 'active' : ''} onClick={() => setView('defending')}>수비·압박</button>
+        <button id="match-stat-tab-passing" type="button" role="tab" aria-selected={view === 'passing'} aria-controls="match-stat-panel" tabIndex={view === 'passing' ? 0 : -1} className={view === 'passing' ? 'active' : ''} onClick={() => setView('passing')} onKeyDown={(event) => changeViewWithKeyboard(event, 'passing')}>패스·전개</button>
+        <button id="match-stat-tab-defending" type="button" role="tab" aria-selected={view === 'defending'} aria-controls="match-stat-panel" tabIndex={view === 'defending' ? 0 : -1} className={view === 'defending' ? 'active' : ''} onClick={() => setView('defending')} onKeyDown={(event) => changeViewWithKeyboard(event, 'defending')}>수비·압박</button>
       </div>
-      <div className="match-stat-details" role="tabpanel">
+      <div id="match-stat-panel" className="match-stat-details" role="tabpanel" aria-labelledby={`match-stat-tab-${view}`}>
         {details[view].map((row) => <DetailRow key={row.label} row={row} />)}
       </div>
 

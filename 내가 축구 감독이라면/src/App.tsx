@@ -1,31 +1,38 @@
 import { useMemo, useRef, useState } from 'react'
-import type { PointerEvent as ReactPointerEvent } from 'react'
+import type { KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from 'react'
 import UniversalStudio from './components/UniversalStudio'
 import SpatialEvidence from './components/SpatialEvidence'
 import TacticalSequence from './components/TacticalSequence'
-import PassNetwork from './components/PassNetwork'
+import PassNetwork from './components/PassNetworkPro'
 import BallFlow from './components/BallFlow'
 import MatchStats from './components/MatchStats'
 import CountryFlag from './components/CountryFlag'
 import OfficialReportEvidence from './components/OfficialReportEvidence'
 import { evidenceMethod } from './data/evidence'
-import { formationPositions, roleOptions } from './data/match'
+import { formationGroups, formationGuidance, formationPositions, formations, roleOptions } from './data/match'
 import { cloneScenarioSquad, defaultScenarioId, guidedScenarios, type GuidedScenario, type GuidedScenarioId } from './data/scenarios'
 import type { FormationKey, Metrics, Player, Stage, Tactics } from './types'
 
-const formations: FormationKey[] = ['4-3-3', '4-2-3-1', '4-4-2', '4-1-4-1', '4-3-1-2', '3-4-3', '5-3-2']
-const formationGuidance: Record<FormationKey, string> = {
-  '4-3-3': '측면 폭과 전방 압박의 균형',
-  '4-2-3-1': '중앙 보호와 2선 연결 강화',
-  '4-4-2': '두 줄 수비와 빠른 전환',
-  '4-1-4-1': '중앙 간격을 좁히는 안정형',
-  '4-3-1-2': '중앙 수적 우위와 투톱 침투',
-  '3-4-3': '높은 폭과 공격 숫자 확보',
-  '5-3-2': '박스 보호와 역습 출구 유지',
-}
 const stageOrder: Stage[] = ['intro', 'briefing', 'tactics', 'result']
 const stageLabels: Record<Stage, string> = { intro: '시작', briefing: '진단', tactics: '설계', result: '검토' }
+const mobileStageActions: Record<Stage, string> = { intro: '브리핑', briefing: '전술 보드', tactics: '비교 실행', result: '다시 설계' }
 type AppMode = 'home' | 'guided' | 'studio'
+type GuidedSubstitution = {
+  id: string
+  outgoingId: string
+  outgoingName: string
+  incomingId: string
+  incomingName: string
+  squadBefore: Player[]
+  selectedIdBefore: string
+}
+
+const tacticPresets: Array<{ id: string; label: string; detail: string; values: Tactics }> = [
+  { id: 'control', label: '균형 유지', detail: '간격과 점유 우선', values: { pressing: 52, width: 55, tempo: 50, risk: 42 } },
+  { id: 'possession', label: '점유 회복', detail: '좁은 지원과 재압박', values: { pressing: 64, width: 48, tempo: 45, risk: 36 } },
+  { id: 'transition', label: '전환 공격', detail: '넓고 빠른 전진', values: { pressing: 56, width: 70, tempo: 78, risk: 62 } },
+  { id: 'chase', label: '종료 압박', detail: '득점 우선 고위험', values: { pressing: 82, width: 74, tempo: 86, risk: 84 } },
+]
 
 const getInitialMode = (): AppMode => {
   if (window.location.hash === '#studio') return 'studio'
@@ -39,6 +46,24 @@ const getInitialStage = (): Stage => {
 }
 
 const clamp = (value: number, min = 0, max = 100) => Math.min(max, Math.max(min, value))
+
+function revertSubstitutionPlan(squad: Player[], records: GuidedSubstitution[]) {
+  return [...records].reverse().reduce((current, record) => {
+    const incomingOnPitch = current.find((player) => player.id === record.incomingId)
+    const outgoingBefore = record.squadBefore.find((player) => player.id === record.outgoingId)
+    const incomingBefore = record.squadBefore.find((player) => player.id === record.incomingId)
+    if (!incomingOnPitch || !outgoingBefore || !incomingBefore) return current
+    return current.map((player) => {
+      if (player.id === record.outgoingId) {
+        return { ...outgoingBefore, onPitch: true, slot: incomingOnPitch.slot, x: incomingOnPitch.x, y: incomingOnPitch.y }
+      }
+      if (player.id === record.incomingId) {
+        return { ...incomingBefore, onPitch: false, slot: null, x: 0, y: 0 }
+      }
+      return player
+    })
+  }, squad.map((player) => ({ ...player })))
+}
 
 function calculateMetrics(
   squad: Player[],
@@ -85,12 +110,17 @@ function App() {
   const [squad, setSquad] = useState<Player[]>(() => cloneScenarioSquad(scenario))
   const [selectedId, setSelectedId] = useState<string>(scenario.selectedPlayerId)
   const [draggingId, setDraggingId] = useState<string | null>(null)
-  const [substitutionUsed, setSubstitutionUsed] = useState(false)
+  const [substitutions, setSubstitutions] = useState<GuidedSubstitution[]>([])
   const [tactics, setTactics] = useState<Tactics>({ ...scenario.defaultTactics })
   const pitchRef = useRef<HTMLDivElement>(null)
 
   const selectedPlayer = squad.find((player) => player.id === selectedId) ?? null
   const metrics = useMemo(() => calculateMetrics(squad, tactics, formation, scenario), [squad, tactics, formation, scenario])
+
+  const goToStage = (nextStage: Stage) => {
+    setStage(nextStage)
+    window.history.replaceState(null, '', `#${nextStage}`)
+  }
 
   const selectScenario = (nextId: GuidedScenarioId) => {
     const next = guidedScenarios[nextId]
@@ -100,7 +130,7 @@ function App() {
     setSquad(cloneScenarioSquad(next))
     setSelectedId(next.selectedPlayerId)
     setDraggingId(null)
-    setSubstitutionUsed(false)
+    setSubstitutions([])
     setTactics({ ...next.defaultTactics })
     window.history.replaceState(null, '', '#intro')
   }
@@ -115,6 +145,10 @@ function App() {
 
   const updateTactic = (key: keyof Tactics, value: number) => {
     setTactics((current) => ({ ...current, [key]: value }))
+  }
+
+  const applyTacticPreset = (values: Tactics) => {
+    setTactics({ ...values })
   }
 
   const handlePointerDown = (event: ReactPointerEvent<HTMLButtonElement>, playerId: string) => {
@@ -138,15 +172,43 @@ function App() {
     setDraggingId(null)
   }
 
+  const movePlayerWithKeyboard = (event: ReactKeyboardEvent<HTMLButtonElement>, playerId: string) => {
+    const offsets: Partial<Record<string, [number, number]>> = {
+      ArrowLeft: [-1, 0],
+      ArrowRight: [1, 0],
+      ArrowUp: [0, -1],
+      ArrowDown: [0, 1],
+    }
+    const offset = offsets[event.key]
+    if (!offset) return
+    event.preventDefault()
+    const step = event.shiftKey ? 5 : 2
+    setSelectedId(playerId)
+    setSquad((current) => current.map((player) => player.id === playerId
+      ? { ...player, x: clamp(player.x + offset[0] * step, 7, 93), y: clamp(player.y + offset[1] * step, 6, 94) }
+      : player))
+  }
+
   const changeRole = (role: string) => {
     if (!selectedPlayer) return
     setSquad((current) => current.map((player) => player.id === selectedPlayer.id ? { ...player, role } : player))
   }
 
   const substitute = (incomingId: string) => {
-    if (!selectedPlayer?.onPitch || selectedPlayer.slot === null || substitutionUsed) return
+    const incomingPlayer = squad.find((player) => player.id === incomingId)
+    const cannotReturn = substitutions.some((item) => item.outgoingId === incomingId)
+    if (!selectedPlayer?.onPitch || selectedPlayer.slot === null || !incomingPlayer || incomingPlayer.onPitch || cannotReturn || substitutions.length >= 5) return
     const outgoingSlot = selectedPlayer.slot
     const outgoingCoordinate = { x: selectedPlayer.x, y: selectedPlayer.y }
+    const record: GuidedSubstitution = {
+      id: `sub-${substitutions.length + 1}-${selectedPlayer.id}-${incomingId}`,
+      outgoingId: selectedPlayer.id,
+      outgoingName: selectedPlayer.shortName,
+      incomingId,
+      incomingName: incomingPlayer.shortName,
+      squadBefore: squad.map((player) => ({ ...player })),
+      selectedIdBefore: selectedId,
+    }
     setSquad((current) => current.map((player) => {
       if (player.id === selectedPlayer.id) {
         return { ...player, onPitch: false, slot: null, x: 0, y: 0 }
@@ -157,7 +219,24 @@ function App() {
       return player
     }))
     setSelectedId(incomingId)
-    setSubstitutionUsed(true)
+    setSubstitutions((current) => [...current, record])
+  }
+
+  const undoLastSubstitution = () => {
+    const previous = substitutions[substitutions.length - 1]
+    if (!previous) return
+    setSquad((current) => revertSubstitutionPlan(current, [previous]))
+    setSelectedId(previous.selectedIdBefore)
+    setSubstitutions((current) => current.slice(0, -1))
+  }
+
+  const resetSubstitutions = () => {
+    const first = substitutions[0]
+    if (!first) return
+    if (!window.confirm('계획한 교체를 모두 취소하고 교체 전 명단으로 돌아갈까요?')) return
+    setSquad((current) => revertSubstitutionPlan(current, substitutions))
+    setSelectedId(first.selectedIdBefore)
+    setSubstitutions([])
   }
 
   const goHome = () => {
@@ -166,7 +245,7 @@ function App() {
     setFormation(scenario.defaultFormation)
     setSquad(cloneScenarioSquad(scenario))
     setSelectedId(scenario.selectedPlayerId)
-    setSubstitutionUsed(false)
+    setSubstitutions([])
     setTactics({ ...scenario.defaultTactics })
     window.history.replaceState(null, '', window.location.pathname)
   }
@@ -177,8 +256,14 @@ function App() {
     window.history.replaceState(null, '', nextMode === 'home' ? window.location.pathname : nextMode === 'studio' ? '#studio' : `#${mode === 'home' ? 'intro' : stage}`)
   }
 
+  const advanceMobileStage = () => {
+    const currentIndex = stageOrder.indexOf(stage)
+    goToStage(stage === 'result' ? 'tactics' : stageOrder[Math.min(currentIndex + 1, stageOrder.length - 1)])
+  }
+
   return (
     <div className="app-shell">
+      <a className="skip-link" href="#main-content">본문 바로가기</a>
       <header className="topbar">
         <button className="brand" type="button" onClick={goHome} aria-label="서비스 홈으로">
           <span className="brand-mark">R:</span>
@@ -186,8 +271,8 @@ function App() {
         </button>
         <div className="topbar-center">
           <nav className="mode-switch" aria-label="서비스 모드">
-            <button type="button" className={mode === 'guided' ? 'active' : ''} onClick={() => switchMode('guided')}><span className="mode-long">실제 경기 분석</span><span className="mode-short">경기 분석</span></button>
-            <button type="button" className={mode === 'studio' ? 'active' : ''} onClick={() => switchMode('studio')}><span className="mode-long">범용 전술 스튜디오</span><span className="mode-short">전술판</span></button>
+            <button type="button" aria-pressed={mode === 'guided'} className={mode === 'guided' ? 'active' : ''} onClick={() => switchMode('guided')}><span className="mode-long">실제 경기 분석</span><span className="mode-short">경기 분석</span></button>
+            <button type="button" aria-pressed={mode === 'studio'} className={mode === 'studio' ? 'active' : ''} onClick={() => switchMode('studio')}><span className="mode-long">범용 전술 스튜디오</span><span className="mode-short">전술판</span></button>
           </nav>
           {mode === 'guided' && <div className="match-chip">
             <span><CountryFlag code={scenario.ours.short} label={scenario.ours.name} /> {scenario.ours.short}</span><strong>{scenario.score[0]} : {scenario.score[1]}</strong><span>{scenario.opponent.short} <CountryFlag code={scenario.opponent.short} label={scenario.opponent.name} /></span><em>{scenario.minute}′</em>
@@ -196,18 +281,27 @@ function App() {
         {mode === 'guided' ? <nav className="stage-nav" aria-label="진행 단계">
           {stageOrder.map((item, index) => {
             const currentIndex = stageOrder.indexOf(stage)
-            return <button type="button" key={item} className={currentIndex >= index ? 'active' : ''} disabled={index > currentIndex} onClick={() => setStage(item)}><i>{index + 1}</i><b>{stageLabels[item]}</b></button>
+            const state = index === currentIndex ? 'current' : index < currentIndex ? 'completed' : ''
+            return <button type="button" key={item} className={state} aria-current={index === currentIndex ? 'step' : undefined} disabled={index > currentIndex} onClick={() => goToStage(item)}><i>{index < currentIndex ? '✓' : index + 1}</i><b>{stageLabels[item]}</b></button>
           })}
         </nav> : mode === 'studio' ? <span className="studio-top-status"><i /> 작업 내용 자동 저장</span> : <span className="home-top-status">데이터 · 판단 · 전술</span>}
       </header>
-      {mode !== 'home' && <nav className="mobile-mode-nav" aria-label="모바일 서비스 모드">
-        <button type="button" className={mode === 'guided' ? 'active' : ''} onClick={() => switchMode('guided')}>실제 경기 분석</button>
-        <button type="button" className={mode === 'studio' ? 'active' : ''} onClick={() => switchMode('studio')}>범용 전술판</button>
-      </nav>}
+      {mode !== 'home' && <div className="mobile-navigation">
+        <nav className="mobile-mode-nav" aria-label="모바일 서비스 모드">
+          <button type="button" aria-pressed={mode === 'guided'} className={mode === 'guided' ? 'active' : ''} onClick={() => switchMode('guided')}>실제 경기 분석</button>
+          <button type="button" aria-pressed={mode === 'studio'} className={mode === 'studio' ? 'active' : ''} onClick={() => switchMode('studio')}>범용 전술판</button>
+        </nav>
+        {mode === 'guided' && <div className="mobile-stage-status" role="region" aria-label={`현재 단계 ${stageLabels[stage]}, ${stageOrder.indexOf(stage) + 1}/${stageOrder.length}`}>
+          <span><b>{stageLabels[stage]}</b><small>{stageOrder.indexOf(stage) + 1} / {stageOrder.length}</small></span>
+          <i aria-hidden="true"><b style={{ width: `${((stageOrder.indexOf(stage) + 1) / stageOrder.length) * 100}%` }} /></i>
+          <button className="mobile-stage-action" type="button" onClick={advanceMobileStage}>{mobileStageActions[stage]} <span aria-hidden="true">→</span></button>
+        </div>}
+      </div>}
 
+      <div id="main-content" tabIndex={-1}>
       {mode === 'home' ? <HomeScreen onGuided={() => switchMode('guided')} onStudio={() => switchMode('studio')} /> : mode === 'studio' ? <UniversalStudio /> : <>
-      {stage === 'intro' && <IntroScreen scenario={scenario} scenarioId={scenarioId} onScenario={selectScenario} onStart={() => setStage('briefing')} onStudio={() => switchMode('studio')} />}
-      {stage === 'briefing' && <BriefingScreen scenario={scenario} onBack={() => setStage('intro')} onNext={() => setStage('tactics')} />}
+      {stage === 'intro' && <IntroScreen scenario={scenario} scenarioId={scenarioId} onScenario={selectScenario} onStart={() => goToStage('briefing')} onStudio={() => switchMode('studio')} />}
+      {stage === 'briefing' && <BriefingScreen scenario={scenario} onBack={() => goToStage('intro')} onNext={() => goToStage('tactics')} />}
       {stage === 'tactics' && (
         <TacticsScreen
           scenario={scenario}
@@ -215,24 +309,29 @@ function App() {
           squad={squad}
           selectedPlayer={selectedPlayer}
           draggingId={draggingId}
-          substitutionUsed={substitutionUsed}
+          substitutions={substitutions}
           tactics={tactics}
           metrics={metrics}
           pitchRef={pitchRef}
-          onBack={() => setStage('briefing')}
+          onBack={() => goToStage('briefing')}
           onFormation={setFormationPreset}
           onTactic={updateTactic}
+          onTacticPreset={applyTacticPreset}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
+          onKeyboardMove={movePlayerWithKeyboard}
           onSelect={setSelectedId}
           onRole={changeRole}
           onSubstitute={substitute}
-          onSubmit={() => setStage('result')}
+          onUndoSubstitution={undoLastSubstitution}
+          onResetSubstitutions={resetSubstitutions}
+          onSubmit={() => goToStage('result')}
         />
       )}
-      {stage === 'result' && <ResultScreen scenario={scenario} metrics={metrics} squad={squad} tactics={tactics} formation={formation} onRetry={() => setStage('tactics')} />}
+      {stage === 'result' && <ResultScreen scenario={scenario} metrics={metrics} squad={squad} tactics={tactics} formation={formation} substitutions={substitutions} onRetry={() => goToStage('tactics')} />}
       </>}
+      </div>
     </div>
   )
 }
@@ -322,6 +421,9 @@ function IntroScreen({ scenario, scenarioId, onScenario, onStart, onStudio }: { 
 }
 
 function BriefingScreen({ scenario, onBack, onNext }: { scenario: GuidedScenario; onBack: () => void; onNext: () => void }) {
+  const [evidenceOpen, setEvidenceOpen] = useState(() => window.matchMedia('(min-width: 721px)').matches)
+  const evidenceCount = scenario.officialReport ? 2 : 3
+
   return (
     <main className="briefing-screen page-wrap">
       <div className="page-heading">
@@ -333,11 +435,17 @@ function BriefingScreen({ scenario, onBack, onNext }: { scenario: GuidedScenario
         <span className="live-pill"><i /> 검증된 경기 데이터</span>
       </div>
 
+      <section className="decision-brief" aria-label="경기 개입 핵심 요약">
+        <span><small>관측 구간</small><b>{scenario.windowLabel}</b><em>{scenario.briefing.diagnosisTitle}</em></span>
+        <span><small>필요한 결과</small><b>{scenario.briefing.contextNumber}</b><em>{scenario.briefing.contextLabel}</em></span>
+        <span><small>우선 검토</small><b>{scenario.briefing.optionPlayer}</b><em>{scenario.briefing.optionRole}</em></span>
+      </section>
+
       <section className="briefing-grid">
         <MatchStats scenario={scenario} />
 
         <article className="analysis-card">
-          <div className="card-heading"><span>02</span><div><small>경기 상황</small><h2>우리에게 필요한 결과</h2></div></div>
+          <div className="card-heading"><span>READ</span><div><small>경기 상황</small><h2>우리에게 필요한 결과</h2></div></div>
           <div className="context-number"><strong>{scenario.briefing.contextNumber}</strong><span>{scenario.briefing.contextLabel}</span></div>
           <ul className="signal-list">
             <li><span className="signal good">↗</span><div><strong>{scenario.briefing.successTitle}</strong><small>{scenario.briefing.successDetail}</small></div></li>
@@ -346,7 +454,7 @@ function BriefingScreen({ scenario, onBack, onNext }: { scenario: GuidedScenario
         </article>
 
         <article className="analysis-card">
-          <div className="card-heading"><span>03</span><div><small>개입 선택지</small><h2>{scenario.briefing.optionTitle}</h2></div></div>
+          <div className="card-heading"><span>ACT</span><div><small>개입 선택지</small><h2>{scenario.briefing.optionTitle}</h2></div></div>
           <div className="player-spotlight">
             <div className="shirt-number">{scenario.briefing.optionNumber}</div>
             <div><strong>{scenario.briefing.optionPlayer}</strong><small>{scenario.briefing.optionPosition} · {scenario.briefing.optionRole}</small></div>
@@ -357,12 +465,17 @@ function BriefingScreen({ scenario, onBack, onNext }: { scenario: GuidedScenario
         </article>
       </section>
 
-      {scenario.officialReport
-        ? <><OfficialReportEvidence scenario={scenario} /><PassNetwork scenario={scenario} /></>
-        : <><SpatialEvidence scenario={scenario} /><PassNetwork scenario={scenario} /><BallFlow scenario={scenario} /></>}
+      <details className="evidence-stack" open={evidenceOpen} onToggle={(event) => setEvidenceOpen(event.currentTarget.open)}>
+        <summary><span><small>상세 분석 근거</small><strong>{scenario.officialReport ? '공식 보고서와 패스 구조' : '공간·패스·볼 흐름'}</strong></span><b>{evidenceCount}개 보기 <i aria-hidden="true">⌄</i></b></summary>
+        <div className="evidence-stack-content">
+          {scenario.officialReport
+            ? <><OfficialReportEvidence scenario={scenario} /><PassNetwork scenario={scenario} /></>
+            : <><SpatialEvidence scenario={scenario} /><PassNetwork scenario={scenario} /><BallFlow scenario={scenario} /></>}
+        </div>
+      </details>
 
       <div className="source-strip">
-        {scenario.officialReport ? <b className="source-wordmark">FIFA<br />TRAINING CENTRE</b> : <img src="/statsbomb-logo.png" alt="StatsBomb" />}
+        {scenario.officialReport ? <b className="source-wordmark">FIFA<br />TRAINING CENTRE</b> : <img src="/statsbomb-logo.png" alt="StatsBomb" width="5885" height="943" loading="lazy" />}
         <p><strong>데이터 근거</strong> {scenario.sourceNote ?? `Match ${scenario.matchId} · ${scenario.windowLabel} 이벤트 직접 집계 · 추출일 ${scenario.extractedAt}`}</p>
         <a href={scenario.sourceUrl} target="_blank" rel="noreferrer">원본 자료 ↗</a>
       </div>
@@ -381,27 +494,34 @@ interface TacticsScreenProps {
   squad: Player[]
   selectedPlayer: Player | null
   draggingId: string | null
-  substitutionUsed: boolean
+  substitutions: GuidedSubstitution[]
   tactics: Tactics
   metrics: Metrics
   pitchRef: React.RefObject<HTMLDivElement>
   onBack: () => void
   onFormation: (formation: FormationKey) => void
   onTactic: (key: keyof Tactics, value: number) => void
+  onTacticPreset: (values: Tactics) => void
   onPointerDown: (event: ReactPointerEvent<HTMLButtonElement>, id: string) => void
   onPointerMove: (event: ReactPointerEvent<HTMLButtonElement>, id: string) => void
   onPointerUp: (event: ReactPointerEvent<HTMLButtonElement>) => void
+  onKeyboardMove: (event: ReactKeyboardEvent<HTMLButtonElement>, id: string) => void
   onSelect: (id: string) => void
   onRole: (role: string) => void
   onSubstitute: (id: string) => void
+  onUndoSubstitution: () => void
+  onResetSubstitutions: () => void
   onSubmit: () => void
 }
 
 function TacticsScreen(props: TacticsScreenProps) {
-  const { scenario, formation, squad, selectedPlayer, draggingId, substitutionUsed, tactics, metrics, pitchRef } = props
+  const { scenario, formation, squad, selectedPlayer, draggingId, substitutions, tactics, metrics, pitchRef } = props
   const onPitch = squad.filter((player) => player.onPitch)
   const bench = squad.filter((player) => !player.onPitch)
   const selectedEvidence = selectedPlayer ? scenario.playerEvidence[selectedPlayer.id] : null
+  const substitutionsRemaining = 5 - substitutions.length
+  const substitutedOffIds = new Set(substitutions.map((item) => item.outgoingId))
+  const activePreset = tacticPresets.find((preset) => (Object.keys(tactics) as Array<keyof Tactics>).every((key) => tactics[key] === preset.values[key]))?.id
 
   return (
     <main className="tactics-screen page-wrap wide">
@@ -419,26 +539,39 @@ function TacticsScreen(props: TacticsScreenProps) {
 
       <div className="tactics-layout">
         <aside className="control-panel panel">
-          <div className="panel-title"><span>01</span><div><small>팀 대형</small><h2>포메이션</h2></div></div>
-          <label className="formation-select">
-            <span>기본 대형</span>
-            <select aria-label="포메이션 선택" value={formation} onChange={(event) => props.onFormation(event.target.value as FormationKey)}>
-              {formations.map((item) => <option value={item} key={item}>{item} · {formationGuidance[item]}</option>)}
-            </select>
-          </label>
-          <div className="formation-summary"><strong>{formation}</strong><span>{formationGuidance[formation]}</span><i>{formation === scenario.defaultFormation ? '실제 기준 대형' : '변경 전술 대형'}</i></div>
-          <p className="helper">대형을 적용한 뒤 선수 위치를 직접 조정할 수 있습니다.</p>
+          <div className="formation-control-block">
+            <div className="panel-title"><span>01</span><div><small>팀 대형</small><h2>포메이션</h2></div></div>
+            <label className="formation-select">
+              <span>비소유 기본 대형</span>
+              <select name="guided-formation" aria-label="포메이션 선택" value={formation} onChange={(event) => props.onFormation(event.target.value as FormationKey)}>
+                {formationGroups.map((group) => <optgroup key={group.label} label={`${group.label} 포메이션`}>{group.items.map((item) => <option value={item} key={item}>{item} · {formationGuidance[item]}</option>)}</optgroup>)}
+              </select>
+            </label>
+            <div className="formation-summary">
+              <FormationGlyph formation={formation} />
+              <strong>{formation}</strong>
+              <span>{formationGuidance[formation]}</span>
+              <i>{formation === scenario.defaultFormation ? '실제 기준 대형' : '변경 전술 대형'} · {formations.length}개 선택지</i>
+            </div>
+            <p className="helper">포메이션은 비소유 기본 위치입니다. 역할과 직접 배치로 볼 소유 시 움직임을 설계합니다.</p>
+          </div>
 
           <div className="section-divider" />
-          <div className="panel-title"><span>02</span><div><small>팀 전술 지시</small><h2>팀 지시</h2></div></div>
-          <Slider label="압박 강도" low="기다리기" high="즉시 압박" value={tactics.pressing} onChange={(value) => props.onTactic('pressing', value)} />
-          <Slider label="공격 폭" low="좁게" high="넓게" value={tactics.width} onChange={(value) => props.onTactic('width', value)} />
-          <Slider label="공격 템포" low="차분하게" high="빠르게" value={tactics.tempo} onChange={(value) => props.onTactic('tempo', value)} />
-          <Slider label="위험 감수" low="안전하게" high="과감하게" value={tactics.risk} onChange={(value) => props.onTactic('risk', value)} />
+          <div className="tactics-control-block">
+            <div className="panel-title"><span>02</span><div><small>팀 전술 지시</small><h2>팀 지시</h2></div></div>
+            <div className="tactic-presets" role="group" aria-label="전술 프리셋">
+              {tacticPresets.map((preset) => <button type="button" key={preset.id} className={activePreset === preset.id ? 'active' : ''} aria-pressed={activePreset === preset.id} onClick={() => props.onTacticPreset(preset.values)}><strong>{preset.label}</strong><small>{preset.detail}</small></button>)}
+            </div>
+            <Slider label="압박 강도" low="기다리기" high="즉시 압박" value={tactics.pressing} onChange={(value) => props.onTactic('pressing', value)} />
+            <Slider label="공격 폭" low="좁게" high="넓게" value={tactics.width} onChange={(value) => props.onTactic('width', value)} />
+            <Slider label="공격 템포" low="차분하게" high="빠르게" value={tactics.tempo} onChange={(value) => props.onTactic('tempo', value)} />
+            <Slider label="위험 감수" low="안전하게" high="과감하게" value={tactics.risk} onChange={(value) => props.onTactic('risk', value)} />
+          </div>
         </aside>
 
         <section className="board-column">
-          <div className="pitch" ref={pitchRef}>
+          <p className="sr-only" id="guided-pitch-instructions">선수를 선택하고 방향키로 2퍼센트씩, Shift와 방향키로 5퍼센트씩 이동할 수 있습니다.</p>
+          <div className="pitch" ref={pitchRef} role="group" aria-label="선수 위치 조정 전술 보드" aria-describedby="guided-pitch-instructions">
             <div className="pitch-lines"><i className="halfway" /><i className="circle" /><i className="box top" /><i className="box bottom" /></div>
             <div className="attack-label">↑ ATTACK</div>
             {onPitch.map((player) => (
@@ -450,7 +583,9 @@ function TacticsScreen(props: TacticsScreenProps) {
                 onPointerDown={(event) => props.onPointerDown(event, player.id)}
                 onPointerMove={(event) => props.onPointerMove(event, player.id)}
                 onPointerUp={props.onPointerUp}
-                aria-label={`${player.name}, ${player.role}`}
+                onPointerCancel={props.onPointerUp}
+                onKeyDown={(event) => props.onKeyboardMove(event, player.id)}
+                aria-label={`${player.name}, ${player.role}, 가로 위치 ${Math.round(player.x)}, 세로 위치 ${Math.round(player.y)}`}
               >
                 <span>{player.number}</span><strong>{player.shortName}</strong>
               </button>
@@ -458,15 +593,23 @@ function TacticsScreen(props: TacticsScreenProps) {
           </div>
 
           <div className="bench panel">
-            <div className="bench-heading"><div><small>교체 명단</small><strong>{substitutionUsed ? '교체 완료' : '먼저 나갈 선수를 선택하세요'}</strong></div><span>{substitutionUsed ? '1 / 1' : '0 / 1'} 교체</span></div>
-            <div className="bench-list">
-              {bench.map((player) => (
-                <button type="button" key={player.id} onClick={() => selectedPlayer?.onPitch && !substitutionUsed ? props.onSubstitute(player.id) : props.onSelect(player.id)}>
-                  <span>{player.number}</span><div><strong>{player.shortName}</strong><small>{player.position} · {player.role}</small></div>
-                  {selectedPlayer?.onPitch && !substitutionUsed && <em>투입</em>}
-                </button>
-              ))}
+            <div className="bench-heading">
+              <div><small>교체 계획</small><strong>{selectedPlayer?.onPitch ? `${selectedPlayer.shortName} 대신 투입할 선수를 선택하세요` : '먼저 필드 선수를 선택하세요'}</strong></div>
+              <div className="substitution-actions"><span>{substitutions.length} / 5명 · 1회 교체 창</span><button type="button" disabled={substitutions.length === 0} onClick={props.onUndoSubstitution}>↶ 직전 취소</button><button type="button" disabled={substitutions.length === 0} onClick={props.onResetSubstitutions}>전체 취소</button></div>
             </div>
+            {substitutions.length > 0 && <ol className="substitution-log" aria-label="계획한 교체 순서">{substitutions.map((item, index) => <li key={item.id}><b>{index + 1}</b><span><s>{item.outgoingName}</s><i aria-hidden="true">→</i><strong>{item.incomingName}</strong></span></li>)}</ol>}
+            <div className="bench-list">
+              {bench.map((player) => {
+                const cannotReturn = substitutedOffIds.has(player.id)
+                const canEnter = Boolean(selectedPlayer?.onPitch) && substitutionsRemaining > 0 && !cannotReturn
+                return (
+                <button type="button" key={player.id} disabled={cannotReturn} onClick={() => canEnter ? props.onSubstitute(player.id) : props.onSelect(player.id)}>
+                  <span>{player.number}</span><div><strong>{player.shortName}</strong><small>{player.position} · {player.role}</small></div>
+                  {cannotReturn ? <em className="unavailable">재투입 불가</em> : canEnter ? <em>투입</em> : null}
+                </button>
+              )})}
+            </div>
+            <p className="substitution-rule">최대 5명까지 한 번의 교체 창에 묶어 설계합니다. 교체 아웃된 선수는 재투입할 수 없으며, 비교 실행 전에는 언제든 직전 교체를 취소할 수 있습니다.</p>
           </div>
         </section>
 
@@ -480,7 +623,7 @@ function TacticsScreen(props: TacticsScreenProps) {
                   <div className="attribute-row evidence"><span>패스 <b>{selectedEvidence.passesCompleted}/{selectedEvidence.passesAttempted}</b></span><span>압박 <b>{selectedEvidence.pressures}</b></span><span>슈팅 <b>{selectedEvidence.shots}</b></span></div>
                 ) : <p className="no-evidence">65분 이전 미출전 · 경기 내 관측값 없음</p>}
                 {selectedEvidence?.note && <p className="evidence-note">{selectedEvidence.note}</p>}
-                <label className="role-select">역할<select value={selectedPlayer.role} onChange={(event) => props.onRole(event.target.value)} disabled={!selectedPlayer.onPitch}>{roleOptions[selectedPlayer.position].map((role) => <option key={role}>{role}</option>)}</select></label>
+                <label className="role-select">역할<select name="guided-player-role" value={selectedPlayer.role} onChange={(event) => props.onRole(event.target.value)} disabled={!selectedPlayer.onPitch}>{roleOptions[selectedPlayer.position].map((role) => <option key={role}>{role}</option>)}</select></label>
               </>
             ) : <p>선수를 선택하세요.</p>}
           </section>
@@ -503,11 +646,19 @@ function TacticsScreen(props: TacticsScreenProps) {
   )
 }
 
+function FormationGlyph({ formation }: { formation: FormationKey }) {
+  return (
+    <span className="formation-glyph" aria-hidden="true">
+      {formationPositions[formation].map((position, index) => <i key={index} style={{ left: `${position.x}%`, top: `${position.y}%` }} />)}
+    </span>
+  )
+}
+
 function Slider({ label, low, high, value, onChange }: { label: string; low: string; high: string; value: number; onChange: (value: number) => void }) {
   return (
     <label className="tactic-slider">
       <span><strong>{label}</strong><b>{value}</b></span>
-      <input type="range" min="0" max="100" value={value} onChange={(event) => onChange(Number(event.target.value))} style={{ '--range': `${value}%` } as React.CSSProperties} />
+      <input name={`guided-tactic-${label}`} type="range" min="0" max="100" value={value} onChange={(event) => onChange(Number(event.target.value))} style={{ '--range': `${value}%` } as React.CSSProperties} />
       <small><i>{low}</i><i>{high}</i></small>
     </label>
   )
@@ -538,7 +689,7 @@ function getCoachNote(metrics: Metrics, squad: Player[], scenario: GuidedScenari
   return '균형은 안정적입니다. 이제 승부를 바꿀 한 가지 과감한 선택이 필요합니다.'
 }
 
-function ResultScreen({ scenario, metrics, squad, tactics, formation, onRetry }: { scenario: GuidedScenario; metrics: Metrics; squad: Player[]; tactics: Tactics; formation: FormationKey; onRetry: () => void }) {
+function ResultScreen({ scenario, metrics, squad, tactics, formation, substitutions, onRetry }: { scenario: GuidedScenario; metrics: Metrics; squad: Player[]; tactics: Tactics; formation: FormationKey; substitutions: GuidedSubstitution[]; onRetry: () => void }) {
   const impactOn = squad.some((player) => player.id === scenario.impactPlayerId && player.onPitch)
   const baselineMetrics = calculateMetrics(cloneScenarioSquad(scenario), scenario.defaultTactics, scenario.defaultFormation, scenario)
   const performance = Math.round(scenario.id === 'argentina-netherlands-83'
@@ -586,26 +737,34 @@ function ResultScreen({ scenario, metrics, squad, tactics, formation, onRetry }:
         <p>실제 관측 구간을 기준선으로 대형, 선수 배치 높이와 폭, 역할, 교체, 팀 지시만 바꿔 다시 계산했습니다. 경기 결과나 득점 확률을 예측하지 않습니다.</p>
       </section>
 
-      {scenario.id === 'korea-portugal-65' ? <TacticalSequence hwangOn={impactOn} formation={formation} tactics={tactics} /> : <PassNetwork scenario={scenario} />}
+      {scenario.id === 'korea-portugal-65' ? <TacticalSequence hwangOn={impactOn} formation={formation} tactics={tactics} /> : <section className="result-evidence-summary panel" aria-label="브리핑 패스 구조 근거 요약">
+        <div><small>브리핑 근거</small><h2>패스 구조는 판단 근거로만 다시 확인합니다</h2><p>{scenario.networkCopy.title} 결과 화면에서는 같은 네트워크를 반복하지 않고 전술 변화와 운영 조건에 집중합니다.</p></div>
+        <dl>
+          <div><dt>{scenario.ours.name}</dt><dd>{scenario.networks.ours.completedPasses}회 완료</dd></div>
+          <div><dt>{scenario.opponent.name}</dt><dd>{scenario.networks.opponent.completedPasses}회 완료</dd></div>
+          <div><dt>위치 기준</dt><dd>{scenario.networkPositionBasis ? '참조 배치' : '평균 위치'}</dd></div>
+        </dl>
+      </section>}
 
       <section className="result-grid">
-        <article className="manager-card">
-          <div className="card-top"><span>RE:TACTIC</span><small>전술 개입 메모 · {scenario.minute}′</small></div>
-          <div className="manager-badge">R:</div>
-          <p>제안 전술</p>
-          <h2>{planLabel}</h2>
-          <div className="manager-traits"><span>{formation}</span><span>위험 {tactics.risk}</span><span>템포 {tactics.tempo}</span><span>{impactOn ? `${impactPlayer} 투입` : '기존 인원 유지'}</span></div>
-          <small>운영 조건 · {operatingCondition}</small>
-        </article>
-
         <article className="report-card">
-          <div className="panel-title"><span>05</span><div><small>의사결정 메모</small><h2>이점과 리스크를 검토합니다</h2></div></div>
+          <div className="panel-title"><span>MEMO</span><div><small>의사결정 메모</small><h2>이점과 리스크를 검토합니다</h2></div></div>
           <ul className="report-list">
             <li className={impactOn ? 'positive' : 'neutral'}><b>{impactOn ? '✓' : '!'}</b><div><strong>{scenario.id === 'korea-portugal-65' ? '전진 수단' : scenario.id === 'korea-south-africa-64' ? '후방 균형' : '측면 대응'}</strong><span>{impactOn ? scenario.result.impactOn : scenario.result.impactOff}</span></div></li>
+            <li className={substitutions.length > 0 ? 'positive' : 'neutral'}><b>{substitutions.length > 0 ? '↗' : '—'}</b><div><strong>교체 계획 · {substitutions.length}/5명</strong><span>{substitutions.length > 0 ? substitutions.map((item) => `${item.outgoingName} → ${item.incomingName}`).join(' · ') : '선수 교체 없이 배치와 팀 지시만 변경했습니다.'}</span></div></li>
             <li className={metrics.exposure < 60 ? 'positive' : 'negative'}><b>{metrics.exposure < 60 ? '✓' : '!'}</b><div><strong>전환 수비</strong><span>{metrics.exposure < 60 ? '공격적 개입 속에서도 후방 숫자를 관리할 수 있는 범위입니다.' : '압박과 위험 감수가 함께 높아 공을 잃은 뒤 중앙 보호 조건이 필요합니다.'}</span></div></li>
             <li className={metrics.control > 50 ? 'positive' : 'neutral'}><b>{metrics.control > 50 ? '✓' : '!'}</b><div><strong>{scenario.metricLabels[1]}</strong><span>{scenario.windowLabel} 패스 성공률 {scenario.evidence.ours.passCompletion}%를 기준으로 한 비교 점수는 {metrics.control}점입니다.</span></div></li>
           </ul>
           <div className="actual-choice"><span>실제 경기와 비교</span><p>{scenario.result.actualChoice} {scenario.result.actualOutcome} 이 사실은 사후 비교 정보이며 시나리오 점수 계산에는 정답값으로 사용하지 않습니다.</p></div>
+        </article>
+
+        <article className="manager-card" aria-label="공유용 전술 카드">
+          <div className="card-top"><span>RE:TACTIC</span><small>공유용 전술 카드 · {scenario.minute}′</small></div>
+          <div className="manager-badge">R:</div>
+          <p>제안 전술</p>
+          <h2>{planLabel}</h2>
+          <div className="manager-traits"><span>{formation}</span><span>위험 {tactics.risk}</span><span>템포 {tactics.tempo}</span><span>{substitutions.length > 0 ? `교체 ${substitutions.length}명` : impactOn ? `${impactPlayer} 투입` : '기존 인원 유지'}</span></div>
+          <small>운영 조건 · {operatingCondition}</small>
         </article>
       </section>
 
@@ -614,7 +773,7 @@ function ResultScreen({ scenario, metrics, squad, tactics, formation, onRetry }:
         <button className="primary-button" type="button" onClick={onRetry}>전술안 다시 설계 <span>↻</span></button>
       </div>
       <footer className="data-source">
-        {scenario.officialReport ? <b className="source-wordmark">FIFA<br />TRAINING CENTRE</b> : <img src="/statsbomb-logo.png" alt="StatsBomb" />}
+        {scenario.officialReport ? <b className="source-wordmark">FIFA<br />TRAINING CENTRE</b> : <img src="/statsbomb-logo.png" alt="StatsBomb" width="5885" height="943" loading="lazy" />}
         <p>{scenario.officialReport
           ? '데이터: FIFA Training Centre 전체 경기 보고서. 64분 개입안은 RE:TACTIC의 사후 전술 재구성이며 실제 경기 예측이나 FIFA의 공식 권고가 아닙니다.'
           : `경기 이벤트 데이터: StatsBomb Open Data · Match ${scenario.matchId}. 파생 지표는 RE:TACTIC이 계산했습니다. 시나리오 점수는 실제 경기 결과 예측이나 승률이 아닙니다.`}</p>

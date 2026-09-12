@@ -124,3 +124,15 @@ node scripts/extract-statsbomb-evidence.mjs
 | country-flag-icons 1.6.20 | 국가 표기를 위한 일관된 SVG 국기 | MIT |
 
 `html-to-image`는 클라이언트에서 사용자가 만든 전술안만 이미지로 변환하며 외부 서버로 내용을 전송하지 않습니다. 의존 패키지의 원문 라이선스는 설치된 패키지와 각 공식 저장소에서 확인할 수 있습니다.
+
+## 8. 프론트엔드 디자인 에이전트 자료
+
+2026-07-22에 디자인·접근성·React 성능 검토를 반복 가능하게 만들기 위해 다음 공개 에이전트 스킬을 프로젝트의 `.agents/skills`에 설치했습니다.
+
+| 자료 | 출처 | 라이선스 | 적용 범위 |
+|---|---|---|---|
+| frontend-design | [Anthropic Skills](https://github.com/anthropics/skills/tree/main/skills/frontend-design) | Apache-2.0 | 프로젝트 맥락에 맞는 시각 방향과 프론트엔드 완성도 |
+| web-design-guidelines | [Vercel Agent Skills](https://github.com/vercel-labs/agent-skills/tree/main/skills/web-design-guidelines) | MIT | 접근성, 폼, 포커스, 모션, 터치, 반응형 UI 감사 |
+| react-best-practices | [Vercel Agent Skills](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices) | MIT | React 렌더링, 번들, 클라이언트 성능 검토 |
+
+각 스킬의 원문, 포함된 라이선스 메타데이터, 공식 저장소 링크를 보존합니다. 외부 서비스의 시각 요소나 코드를 모방하는 용도가 아니라 검토 원칙과 작업 절차를 재사용하는 용도입니다. RE:TACTIC에 특화한 적용 기준과 변경 내역은 [`docs/09_frontend_design_playbook.md`](09_frontend_design_playbook.md)에 정리합니다.

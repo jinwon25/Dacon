@@ -9,20 +9,27 @@ export default function SpatialEvidence({ scenario }: { scenario: GuidedScenario
   const [view, setView] = useState<View>('entries')
   const korea = scenario.spatial.ours
   const portugal = scenario.spatial.opponent
+  const changeViewWithKeyboard = (event: React.KeyboardEvent<HTMLButtonElement>, next: View) => {
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return
+    event.preventDefault()
+    const target = next === 'entries' ? 'shots' : 'entries'
+    setView(target)
+    document.getElementById(`spatial-tab-${target}`)?.focus()
+  }
 
   return (
     <section className="spatial-evidence panel">
       <header className="spatial-heading">
-        <div className="panel-title"><span>04</span><div><small>공간 근거 · {scenario.windowLabel}</small><h2>숫자가 만들어진 위치를 확인하세요</h2></div></div>
+        <div className="panel-title"><span>SPACE</span><div><small>공간 근거 · {scenario.windowLabel}</small><h2>숫자가 만들어진 위치를 확인하세요</h2></div></div>
         <div className="spatial-tabs" role="tablist" aria-label="공간 데이터 종류">
-          <button type="button" role="tab" aria-selected={view === 'entries'} className={view === 'entries' ? 'active' : ''} onClick={() => setView('entries')}>공격 지역 진입</button>
-          <button type="button" role="tab" aria-selected={view === 'shots'} className={view === 'shots' ? 'active' : ''} onClick={() => setView('shots')}>슈팅 위치</button>
+          <button id="spatial-tab-entries" type="button" role="tab" aria-selected={view === 'entries'} aria-controls="spatial-panel" tabIndex={view === 'entries' ? 0 : -1} className={view === 'entries' ? 'active' : ''} onClick={() => setView('entries')} onKeyDown={(event) => changeViewWithKeyboard(event, 'entries')}>공격 지역 진입</button>
+          <button id="spatial-tab-shots" type="button" role="tab" aria-selected={view === 'shots'} aria-controls="spatial-panel" tabIndex={view === 'shots' ? 0 : -1} className={view === 'shots' ? 'active' : ''} onClick={() => setView('shots')} onKeyDown={(event) => changeViewWithKeyboard(event, 'shots')}>슈팅 위치</button>
         </div>
       </header>
 
-      <div className="spatial-body">
+      <div id="spatial-panel" className="spatial-body" role="tabpanel" aria-labelledby={`spatial-tab-${view}`}>
         <div className="event-pitch" aria-label={view === 'entries' ? '팀별 공격 지역 진입 패스맵' : '팀별 슈팅 위치'}>
-          <svg viewBox="0 0 120 80" preserveAspectRatio="xMidYMid meet" role="img">
+          <svg viewBox="0 0 120 80" preserveAspectRatio="xMidYMid meet" role="img" aria-label={view === 'entries' ? '팀별 공격 지역 진입 패스맵' : '팀별 슈팅 위치'}>
             <defs>
               <marker id="arrow-korea" markerUnits="userSpaceOnUse" markerWidth="4" markerHeight="4" refX="3.5" refY="2" viewBox="0 0 4 4" orient="auto"><path d="M0,0 L4,2 L0,4 Z" className="marker-korea" /></marker>
               <marker id="arrow-portugal" markerUnits="userSpaceOnUse" markerWidth="3.2" markerHeight="3.2" refX="2.8" refY="1.6" viewBox="0 0 3.2 3.2" orient="auto"><path d="M0,0 L3.2,1.6 L0,3.2 Z" className="marker-portugal" /></marker>

@@ -1,11 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import type { ChangeEvent, PointerEvent as ReactPointerEvent } from 'react'
+import type { ChangeEvent, KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from 'react'
 import { toPng } from 'html-to-image'
 import { createGenericSquad, createOpponentSquad } from '../data/generic'
-import { formationPositions, roleOptions } from '../data/match'
+import { formationGroups, formationPositions, formations, roleOptions } from '../data/match'
 import type { FormationKey, Player, Tactics } from '../types'
 
-const formations: FormationKey[] = ['4-3-3', '4-2-3-1', '4-4-2', '4-1-4-1', '4-3-1-2', '3-4-3', '5-3-2']
 const storageKey = 'retactic-universal-studio-v1'
 
 interface MatchContext {
@@ -199,6 +198,7 @@ export default function UniversalStudio() {
   const [scenes, setScenes] = useState<TacticalScene[]>(initialScenes.current)
   const [activeSceneId, setActiveSceneId] = useState(saved?.activeSceneId ?? initialScenes.current[0].id)
   const [layoutHistory, setLayoutHistory] = useState<LayoutSnapshot[]>([])
+  const [layoutFuture, setLayoutFuture] = useState<LayoutSnapshot[]>([])
   const [selectedId, setSelectedId] = useState<string>('generic-st')
   const [draggingId, setDraggingId] = useState<string | null>(null)
   const [boardTool, setBoardTool] = useState<BoardTool>('move')
@@ -354,6 +354,33 @@ export default function UniversalStudio() {
     setHasDragged(true)
   }
 
+  const movePlayerWithKeyboard = (event: ReactKeyboardEvent<HTMLButtonElement>, playerId: string, side: 'ours' | 'opponent') => {
+    if (boardTool !== 'move' || isPlaying) return
+    const offsets: Partial<Record<string, [number, number]>> = {
+      ArrowLeft: [-1, 0],
+      ArrowRight: [1, 0],
+      ArrowUp: [0, -1],
+      ArrowDown: [0, 1],
+    }
+    const offset = offsets[event.key]
+    if (!offset) return
+    event.preventDefault()
+    pushLayoutHistory()
+    const step = event.shiftKey ? 5 : 2
+    const move = (players: Player[]) => players.map((player) => player.id === playerId
+      ? { ...player, x: clamp(player.x + offset[0] * step, 7, 93), y: clamp(player.y + offset[1] * step, 6, 94) }
+      : player)
+    if (side === 'ours') {
+      setSquad(move)
+      setSelectedId(playerId)
+      setRightPanelTab('player')
+    } else {
+      setOpponents(move)
+    }
+    setCoachPreview(null)
+    setHasDragged(true)
+  }
+
   const applyOpponentFormation = (next: FormationKey) => {
     pushLayoutHistory()
     setCoachPreview(null)
@@ -404,29 +431,49 @@ export default function UniversalStudio() {
     setRightPanelTab('player')
     setCoachPreview(null)
     setLayoutHistory([])
+    setLayoutFuture([])
     window.localStorage.removeItem(storageKey)
   }
 
-  function pushLayoutHistory() {
-    const snapshot: LayoutSnapshot = {
-      squad: squad.map((player) => ({ ...player })),
-      opponents: opponents.map((player) => ({ ...player })),
+  function captureLayout(): LayoutSnapshot {
+    return {
+      squad: clonePlayers(squad),
+      opponents: clonePlayers(opponents),
       routes: cloneRoutes(routes),
       formation,
       opponentFormation,
     }
+  }
+
+  function restoreLayout(snapshot: LayoutSnapshot) {
+    setSquad(clonePlayers(snapshot.squad))
+    setOpponents(clonePlayers(snapshot.opponents))
+    setRoutes(cloneRoutes(snapshot.routes))
+    setFormation(snapshot.formation)
+    setOpponentFormation(snapshot.opponentFormation)
+    setCoachPreview(null)
+  }
+
+  function pushLayoutHistory() {
+    const snapshot = captureLayout()
     setLayoutHistory((current) => [...current.slice(-9), snapshot])
+    setLayoutFuture([])
   }
 
   const undoLayout = () => {
     const previous = layoutHistory[layoutHistory.length - 1]
     if (!previous) return
-    setSquad(previous.squad)
-    setOpponents(previous.opponents)
-    setRoutes(previous.routes)
-    setFormation(previous.formation)
-    setOpponentFormation(previous.opponentFormation)
+    setLayoutFuture((current) => [...current.slice(-9), captureLayout()])
+    restoreLayout(previous)
     setLayoutHistory((current) => current.slice(0, -1))
+  }
+
+  const redoLayout = () => {
+    const next = layoutFuture[layoutFuture.length - 1]
+    if (!next) return
+    setLayoutHistory((current) => [...current.slice(-9), captureLayout()])
+    restoreLayout(next)
+    setLayoutFuture((current) => current.slice(0, -1))
   }
 
   const captureCurrentScene = (id = activeSceneId, name = activeScene?.name ?? sceneNames[0]) =>
@@ -668,7 +715,7 @@ export default function UniversalStudio() {
         <div className="studio-actions">
           <span className="save-status"><i /> 자동 저장 {lastSaved}</span>
           <button className="secondary-button compact" type="button" onClick={() => importInputRef.current?.click()}>불러오기</button>
-          <input ref={importInputRef} type="file" accept="application/json,.json" onChange={importTacticFile} style={{ display: 'none' }} />
+          <input ref={importInputRef} name="tactic-file" type="file" accept="application/json,.json" onChange={importTacticFile} style={{ display: 'none' }} />
           <button className="secondary-button compact" type="button" onClick={exportTacticFile}>전술 파일</button>
           <button className="secondary-button compact" type="button" onClick={resetStudio}>초기화</button>
           <button className="primary-button compact" type="button" onClick={exportPng} disabled={exportStatus === 'working'}>{exportStatus === 'working' ? '이미지 생성 중…' : 'PNG 저장'}</button>
@@ -676,29 +723,29 @@ export default function UniversalStudio() {
       </header>
       {fileStatus && <p className="studio-file-status" role="status">{fileStatus}</p>}
 
-      <div className="studio-steps" aria-label="사용 순서">
-        <span className="active"><b>1</b><i>경기 정보</i><small>팀과 목표 입력</small></span>
-        <span className="active"><b>2</b><i>선수 배치</i><small>포메이션과 위치</small></span>
-        <span className="active"><b>3</b><i>장면 구성</i><small>경로와 타임라인</small></span>
-        <span className="active"><b>4</b><i>분석·공유</i><small>코치 제안과 저장</small></span>
-      </div>
+      <nav className="studio-steps" aria-label="작업 영역 바로가기">
+        <a href="#studio-context"><b>1</b><i>경기 정보</i><small>팀과 목표 입력</small></a>
+        <a href="#studio-board"><b>2</b><i>선수 배치</i><small>포메이션과 위치</small></a>
+        <a href="#studio-storyboard"><b>3</b><i>장면 구성</i><small>경로와 타임라인</small></a>
+        <a href="#studio-panels"><b>4</b><i>분석·공유</i><small>코치 제안과 저장</small></a>
+      </nav>
 
       <div className="studio-layout">
         <aside className="studio-left">
           <section className="panel studio-panel" id="studio-context">
             <div className="panel-title"><span>01</span><div><small>경기 상황</small><h2>경기 정보</h2></div></div>
             <div className="form-grid">
-              <label>우리 팀<input value={context.teamName} onChange={(event) => setContext({ ...context, teamName: event.target.value })} /></label>
-              <label>상대 팀<input value={context.opponentName} onChange={(event) => setContext({ ...context, opponentName: event.target.value })} /></label>
-              <label>경기 단계<select value={context.phase} onChange={(event) => setContext({ ...context, phase: event.target.value as MatchContext['phase'] })}>{['경기 전', '전반전', '하프타임', '후반전', '연장전'].map((item) => <option key={item}>{item}</option>)}</select></label>
-              <label>분<input type="number" min="0" max="130" value={context.minute} onChange={(event) => setContext({ ...context, minute: Number(event.target.value) })} /></label>
+              <label>우리 팀<input name="team-name" autoComplete="off" value={context.teamName} onChange={(event) => setContext({ ...context, teamName: event.target.value })} /></label>
+              <label>상대 팀<input name="opponent-name" autoComplete="off" value={context.opponentName} onChange={(event) => setContext({ ...context, opponentName: event.target.value })} /></label>
+              <label>경기 단계<select name="match-phase" value={context.phase} onChange={(event) => setContext({ ...context, phase: event.target.value as MatchContext['phase'] })}>{['경기 전', '전반전', '하프타임', '후반전', '연장전'].map((item) => <option key={item}>{item}</option>)}</select></label>
+              <label>분<input name="match-minute" type="number" inputMode="numeric" min="0" max="130" value={context.minute} onChange={(event) => setContext({ ...context, minute: Number(event.target.value) })} /></label>
             </div>
             <div className="score-editor">
-              <label><span>{context.teamName || '우리 팀'}</span><input type="number" min="0" max="20" value={context.ourScore} onChange={(event) => setContext({ ...context, ourScore: Number(event.target.value) })} /></label>
+              <label><span>{context.teamName || '우리 팀'}</span><input name="our-score" type="number" inputMode="numeric" min="0" max="20" value={context.ourScore} onChange={(event) => setContext({ ...context, ourScore: Number(event.target.value) })} /></label>
               <b>:</b>
-              <label><span>{context.opponentName || '상대 팀'}</span><input type="number" min="0" max="20" value={context.theirScore} onChange={(event) => setContext({ ...context, theirScore: Number(event.target.value) })} /></label>
+              <label><span>{context.opponentName || '상대 팀'}</span><input name="opponent-score" type="number" inputMode="numeric" min="0" max="20" value={context.theirScore} onChange={(event) => setContext({ ...context, theirScore: Number(event.target.value) })} /></label>
             </div>
-            <label className="full-field">이번 전술의 목표<select value={context.objective} onChange={(event) => setContext({ ...context, objective: event.target.value as MatchContext['objective'] })}>{['균형 유지', '득점 필요', '리드 보호', '압박 탈출', '상대 역습 차단'].map((item) => <option key={item}>{item}</option>)}</select></label>
+            <label className="full-field">이번 전술의 목표<select name="tactic-objective" value={context.objective} onChange={(event) => setContext({ ...context, objective: event.target.value as MatchContext['objective'] })}>{['균형 유지', '득점 필요', '리드 보호', '압박 탈출', '상대 역습 차단'].map((item) => <option key={item}>{item}</option>)}</select></label>
           </section>
 
           <section className="panel studio-panel">
@@ -710,32 +757,33 @@ export default function UniversalStudio() {
           </section>
         </aside>
 
-        <section className="studio-board">
+        <section className="studio-board" id="studio-board">
           <section className="template-library" aria-label="전술 템플릿">
             <header><div><small>빠른 시작</small><strong>검증된 시작점에서 편집하세요</strong></div><span>템플릿 선택 시 현재 보드를 교체합니다</span></header>
             <div>{studioTemplates.map((template) => <button type="button" key={template.id} onClick={() => applyTemplate(template)}><b>{template.title}</b><small>{template.note}</small></button>)}</div>
           </section>
           <div className="board-toolbar">
             <div><small>02 · 포메이션</small><strong>{formation}</strong></div>
-            <label className="compact-formation-select"><span>우리 팀 포메이션</span><select aria-label="우리 팀 포메이션" value={formation} onChange={(event) => applyFormation(event.target.value as FormationKey)}>{formations.map((item) => <option value={item} key={item}>{item}</option>)}</select></label>
-            <div className="board-actions"><button className="reset-layout" type="button" disabled={layoutHistory.length === 0} onClick={undoLayout}>↶ 실행 취소</button><button className="reset-layout" type="button" onClick={() => applyFormation(formation)}>배치 원위치</button></div>
+            <label className="compact-formation-select"><span>우리 팀 포메이션</span><select name="studio-formation" aria-label="우리 팀 포메이션" value={formation} onChange={(event) => applyFormation(event.target.value as FormationKey)}>{formationGroups.map((group) => <optgroup key={group.label} label={group.label}>{group.items.map((item) => <option value={item} key={item}>{item}</option>)}</optgroup>)}</select></label>
+            <div className="board-actions"><button className="reset-layout" type="button" disabled={layoutHistory.length === 0} onClick={undoLayout} aria-label="배치 실행 취소">↶ 취소</button><button className="reset-layout" type="button" disabled={layoutFuture.length === 0} onClick={redoLayout} aria-label="배치 다시 실행">↷ 다시</button><button className="reset-layout" type="button" onClick={() => applyFormation(formation)}>원위치</button></div>
           </div>
           <div className="opponent-toolbar">
-            <label><input type="checkbox" checked={opponentVisible} onChange={(event) => setOpponentVisible(event.target.checked)} /><span>상대팀 표시</span></label>
-            <label className="compact-formation-select opponent"><span>{context.opponentName || '상대 팀'} 포메이션</span><select aria-label="상대 팀 포메이션" value={opponentFormation} onChange={(event) => applyOpponentFormation(event.target.value as FormationKey)}>{formations.map((item) => <option value={item} key={item}>{item}</option>)}</select></label>
+            <label><input name="opponent-visible" type="checkbox" checked={opponentVisible} onChange={(event) => setOpponentVisible(event.target.checked)} /><span>상대팀 표시</span></label>
+            <label className="compact-formation-select opponent"><span>{context.opponentName || '상대 팀'} 포메이션</span><select name="opponent-formation" aria-label="상대 팀 포메이션" value={opponentFormation} onChange={(event) => applyOpponentFormation(event.target.value as FormationKey)}>{formationGroups.map((group) => <optgroup key={group.label} label={group.label}>{group.items.map((item) => <option value={item} key={item}>{item}</option>)}</optgroup>)}</select></label>
             <p>붉은 선수를 직접 움직여 상대 압박 구조를 재현하세요.</p>
           </div>
           <div className="drawing-toolbar" aria-label="전술 그리기 도구">
             <div role="group" aria-label="보드 도구">
-              <button type="button" className={boardTool === 'move' ? 'active' : ''} onClick={() => setBoardTool('move')}><i>↕</i><span>선수 이동</span></button>
-              <button type="button" className={boardTool === 'pass' ? 'active pass' : 'pass'} onClick={() => setBoardTool('pass')}><i>→</i><span>패스</span></button>
-              <button type="button" className={boardTool === 'run' ? 'active run' : 'run'} onClick={() => setBoardTool('run')}><i>⇢</i><span>침투</span></button>
+              <button type="button" aria-pressed={boardTool === 'move'} className={boardTool === 'move' ? 'active' : ''} onClick={() => setBoardTool('move')}><i aria-hidden="true">↕</i><span>선수 이동</span></button>
+              <button type="button" aria-pressed={boardTool === 'pass'} className={boardTool === 'pass' ? 'active pass' : 'pass'} onClick={() => setBoardTool('pass')}><i aria-hidden="true">→</i><span>패스</span></button>
+              <button type="button" aria-pressed={boardTool === 'run'} className={boardTool === 'run' ? 'active run' : 'run'} onClick={() => setBoardTool('run')}><i aria-hidden="true">⇢</i><span>침투</span></button>
               <button type="button" aria-pressed={showControlSurface} className={showControlSurface ? 'active-control' : ''} onClick={() => setShowControlSurface((current) => !current)}><i>▦</i><span>공간 지배도</span></button>
             </div>
             <p>{boardTool === 'move' ? '선수를 끌어 배치하세요.' : `${selectedPlayer?.shortName ?? '선수'} 선택됨 · 경기장의 도착 지점을 누르세요.`}</p>
             <div><span>경로 {routes.length}</span><button type="button" disabled={routes.length === 0} onClick={() => setRoutes((current) => current.slice(0, -1))}>되돌리기</button><button type="button" disabled={routes.length === 0} onClick={() => setRoutes([])}>모두 지우기</button></div>
           </div>
-          <div className={`pitch studio-pitch tool-${boardTool} ${isPlaying ? 'story-playing' : ''}`} ref={pitchRef} onPointerDown={handlePitchPointerDown}>
+          <p className="sr-only" id="studio-pitch-instructions">선수 이동 도구에서 선수를 선택하고 방향키로 2퍼센트씩, Shift와 방향키로 5퍼센트씩 이동할 수 있습니다.</p>
+          <div className={`pitch studio-pitch tool-${boardTool} ${isPlaying ? 'story-playing' : ''}`} ref={pitchRef} onPointerDown={handlePitchPointerDown} role="group" aria-label="범용 전술 보드" aria-describedby="studio-pitch-instructions">
             {showControlSurface && opponentVisible && <div className="control-surface" aria-hidden="true">{controlCells.map((cell) => <i key={cell.id} className={cell.control >= 0 ? 'ours' : 'theirs'} style={{ '--control-alpha': Math.min(.32, .06 + Math.abs(cell.control) * .36) } as React.CSSProperties} />)}</div>}
             <div className="pitch-lines"><i className="halfway" /><i className="circle" /><i className="box top" /><i className="box bottom" /></div>
             {showControlSurface && opponentVisible && <div className="control-legend"><span><i />우리 팀</span><span><i />상대 팀</span><small>선수 거리 기반 근사치</small></div>}
@@ -762,7 +810,9 @@ export default function UniversalStudio() {
                 onPointerDown={(event) => { event.stopPropagation(); if (boardTool !== 'move' || isPlaying) return; pushLayoutHistory(); event.currentTarget.setPointerCapture(event.pointerId); setDraggingId(player.id) }}
                 onPointerMove={(event) => handleOpponentPointerMove(event, player.id)}
                 onPointerUp={handlePointerUp}
-                aria-label={`${context.opponentName} ${player.shortName}`}
+                onPointerCancel={handlePointerUp}
+                onKeyDown={(event) => movePlayerWithKeyboard(event, player.id, 'opponent')}
+                aria-label={`${context.opponentName || '상대 팀'} ${player.shortName}, 가로 위치 ${Math.round(player.x)}, 세로 위치 ${Math.round(player.y)}`}
               ><span>{player.number}</span><strong>{player.shortName}</strong></button>
             ))}
             {onPitch.map((player) => (
@@ -774,11 +824,13 @@ export default function UniversalStudio() {
                 onPointerDown={(event) => handlePointerDown(event, player.id)}
                 onPointerMove={(event) => handlePointerMove(event, player.id)}
                 onPointerUp={handlePointerUp}
-                aria-label={`${player.name}, ${player.role}`}
+                onPointerCancel={handlePointerUp}
+                onKeyDown={(event) => movePlayerWithKeyboard(event, player.id, 'ours')}
+                aria-label={`${player.name}, ${player.role}, 가로 위치 ${Math.round(player.x)}, 세로 위치 ${Math.round(player.y)}`}
               ><span>{player.number}</span><strong>{player.shortName}</strong></button>
             ))}
           </div>
-          <section className="storyboard panel" aria-label="전술 장면 타임라인">
+          <section className="storyboard panel" id="studio-storyboard" aria-label="전술 장면 타임라인">
             <header><div><small>장면 타임라인</small><strong>배치를 장면으로 저장하고 순서대로 재생하세요</strong></div><div><button type="button" onClick={saveCurrentScene}>현재 장면 저장</button><button type="button" disabled={scenes.length >= 5} onClick={addScene}>＋ 다음 장면</button><button className="play-story" type="button" disabled={scenes.length < 2} onClick={isPlaying ? stopPlayback : playScenes}>{isPlaying ? '■ 정지' : '▶ 전체 재생'}</button></div></header>
             <div className="scene-track">
               {scenes.map((scene, index) => <div className={`scene-item ${activeSceneId === scene.id ? 'active' : ''}`} key={scene.id}>
@@ -795,12 +847,12 @@ export default function UniversalStudio() {
           </div>
         </section>
 
-        <aside className="studio-right">
-          <nav className="context-panel-tabs" aria-label="설정 패널">
-            <button type="button" className={rightPanelTab === 'player' ? 'active' : ''} onClick={() => setRightPanelTab('player')}>선수</button>
-            <button type="button" className={rightPanelTab === 'analysis' ? 'active' : ''} onClick={() => setRightPanelTab('analysis')}>분석</button>
-            <button type="button" className={rightPanelTab === 'plan' ? 'active' : ''} onClick={() => setRightPanelTab('plan')}>전술안</button>
-          </nav>
+        <aside className="studio-right" id="studio-panels">
+          <div className="context-panel-tabs" role="group" aria-label="설정 패널">
+            <button type="button" aria-pressed={rightPanelTab === 'player'} className={rightPanelTab === 'player' ? 'active' : ''} onClick={() => setRightPanelTab('player')}>선수</button>
+            <button type="button" aria-pressed={rightPanelTab === 'analysis'} className={rightPanelTab === 'analysis' ? 'active' : ''} onClick={() => setRightPanelTab('analysis')}>분석</button>
+            <button type="button" aria-pressed={rightPanelTab === 'plan'} className={rightPanelTab === 'plan' ? 'active' : ''} onClick={() => setRightPanelTab('plan')}>전술안</button>
+          </div>
 
           {rightPanelTab === 'player' && <section className="panel studio-panel player-editor context-panel-content">
             <div className="panel-title"><span>02</span><div><small>선택 선수</small><h2>선수 정보</h2></div></div>
@@ -808,10 +860,10 @@ export default function UniversalStudio() {
               <div className="selected-summary"><b>{selectedPlayer.number}</b><div><strong>{selectedPlayer.name}</strong><small>{selectedPlayer.position} · {selectedPlayer.onPitch ? '필드 선수' : '벤치 선수'}</small></div></div>
               <div className="player-quick-metrics"><span><small>주변 패스</small><b>{diagnostics.passOptions}</b></span><span><small>현재 좌표</small><b>{Math.round(selectedPlayer.x)}·{Math.round(selectedPlayer.y)}</b></span></div>
               <div className="form-grid player-fields">
-                <label>표시 이름<input maxLength={10} value={selectedPlayer.shortName} onChange={(event) => updatePlayer({ shortName: event.target.value, name: event.target.value })} /></label>
-                <label>등번호<input type="number" min="1" max="99" value={selectedPlayer.number} onChange={(event) => updatePlayer({ number: Number(event.target.value) })} /></label>
+                <label>표시 이름<input name="player-display-name" autoComplete="off" maxLength={10} value={selectedPlayer.shortName} onChange={(event) => updatePlayer({ shortName: event.target.value, name: event.target.value })} /></label>
+                <label>등번호<input name="player-number" type="number" inputMode="numeric" min="1" max="99" value={selectedPlayer.number} onChange={(event) => updatePlayer({ number: Number(event.target.value) })} /></label>
               </div>
-              <label className="full-field">역할<select value={selectedPlayer.role} onChange={(event) => updatePlayer({ role: event.target.value })}>{roleOptions[selectedPlayer.position].map((role) => <option key={role}>{role}</option>)}</select></label>
+              <label className="full-field">역할<select name="player-role" value={selectedPlayer.role} onChange={(event) => updatePlayer({ role: event.target.value })}>{roleOptions[selectedPlayer.position].map((role) => <option key={role}>{role}</option>)}</select></label>
               <p className="player-editor-hint">선수 마커는 최소 정보만 표시합니다. 역할과 연결 지표는 이 패널에서 확인하세요.</p>
             </>}
           </section>}
@@ -874,7 +926,7 @@ function PlanSlot({ label, snapshot, onLoad }: { label: 'A' | 'B'; snapshot?: Pl
 const signed = (value: number) => value > 0 ? `+${value}` : `${value}`
 
 function RangeControl({ label, low, high, value, onChange }: { label: string; low: string; high: string; value: number; onChange: (value: number) => void }) {
-  return <label className="tactic-slider"><span><strong>{label}</strong><b>{value}</b></span><input type="range" min="0" max="100" value={value} onChange={(event) => onChange(Number(event.target.value))} style={{ '--range': `${value}%` } as React.CSSProperties} /><small><i>{low}</i><i>{high}</i></small></label>
+  return <label className="tactic-slider"><span><strong>{label}</strong><b>{value}</b></span><input name={`studio-tactic-${label}`} type="range" min="0" max="100" value={value} onChange={(event) => onChange(Number(event.target.value))} style={{ '--range': `${value}%` } as React.CSSProperties} /><small><i>{low}</i><i>{high}</i></small></label>
 }
 
 function getStudioNote(context: MatchContext, tactics: Tactics, risk: number, passOptions = 3, compactness = 20) {

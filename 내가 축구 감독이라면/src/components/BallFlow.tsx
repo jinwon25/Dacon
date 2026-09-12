@@ -37,7 +37,7 @@ export default function BallFlow({ scenario }: { scenario: GuidedScenario }) {
   return (
     <section className="ball-flow panel">
       <header className="ball-flow-heading">
-        <div className="panel-title"><span>06</span><div><small>실제 볼 흐름 · 이벤트 순서</small><h2>{scenario.flow.title}</h2></div></div>
+        <div className="panel-title"><span>FLOW</span><div><small>실제 볼 흐름 · 이벤트 순서</small><h2>{scenario.flow.title}</h2></div></div>
         <div className="flow-controls">
           <button type="button" onClick={() => { setPlaying(false); setStep(-1) }}>처음으로</button>
           <button className="flow-play" type="button" onClick={togglePlayback}>{playing ? '■ 일시정지' : '▶ 실제 흐름 재생'}</button>
@@ -46,7 +46,7 @@ export default function BallFlow({ scenario }: { scenario: GuidedScenario }) {
 
       <div className="ball-flow-body">
         <div className="flow-pitch" aria-label={`${scenario.flow.title} 이벤트 좌표 재생`}>
-          <svg viewBox="0 0 120 80" preserveAspectRatio="xMidYMid meet" role="img">
+          <svg viewBox="0 0 120 80" preserveAspectRatio="xMidYMid meet" role="img" aria-label={`${scenario.flow.title} 이벤트 좌표 재생`}>
             <defs>
               <marker id={`flow-arrow-${scenario.id}`} markerUnits="userSpaceOnUse" markerWidth="3.6" markerHeight="3.6" refX="3.2" refY="1.8" viewBox="0 0 3.6 3.6" orient="auto"><path d="M0,0 L3.6,1.8 L0,3.6 Z" /></marker>
             </defs>
