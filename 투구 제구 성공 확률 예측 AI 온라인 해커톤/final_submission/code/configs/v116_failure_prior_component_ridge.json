@@ -1,0 +1,27 @@
+{
+  "protocol": "V116_FAILURE_PRIOR_COMPONENT_RIDGE_V1",
+  "hypothesis": "Learn a three-component dose for reverse, middle, and way-off historical pitch-selection failure priors using only cross-origin 2022 and late-2023 validation.",
+  "components": ["reverse", "middle", "wayoff"],
+  "anchor_weights": [-0.75, 1.5, -0.5],
+  "ridge_lambda": [0.0, 0.01, 0.03, 0.1, 0.3, 1.0, 3.0, 10.0],
+  "route_domains": ["R_CORE"],
+  "bootstrap_resamples": 3000,
+  "block_size": 2000,
+  "seed": 20260823,
+  "selection_gate": {
+    "minimum_positive_month_fraction": 0.75,
+    "worst_month_gain_strictly_above": -5.0,
+    "minimum_domain_gain": 0.0,
+    "reality_check_alpha": 0.1
+  },
+  "restrictions": {
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_for_selection": false,
+    "locked_2024_used_for_lambda_or_weights": false,
+    "current_audit_pitch_type_used": false,
+    "v104_recipe_retuned": false,
+    "row_local_inference": true,
+    "reference_recipe_is_external_and_not_a_clean_holdout": true
+  }
+}

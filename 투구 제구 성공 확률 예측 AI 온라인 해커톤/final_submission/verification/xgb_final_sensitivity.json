@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-09-06T04:25:29.934286+00:00",
+  "status": "pass",
+  "purpose": "Quantify final v345 prediction sensitivity when only the deployed fallback XGBoost booster is replaced by the locally reproduced CPU booster.",
+  "input": {
+    "source": "official train.csv rows whose original season is 2024",
+    "temporal_transform": "season changed from 2024 to 2025 before inference",
+    "row_count": 253507,
+    "target_mean": 0.4861049201797189
+  },
+  "models": {
+    "deployed_sha256": "31BF80F0597F07B67F162A88633E2071BD865E4DA928F5990C1B16C5291F9CF6",
+    "cpu_reproduced_sha256": "8B4CDA69338719C96668ED7B5DB1DED6A2D7359F1DAEF2BE9715997ED4D74EBF"
+  },
+  "raw_fallback_prediction_difference": {
+    "changed_rows_gt_1e-15": 253507,
+    "changed_fraction_gt_1e-15": 1.0,
+    "mean_signed": -0.0029839405725438175,
+    "mean_absolute": 0.003844848973503712,
+    "root_mean_square": 0.005006201482698858,
+    "max_absolute": 0.02381753921508789,
+    "absolute_quantiles": {
+      "p50": 0.0030117034912109375,
+      "p90": 0.008347135782241822,
+      "p95": 0.010187661647796623,
+      "p99": 0.014140160083770753
+    }
+  },
+  "final_v345_prediction_difference": {
+    "changed_rows_gt_1e-15": 65251,
+    "changed_fraction_gt_1e-15": 0.2573932869703795,
+    "mean_signed": -5.045735960333811e-05,
+    "mean_absolute": 0.00020254283459148427,
+    "root_mean_square": 0.0007617400919771526,
+    "max_absolute": 0.008996084943165616,
+    "absolute_quantiles": {
+      "p50": 0.0,
+      "p90": 0.0005668830871581873,
+      "p95": 0.001023182272911071,
+      "p99": 0.002716563016176266
+    }
+  },
+  "pseudo_temporal_label_diagnostic": {
+    "reference_brier": 0.24980692675678798,
+    "deployed_final_brier": 0.24584775341129309,
+    "cpu_reproduced_final_brier": 0.2458586554857191,
+    "candidate_minus_deployed_brier": 1.0902074426027974e-05,
+    "deployed_unclipped_score": 1584.893340187299,
+    "cpu_reproduced_unclipped_score": 1580.5291399757282
+  },
+  "limitations": [
+    "This is a controlled sensitivity audit, not a hidden Private-score estimate.",
+    "The rows and labels come from training season 2024, while season is changed to 2025 only to satisfy the runtime temporal contract.",
+    "Both boosters were fitted using the 2024 labels, so label-based diagnostics are development-contaminated.",
+    "This audit does not prove byte-identical CUDA booster reproduction."
+  ]
+}

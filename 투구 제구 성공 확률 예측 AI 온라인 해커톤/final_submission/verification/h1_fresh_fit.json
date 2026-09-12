@@ -1,0 +1,30 @@
+{
+  "rows_compared": 32773,
+  "features_equal": true,
+  "prediction_max_abs": 0.0,
+  "models": [
+    {
+      "seed": 42,
+      "trees_equal": true,
+      "borders_equal": true,
+      "scale_and_bias_equal": true,
+      "leaf_values_max_abs": 0.0
+    },
+    {
+      "seed": 43,
+      "trees_equal": true,
+      "borders_equal": true,
+      "scale_and_bias_equal": true,
+      "leaf_values_max_abs": 0.0
+    },
+    {
+      "seed": 44,
+      "trees_equal": true,
+      "borders_equal": true,
+      "scale_and_bias_equal": true,
+      "leaf_values_max_abs": 0.0
+    }
+  ],
+  "strict_fit_parity": true,
+  "private_score_recomputed": false
+}

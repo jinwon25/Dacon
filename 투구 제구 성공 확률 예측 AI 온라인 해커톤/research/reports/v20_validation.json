@@ -1,0 +1,59 @@
+{
+  "candidate": "submit_v20.zip",
+  "parent": "submit_v19.zip",
+  "candidate_size_mb": 30.970065116882324,
+  "added_members": [
+    "model/v20_pfd_control.txt",
+    "model/v20_pfd_soft_l050.txt",
+    "model/v20_target1160_spec.json"
+  ],
+  "removed_members": [],
+  "changed_parent_members": [
+    "model/hybrid.json",
+    "script.py"
+  ],
+  "gates": {
+    "archive_lineage_ok": true,
+    "sample_rows_ok": true,
+    "benchmark_rows_ok": true,
+    "probabilities_finite_and_bounded": true,
+    "runtime_under_120s": true,
+    "peak_memory_under_4gb": true,
+    "batch_invariant": true,
+    "all_domains_changed": true,
+    "network_free": true,
+    "row_local_declared": true,
+    "test_aggregate_unused": true,
+    "current_pitch_trackman_unused": true
+  },
+  "sample_seconds": 9.7888977000257,
+  "sample_peak_mb": 275.83984375,
+  "sample_stdout": "Saved C:\\Users\\yun72_92xubzr\\AppData\\Local\\Temp\\aimers9_v20_verify_r1i5jmsg\\submit_v20\\output\\submission.csv rows=5 elapsed=5.971s",
+  "benchmark_seconds": 93.27429959998699,
+  "benchmark_peak_mb": 1434.91015625,
+  "benchmark_stdout": "Saved C:\\Users\\yun72_92xubzr\\AppData\\Local\\Temp\\aimers9_v20_verify_r1i5jmsg\\submit_v20\\output\\submission.csv rows=245789 elapsed=88.913s",
+  "benchmark_probability_min": 0.3482201697548933,
+  "benchmark_probability_max": 0.6467972220606629,
+  "batch_max_abs_difference": 1.1102230246251565e-16,
+  "domain_comparison": {
+    "R_CORE": {
+      "rows": 128,
+      "mean_difference": -0.00162243600635446,
+      "mean_abs_difference": 0.0033164965504028946,
+      "max_abs_difference": 0.011880317713646005
+    },
+    "R_ANCHOR": {
+      "rows": 128,
+      "mean_difference": -0.0022676701647402534,
+      "mean_abs_difference": 0.004915171857563495,
+      "max_abs_difference": 0.013219025387634642
+    },
+    "F": {
+      "rows": 128,
+      "mean_difference": -0.0008482012734493112,
+      "mean_abs_difference": 0.0033142862890073997,
+      "max_abs_difference": 0.01168155116069769
+    }
+  },
+  "all_gates": true
+}

@@ -1,0 +1,58 @@
+{
+  "component": "v21_eb",
+  "reference_inference_sha256": "d44578dc50220ce84dd4b8489bbae680afdcf93f931ed4236287b5a9e6f5aaaa",
+  "candidate_files_sha256": {
+    "v21_context_state_eb_spec.json": "9af5fad3c356a73796a42fa8395202c86f7ae41347a9654da37a232b5e8b29d9"
+  },
+  "native_assets": {
+    "v21_context_state_eb_spec.json": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    }
+  },
+  "native_model_and_state_parity": true,
+  "final_ensemble_doses_excluded_from_model_fit_comparison": {
+    "recipes[0].weight": {
+      "submitted": 0.158125,
+      "initial_fit": 0.275
+    },
+    "recipes[1].weight": {
+      "submitted": 0.043125,
+      "initial_fit": 0.075
+    },
+    "recipes[2].weight": {
+      "submitted": 0.028749999999999998,
+      "initial_fit": 0.05
+    },
+    "recipes[3].weight": {
+      "submitted": 0.057499999999999996,
+      "initial_fit": 0.1
+    },
+    "recipes[4].weight": {
+      "submitted": 0.11499999999999999,
+      "initial_fit": 0.2
+    },
+    "recipes[5].weight": {
+      "submitted": 0.028749999999999998,
+      "initial_fit": 0.05
+    }
+  },
+  "assembly_annotations_excluded": {
+    "v124_public_quadratic_stack": {
+      "submitted": {
+        "protocol": "V124_PUBLIC_QUADRATIC_STACK_V1",
+        "axis": "v21_all_recipes",
+        "selected_scale_or_eta": 0.575,
+        "selection_source": "official sequential Public deltas plus strict-forward 2023-to-2024 OOF Brier curvature; no evaluation-row aggregate",
+        "row_local_inference": true,
+        "test_aggregate_used": false
+      },
+      "initial_fit": null
+    }
+  },
+  "serialization_defaults_excluded": {},
+  "whole_parent_ensemble_fresh_fit": false,
+  "private_score_recomputed": false
+}

@@ -1,0 +1,38 @@
+{
+  "recorded_from": "2026-09-05 train.py verify stdout; public sample proxy, not hidden test",
+  "sha256": "D44578DC50220CE84DD4B8489BBAE680AFDCF93F931ED4236287B5A9E6F5AAAA",
+  "bytes": 101139163,
+  "file_count": 191,
+  "roots": ["model", "requirements.txt", "script.py"],
+  "crc_ok": true,
+  "static_row_independence": {
+    "forbidden_operation_count": 0,
+    "status": "pass"
+  },
+  "dynamic_row_independence": {
+    "rows": 5,
+    "singleton_vs_full_max_abs_diff": 0.0,
+    "shuffled_vs_full_max_abs_diff": 1.1102230246251565e-16,
+    "partitioned_vs_full_max_abs_diff": 1.1102230246251565e-16,
+    "atol": 1e-12,
+    "status": "pass"
+  },
+  "sample_run": {
+    "rows": 5,
+    "runtime_seconds": 11.749456599998666,
+    "mean_prediction": 0.4408916001086786,
+    "min_prediction": 0.3815888338354614,
+    "max_prediction": 0.4873149662265189,
+    "finite": true,
+    "in_range": true
+  },
+  "scale_run": {
+    "rows": 245789,
+    "runtime_seconds": 316.1925182999985,
+    "mean_prediction": 0.4413250605251717,
+    "min_prediction": 0.3815888338354613,
+    "max_prediction": 0.502352268169352,
+    "finite": true,
+    "in_range": true
+  }
+}

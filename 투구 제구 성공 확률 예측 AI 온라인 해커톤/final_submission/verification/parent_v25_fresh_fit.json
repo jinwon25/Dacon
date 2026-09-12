@@ -1,0 +1,65 @@
+{
+  "component": "v25_anchor",
+  "reference_inference_sha256": "d44578dc50220ce84dd4b8489bbae680afdcf93f931ed4236287b5a9e6f5aaaa",
+  "candidate_files_sha256": {
+    "v25_postbreak_anchor.joblib": "36a785786a27dfcc7c5626c0ba60fd9dfe2a67f02be9260b4a882a0c2817326e",
+    "v25_postbreak_anchor_spec.json": "b305986c49a8dfacd9c3b1769af17247e5d87c387ba26fd4bd4297f5ce0a0df0"
+  },
+  "native_assets": {
+    "v25_postbreak_anchor.joblib": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "v25_postbreak_anchor_spec.json": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    }
+  },
+  "native_model_and_state_parity": true,
+  "final_ensemble_doses_excluded_from_model_fit_comparison": {
+    "blend_eta": {
+      "submitted": 0.3285,
+      "initial_fit": 0.075
+    }
+  },
+  "assembly_annotations_excluded": {
+    "protocol": {
+      "submitted": "R_ANCHOR_WEIGHT_PROBE_2025_V1",
+      "initial_fit": "V25_POSTBREAK_ANCHOR_2025_V1"
+    },
+    "selection_note": {
+      "submitted": "same frozen row-local R_ANCHOR model at eta=0.36; exact official Public quadratic from eta 0.075/0.10/0.15; DACON FAQ reply 320256",
+      "initial_fit": "model family/domain selected on late-2023; eta frozen conservatively; full-2024 and early-to-late-2024 are independent audits"
+    },
+    "leaderboard_probe_parent": {
+      "submitted": "submit_v25.zip",
+      "initial_fit": null
+    },
+    "leaderboard_probe_parent_sha256": {
+      "submitted": "60CF13B28AF01B24A49E2B03E13161F2E04A1C09647D8DA2CFD95407ED9335B1",
+      "initial_fit": null
+    },
+    "local_evidence_reference": {
+      "submitted": "artifacts/v25_postbreak_anchor_audit_20260817_01 and the exact quadratic eta sweep recorded in the research report",
+      "initial_fit": null
+    },
+    "v124_public_quadratic_stack": {
+      "submitted": {
+        "protocol": "V124_PUBLIC_QUADRATIC_STACK_V1",
+        "axis": "v25_anchor_eta",
+        "selected_scale_or_eta": 0.3285,
+        "selection_source": "official sequential Public deltas plus strict-forward 2023-to-2024 OOF Brier curvature; no evaluation-row aggregate",
+        "row_local_inference": true,
+        "test_aggregate_used": false
+      },
+      "initial_fit": null
+    }
+  },
+  "serialization_defaults_excluded": {},
+  "whole_parent_ensemble_fresh_fit": false,
+  "private_score_recomputed": false
+}

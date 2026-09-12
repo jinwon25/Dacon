@@ -1,0 +1,72 @@
+{
+  "candidate": "submit_v13_fixed.zip",
+  "incumbent": "submit_v11.zip",
+  "candidate_size_mb": 25.906311988830566,
+  "candidate_uncompressed_mb": 65.85415172576904,
+  "added_members": [
+    "model/recent_exact_lgb.txt",
+    "model/recent_exact_preprocess.joblib",
+    "model/recent_exact_ridge.joblib",
+    "model/recent_exact_spec.json",
+    "model/recent_stable_ridge.joblib"
+  ],
+  "removed_members": [],
+  "changed_parent_members": [
+    "model/hybrid.json",
+    "script.py"
+  ],
+  "gates": {
+    "archive_lineage_ok": true,
+    "sample_rows_ok": true,
+    "benchmark_rows_ok": true,
+    "runtime_under_120s": true,
+    "batch_invariant": true,
+    "anchor_unchanged": true,
+    "core_changed": true,
+    "finals_changed": true,
+    "network_free": true,
+    "row_local_static": true
+  },
+  "sample_seconds": 8.97408529999666,
+  "sample_peak_mb": 273.515625,
+  "sample_stdout": "Saved C:\\Users\\yun72_92xubzr\\AppData\\Local\\Temp\\aimers9_recent_exact_verify_sz3nekq3\\submit_v13_fixed\\output\\submission.csv rows=5 elapsed=2.902s",
+  "benchmark_seconds": 32.19319399999222,
+  "benchmark_peak_mb": 1418.3828125,
+  "benchmark_stdout": "Saved C:\\Users\\yun72_92xubzr\\AppData\\Local\\Temp\\aimers9_recent_exact_verify_sz3nekq3\\submit_v13_fixed\\output\\submission.csv rows=245789 elapsed=28.332s",
+  "batch_max_abs_difference": 1.1102230246251565e-16,
+  "domain_comparison": {
+    "R_CORE": {
+      "rows": 64,
+      "mean_difference": -0.04711409366785897,
+      "mean_abs_difference": 0.04711409366785897,
+      "max_abs_difference": 0.06392963458762524
+    },
+    "R_ANCHOR": {
+      "rows": 64,
+      "mean_difference": 0.0,
+      "mean_abs_difference": 1.734723475976807e-17,
+      "max_abs_difference": 1.1102230246251565e-16
+    },
+    "F": {
+      "rows": 64,
+      "mean_difference": -0.024816964800865943,
+      "mean_abs_difference": 0.024816964800865943,
+      "max_abs_difference": 0.039756114857424474
+    }
+  },
+  "spec": {
+    "candidate": "v13_recent_exact_asof_overlay_v1",
+    "source_season": 2024,
+    "forecast_season": 2025,
+    "anchor_team_id": 13,
+    "core_bias": -0.010045311969839179,
+    "core_exact_lgb_weight": 0.125,
+    "core_exact_ridge_weight": 0.2,
+    "core_stable_gamma": 0.2,
+    "f_exact_lgb_weight": 0.75,
+    "exact_lgb_num_iterations": 120,
+    "selection_rule": "core weights selected on 2022->2023 and confirmed on 2021->2022/2023->2024; F blend confirmed on post-break 2023->2024",
+    "test_aggregate_used": false,
+    "row_local_inference": true
+  }
+}

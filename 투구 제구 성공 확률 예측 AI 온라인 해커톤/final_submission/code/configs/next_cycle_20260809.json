@@ -1,0 +1,83 @@
+{
+  "cycle": "next_cycle_20260809",
+  "parent": {
+    "filename": "submit_v2.zip",
+    "sha256": "FE368AF109EF0BB8103D728F45794A6192599B691BF08DF02A22F31BD2D438A7",
+    "baseline_commit": "9b0cb8401336916f510669021005e48b4db2c92a"
+  },
+  "outer_seasons": [2021, 2022, 2023, 2024],
+  "nested_rule": {
+    "inner_train": "season < outer_year - 1",
+    "inner_validation": "season == outer_year - 1",
+    "outer_fit": "season < outer_year",
+    "outer_target_allowed_for_selection": false,
+    "outer_2024_lock": "feature/model/scale/gate fixed after development through 2023"
+  },
+  "recipe_budget": {
+    "main_only_residual": 3,
+    "trackman_residual": 4,
+    "catboost_residual": 1,
+    "tabm": 1,
+    "tabr_diagnostic": 1,
+    "total": 10,
+    "max_2024_finalists": 2
+  },
+  "main_residual": {
+    "correction_clip": 0.05,
+    "correction_abs_percentile_995": 0.02,
+    "mean_abs_correction": 0.001,
+    "eb_alpha_parent": 5000,
+    "eb_alpha_leaf": 2000,
+    "eb_cap": 0.0125,
+    "ridge_lambdas": [0.0001, 0.001, 0.01],
+    "ridge_etas": [0.0, 0.25, 0.5, 1.0],
+    "lgb": {
+      "objective": "regression_l2",
+      "num_leaves": 7,
+      "max_depth": 3,
+      "min_data_in_leaf": 2000,
+      "learning_rate": 0.03,
+      "lambda_l2": 50,
+      "max_bin": 63,
+      "bagging": false,
+      "max_rounds": 200,
+      "early_stopping_rounds": 25,
+      "seed": 42
+    }
+  },
+  "trackman": {
+    "bootstrap_repeats": 200,
+    "high_gate": {
+      "rank": 1,
+      "distance_max": 0.06,
+      "rho_min": 0.8,
+      "common_seasons_min": 2,
+      "history_count_min": 30
+    },
+    "medium_low_unmatched_correction": 0.0,
+    "max_features": 12
+  },
+  "promotion_gate": {
+    "recency_weighted_delta_max": -0.000025,
+    "locked_2024_delta_max": -0.00002,
+    "worst_fold_delta_max": 0.00001,
+    "minimum_strictly_improved_folds": 2,
+    "bootstrap_fraction_negative_min": 0.9,
+    "correction_abs_p995_max": 0.02,
+    "correction_abs_max": 0.05,
+    "correction_abs_mean_max": 0.001,
+    "parent_parity_max": 1e-12,
+    "frozen_parity_max": 1e-10,
+    "inference_seconds_max": 300,
+    "peak_rss_gb_max": 14
+  },
+  "external_method_references": [
+    "https://proceedings.neurips.cc/paper/2018/hash/14491b756b3a51daac41c24863285549-Abstract.html",
+    "https://github.com/yandex-research/tabm",
+    "https://proceedings.iclr.cc/paper_files/paper/2025/file/c1ba41c694834aeef91ae161711d4939-Paper-Conference.pdf",
+    "https://proceedings.iclr.cc/paper_files/paper/2024/hash/4ef594af0d9a519db8fb292452c461fa-Abstract-Conference.html",
+    "https://pubmed.ncbi.nlm.nih.gov/31449438/",
+    "https://www.tandfonline.com/doi/abs/10.1080/02640414.2020.1868679",
+    "https://link.springer.com/article/10.1007/s12283-025-00497-5"
+  ]
+}

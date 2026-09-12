@@ -1,0 +1,40 @@
+{
+  "protocol": "V99_CONDITIONAL_MLP_AXIS_V1",
+  "frozen_before_run": "2026-08-22",
+  "hypothesis": "A full-history, ID-free embedding MLP using strict prior-season conditional features supplies nonlinear resolution that is not present in the tree-and-lookup champion.",
+  "audit_years": [2022, 2023, 2024],
+  "selection_axis": "v84_full_2022_exact_R_CORE",
+  "locked_axes": ["v84_late_2023_R_CORE", "v84_full_2024_R_CORE"],
+  "axis_families": {
+    "direct_mlp": "mlp - champion_parent",
+    "architecture_delta": "mlp - paired_conditional_lightgbm"
+  },
+  "eta_caps": {
+    "direct_mlp": 0.1,
+    "architecture_delta": 0.5
+  },
+  "network": {
+    "widths": [256, 128],
+    "dropout": 0.15,
+    "epochs": 4,
+    "batch_size": 16384,
+    "learning_rate": 0.003,
+    "weight_decay": 0.0002,
+    "seed": 9901,
+    "threads": 6
+  },
+  "recency_half_life": 2.0,
+  "selection_gate": {
+    "gain_strictly_positive": true,
+    "minimum_positive_month_fraction": 0.75,
+    "worst_month_gain_strictly_above": -5.0
+  },
+  "prohibited": [
+    "raw pitcher_id or batter_id as model features",
+    "game_month as model feature",
+    "same-season labels in conditional features",
+    "audit labels in model fitting",
+    "test aggregates, order, frequency or distribution",
+    "Public-score-derived model, route or weight"
+  ]
+}

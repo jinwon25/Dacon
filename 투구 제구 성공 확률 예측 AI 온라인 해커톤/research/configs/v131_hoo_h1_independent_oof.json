@@ -1,0 +1,37 @@
+{
+  "protocol": "V131_HOO_H1_INDEPENDENT_OOF_V1",
+  "hypothesis": "The publicly specified H1 current-season interaction model can add an orthogonal, rule-compliant direction above v104 when retrained only on official historical rows.",
+  "model": {
+    "iterations": 1200,
+    "learning_rate": 0.02,
+    "depth": 6,
+    "l2_leaf_reg": 100.0,
+    "border_count": 32,
+    "seed": 42,
+    "post_shrink": [300.0, 2000.0, 800.0, 2000.0],
+    "post_weight": [0.20, 0.825, 0.280, 0.45]
+  },
+  "families": ["h1_raw_blend", "h1_post4_blend", "h1_minus_dx_correction"],
+  "routes": ["ALL", "R_CORE", "F"],
+  "blend_weight_grid": [0.0025, 0.005, 0.01, 0.025, 0.05, 0.1, 0.15, 0.2],
+  "correction_eta_grid": [0.025, 0.05, 0.1, 0.2, 0.35, 0.5, 0.75, 1.0, 1.5, 2.0],
+  "source_gate": {
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "active_domain_gain_min": 0.0
+  },
+  "locked_gate": {
+    "gain_min": 5.7,
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "active_domain_gain_min": 0.0
+  },
+  "restrictions": {
+    "external_2025_outcomes_used": false,
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_for_selection": false,
+    "full_2024_used_for_recipe_selection": false,
+    "row_local_inference": true
+  }
+}

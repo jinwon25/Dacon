@@ -1,0 +1,11 @@
+debt,status,evidence
+exact V2 row-level component OOF,FAIL,strict fixed-fit nested OOF was not completed; frozen cache is diagnostic only
+outer early stopping removed and executed,FAIL,implementation exists in src/nested_v2.py/nested_fast.py but full run exceeded local runtime
+2024 virgin holdout wording,PASS,all reports call 2024 locked confirmation and document repeated reuse
+V4/V5 clean ablation interpretation,PASS,submission_audit and frozen decomposition label branch precedence
+RF categorical ID treatment,FAIL,new FM/CatBoost family required before using RF as structural reference
+fair CatBoost comparison,FAIL,legacy CatBoost used outer callback/complex hierarchy; new fair pilot not yet run
+legacy target encoder isolation,PASS,permutation/current-label/future-label audit; excluded from Top-1100 recipes
+Trackman confidence is identity accuracy,PASS,reports distinguish stability from identity and keep low confidence on fallback
+hand mapping target-free two-way comparison,FAIL,structural alignment audit cannot identify mapping; no physical profile promotion
+plate coordinate availability,PASS,schema has no plate_x/plate_z; no plate-location model is claimed

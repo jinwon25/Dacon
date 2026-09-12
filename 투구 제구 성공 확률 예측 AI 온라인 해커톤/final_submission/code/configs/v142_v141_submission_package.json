@@ -1,0 +1,32 @@
+{
+  "protocol": "V142_V141_SUBMISSION_PACKAGE_V1",
+  "package_name": "submit_v142.zip",
+  "parent_v124_sha256": "5E6E961717A527AA39DDF7FD2447ED6E08BFFB4CDBF80D0024AE761ADE3A193A",
+  "h1_package_sha256": "D338E9EEF715C3CC84C0C5CD9C830925A93D85BF9518BFB0DCD0D0B052F995D6",
+  "h1_weight": 0.15,
+  "c3_weight": 0.5,
+  "anchor_team": 13,
+  "route": "R_CORE",
+  "c3": {
+    "windows": {
+      "last1": 1,
+      "last2": 2,
+      "last3": 3,
+      "expanding": 99
+    },
+    "same_hand_shrink": 1000.0,
+    "two_strike_shrink": 1000.0,
+    "runner_on_shrink": 2000.0,
+    "contrast_scale": 0.5,
+    "consensus": "sign_all_mean"
+  },
+  "runtime_limit_seconds": 120.0,
+  "scale_proxy_rows": 245789,
+  "restrictions": {
+    "external_2025_outcomes_used": false,
+    "test_aggregate_used_for_prediction": false,
+    "test_distribution_used_for_prediction": false,
+    "public_score_used_only_in_frozen_v124_parent": true,
+    "row_local_inference": true
+  }
+}

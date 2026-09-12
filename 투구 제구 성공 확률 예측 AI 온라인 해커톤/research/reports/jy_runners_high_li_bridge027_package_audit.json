@@ -1,0 +1,40 @@
+{
+  "candidate": "jy_runners_high_li_bridge027",
+  "candidate_submit": {
+    "path": "artifacts\\jy_next_variants_20260828_01\\submit_jy_runners_high_li_bridge027.zip",
+    "sha256": "4C924E046091304BFC73B50BE51110BDF1351DFD9B577738CC6B65A8DFF43C9E"
+  },
+  "previous_submit": {
+    "path": "artifacts\\jy_runners_gate_20260828_01\\submit_jy_runners_gate.zip",
+    "sha256": "2C4320CBF6CF818625E0F550356995BD2BE98259C3C41E0EC559C47F21148FF2"
+  },
+  "base_submit": {
+    "path": "submissions\\releases\\v167\\submit_v167.zip",
+    "sha256": "30DD28F56723EC0F560C9101FC5A94EF78568F874DCA88BF808879831E61C8C1"
+  },
+  "rows": 3600,
+  "candidate_active_fraction": 0.625,
+  "previous_active_fraction": 0.375,
+  "added_fraction": 0.25,
+  "changed_vs_base_fraction": 0.625,
+  "changed_vs_previous_fraction": 0.625,
+  "protected_max_abs_delta_vs_base": 0.0,
+  "delta_vs_base_active": {
+    "min": -0.00011772806665921731,
+    "mean": 0.00026242014274875604,
+    "max": 0.0005476491851907905,
+    "mean_abs": 0.0002889203060077539
+  },
+  "delta_vs_previous_added": {
+    "min": 0.0002048679562948741,
+    "mean": 0.00029674732279615367,
+    "max": 0.0004503343735005605,
+    "mean_abs": 0.00029674732279615367
+  },
+  "runtime": {
+    "base_seconds": 6.5730663999856915,
+    "previous_seconds": 9.51435210002819,
+    "candidate_seconds": 9.723217599996133
+  },
+  "passes_structural_audit": true
+}

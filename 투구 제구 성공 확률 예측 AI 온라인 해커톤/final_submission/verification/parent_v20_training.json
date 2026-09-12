@@ -1,0 +1,33 @@
+{
+  "protocol": "V20_TARGET1160_FINAL_TRAIN_2025_V1",
+  "train_sha256": "D2081186B458B49F60B082BE480C273135833E15BA59A76D033AF28BCF8763FF",
+  "trackman_sha256": "F7818F9EE0CCEFE7C2CF69FA99EFE6E5CB882D8B886DD96D2394BCF3B53F33A9",
+  "joint_oof_sha256": "D744E7B1F3569E3DAA0B74329C06ED82C3D421DFB53B30AC3E272EFDBF417F96",
+  "pitch_alignment_sha256": "3972E4B420169F3065628FE18AA05353B55B07D03EA04692EB0715F3A00A581C",
+  "source_year": 2024,
+  "source_rows": 253507,
+  "aligned_source_rows": 216555,
+  "teacher_folds": 3,
+  "versions": {
+    "numpy": "2.2.6",
+    "pandas": "2.2.3",
+    "lightgbm": "4.6.0"
+  },
+  "reference_model_read_during_fit": false,
+  "test_values_read_during_fit": false,
+  "private_score_recomputed": false,
+  "artifacts": {
+    "v20_target1160_spec.json": {
+      "size_bytes": 159219,
+      "sha256": "DC769F7CEB2EB459A9B691BC81B2E00EC68D08E22121174E3F39DB90AA71308E"
+    },
+    "v20_pfd_control.txt": {
+      "size_bytes": 242520,
+      "sha256": "2CB40616E1FEAF4E9B5BBF0051922F3BE1AB56AB51AF91D0190776F4B07D3D34"
+    },
+    "v20_pfd_soft_l050.txt": {
+      "size_bytes": 245191,
+      "sha256": "AF946303729E2CCADFD839580B11A0AE372F211DF1746125DC5B109A8C98D86D"
+    }
+  }
+}

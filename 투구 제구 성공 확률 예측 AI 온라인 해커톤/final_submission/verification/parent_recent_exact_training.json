@@ -1,0 +1,33 @@
+{
+  "candidate": "v13_recent_exact_asof_overlay_v1",
+  "source_season": 2024,
+  "forecast_season": 2025,
+  "anchor_team_id": 13,
+  "core_bias": -0.010045311969839179,
+  "core_exact_lgb_weight": 0.125,
+  "core_exact_ridge_weight": 0.2,
+  "core_stable_gamma": 0.2,
+  "f_exact_lgb_weight": 0.75,
+  "exact_lgb_num_iterations": 120,
+  "selection_rule": "core weights selected on 2022->2023 and confirmed on 2021->2022/2023->2024; F blend confirmed on post-break 2023->2024",
+  "test_aggregate_used": false,
+  "row_local_inference": true,
+  "n_source_rows": 253507,
+  "n_core_rows": 178729,
+  "target_rate": 0.4861049201797189,
+  "exact_feature_count": 74,
+  "stable_feature_count": 25,
+  "source_oof_sha256": {
+    "corrected_cb_o2024.npz": "39df5e8006d54dab14ab13f5f073de91425c23d80fe4e5e53612e26d1f08847c",
+    "correction_compact_l15_o2024.npz": "4f9f0e4a5d7b9a8608c843f03ed6fdf4f09e9a53ad68f06bff1370f6b416c5a3",
+    "legacy_baseline_s42_o2024.npz": "c8f46d0f33add96b64241c7fa74d95f9f5d8ca089b36d72f28b38eed5dacfa05"
+  },
+  "source_oof_note": "Frozen official-train OOF inputs; this run refits final models but does not refit those OOFs.",
+  "artifacts": {
+    "recent_exact_lgb.txt": 121500,
+    "recent_exact_preprocess.joblib": 178935,
+    "recent_exact_ridge.joblib": 1040,
+    "recent_exact_spec.json": 549,
+    "recent_stable_ridge.joblib": 646
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "protocol": "V72_TRACKMAN_VS_ASOF_PITCH_TYPE_LABEL_AUDIT_V1",
+  "test_csv_read": false,
+  "target_column_read_for_audit": false,
+  "overall": {
+    "season": "ALL",
+    "aligned_rows": 1217598,
+    "three_class_trackman_rows": 1204189,
+    "reconstructed_rows": 1216064,
+    "both_labelled_rows": 1202669,
+    "agreement": 0.9332509609876034,
+    "trackman_additional_labels": 1520,
+    "trackman_other_rows": 13409
+  },
+  "classifier_recheck": [
+    {
+      "season": 2023,
+      "aligned_three_class_rows": 204219,
+      "accuracy_vs_trackman": 0.5167687629456613,
+      "accuracy_vs_reconstructed_on_same_rows": 0.5560846431111002,
+      "label_agreement_on_classifier_rows": 0.9211289017482774
+    },
+    {
+      "season": 2024,
+      "aligned_three_class_rows": 215980,
+      "accuracy_vs_trackman": 0.5185804241133438,
+      "accuracy_vs_reconstructed_on_same_rows": 0.5648817444604664,
+      "label_agreement_on_classifier_rows": 0.9242617432549599
+    }
+  ],
+  "maximum_classifier_accuracy_change": 0.04630132034712253,
+  "trackman_retraining_priority": "review",
+  "row_local_deployment_possible": true,
+  "other_test_rows_required": false
+}

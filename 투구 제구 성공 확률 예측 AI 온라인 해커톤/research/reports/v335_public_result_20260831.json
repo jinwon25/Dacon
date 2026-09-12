@@ -1,0 +1,23 @@
+{
+  "submission_id": 76835,
+  "submitted_at_kst": "2026-08-31 00:00:45",
+  "uploaded_filename": "submit_v335.zip",
+  "release_filename": "submit_v335_anchor_lowrank_complement.zip",
+  "public_score": 1181.7100031613,
+  "runtime_seconds": 111,
+  "package_sha256": "A3BCD933DE3F78DEB9565F537DC3199922BDFD219B2840E4150F939CFF144C7A",
+  "package_bytes": 91469892,
+  "package_members": 188,
+  "previous_champion": {
+    "name": "submit_v290.zip",
+    "public_score": 1176.757071668,
+    "delta": 4.9529314933
+  },
+  "targets": {
+    "above_1180": 1.7100031613,
+    "gap_to_1185": 3.2899968387,
+    "gap_to_1190": 8.2899968387
+  },
+  "status": "promoted_public_champion",
+  "attribution_warning": "v320 was not submitted, so the observed gain cannot be split between the F portfolio and the R_ANCHOR complement"
+}

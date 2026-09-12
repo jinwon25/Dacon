@@ -1,0 +1,35 @@
+{
+  "target_public_score": 1150.0,
+  "champion_submission": "submit_v19.zip",
+  "champion_public_score": 1144.1518063753,
+  "required_public_gain": 5.8481936247,
+  "status_labels": {
+    "interesting": {
+      "minimum_fold_gain_vs_v19": 10.0,
+      "mean_fold_gain_vs_v19": 15.0
+    },
+    "strong": {
+      "minimum_fold_gain_vs_v19": 25.0,
+      "mean_fold_gain_vs_v19": 35.0,
+      "minimum_resampling_p05": 0.0
+    },
+    "near_1150": {
+      "minimum_fold_gain_vs_v19": 40.0,
+      "mean_fold_gain_vs_v19": 50.0,
+      "latest_fold_gain_vs_v19": 45.0,
+      "minimum_resampling_p05": 10.0,
+      "minimum_positive_month_fraction": 0.7,
+      "maximum_allowed_domain_loss": -10.0,
+      "minimum_positive_forward_folds": 2
+    }
+  },
+  "primary_forward_folds": [
+    "2022_to_2023",
+    "2023_to_2024"
+  ],
+  "notes": [
+    "The threshold is incremental to the frozen v19 champion, not to v17 or earlier submissions.",
+    "Public transfer is not estimated from one leaderboard contrast; near_1150 requires robust local evidence.",
+    "2024 is development-contaminated, so a passing result remains a submission candidate rather than proof."
+  ]
+}

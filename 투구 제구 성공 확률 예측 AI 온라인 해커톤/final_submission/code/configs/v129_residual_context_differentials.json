@@ -1,0 +1,32 @@
+{
+  "protocol": "V129_RESIDUAL_CONTEXT_DIFFERENTIALS_V1",
+  "hypothesis": "Strongly shrunk pitcher-specific residual contrasts for same-hand, two-strike and runners-on contexts transfer as a low-correlation post-processing signal above exact v104, as independently demonstrated by a +7.42 Public improvement.",
+  "families": ["hand_only", "c3_hand_two_runner"],
+  "shrink": {
+    "same_hand": 1000.0,
+    "two_strike": 1000.0,
+    "runner_on": 2000.0
+  },
+  "routes": ["ALL", "R_CORE", "F"],
+  "eta_grid": [0.25, 0.5, 1.0],
+  "correction_cap": 0.05,
+  "source_gate": {
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "active_domain_gain_min": 0.0
+  },
+  "locked_gate": {
+    "gain_min": 5.7,
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "active_domain_gain_min": 0.0
+  },
+  "restrictions": {
+    "external_2025_outcomes_used": false,
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_for_selection": false,
+    "full_2024_used_for_recipe_selection": false,
+    "row_local_inference": true
+  }
+}

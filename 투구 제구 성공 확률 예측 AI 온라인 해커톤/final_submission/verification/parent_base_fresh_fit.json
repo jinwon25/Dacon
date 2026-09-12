@@ -1,0 +1,26 @@
+{
+  "component": "base",
+  "reference_inference_sha256": "d44578dc50220ce84dd4b8489bbae680afdcf93f931ed4236287b5a9e6f5aaaa",
+  "candidate_files_sha256": {
+    "lgb_model.txt": "a8dcefe635ffd16c501dc1ceeec1db3e4eb73e811522fcd39c68547c491034fc",
+    "feature_spec.json": "c3c047b2d47241a25775a9989565f5f14779cf24fa568d8e32f36e1ec0cc1942",
+    "rf_model.joblib": "f6465c7f3f1ef8c6ee2b059798064a554b2282748bea4e1224a4a0517b281cc9"
+  },
+  "native_assets": {
+    "lgb_model.txt": {"within_tolerance": true, "maximum_numeric_abs_difference": 0.0, "mismatch_count": 0, "first_mismatches": []},
+    "feature_spec.json": {"within_tolerance": true, "maximum_numeric_abs_difference": 0.0, "mismatch_count": 0, "first_mismatches": []},
+    "rf_model.joblib": {"within_tolerance": true, "maximum_numeric_abs_difference": 0.0, "mismatch_count": 0, "first_mismatches": []}
+  },
+  "native_model_and_state_parity": true,
+  "final_ensemble_doses_excluded_from_model_fit_comparison": {},
+  "assembly_annotations_excluded": {},
+  "serialization_defaults_excluded": {
+    "feature_spec.drop_columns": {
+      "submitted": "absent",
+      "fresh_fit": [],
+      "predictive_effect": "none; empty optional default"
+    }
+  },
+  "whole_parent_ensemble_fresh_fit": false,
+  "private_score_recomputed": false
+}

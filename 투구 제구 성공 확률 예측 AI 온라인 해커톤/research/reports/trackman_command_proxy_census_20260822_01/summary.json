@@ -1,0 +1,299 @@
+{
+  "protocol": "V67_TRACKMAN_COMMAND_PROXY_CENSUS_ABOVE_1158_V1",
+  "test_csv_read": false,
+  "profile_contract": "TrackMan season < origin; direct map support>=20 and purity>=0.99",
+  "profile_feature_count": 127,
+  "coverage": [
+    {
+      "axis": "late_2023",
+      "origin": 2023,
+      "rows": 93604,
+      "profile_row_coverage": 0.81989017563352,
+      "profile_pitcher_coverage": 0.8172757475083057
+    },
+    {
+      "axis": "early_2024_full_parent",
+      "origin": 2024,
+      "rows": 176611,
+      "profile_row_coverage": 0.7963660247662943,
+      "profile_pitcher_coverage": 0.7842565597667639
+    },
+    {
+      "axis": "late_2024_full_parent",
+      "origin": 2024,
+      "rows": 76896,
+      "profile_row_coverage": 0.7823033707865169,
+      "profile_pitcher_coverage": 0.7660256410256411
+    },
+    {
+      "axis": "late_2024_replication_parent",
+      "origin": 2024,
+      "rows": 76896,
+      "profile_row_coverage": 0.7823033707865169,
+      "profile_pitcher_coverage": 0.7660256410256411
+    }
+  ],
+  "consistent_signal_count": 23,
+  "top_consistent_signals": [
+    {
+      "domain": "R_ANCHOR",
+      "feature": "tm_induced_vert_break_mean",
+      "late_2023_correlation": -0.14047735641920286,
+      "early_2024_correlation": -0.15173621590361638,
+      "late_2024_correlation": -0.19230969993048028,
+      "sign_consistency": 1.0,
+      "minimum_abs_correlation": 0.14047735641920286,
+      "median_abs_correlation": 0.15173621590361638,
+      "mean_correlation": -0.1615077574177665
+    },
+    {
+      "domain": "F",
+      "feature": "tm_latest_rel_height_std_ratio",
+      "late_2023_correlation": 0.12028238366800048,
+      "early_2024_correlation": 0.13369409446075534,
+      "late_2024_correlation": 0.1738035035658494,
+      "sign_consistency": 1.0,
+      "minimum_abs_correlation": 0.12028238366800048,
+      "median_abs_correlation": 0.13369409446075534,
+      "mean_correlation": 0.14259332723153506
+    },
+    {
+      "domain": "R_ANCHOR",
+      "feature": "tm_other_extension_std",
+      "late_2023_correlation": 0.18137089579918564,
+      "early_2024_correlation": 0.11627985228933477,
+      "late_2024_correlation": 0.23038273562925426,
+      "sign_consistency": 1.0,
+      "minimum_abs_correlation": 0.11627985228933477,
+      "median_abs_correlation": 0.18137089579918564,
+      "mean_correlation": 0.17601116123925822
+    },
+    {
+      "domain": "R_ANCHOR",
+      "feature": "tm_latest_induced_vert_break_mean",
+      "late_2023_correlation": -0.10528686486729469,
+      "early_2024_correlation": -0.10761783490562807,
+      "late_2024_correlation": -0.1966172635608582,
+      "sign_consistency": 1.0,
+      "minimum_abs_correlation": 0.10528686486729469,
+      "median_abs_correlation": 0.10761783490562807,
+      "mean_correlation": -0.13650732111126032
+    },
+    {
+      "domain": "ALL",
+      "feature": "tm_other_horz_break_mean",
+      "late_2023_correlation": 0.09822134700077756,
+      "early_2024_correlation": 0.10822099854161714,
+      "late_2024_correlation": 0.18125083954120993,
+      "sign_consistency": 1.0,
+      "minimum_abs_correlation": 0.09822134700077756,
+      "median_abs_correlation": 0.10822099854161714,
+      "mean_correlation": 0.12923106169453488
+    },
+    {
+      "domain": "R_ANCHOR",
+      "feature": "tm_latest_rel_side_mean",
+      "late_2023_correlation": 0.15024370378807939,
+      "early_2024_correlation": 0.18679830446677823,
+      "late_2024_correlation": 0.08953271616494275,
+      "sign_consistency": 1.0,
+      "minimum_abs_correlation": 0.08953271616494275,
+      "median_abs_correlation": 0.15024370378807939,
+      "mean_correlation": 0.14219157480660014
+    },
+    {
+      "domain": "F",
+      "feature": "tm_offspeed_extension_std",
+      "late_2023_correlation": 0.0813900436530673,
+      "early_2024_correlation": 0.1413618798672761,
+      "late_2024_correlation": 0.1149847378444689,
+      "sign_consistency": 1.0,
+      "minimum_abs_correlation": 0.0813900436530673,
+      "median_abs_correlation": 0.1149847378444689,
+      "mean_correlation": 0.11257888712160409
+    },
+    {
+      "domain": "R_ANCHOR",
+      "feature": "tm_fastball_induced_vert_break_mean",
+      "late_2023_correlation": -0.07884063736289211,
+      "early_2024_correlation": -0.12665709101885286,
+      "late_2024_correlation": -0.1772339059174237,
+      "sign_consistency": 1.0,
+      "minimum_abs_correlation": 0.07884063736289211,
+      "median_abs_correlation": 0.12665709101885286,
+      "mean_correlation": -0.12757721143305623
+    },
+    {
+      "domain": "R_ANCHOR",
+      "feature": "tm_other_zone_speed_mean",
+      "late_2023_correlation": 0.10375312423199082,
+      "early_2024_correlation": 0.07447185901442283,
+      "late_2024_correlation": 0.1939725419959198,
+      "sign_consistency": 1.0,
+      "minimum_abs_correlation": 0.07447185901442283,
+      "median_abs_correlation": 0.10375312423199082,
+      "mean_correlation": 0.12406584174744446
+    },
+    {
+      "domain": "ALL",
+      "feature": "tm_latest_extension_std",
+      "late_2023_correlation": 0.07309459276291373,
+      "early_2024_correlation": 0.08717447649591469,
+      "late_2024_correlation": 0.0948202459943276,
+      "sign_consistency": 1.0,
+      "minimum_abs_correlation": 0.07309459276291373,
+      "median_abs_correlation": 0.08717447649591469,
+      "mean_correlation": 0.08502977175105202
+    },
+    {
+      "domain": "R_CORE",
+      "feature": "tm_other_horz_break_mean",
+      "late_2023_correlation": 0.14979680435272377,
+      "early_2024_correlation": 0.06046260024232736,
+      "late_2024_correlation": 0.1438667855578738,
+      "sign_consistency": 1.0,
+      "minimum_abs_correlation": 0.06046260024232736,
+      "median_abs_correlation": 0.1438667855578738,
+      "mean_correlation": 0.1180420633843083
+    },
+    {
+      "domain": "R_ANCHOR",
+      "feature": "tm_offspeed_spin_rate_std",
+      "late_2023_correlation": 0.07402706586235998,
+      "early_2024_correlation": 0.05839299739334474,
+      "late_2024_correlation": 0.16403497293608674,
+      "sign_consistency": 1.0,
+      "minimum_abs_correlation": 0.05839299739334474,
+      "median_abs_correlation": 0.07402706586235998,
+      "mean_correlation": 0.09881834539726382
+    },
+    {
+      "domain": "F",
+      "feature": "tm_fastball_rel_height_mean",
+      "late_2023_correlation": -0.05833094530465608,
+      "early_2024_correlation": -0.16555409023797035,
+      "late_2024_correlation": -0.08344961568739855,
+      "sign_consistency": 1.0,
+      "minimum_abs_correlation": 0.05833094530465608,
+      "median_abs_correlation": 0.08344961568739855,
+      "mean_correlation": -0.10244488374334165
+    },
+    {
+      "domain": "ALL",
+      "feature": "tm_other_rel_height_mean",
+      "late_2023_correlation": -0.05623874936064999,
+      "early_2024_correlation": -0.060813827391047674,
+      "late_2024_correlation": -0.06123186406561792,
+      "sign_consistency": 1.0,
+      "minimum_abs_correlation": 0.05623874936064999,
+      "median_abs_correlation": 0.060813827391047674,
+      "mean_correlation": -0.0594281469391052
+    },
+    {
+      "domain": "ALL",
+      "feature": "tm_offspeed_extension_std",
+      "late_2023_correlation": 0.0964424619370557,
+      "early_2024_correlation": 0.08088473698468379,
+      "late_2024_correlation": 0.05608188871715729,
+      "sign_consistency": 1.0,
+      "minimum_abs_correlation": 0.05608188871715729,
+      "median_abs_correlation": 0.08088473698468379,
+      "mean_correlation": 0.0778030292129656
+    },
+    {
+      "domain": "R_ANCHOR",
+      "feature": "tm_other_rel_speed_mean",
+      "late_2023_correlation": 0.11475200862980206,
+      "early_2024_correlation": 0.055608010239638454,
+      "late_2024_correlation": 0.16536302899073116,
+      "sign_consistency": 1.0,
+      "minimum_abs_correlation": 0.055608010239638454,
+      "median_abs_correlation": 0.11475200862980206,
+      "mean_correlation": 0.11190768262005724
+    },
+    {
+      "domain": "ALL",
+      "feature": "tm_induced_vert_break_mean",
+      "late_2023_correlation": -0.07692037246607755,
+      "early_2024_correlation": -0.17454439246829015,
+      "late_2024_correlation": -0.05450010420550322,
+      "sign_consistency": 1.0,
+      "minimum_abs_correlation": 0.05450010420550322,
+      "median_abs_correlation": 0.07692037246607755,
+      "mean_correlation": -0.10198828971329031
+    },
+    {
+      "domain": "R_ANCHOR",
+      "feature": "tm_other_rate",
+      "late_2023_correlation": 0.09495492644498518,
+      "early_2024_correlation": 0.14625985158504357,
+      "late_2024_correlation": 0.05286189910376139,
+      "sign_consistency": 1.0,
+      "minimum_abs_correlation": 0.05286189910376139,
+      "median_abs_correlation": 0.09495492644498518,
+      "mean_correlation": 0.09802555904459671
+    },
+    {
+      "domain": "ALL",
+      "feature": "tm_extension_std",
+      "late_2023_correlation": 0.1122044970795218,
+      "early_2024_correlation": 0.11298667613670478,
+      "late_2024_correlation": 0.05264367066581967,
+      "sign_consistency": 1.0,
+      "minimum_abs_correlation": 0.05264367066581967,
+      "median_abs_correlation": 0.1122044970795218,
+      "mean_correlation": 0.09261161462734875
+    },
+    {
+      "domain": "ALL",
+      "feature": "tm_offspeed_induced_vert_break_mean",
+      "late_2023_correlation": -0.09058629133729908,
+      "early_2024_correlation": -0.052298081666257545,
+      "late_2024_correlation": -0.16121269554533527,
+      "sign_consistency": 1.0,
+      "minimum_abs_correlation": 0.052298081666257545,
+      "median_abs_correlation": 0.09058629133729908,
+      "mean_correlation": -0.10136568951629728
+    },
+    {
+      "domain": "ALL",
+      "feature": "tm_fastball_induced_vert_break_mean",
+      "late_2023_correlation": -0.0691219812859322,
+      "early_2024_correlation": -0.15105721556175505,
+      "late_2024_correlation": -0.05211219216605566,
+      "sign_consistency": 1.0,
+      "minimum_abs_correlation": 0.05211219216605566,
+      "median_abs_correlation": 0.0691219812859322,
+      "mean_correlation": -0.0907637963379143
+    },
+    {
+      "domain": "F",
+      "feature": "tm_breaking_rate",
+      "late_2023_correlation": -0.16065854409605806,
+      "early_2024_correlation": -0.05049238623475896,
+      "late_2024_correlation": -0.06926870890315595,
+      "sign_consistency": 1.0,
+      "minimum_abs_correlation": 0.05049238623475896,
+      "median_abs_correlation": 0.06926870890315595,
+      "mean_correlation": -0.09347321307799099
+    },
+    {
+      "domain": "F",
+      "feature": "tm_fastball_induced_vert_break_mean",
+      "late_2023_correlation": -0.05026469891614977,
+      "early_2024_correlation": -0.19112749496831277,
+      "late_2024_correlation": -0.10711396062859754,
+      "sign_consistency": 1.0,
+      "minimum_abs_correlation": 0.05026469891614977,
+      "median_abs_correlation": 0.10711396062859754,
+      "mean_correlation": -0.11616871817102004
+    }
+  ],
+  "interpretation_guardrails": [
+    "Association is pitcher-level and does not recover intended target.",
+    "Raw TrackMan value and repeatability are distinct; pitch-family SD avoids arsenal-mix inflation.",
+    "2024 axes are descriptive audits and must not be used for post-hoc recipe tuning."
+  ],
+  "row_local_deployment_possible": true,
+  "other_test_rows_required": false
+}

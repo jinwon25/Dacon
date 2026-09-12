@@ -1,0 +1,18 @@
+{
+  "training_rows": 1475092,
+  "features": 8,
+  "comparison_dtype": "float32",
+  "array_equal_including_nan": true,
+  "max_abs_by_feature": {
+    "p_succ_k25": 0.0,
+    "p_succ_k75": 0.0,
+    "p_succ_k400": 0.0,
+    "p_succ_k1000": 0.0,
+    "b_succ_k25": 0.0,
+    "b_succ_k75": 0.0,
+    "b_succ_k400": 0.0,
+    "b_succ_k1000": 0.0
+  },
+  "original_xgb_training_matrix_parity": "not verified",
+  "whole_model_fresh_fit": false
+}

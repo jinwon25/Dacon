@@ -1,0 +1,45 @@
+{
+  "protocol": "V158_EXACT_H1_C3_CONTRACT_V1",
+  "hypothesis": "C3 tables trained on depth-6 single-seed proxy residuals are inconsistent with the deployed depth-8 three-seed H1 ensemble. Rebuilding the fixed C3 windows from exact deployed-recipe OOF residuals should remove that interaction error without tuning the deployed weights or route.",
+  "windows": ["last1", "last2", "last3", "expanding"],
+  "c3": {
+    "same_hand_shrink": 1000.0,
+    "two_strike_shrink": 1000.0,
+    "runner_on_shrink": 2000.0,
+    "contrast_scale": 0.5
+  },
+  "h1_weight": 0.15,
+  "c3_weight": 0.5,
+  "mean_recent_weight": 0.15,
+  "route": "R_CORE",
+  "source_gate": {
+    "gain_min_each": 0.0,
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "minimum_domain_gain": 0.0
+  },
+  "locked_gate": {
+    "v148_gain_min": 3.0,
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "minimum_domain_gain": 0.0,
+    "bootstrap_p05_min": 0.0,
+    "reality_check_alpha": 0.1
+  },
+  "robustness": {
+    "bootstrap_resamples": 2000,
+    "block_size": 4096,
+    "seed": 15842
+  },
+  "restrictions": {
+    "external_2025_outcomes_used": false,
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_for_selection": false,
+    "full_2024_used_for_recipe_selection": false,
+    "weight_or_route_search_performed": false,
+    "c3_tables_use_prior_year_oof_residuals_only": true,
+    "row_local_inference": true,
+    "official_train_only_for_fitting": true
+  }
+}

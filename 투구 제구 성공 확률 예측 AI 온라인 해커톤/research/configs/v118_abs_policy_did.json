@@ -1,0 +1,32 @@
+{
+  "protocol": "V118_ABS_POLICY_DID_V1",
+  "hypothesis": "Context-relative effects that persisted after the 2020 Futures ABS adoption may identify the transferable part of the 2024 Regular-league ABS transition above v104.",
+  "group_specs": {
+    "count": ["count_state"],
+    "count_hands": ["count_state", "hand_matchup"],
+    "count_hands_out": ["count_state", "hand_matchup", "outs_before"],
+    "count_base_out": ["count_state", "base_state", "outs_before"]
+  },
+  "alpha_grid": [200.0, 1000.0, 5000.0],
+  "eta_grid": [0.25, 0.5, 1.0],
+  "correction_cap": 0.03,
+  "minimum_group_rows": 100,
+  "source_gate": {
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "active_domain_gain_min": 0.0
+  },
+  "locked_gate": {
+    "gain_min": 5.0,
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "active_domain_gain_min": 0.0
+  },
+  "restrictions": {
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_for_selection": false,
+    "late_2024_used_for_recipe_selection": false,
+    "row_local_inference": true
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "protocol": "V160_ORIGINAL_H1_AFFINE_AUDIT_V1",
+  "hypothesis": "The independently published H1 package fixed alpha=1.09 and center=0.5854452601930041, but v142 reset them to identity using a mismatched proxy OOF. Exact deployed-recipe OOF can now test the original fixed affine without a parameter search.",
+  "alpha": 1.09,
+  "center": 0.5854452601930041,
+  "h1_weight": 0.15,
+  "c3_weight": 0.5,
+  "route": "R_CORE",
+  "source_gate": {
+    "gain_min_each": 0.0,
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "minimum_domain_gain": 0.0
+  },
+  "locked_gate": {
+    "gain_min": 3.0,
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "minimum_domain_gain": 0.0,
+    "bootstrap_p05_min": 0.0,
+    "reality_check_alpha": 0.1
+  },
+  "robustness": {
+    "bootstrap_resamples": 2000,
+    "block_size": 4096,
+    "seed": 16042
+  },
+  "restrictions": {
+    "external_2025_outcomes_used": false,
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_for_selection": false,
+    "full_2024_used_for_recipe_selection": false,
+    "affine_search_performed": false,
+    "row_local_inference": true,
+    "official_train_only_for_fitting": true
+  }
+}

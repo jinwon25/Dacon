@@ -1,0 +1,58 @@
+{
+  "protocol": "V109_V104_PUBLIC_PROBE_V1",
+  "submitted_filename": "submit_v104_probe.zip",
+  "canonical_filename": "standalone_champion_1162.zip",
+  "package_bytes": 36637471,
+  "sha256": "0C3B6A9D88D31D9AC32FB43FFD642FA07BFCC3367699FA71841E35188FBDA0BA",
+  "parent": {
+    "public_score": 1161.2020600422,
+    "submission_id": 59988,
+    "sha256": "C033FC38A5F9681E45B0BD2494359B8BD1387EE44E5F318C5B7A5547CFE6C4F7"
+  },
+  "recipe": {
+    "route": "R_CORE",
+    "fm_rank": 16,
+    "fm_eta": 0.1,
+    "conditional_eta": 0.1,
+    "mask_policy": "majority_two_of_count_history_platoon",
+    "source_windows": ["full_2023", "late_2024"],
+    "public_score_used_for_recipe": false,
+    "test_aggregate_used": false,
+    "row_local_inference": true
+  },
+  "local_evidence": {
+    "full_2022_gain": 9.9172,
+    "late_2023_gain": 8.1216,
+    "full_2024_gain": 3.2162,
+    "late_2024_gain": 2.5868,
+    "known_risks": {
+      "full_2024_worst_month_gain": -6.6440,
+      "full_2024_crossed_bootstrap_p05": -2.476,
+      "white_reality_check_p": 0.117
+    }
+  },
+  "package_audit": {
+    "active_rows_shifted": 9,
+    "protected_max_abs": 0.0,
+    "shuffled_max_abs": 0.0,
+    "partition_max_abs": 0.0,
+    "scale_proxy_rows": 245789,
+    "scale_proxy_runtime_seconds": 80.48537799999758,
+    "tests_passed": 4
+  },
+  "public_result": {
+    "api_is_submitted": true,
+    "submission_id": 60626,
+    "submitted_at_kst": "2026-08-22 23:06:48",
+    "public_score": 1162.6302840289,
+    "previous_public_score": 1161.2020600422,
+    "public_gain": 1.4282239867,
+    "official_runtime_seconds": 48,
+    "leaderboard_rank_at_confirmation": 13,
+    "submission_count_at_confirmation": 30
+  },
+  "promoted_to_champion": true,
+  "target1170_gap": 7.3697159711,
+  "target1170_gate_passed": false,
+  "standalone_no_parent_zip_dependency": true
+}

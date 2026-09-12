@@ -1,0 +1,48 @@
+{
+  "protocol": "V150_DECAY_LEVEL_EFFECTS_AUDIT_V1",
+  "hypothesis": "Exponentially decayed prior-season pitcher-context contrasts plus strongly shrunk pitcher and batter residual levels add a low-variance command signal that is distinct from v148's sign-consensus contrasts.",
+  "contrast_gamma": 0.85,
+  "batter_gamma": 0.5,
+  "pitcher_history_seasons": 2,
+  "contrast_shrink": [1000.0, 1000.0, 2000.0],
+  "pitcher_level_shrink": 50000.0,
+  "batter_level_shrink": 20000.0,
+  "contrast_replace_grid": [0.0, 0.25, 0.5, 0.75, 1.0],
+  "pitcher_weight_grid": [0.0, 0.5, 1.0, 1.5, 2.0, 2.5],
+  "batter_weight_grid": [0.0, 0.5, 1.0, 1.5, 1.75, 2.0, 2.5],
+  "source_audit_top": 50,
+  "source_gate": {
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "active_domain_gain_min": 0.0,
+    "incremental_gain_min": 0.0,
+    "incremental_worst_month_gain_min_exclusive": -5.0
+  },
+  "locked_gate": {
+    "incremental_gain_vs_v148_min": 2.7,
+    "incremental_late_gain_vs_v148_min": 2.0,
+    "incremental_positive_month_fraction_min": 0.625,
+    "incremental_worst_month_gain_min_exclusive": -7.5,
+    "gain_vs_v124_min": 9.5
+  },
+  "fixed_external_recipe": {
+    "contrast_replace": 1.0,
+    "pitcher_weight": 2.0,
+    "batter_weight": 1.75,
+    "provenance": "Independent public recipe definition reimplemented from official train data; no external data or model weights"
+  },
+  "public_calibration": {
+    "v148_score": 1170.3014697177,
+    "conservative_transfer_ratio": 0.75,
+    "target_score_min": 1173.0
+  },
+  "restrictions": {
+    "external_2025_outcomes_used": false,
+    "external_model_weights_used": false,
+    "official_train_only": true,
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "full_2024_reused_as_development": true,
+    "row_local_inference": true
+  }
+}

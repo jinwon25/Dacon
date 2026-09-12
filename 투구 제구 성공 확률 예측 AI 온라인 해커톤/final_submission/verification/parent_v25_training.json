@@ -1,0 +1,24 @@
+{
+  "protocol": "V25_POSTBREAK_ANCHOR_2025_V1",
+  "train_sha256": "D2081186B458B49F60B082BE480C273135833E15BA59A76D033AF28BCF8763FF",
+  "audit_summary_sha256": "A9855455D23B850BCEAEB24AAFD31F69A66C260824BA6577CFED811A0E45606C",
+  "versions": {
+    "numpy": "2.2.6",
+    "pandas": "2.2.3",
+    "scikit-learn": "1.6.1",
+    "joblib": "1.5.1"
+  },
+  "reference_model_read_during_fit": false,
+  "test_values_read_during_fit": false,
+  "private_score_recomputed": false,
+  "artifacts": {
+    "v25_postbreak_anchor.joblib": {
+      "size_bytes": 7821,
+      "sha256": "36A785786A27DFCC7C5626C0BA60FD9DFE2A67F02BE9260B4A882A0C2817326E"
+    },
+    "v25_postbreak_anchor_spec.json": {
+      "size_bytes": 1516,
+      "sha256": "B305986C49A8DFACD9C3B1769AF17247E5D87C387BA26FD4BD4297F5CE0A0DF0"
+    }
+  }
+}

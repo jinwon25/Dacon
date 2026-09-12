@@ -1,0 +1,34 @@
+{
+  "protocol": "V296_PUBLIC_RESULT_V1",
+  "submission_id": 75887,
+  "filename": "submit_v296.zip",
+  "submitted_at_kst": "2026-08-30 16:57:51",
+  "public_score": 1172.858818614,
+  "runtime_seconds": 114,
+  "parent_champion": {
+    "version": "v290",
+    "public_score": 1176.757071668,
+    "delta": -3.898253054
+  },
+  "comparison_v244": {
+    "public_score": 1175.9746833121,
+    "delta": -3.1158646981
+  },
+  "target": {
+    "score": 1190.0,
+    "gap": 17.141181386
+  },
+  "pre_submission_forecast": {
+    "low": 1180.234329370172,
+    "center": 1185.6665629480601,
+    "high": 1194.4355892755068,
+    "outcome": "all_scenarios_falsified"
+  },
+  "decision": "rejected_not_promoted",
+  "champion_after_result": {
+    "version": "v290",
+    "submission_id": 75638,
+    "public_score": 1176.757071668
+  },
+  "research_policy": "close latest-season absolute R-expert direction; do not Public-retune the blend weight; require honest labelled transport evidence for the next candidate"
+}

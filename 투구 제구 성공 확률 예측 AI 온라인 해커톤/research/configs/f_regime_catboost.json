@@ -1,0 +1,22 @@
+{
+  "game_type": "F",
+  "validation_train_seasons": [2023],
+  "validation_season": 2024,
+  "final_train_seasons": [2023, 2024],
+  "backtest_pairs": [[2020, 2021], [2021, 2022], [2023, 2024]],
+  "feature_set": "hierarchical_v2",
+  "drop_columns": ["season"],
+  "seeds": [42, 202, 777],
+  "final_seeds": [42],
+  "iterations": 800,
+  "final_iterations": 260,
+  "depth": 5,
+  "learning_rate": 0.03,
+  "l2_leaf_reg": 12.0,
+  "random_strength": 0.5,
+  "bagging_temperature": 0.5,
+  "early_stopping_rounds": 80,
+  "thread_count": 6,
+  "f_catboost_weight": 0.75,
+  "trackman_weight_by_game_type": {"F": 1.0, "R": 0.05}
+}

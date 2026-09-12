@@ -1,0 +1,31 @@
+{
+  "protocol": "V157_EXACT_DEPLOYED_H1_OOF_V1",
+  "hypothesis": "The v148 local contract used a depth-6 single-seed H1 proxy, while the deployed package uses an identity-affine depth-8 three-seed H1 ensemble. Rebuilding that exact deployed recipe on strict forward OOF can measure the contract error without using test rows or leaderboard feedback.",
+  "audit_years": [2020, 2021, 2022, 2023, 2024],
+  "model": {
+    "iterations": 1200,
+    "learning_rate": 0.02,
+    "depth": 8,
+    "l2_leaf_reg": 100.0,
+    "border_count": 32,
+    "seeds": [42, 43, 44],
+    "thread_count": 16
+  },
+  "deployed_h1_weight": 0.15,
+  "deployed_route": "R_CORE",
+  "robustness": {
+    "bootstrap_resamples": 1000,
+    "block_size": 4096,
+    "seed": 15742
+  },
+  "restrictions": {
+    "external_2025_outcomes_used": false,
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_for_selection": false,
+    "full_2024_used_for_recipe_selection": false,
+    "candidate_search_performed": false,
+    "row_local_inference": true,
+    "official_train_only_for_fitting": true
+  }
+}

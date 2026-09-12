@@ -1,0 +1,35 @@
+{
+  "protocol": "PARENT_TRACKMAN_FRESH_FIT_V1",
+  "official_input_sha256": {
+    "train.csv": "d2081186b458b49f60b082be480c273135833e15ba59a76d033af28bcf8763ff",
+    "trackman_history.csv": "f7818f9ee0ccefe7c2cf69fa99efe6e5cb882d8b886dd96d2394bcf3b53f33a9"
+  },
+  "rows": 1475092,
+  "profile_rows_all_origins": 3531,
+  "profile_rows_deployed_2025": 792,
+  "feature_count": 137,
+  "model": {
+    "name": "lgb_trackman_pitcher_v1",
+    "feature_set": "trackman_pitcher",
+    "num_leaves": 31,
+    "learning_rate": 0.05,
+    "min_data_in_leaf": 500,
+    "lambda_l2": 2.0,
+    "feature_fraction": 0.9,
+    "bagging_fraction": 0.85
+  },
+  "iterations": 41,
+  "versions": {
+    "numpy": "2.2.6",
+    "pandas": "2.2.3",
+    "lightgbm": "4.6.0"
+  },
+  "files_sha256": {
+    "trackman_lgb_model.txt": "cacbb19d038be6ea389d733aca3dd12c2195e2e93c219902e544c078e6d748bc",
+    "trackman_feature_spec.json": "1ad2ed5d46fc76158419a58f9daee56810591876dd1b8b33ffad778ff6b3e8dd",
+    "trackman_pitcher_profiles.csv": "a7ef358327da132955e783e62622f48517b64c0f990cd6adf7dcac4d1492e304"
+  },
+  "reference_model_read_during_fit": false,
+  "test_values_read_during_fit": false,
+  "private_score_recomputed": false
+}

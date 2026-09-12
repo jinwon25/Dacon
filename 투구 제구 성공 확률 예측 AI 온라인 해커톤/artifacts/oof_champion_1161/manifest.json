@@ -1,0 +1,91 @@
+{
+  "protocol": "CHAMPION_1161_PRIVATE_OOF_EVIDENCE_V1",
+  "visibility": "PRIVATE_OFFICIAL_DACON_TEAM_ONLY",
+  "public_score": 1161.2020600422,
+  "submission_id": 59988,
+  "model": {
+    "name": "v84_fixed_v56_f_route",
+    "package": "../standalone_champion_1161/standalone_champion_1161.zip",
+    "sha256": "C033FC38A5F9681E45B0BD2494359B8BD1387EE44E5F318C5B7A5547CFE6C4F7",
+    "bytes": 34629670,
+    "config": "../../configs/v84_fixed_v56_fm.json",
+    "config_sha256": "CD6DC3B52912FDD1DFD7F1EBD2DD9C9E2257B3CBAFA0F39BC0CFC0B6630B6EC9"
+  },
+  "source_protocol": "V94_MULTI_ORIGIN_CHAMPION_CONTRACT_V1",
+  "train_csv_sha256": "D2081186B458B49F60B082BE480C273135833E15BA59A76D033AF28BCF8763FF",
+  "train_rows": 1475092,
+  "prediction_field": "parent",
+  "row_local": true,
+  "test_csv_read": false,
+  "test_aggregate_used": false,
+  "contains_competition_targets_and_player_ids": true,
+  "caveat": "Fidelity-labelled temporal v84 analogues; not a single pristine cross-fitted OOF of the final deployment ZIP.",
+  "axes": [
+    {
+      "axis": "v84_full_2022",
+      "file": "v84_full_2022.npz",
+      "file_sha256": "318978A8BAD1F55DA268AA77EEFB26800EA60F0BCBFB8D214967D29E4C686021",
+      "bytes": 4154320,
+      "role": "locked_shadow_partial_exact",
+      "fidelity": "exact_v84_on_R_CORE_and_F_only",
+      "evaluation_season": 2022,
+      "training_max_season": 2021,
+      "rows": 247472,
+      "exact_rows": 204666,
+      "exact_fraction": 0.8270268959720696,
+      "exact_domains": ["F", "R_CORE"],
+      "raw_index_sha256": "6AFCDDF2BF33CC2E49A2A1BF80B3419785E606CAA954CCCCD02A77BAFF9D9119",
+      "row_id_sha256": "EC6CF4EEA953764DD4DD983B7A6336B1236B3CEE65DAF2CE6AC20E0B9F171E6A",
+      "target_sha256": "72A1B3A83357CDA40D4263991176DED073AB139CBC1AFE8C4B99E3519356AB5A",
+      "prediction_sha256": "6493E06468C13CE60629C4A43A8AA9E9B516185E660340EA1C642400B2BE0CA1"
+    },
+    {
+      "axis": "v84_late_2023",
+      "file": "v84_late_2023.npz",
+      "file_sha256": "E582C6313FC511726E6A5F0A71F060B5345BC0039722EB03578111A5AC1FBC85",
+      "bytes": 1498848,
+      "role": "development_contaminated_same_season",
+      "fidelity": "exact_v84_all_domains",
+      "evaluation_season": 2023,
+      "training_max_season": 2023,
+      "rows": 93604,
+      "exact_rows": 93604,
+      "exact_fraction": 1.0,
+      "exact_domains": ["F", "R_ANCHOR", "R_CORE"],
+      "raw_index_sha256": "B82A80BE469B42986502A2B6CF1AC1E05BE709FAB17A8D387DDA658B74293AEC",
+      "row_id_sha256": "64128B6F6AA07A28D37047BE4F56777636E0DA118C3E92A87E3D6CC076197F10",
+      "target_sha256": "75075755C5E4B220CB2A0946F76EAC9ADB180B0CA1EB530F94FCCC6209B9E251",
+      "prediction_sha256": "76DDEDCE086003A7D23ADA60DE30F9A866F43C388F495EFAE1310B4ECA926220"
+    },
+    {
+      "axis": "v84_full_2024",
+      "file": "v84_full_2024.npz",
+      "file_sha256": "9DAF09A5A36A5AA86E33081834C994F5655A03D66079EEA353F2D39214A342B9",
+      "bytes": 4279674,
+      "role": "development_contaminated_family_inspected",
+      "fidelity": "exact_v84_all_domains",
+      "evaluation_season": 2024,
+      "training_max_season": 2023,
+      "rows": 253507,
+      "exact_rows": 253507,
+      "exact_fraction": 1.0,
+      "exact_domains": ["F", "R_ANCHOR", "R_CORE"],
+      "raw_index_sha256": "F9DF45B00FDEAE23E62E9FD00143C1CD385491C072F38FFC89CF34E5A4E08D52",
+      "row_id_sha256": "E88CD681D0A64617F28C486DC3C8738EB231B09100B49B67DAA242CFE75E2D51",
+      "target_sha256": "8FD94ED816F9F2B3F65690751D72013AB104D28DA6FE460489F64A833BDB6C19",
+      "prediction_sha256": "DA0133BF3AD405E68F6B4239B1F5339C9DDF26E4B076D7E0E72C8586D7D43ED7"
+    }
+  ],
+  "allowed_uses": [
+    "private teammate handoff",
+    "lineage and alignment audit",
+    "residual covariance and error correlation diagnostics"
+  ],
+  "forbidden_uses": [
+    "public redistribution",
+    "calling contaminated axes pristine holdouts",
+    "scoring v84_full_2022 outside exact_mask",
+    "choosing a submission weight from Public score",
+    "using test-row aggregate, order, frequency or distribution features"
+  ]
+}

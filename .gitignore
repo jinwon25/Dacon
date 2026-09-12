@@ -36,9 +36,6 @@ K리그-서울시립대 공개 AI 경진대회/catboost_info/
 # Local linked worktrees
 .git-worktrees/
 
-# Split out into its own repository: github.com/jinwon25/lg-aimers9-pitch-control
-# The folder here is a clone of it, so this repository must not track its files.
-투구 제구 성공 확률 예측 AI 온라인 해커톤/
 
 # Keep example/light reference CSVs if they exist at repo root (none expected)
 !**/sample_submission_template.csv

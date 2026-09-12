@@ -1,0 +1,526 @@
+r"""22회차 후보 — AS-OF 현재상태 분해 (D). 오늘 유일하게 크기가 다른 축.
+
+## 근거 (`exp/asof_state.py`, 시드 2개 평균, walk-forward)
+
+| 구성 | 2022 | 2023 | 2024 | 기하평균 | **min gain** | 3/3 |
+|---|---:|---:|---:|---:|---:|---|
+| C 이력(prior) | 1.0005 | 1.0641 | 1.0047 | 1.0227 | 1.0005 | 3/3 |
+| **D 현재(cur)** | **1.0322** | **2.3381** | **1.1291** | **1.3968** | **1.0322** | 3/3 |
+| E 현재-이력 | 1.0332 | 1.7301 | 1.1070 | 1.2555 | 1.0332 | 3/3 |
+| J 전부 | 1.0303 | 2.3376 | 1.1195 | 1.3918 | 1.0303 | 3/3 |
+
+**게이트 B(min gain)가 이번엔 실질적이다** — CAAFE 는 min 1.0001 로 3/3 을 통과하고도
+평가셋 이득이 0 이었다(§15-c). 여기는 min 1.0322 로 322배 크다.
+
+`C 이력` 이 거의 0 인데 `D 현재` 가 크다는 대조가 핵심이다 — 새 정보는 "그 투수가
+원래 어떤가"가 아니라 **"지금 어떤가"** 다.
+
+## 무엇이 새 정보인가
+
+모델이 보는 `asof_pitcher_success_rate` 는 **통산**이라 이력과 현재 폼이 섞여 있고,
+모델은 그 투수의 직전 시즌말 통산을 모르므로 **원리적으로 못 가른다**.
+학습 데이터에서 그 상수를 빼주면 갈린다.
+
+    cur_n    = asof_n(행) - prior_n[선수]
+    cur_rate = ((asof_n * asof_rate)(행) - prior_events[선수]) / cur_n
+
+검증 — 2024 폴드에서 `cur_n` 이 실제 시즌내 순번과 **100.0000%** 일치(음수 0%),
+`cur_rate` 복원 평균절대오차 **3.1e-6**. test 5행에서도 전부 정합
+(예: 투수 21813 asof_n 3,465 - train 3,085 = 2025 시즌 380구, 7월).
+
+## 규정 5)
+
+행 자신의 공식 `asof_*` 컬럼(`data_description.md` L182 사용 허가 명시) +
+학습 데이터만으로 만든 선수별 상수. 평가셋의 다른 행을 안 본다.
+
+## 아핀 — 클린 노선
+
+§16 에서 확인한 방식을 그대로 쓴다 (평가셋 정보 미사용).
+
+    r_hat = 최근 3시즌 선형외삽
+    m_hat = r_hat + mean(m - r)      워크포워드
+    center = (r_hat - A*m_hat)/(1-A),  A = 1.09 (10회차 문서화 상수)
+
+    .\venv_submit\Scripts\python.exe -u exp\build_asof.py            # 적률만
+    .\venv_submit\Scripts\python.exe -u exp\build_asof.py --build    # pkl/zip
+"""
+import argparse
+import importlib.util
+import os
+import subprocess
+import sys
+import time
+
+import joblib
+import numpy as np
+import pandas as pd
+from catboost import CatBoostClassifier
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OrdinalEncoder
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, ROOT)
+
+
+def _load(name, path):
+    spec = importlib.util.spec_from_file_location(name, os.path.join(ROOT, path))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+ft = _load("ft", "final_train.py")
+sc = _load("sc", "script.py")
+
+ALPHA = 1.09
+WPOST = np.array([0.20, 0.825, 0.280, 0.45])
+KSH = [300, 2000, 800, 2000]
+HP = dict(iterations=1200, learning_rate=0.02, depth=6, l2_leaf_reg=100.0,
+          border_count=32, loss_function="Logloss", verbose=0,
+          thread_count=16, allow_writing_files=False)
+OUT_PKL = os.path.join(ROOT, "model_cand", "cat_asof.pkl")
+OUT_ZIP = os.path.join(ROOT, "submissions", "cand_asof.zip")
+# --form 일 때 (23회차). 22회차 아티팩트를 절대 덮어쓰지 않는다.
+OUT_PKL_F = os.path.join(ROOT, "model_cand", "cat_asof_f.pkl")
+OUT_ZIP_F = os.path.join(ROOT, "submissions", "cand_asof_f.zip")
+# --ctx 일 때 (D x 맥락). Champion 아티팩트와 이름이 겹치지 않는다.
+OUT_PKL_X = os.path.join(ROOT, "model_cand", "cat_asof_x.pkl")
+OUT_ZIP_X = os.path.join(ROOT, "submissions", "cand_asof_x.zip")
+
+
+def nested_dev(parent, child, y, k):
+    o = np.argsort(child, kind="stable")
+    Ys, Ps, Cs = y[o], parent[o], child[o]
+    u, s = np.unique(Cs, return_index=True)
+    cnt = np.diff(np.append(s, len(Cs)))
+    cell = np.add.reduceat(Ys, s) / cnt
+    par = Ps[s]
+    op = np.argsort(parent, kind="stable")
+    Yp, Pp = y[op], parent[op]
+    pu, ps = np.unique(Pp, return_index=True)
+    pc = np.diff(np.append(ps, len(Pp)))
+    pmean = np.add.reduceat(Yp, ps) / pc
+    return u, cnt * (cell - pmean[np.searchsorted(pu, par)]) / (cnt + k)
+
+
+def look(u, d, keys):
+    ix = np.clip(np.searchsorted(u, keys), 0, len(u) - 1)
+    ok = u[ix] == keys
+    out = np.zeros(len(keys))
+    out[ok] = d[ix[ok]]
+    return out
+
+
+def prior_tables(df, mask):
+    """`mask` 구간에서 선수별 (표본수, 사건수...) 를 만든다.
+
+    표본수는 **행 수**다 (as-of 카운터가 정확히 이 행들을 센다 — 100.0000% 검증).
+    사건수는 그 구간 마지막 행의 `n*rate` 최대값이다 (통산이 단조증가).
+    """
+    out = {}
+    for kind, (ncol, idcol) in sc.ASOF_NCOL.items():
+        ids = df.loc[mask, idcol].to_numpy(np.int64)
+        n = df.loc[mask, ncol].to_numpy(np.float64)
+        u, cnt = np.unique(ids, return_counts=True)
+        cols = [rc for rc, _, _, k in sc.ASOF_SPEC if k == kind]
+        ev = []
+        o = np.argsort(ids, kind="stable")
+        ks, s0 = np.unique(ids[o], return_index=True)
+        for rc in cols:
+            tot = (n * np.nan_to_num(df.loc[mask, rc].to_numpy(np.float64)))[o]
+            ev.append(np.maximum.reduceat(tot, s0))
+        out[kind] = {int(k): tuple([float(c)] + [float(e[i]) for e in ev])
+                     for i, (k, c) in enumerate(zip(u, cnt))}
+    return out
+
+
+def eb_params(df, mask, cols):
+    """적률법으로 `k` 를 뽑는다 — `k = mu(1-mu)/sigma^2_between`.
+
+    `mask` 구간의 행만 쓴다 (학습 시점 규율). 고정 500 이 아니라 데이터가
+    정하게 한다. `mu` 는 신인(이력 없음) 부모로도 쓰인다.
+    """
+    out = {"k": {}, "mu": {}}
+    cn = df.loc[mask, "cur_logn_pitch"].to_numpy(np.float64)
+    cn = np.expm1(cn)                       # log1p 를 되돌린다
+    for lb in cols:
+        r = df.loc[mask, f"cur_{lb}"].to_numpy(np.float64)
+        ok = (cn > 0) & np.isfinite(r)
+        if ok.sum() < 1000:
+            out["k"][lb], out["mu"][lb] = 500.0, 0.5
+            continue
+        w = cn[ok]
+        mu = float((r[ok] * w).sum() / w.sum())
+        v_tot = float(np.average((r[ok] - mu) ** 2, weights=w))
+        v_bin = float(np.average(mu * (1 - mu) / np.maximum(w, 1), weights=w))
+        out["k"][lb] = float(mu * (1 - mu) / max(v_tot - v_bin, 1e-8))
+        out["mu"][lb] = mu
+    return out
+
+
+def add_state(df, tabs):
+    """`tabs` 를 임시 번들로 삼아 추론과 **같은 함수**로 파생컬럼을 만든다."""
+    return sc.attach_asof_state(df, {"asof_prior": tabs})
+
+
+# 단조 제약 (2026-08-18, EXP023/023b). 방향을 **물리로** 아는 10열에만 건다.
+# 폴드 2024 실측 — 제약 0개 958.7 / 3개 961.0 / 5개 965.3 / **10개 968.1** / 15개 958.2.
+# 15개에서 무너지는 것은 직전경기 창(F 계열)이라 부호가 불안정하기 때문이다.
+MONO_10 = {"cur_succ": 1, "cur_rev": -1, "cur_mid": -1, "cur_ball": -1, "cur_str": 1,
+           "asof_pitcher_success_rate": 1, "asof_pitcher_middle_rate": -1,
+           "asof_pitcher_reverse_rate": -1, "asof_pitcher_ball_rate": -1,
+           "asof_pitcher_strike_rate": 1}
+# 통산 비율만 (cur_* 제외). mono10 실패 진단 — 제약이 cur_succ 로 용량을 몰아
+# 시즌 내 적합을 키웠고 그게 다음 시즌에 무너졌다. 통산 비율은 시즌을 건너
+# 안정적인 값이라 같은 함정이 없다.
+MONO_CAREER = {"asof_pitcher_success_rate": 1, "asof_pitcher_middle_rate": -1,
+               "asof_pitcher_reverse_rate": -1, "asof_pitcher_ball_rate": -1,
+               "asof_pitcher_strike_rate": 1}
+MONO_SETS = {"all10": MONO_10, "career": MONO_CAREER}
+
+# 정보 손실이 **증명된** 중복 열 (RELATION_LEDGER §3). 다른 열의 정확한 함수라
+# 빼도 정보가 0 만큼 준다. 2026-08-18 에 "쓸모없는 8열 추가 = -13.5" 를 재고
+# 나서 나온 발상 — 열에 세금이 있다면 **중복을 빼면 이득**이다.
+PRUNE_DUP = ["asof_pitcher_pitchmix_n", "run_total_before", "score_diff_home",
+             "num_runners_on", "base_state", "away_win_expectancy",
+             "cur_logn_mix"]
+MONO_SPEC = {}          # --mono 로 켠다
+
+
+def pipeline(features, seed):
+    cat = [c for c in ft.CAT_COLS if c in features]
+    num = [c for c in features if c not in cat]
+    pre = ColumnTransformer(
+        [("cat", OrdinalEncoder(handle_unknown="use_encoded_value",
+                                unknown_value=-1), cat),
+         ("num", "passthrough", num)])
+    clf = CatBoostClassifier(random_seed=seed, **HP)
+    if MONO_SPEC:
+        order = cat + num          # ColumnTransformer 출력 순서
+        v = [0] * len(order)
+        for nm, sg in MONO_SPEC.items():
+            if nm in order:
+                v[order.index(nm)] = sg
+        clf.set_params(monotone_constraints=v)
+    return Pipeline([("pre", pre), ("clf", clf)])
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--build", action="store_true")
+    ap.add_argument("--seeds", type=int, default=3)
+    ap.add_argument("--form", action="store_true",
+                    help="F(최근경기 vs 시즌내 누적) 6개를 더한다 — 23회차")
+    ap.add_argument("--ctx", action="store_true",
+                    help="X(D x 맥락) 8개를 더한다 — d_decomp 최유력")
+    ap.add_argument("--lvl", action="store_true",
+                    help="H1(수준확장) 6개를 --ctx 위에 더한다 — 25회차 후보")
+    ap.add_argument("--eb", action="store_true",
+                    help="EB 축소 5개를 --ctx --lvl 위에 더한다 (원시는 유지)")
+    ap.add_argument("--mono", type=str, default=None, choices=list(MONO_SETS),
+                    help="단조 제약 집합. all10 은 LB -65.7 로 실패, career 는 미검증")
+    ap.add_argument("--mx", action="store_true",
+                    help="MX(구종믹스 x 맥락) 6열 — X/H1 의 직접 연장")
+    ap.add_argument("--prune", action="store_true",
+                    help="증명된 중복 7열 제거 — 정보 손실 0")
+    ap.add_argument("--nz", action="store_true",
+                    help="위약 — 정보 0 인 잡음 8열. 열 추가 자체의 비용 측정")
+    ap.add_argument("--uc", action="store_true",
+                    help="UC(관측되지 않은 결과 계급) 8열 — current-state family")
+    ap.add_argument("--rx", action="store_true",
+                    help="RX(로그비) 9개를 더한다 — 곱은 줬고 비는 안 줬다")
+    ap.add_argument("--k2", action="store_true",
+                    help="K2(2스트라이크 국면) 4개를 --ctx --lvl 위에 더한다")
+    ap.add_argument("--border", type=int, default=None,
+                    help="border_count 오버라이드 (기본 32)")
+    ap.add_argument("--l2", type=float, default=None,
+                    help="l2_leaf_reg 오버라이드 (기본 100)")
+    ap.add_argument("--iters", type=int, default=None)
+    ap.add_argument("--lr", type=float, default=None)
+    ap.add_argument("--depth", type=int, default=None,
+                    help="트리 깊이 오버라이드 (기본 6)")
+    ap.add_argument("--center", type=float, default=None,
+                    help="이미 푼 클린 아핀 center 를 재사용한다")
+    ap.add_argument("--skip-eval", action="store_true",
+                    help="홀드아웃/아핀 단계를 건너뛴다 (--center 필수). 그 단계 "
+                         "뒤에서 죽었을 때 학습만 다시 돌리기 위한 것이고, 상수는 "
+                         "반드시 앞선 실행의 출력에서 그대로 가져와야 한다")
+    ap.add_argument("--data-dir", default=os.path.join(ROOT, "..", "data"))
+    ap.add_argument("--output-dir", default=None)
+    a = ap.parse_args()
+    ft.DATA_DIR = os.path.abspath(a.data_dir)
+    ft.TM_PATH = os.path.join(ft.DATA_DIR, "trackman_history.csv")
+    ft.ID_MAP_PATH = os.path.join(ROOT, "pitcher_id_map.csv")
+    assert not (a.form and a.ctx), "한 번에 하나만 바꾼다"
+    assert not (a.lvl and not a.ctx), "--lvl 은 --ctx 위에 얹는다"
+    assert not (a.k2 and not a.lvl), "--k2 는 --lvl 위에 얹는다"
+    assert not (a.eb and not a.lvl), "--eb 는 --lvl 위에 얹는다"
+    assert not (a.eb and a.k2), "한 번에 하나만 바꾼다"
+    assert not (a.rx and not a.lvl), "--rx 는 --lvl 위에 얹는다"
+    global MONO_SPEC, HP
+    ov = {}
+    if a.depth: ov["depth"] = a.depth
+    if a.border: ov["border_count"] = a.border
+    if a.l2: ov["l2_leaf_reg"] = a.l2
+    if a.iters: ov["iterations"] = a.iters
+    if a.lr: ov["learning_rate"] = a.lr
+    if ov:
+        HP = dict(HP, **ov)
+        print(f'  HP 오버라이드 {ov}')
+    if a.mono:
+        MONO_SPEC = MONO_SETS[a.mono]
+        print(f'  단조 제약 [{a.mono}] {len(MONO_SPEC)}열 적용')
+    acols = (sc.ASOF_COLS + (sc.FORM_COLS if a.form else [])
+             + (sc.CTX_COLS if a.ctx else [])
+             + (sc.LVL_COLS if a.lvl else [])
+             + (sc.K2_COLS if a.k2 else [])
+             + (sc.EB_COLS if a.eb else [])
+             + (sc.RX_COLS if a.rx else [])
+             + (sc.UC_COLS if a.uc else [])
+             + (sc.NZ_COLS if a.nz else [])
+             + (sc.MX_COLS if a.mx else []))
+    a.prune_cols = PRUNE_DUP if a.prune else []
+    a.acols = acols
+    out_pkl, out_zip = (OUT_PKL, OUT_ZIP)
+    if a.form:
+        out_pkl, out_zip = OUT_PKL_F, OUT_ZIP_F
+    elif a.eb:
+        out_pkl = os.path.join(ROOT, "model_cand", "cat_asof_eb.pkl")
+        out_zip = os.path.join(ROOT, "submissions", "cand_asof_eb.zip")
+    elif a.k2:
+        out_pkl = os.path.join(ROOT, "model_cand", "cat_asof_k2.pkl")
+        out_zip = os.path.join(ROOT, "submissions", "cand_asof_k2.zip")
+    elif a.lvl:
+        out_pkl = os.path.join(ROOT, "model_cand", "cat_asof_xl.pkl")
+        out_zip = os.path.join(ROOT, "submissions", "cand_asof_xl.zip")
+    elif a.ctx:
+        out_pkl, out_zip = OUT_PKL_X, OUT_ZIP_X
+
+    if a.output_dir:
+        out_pkl = os.path.join(os.path.abspath(a.output_dir), "cat_asof_xl.pkl")
+        out_zip = os.path.join(os.path.abspath(a.output_dir), "cand_asof_xl.zip")
+    if a.build:
+        for output in (out_pkl, out_zip):
+            if os.path.exists(output):
+                raise FileExistsError(f"Use a fresh output directory: {output}")
+            os.makedirs(os.path.dirname(output), exist_ok=True)
+    t0 = time.time()
+    tc = pd.read_csv(os.path.join(ft.DATA_DIR, "train.csv"),
+                     encoding="utf-8-sig", nrows=0).columns
+    allf = [c for c in tc if c not in (ft.ID, ft.TARGET)]
+    tr = pd.read_csv(os.path.join(ft.DATA_DIR, "train.csv"),
+                     encoding="utf-8-sig", usecols=allf + [ft.TARGET])
+    tm = ft.load_trackman()
+    tr = ft.attach_ctx_train(tr, tm)
+    ctxf = [c for c in ft.COUNT_FEATS + ft.HAND_FEATS
+            if c not in ("tmc_n", "tmh_n")]
+    c_all, h_all = ft.ctx_tables(tm, 9999)
+    ctx_pack = {"count": ft.pack_table(c_all, ft.COUNT_KEY),
+                "hand": ft.pack_table(h_all, ft.HAND_KEY),
+                "hand_map": {str(k): v for k, v in ft.HAND.items()},
+                "count_key": ft.COUNT_KEY, "hand_key": ft.HAND_KEY}
+
+    # --- 학습용: 시즌 g 의 행은 <g 상수로 분해 (추론 시점과 같은 형태) ---
+    season = tr["season"].to_numpy()
+    for c in acols:
+        tr[c] = np.nan
+    ebp_final = None
+    for g in sorted(np.unique(season)):
+        m = season == g
+        tabs = prior_tables(tr, season < g)
+        part = add_state(tr.loc[m].copy(), tabs)
+        if a.eb:
+            # k 는 **시즌 <g** 로 뽑는다. 첫 시즌은 자기 자신뿐이라 그것을 쓴다.
+            src = (season < g) if (season < g).any() else m
+            base_part = add_state(tr.loc[src].copy(), prior_tables(tr, season < g))
+            ebp = eb_params(base_part, np.ones(len(base_part), bool), sc.EB_RATES)
+            part = sc.attach_asof_state(tr.loc[m].copy(),
+                                        {"asof_prior": tabs, "eb": ebp})
+        for c in acols:
+            tr.loc[m, c] = part[c].to_numpy()
+    if a.eb:
+        # 번들에 담을 k 는 **학습 전체**로 뽑는다 (추론 시점 규율).
+        # 학습 행의 EB 열은 위 루프에서 시즌별 <g 로 이미 만들어졌다.
+        a.ebp = eb_params(tr, np.ones(len(tr), bool), sc.EB_RATES)
+        print(f"  EB k = " + ", ".join(f"{r}:{a.ebp['k'][r]:.0f}"
+                                       for r in sc.EB_RATES), flush=True)
+    features = list(allf) + ctxf + acols
+    y = tr[ft.TARGET].to_numpy(np.float64)
+    if a.prune:
+        print(f"  중복 제거 비교 — 대조=가지치기 / 신규=원본", flush=True)
+    print(f"피처 {len(features)}개 (기본 {len(allf)} + ctx {len(ctxf)} + "
+          f"AS-OF {len(acols)})   {len(tr):,}행   {time.time()-t0:.0f}s")
+    print(f"  cur_n>0 비율 {float((tr['cur_logn_pitch'] > 0).mean()):.1%}")
+
+    # --- 편차 후처리 4축 ---
+    P = tr["pitcher_id"].to_numpy(np.int64)
+    BH = tr["batter_hand"].to_numpy(np.int64)
+    BB = tr["balls_before"].to_numpy(np.int64)
+    SS = tr["strikes_before"].to_numpy(np.int64)
+    OB = (tr["num_runners_on"].to_numpy(np.int64) > 0).astype(np.int64)
+    PH = P * 10 + BH
+    PHA = PH * 10 + (SS > BB).astype(np.int64)
+    AX = [(P, PH), (PH, PHA), (PHA, PHA * 100 + (BB * 4 + SS)), (PH, PH * 10 + OB)]
+
+    if a.skip_eval:
+        assert a.center is not None, "--skip-eval 은 --center 가 있어야 한다"
+        print(f"  홀드아웃/아핀 건너뜀 — center={a.center:.6f} 재사용", flush=True)
+        return finish(a, [tr], y, features, AX, ctx_pack, a.center,
+                      out_pkl, out_zip)
+
+    # --- 2024 홀드아웃: 대조 vs 신규, 그리고 클린 아핀용 적률 ---
+    m_tr, m_va = season < 2024, season == 2024
+    post = np.column_stack([
+        look(*nested_dev(p[m_tr], c[m_tr], y[m_tr], k), c[m_va])
+        for (p, c), k in zip(AX, KSH)]) @ WPOST
+    drop = (PRUNE_DUP if a.prune else
+            sc.NZ_COLS if a.nz else
+            sc.UC_COLS if a.uc else
+            sc.RX_COLS if a.rx else
+            sc.FORM_COLS if a.form else
+            sc.EB_COLS if a.eb else
+            sc.K2_COLS if a.k2 else
+            sc.LVL_COLS if a.lvl else
+            sc.CTX_COLS if a.ctx else sc.ASOF_COLS)
+    base_f = [c for c in features if c not in drop]
+    ref = f"대조 {len(base_f)}p" + (" (D=22회차)" if a.form else "")
+    new = f"신규 {len(features)}p"
+    P2 = {}
+    for lbl, fs in ((ref, base_f), (new, features)):
+        t = time.time()
+        mm = pipeline(fs, 42)
+        mm.fit(tr.loc[m_tr, fs], y[m_tr].astype(int))
+        P2[lbl] = mm.predict_proba(tr.loc[m_va, fs])[:, 1] + post
+        print(f"  {lbl} 학습 {time.time()-t:.0f}s", flush=True)
+    yv = y[m_va]
+    r0 = 1e5 * np.corrcoef(P2[ref], yv)[0, 1] ** 2
+    r1 = 1e5 * np.corrcoef(P2[new], yv)[0, 1] ** 2
+    print(f"\n2024 홀드아웃  대조 {r0:.1f}   신규 {r1:.1f}   배수 {r1/r0:.4f}")
+
+    # --- 클린 아핀 (§16) ---
+    print("\n=== 클린 아핀 (평가셋 정보 미사용) ===")
+    ms, rr = [], []
+    for f in (2022, 2023, 2024):
+        mt, mv = season < f, season == f
+        po = np.column_stack([
+            look(*nested_dev(p[mt], c[mt], y[mt], k), c[mv])
+            for (p, c), k in zip(AX, KSH)]) @ WPOST
+        mm = pipeline(features, 42)
+        mm.fit(tr.loc[mt, features], y[mt].astype(int))
+        pv = mm.predict_proba(tr.loc[mv, features])[:, 1] + po
+        ms.append(float(pv.mean()))
+        rr.append(float(y[mv].mean()))
+        print(f"  {f}  r={rr[-1]:.6f}  m={ms[-1]:.6f}  m-r={ms[-1]-rr[-1]:+.6f}",
+              flush=True)
+    d = float(np.mean(np.array(ms) - np.array(rr)))
+    seasons = np.array(sorted(np.unique(season)))
+    rate = np.array([float(y[season == s].mean()) for s in seasons])
+    sl, ic = np.polyfit(seasons[-3:], rate[-3:], 1)
+    r_hat = float(sl * 2025 + ic)
+    m_hat = r_hat + d
+    center = (r_hat - ALPHA * m_hat) / (1 - ALPHA)
+    print(f"\n  mean(m-r)={d:.6f}   r_hat={r_hat:.6f}   m_hat={m_hat:.6f}")
+    print(f"  alpha={ALPHA:.6f}   center={center:.6f}")
+    # 기준선 — --form 은 22회차 실측(1040.8656) 위에 곱한다. 22회차는 2024
+    # 배수의 78~87% 가 평가셋으로 넘어왔으므로(17-i) 그 구간도 같이 찍는다.
+    b0 = (1049.9226 if (a.k2 or a.eb) else 1044.7656 if a.lvl
+          else 1040.8656 if (a.form or a.ctx) else 955.64)
+    g = r1 / r0 - 1.0
+    print(f"  기대 LB  {b0:.4f} x {r1/r0:.4f} = **{b0*(1+g):.1f}**")
+    if a.form or a.ctx or a.lvl or a.k2 or a.eb:
+        print(f"  전이 78~87% 가정  {b0*(1+g*0.78):.1f} ~ {b0*(1+g*0.87):.1f}")
+    if not a.build:
+        print("\n(--build 를 주면 pkl/zip 을 만든다)")
+        return
+    return finish(a, [tr], y, features, AX, ctx_pack, center, out_pkl, out_zip)
+
+
+def finish(a, box, y, features, AX, ctx_pack, center, out_pkl, out_zip):
+    """전체 학습 -> 편차표 -> 번들 -> zip. `--skip-eval` 이 여기로 바로 온다.
+
+    **메모리** — 이 PC 는 가용 3GB 다. 전체 데이터(1,475,092행) 학습에서 세 번
+    조용히 죽었다 (홀드아웃 1.22M행은 통과한다). 봉우리를 세 군데서 낮춘다.
+
+      1. `box` 로 받아 즉시 pop 한다 -> 호출자 프레임이 원본을 안 붙잡는다
+      2. 번들에 필요한 `asof_prior` 를 **먼저** 뽑고 원본 DataFrame 을 버린다
+      3. 학습 행렬을 float32 로 내린다 (894MB -> 447MB). `border_count`=32 로
+         양자화되므로 경계가 달라지지 않는다
+    """
+    tr = box.pop()
+    pri = prior_tables(tr, np.ones(len(tr), bool))
+    Xtr = tr[features].copy()
+    # 범주형 3개는 문자열이다 (`top_bottom` = 'T'/'B' 등). 통째로 캐스팅하면
+    # ValueError 로 죽는다 — 수치 컬럼만 내린다.
+    num = [c for c in features if c not in ft.CAT_COLS]
+    Xtr[num] = Xtr[num].astype(np.float32)
+    del tr, box
+    print(f"  학습 행렬 {Xtr.shape} float32 "
+          f"({Xtr.memory_usage(deep=True).sum()/1e6:.0f}MB)", flush=True)
+
+    models = []
+    for s in range(42, 42 + a.seeds):
+        t = time.time()
+        mm = pipeline(features, s)
+        mm.fit(Xtr, y.astype(int))
+        models.append(mm)
+        print(f"  seed {s} 학습 {time.time()-t:.0f}s", flush=True)
+    del Xtr
+
+    (u1, t1), (uC, tC), (uN, tN), (u3, t3) = [
+        nested_dev(p, c, y, k) for (p, c), k in zip(AX, KSH)]
+    tab1 = {(int(k // 10), int(k % 10)): float(x) for k, x in zip(u1, t1)}
+    tabC = {}
+    for k, x in zip(uC, tC):
+        pid, hd, adv = int(k // 100), int((k // 10) % 10), int(k % 10)
+        for b in range(4):
+            for st in range(3):
+                if int(st > b) == adv:
+                    tabC[(pid, hd, b, st)] = float(x)
+    tabN = {}
+    for k, x in zip(uN, tN):
+        cn, rest = int(k % 100), k // 100
+        tabN[(int(rest // 100), int((rest // 10) % 10),
+              int(cn // 4), int(cn % 4))] = float(x)
+    tab3 = {}
+    for k, x in zip(u3, t3):
+        pid, hd, ob = int(k // 100), int((k // 10) % 10), int(k % 10)
+        for nr in ([0] if ob == 0 else [1, 2, 3]):
+            tab3[(pid, hd, nr)] = float(x)
+    CK = ["pitcher_id", "batter_hand", "balls_before", "strikes_before"]
+    b = {"models": models, "alpha": float(ALPHA), "center": float(center),
+         "features": features, "spec": [f"cat-s{s}" for s in
+                                        range(42, 42 + a.seeds)],
+         "shift": None, "detrend": None, "ctx": ctx_pack,
+         "asof_prior": pri,
+         **({"eb": a.ebp} if a.eb else {}),
+         "platoon": [
+             {"w": float(WPOST[0]), "cols": ["pitcher_id", "batter_hand"],
+              "table": tab1, "note": "dev(투수x타자손|부모=투수), n/(n+300)"},
+             {"w": float(WPOST[1]), "cols": CK, "table": tabC,
+              "note": "dev(플래툰x투수유리|부모=플래툰), n/(n+2000), 12칸 전개"},
+             {"w": float(WPOST[2]), "cols": CK, "table": tabN,
+              "note": "dev(플래툰x투수유리x카운트|부모=플래툰x투수유리), n/(n+800)"},
+             {"w": float(WPOST[3]),
+              "cols": ["pitcher_id", "batter_hand", "num_runners_on"],
+              "table": tab3, "note": "dev(플래툰x주자유무|부모=플래툰), n/(n+2000)"}],
+         "note": (f"catboost x{a.seeds}; AS-OF 현재상태 분해 {len(a.acols)}개 "
+                  f"in-model; p += 편차4 -> center+{ALPHA}*(p-center) -> clip. "
+                  f"walk-forward 배수 1.3968 (min 1.0322, 3/3). "
+                  f"클린 아핀 (r_hat 추세외삽 + m_hat 워크포워드), 평가셋 정보 미사용")}
+    joblib.dump(b, out_pkl, compress=3)
+    print(f"\n저장 {out_pkl} ({os.path.getsize(out_pkl)/1e6:.1f} MB)")
+    r = subprocess.run(
+        [sys.executable, os.path.join(ROOT, "make_submit.py"),
+         "--model", os.path.relpath(out_pkl, ROOT),
+         "--requirements", "requirements_cat.txt",
+         "--out", os.path.relpath(out_zip, ROOT)],
+        cwd=ROOT, capture_output=True, text=True, encoding="utf-8",
+        errors="replace", env={**os.environ, "PYTHONIOENCODING": "utf-8"})
+    print(r.stdout[-800:] if r.returncode == 0
+          else r.stdout[-400:] + r.stderr[-800:])
+    r.check_returncode()
+
+
+if __name__ == "__main__":
+    main()

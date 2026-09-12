@@ -1,0 +1,26 @@
+{
+  "protocol": "V120_RECENT_ANCHOR_SPREAD_V1",
+  "hypothesis": "A row-local recent-game pitcher anchor separates current command level from champion context resolution, allowing a frozen spread correction without test-batch calibration.",
+  "anchor_modes": ["prev1", "mean135", "weighted135"],
+  "routes": ["ALL", "R_CORE", "R_CORE_R_ANCHOR"],
+  "alpha_min": 0.85,
+  "alpha_max": 1.15,
+  "source_gate": {
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "active_domain_gain_min": 0.0
+  },
+  "locked_gate": {
+    "gain_min": 5.0,
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "active_domain_gain_min": 0.0
+  },
+  "restrictions": {
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_for_selection": false,
+    "full_2024_used_for_recipe_selection": false,
+    "row_local_inference": true
+  }
+}

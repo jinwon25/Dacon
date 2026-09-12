@@ -1,0 +1,24 @@
+{
+  "protocol": "V111_V104_INACTIVE_ARCHITECTURE_ROUTE_V1",
+  "hypothesis": "Apply the frozen cross-architecture correction only where the source-defined v104 majority-two mask leaves the validated parent unchanged.",
+  "correction_scope": "v104_inactive",
+  "alpha_cap": 1.0,
+  "family_alpha": [0.0, 0.25, 0.5, 0.75, 1.0],
+  "bootstrap_resamples": 3000,
+  "block_size": 2000,
+  "seed": 20260822,
+  "selection_gate": {
+    "minimum_positive_month_fraction": 0.75,
+    "worst_month_gain_strictly_above": -5.0,
+    "minimum_domain_gain": 0.0,
+    "reality_check_alpha": 0.1
+  },
+  "restrictions": {
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_for_recipe_or_weight": false,
+    "v104_recipe_retuned": false,
+    "locked_2024_used_for_alpha_or_scope": false,
+    "row_local_inference": true
+  }
+}

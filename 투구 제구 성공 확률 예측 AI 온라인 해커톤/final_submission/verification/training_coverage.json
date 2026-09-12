@@ -1,0 +1,92 @@
+{
+  "scope": "Runtime component families of submitted v345; not a claim of complete fresh training",
+  "reference_inference_sha256": "d44578dc50220ce84dd4b8489bbae680afdcf93f931ed4236287b5a9e6f5aaaa",
+  "components": [
+    {
+      "name": "v124 and v124_bridge parent ensembles",
+      "fresh_training_verified": false,
+      "verified_subcomponents": [
+        "strict EXP-021: all six fresh stages; nine native assets exactly match",
+        "initial V2 OOF: four folds match numeric references within 4.44e-16",
+        "legacy CatBoost and endpoint tables: native sections exact",
+        "initial Futures CatBoost and feature spec: native sections exact",
+        "corrected residual LightGBM, feature spec and endpoint tables: native assets exact",
+        "advanced residual LightGBM and feature spec: native assets exact",
+        "base LightGBM, FeatureBuilder state and 100-tree RandomForest: native predictive state exact",
+        "TrackMan LightGBM, feature spec and official TrackMan-derived pitcher profiles: native assets exact",
+        "recency half-life 1.0 RandomForest: all 100 trees exact",
+        "recent-exact LightGBM, two Ridge models, preprocessing state and spec: native assets exact from frozen official-train OOF inputs",
+        "v14 anchor Ridge, F-trend LightGBM and preprocessing state: native assets exact; later v124 doses separated",
+        "joint state/mode: 12 LightGBM models, preprocessing state and spec exact",
+        "v20 PFD LightGBM models and embedded EB state exact from frozen official-data-derived OOF/alignment; later v124 doses separated",
+        "v25 post-break anchor sklearn pipeline exact from frozen selection summary; later v124 dose separated",
+        "v21 context EB tables exact from frozen official-train joint OOF; later v124 dose separated",
+        "v22 model-free low-variance calibration state exact; later v124 dose separated",
+        "v56 shared-horizon FM, two v104 R-FM models and paired conditional/baseline LightGBM assets: freshly trained from official data plus hash-frozen official-train OOF inputs; both submitted parent trees match exactly"
+      ],
+      "evidence": ["strict_fresh_fit.json", "initial_oof_fresh_fit.json", "legacy_fresh_fit.json", "futures_initial_fresh_fit.json", "corrected_fresh_fit.json", "advanced_fresh_fit.json", "parent_base_training.json", "parent_base_fresh_fit.json", "parent_trackman_training.json", "parent_trackman_fresh_fit.json", "parent_recency_rf_training.json", "parent_recency_rf_fresh_fit.json", "parent_recent_exact_training.json", "parent_recent_exact_fresh_fit.json", "parent_v14_training.json", "parent_v14_fresh_fit.json", "parent_joint_state_training.json", "parent_joint_state_fresh_fit.json", "parent_v20_training.json", "parent_v20_fresh_fit.json", "parent_v21_training.json", "parent_v21_fresh_fit.json", "parent_v22_training.json", "parent_v22_fresh_fit.json", "parent_v25_training.json", "parent_v25_fresh_fit.json", "parent_v104_native_fit.json"],
+      "remaining": "Some upstream OOF/intermediate builders and the later quadratic dose-selection/whole v124-v124_bridge assembly have not been rerun as one uninterrupted fresh fit. The v56/v104 FM and conditional assets themselves are exact; their seven packaged inputs are clearly identified frozen official-train derivatives."
+    },
+    {
+      "name": "H1 three-seed CatBoost",
+      "fresh_training_verified": true,
+      "evidence": "h1_fresh_fit.json",
+      "scope": "Saved model trees and sampled prediction parity, with fixed alpha and center."
+    },
+    {
+      "name": "C3 sign agreement",
+      "fresh_training_verified": true,
+      "evidence": ["c3_oof_training.json", "c3_fresh_fit.json"],
+      "scope": "Five new H1 OOF fits, followed by table refit using the deployed v148 consensus metadata. All table values exactly match."
+    },
+    {
+      "name": "fallback XGBoost",
+      "fresh_training_verified": false,
+      "evidence": ["xgb_training_precision.json", "xgb_fresh_fit.json", "xgb_final_sensitivity.json"],
+      "scope": "On 253507 pseudo-2025 rows built from official 2024 contexts and frozen closing ASOF snapshots, swapping only the booster changed 65251 final outputs; final MAE 0.000202543 and RMS 0.000761740. This is a development-contaminated sensitivity audit, not a Private-score estimate.",
+      "remaining": "CPU fit differs. Original CUDA environment and exact booster parity are unavailable; matching split-boundary support and small final-ensemble sensitivity are supporting evidence, not proof of exact CUDA reproduction."
+    },
+    {
+      "name": "recent futures five-seed CatBoost",
+      "fresh_training_verified": true,
+      "evidence": "futures_fresh_fit.json",
+      "scope": "All five native model sections and all 30010 training-row predictions match. Fixed recipe not reselected."
+    },
+    {
+      "name": "futures and anchor lowrank lookup",
+      "fresh_training_verified": true,
+      "conditional_refit_verified": true,
+      "arrays_compared": 11,
+      "arrays_equal": true,
+      "evidence": ["wave0_fresh_fit.json", "lookup_refit_parity.json"],
+      "scope": "All five wave0 folds were retrained, then all 11 lookup arrays matched exactly."
+    },
+    {
+      "name": "player transition lookup",
+      "fresh_training_verified": true,
+      "conditional_refit_verified": true,
+      "arrays_compared": 9,
+      "arrays_equal": false,
+      "max_abs": 3.469446951953614e-18,
+      "evidence": ["wave0_fresh_fit.json", "lookup_refit_parity.json"],
+      "scope": "All five wave0 folds were retrained; eight arrays exact, corrections within floating-point roundoff."
+    },
+    {
+      "name": "workload H1",
+      "fresh_training_verified": true,
+      "evidence": ["workload_training.json", "workload_fresh_fit.json", "h1_fresh_fit.json"],
+      "scope": "Three new full fits, 101 features; all trees, borders and leaf values exact, 32773-row prediction maximum difference zero. Fixed H1 preprocessing and calibration retained."
+    },
+    {
+      "name": "Beta cell and final assembly",
+      "fresh_training_verified": true,
+      "conditional_refit_verified": true,
+      "evidence": "rebuild.json",
+      "scope": "Beta component refit and v343-to-v345 assembly exactly rebuild the submitted archive. Upstream v343 model gaps are tracked as their own component rows."
+    }
+  ],
+  "notes": [
+    "Unknown or unverified is not equivalent to a rules violation.",
+    "Final approval and any accepted numerical reproduction tolerance belong to the organizer."
+  ]
+}

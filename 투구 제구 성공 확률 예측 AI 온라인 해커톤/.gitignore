@@ -1,0 +1,88 @@
+# DACON-provided data: each registered teammate downloads it independently.
+data/*
+!data/README.md
+baseline_submit/
+
+# Generated models, OOF predictions, caches, and submission archives.
+artifacts/*
+!artifacts/README.md
+model/
+output/
+submit*.zip
+submissions/**/*.zip
+# Track only reviewed, hash-pinned release archives listed in the repository audit allowlist.
+*.npy
+*.npz
+*.parquet
+*.feather
+*.joblib
+*.pkl
+*.pickle
+*.cbm
+*.onnx
+*.pt
+*.pth
+*.ckpt
+
+# Secrets. Track only the key-name template.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python and test caches.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Editors and operating-system files.
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+
+# Logs and temporary files.
+*.log
+tmp/
+.cache/
+
+# Phase 3 reproduction package: track the code and reports, not the frozen
+# training checkpoints (297MB). Teammates receive those through the private
+# artifact channel described in final_submission/README.md.
+final_submission/code/reproduction_inputs/
+final_submission/code/lineage_inputs/
+final_submission/code/data/*
+!final_submission/code/data/README.md
+# Frozen lookup the reproduction package needs; the repository copy under
+# src/team_assets/ is pinned by the same hash in scripts/audit_repository.py.
+
+# Internal audit evidence bundle: kept locally, not in history.
+research/reports/internal_audit_20260906/*.zip
+# Public repository: never track DACON-derived data.
+#
+# The competition forbids redistributing the provided data, and these files
+# carry it in derived form - OOF arrays hold the train target and player ids,
+# the submission archives embed per-player count/success priors, and the
+# linkage tables reconstruct the pitcher and game id mapping. They stay local
+# and reach official teammates through the private channel in
+# docs/ARTIFACT_HANDOFF.md.
+artifacts/oof_champion_*/
+artifacts/standalone_champion_*/
+submissions/releases/
+**/fallback_lookups.joblib
+final_submission/code/fallback_xgb/pitcher_map.csv
+final_submission/code/h1/pitcher_id_map.csv
+research/reports/top1100/player_mapping_by_origin.csv
+research/reports/top1100/alignment_game_candidates.csv
+research/reports/trackman_linkage.csv
+research/reports/trackman_domain_linkage.csv
+research/reports/trackman_command_proxy_census_*/origin_physical_profiles.csv

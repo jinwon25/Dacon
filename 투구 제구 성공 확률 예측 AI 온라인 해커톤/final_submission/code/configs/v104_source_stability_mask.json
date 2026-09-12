@@ -1,0 +1,31 @@
+{
+  "protocol": "V104_SOURCE_STABILITY_MASK_V1",
+  "hypothesis": "Apply the frozen v103 correction only in context levels whose paired gain is positive at both source origins, using no 2024 labels to construct the mask.",
+  "minimum_group_rows_per_source": 200,
+  "policies": [
+    "count_only",
+    "history_only",
+    "platoon_only",
+    "count_history",
+    "count_platoon",
+    "history_platoon",
+    "all_three",
+    "majority_two"
+  ],
+  "bootstrap_resamples": 3000,
+  "block_size": 2000,
+  "seed": 20260822,
+  "selection_gate": {
+    "minimum_positive_month_fraction": 0.75,
+    "worst_month_gain_strictly_above": -5.0,
+    "minimum_domain_gain": 0.0,
+    "reality_check_alpha": 0.1
+  },
+  "restrictions": {
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_for_selection": false,
+    "locked_2024_used_for_policy_selection": false,
+    "row_local_inference": true
+  }
+}

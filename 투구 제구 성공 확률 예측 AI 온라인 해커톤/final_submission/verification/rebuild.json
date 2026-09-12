@@ -1,0 +1,112 @@
+{
+    "protocol":  "V345_BUILD_TRANSITION_WORKLOAD_BETA_PACKAGE_V1",
+    "status":  "built_and_runtime_audited",
+    "output_zip":  "artifacts/integrated_rebuild_20260905_01/submit_v345.zip",
+    "output_sha256":  "D44578DC50220CE84DD4B8489BBAE680AFDCF93F931ED4236287B5A9E6F5AAAA",
+    "output_bytes":  101139163,
+    "member_count":  191,
+    "crc_passed":  true,
+    "source_zip":  "code/reproduction_inputs/v343.zip",
+    "source_zip_sha256":  "165C074AF6E37C995EC7CAEAB1AAD195EB2C0B03E996036BC96F0BE69FD2A7C9",
+    "bundle_sha256":  "FAAAA5F5E28707CF8438A16E6E888C330F1C722B1446EBEF2E5E434D95E09BC2",
+    "historical_beta_runtime_parity":  {
+                                           "prediction_year":  2024,
+                                           "rows":  253507,
+                                           "max_abs":  0.0,
+                                           "status":  "pass"
+                                       },
+    "bundle":  {
+                   "calibration_year":  2024,
+                   "concentration":  50.0,
+                   "weights":  [
+                                   0.6997719891516873,
+                                   0.2307766581077912,
+                                   0.0,
+                                   0.038037409805836454,
+                                   0.03141394293468516
+                               ],
+                   "candidate_names":  [
+                                           "pitcher_season_posterior",
+                                           "batter_season_posterior",
+                                           "previous_season_game_type_prior",
+                                           "pitcher_career_rate",
+                                           "pitcher_prev5_game_rate"
+                                       ],
+                   "pitcher_snapshots":  792,
+                   "batter_snapshots":  830
+               },
+    "recipe":  {
+                   "parent":  "v343 transition + three-seed workload H1",
+                   "increment":  "frozen v337 Beta-Binomial cell direction",
+                   "cell":  "R_CORE|DEVELOPING|MIXED",
+                   "beta_weight":  0.1,
+                   "route_or_weight_retuned":  false
+               },
+    "local_metrics_vs_v335":  {
+                                  "gain":  3.390593124685779,
+                                  "candidate_brier":  0.24726530609262104,
+                                  "baseline_brier":  0.24727377602910464,
+                                  "active_gain":  4.813239794376727,
+                                  "active_rows":  178729,
+                                  "mean_abs_shift_active":  0.0017356012606943331,
+                                  "positive_month_fraction":  0.75,
+                                  "worst_month_gain":  -25.41014406955975,
+                                  "months":  [
+                                                 {
+                                                     "month":  3,
+                                                     "n_rows":  9220,
+                                                     "gain":  7.838144262806281
+                                                 },
+                                                 {
+                                                     "month":  4,
+                                                     "n_rows":  29436,
+                                                     "gain":  11.734675459362734
+                                                 },
+                                                 {
+                                                     "month":  5,
+                                                     "n_rows":  30382,
+                                                     "gain":  3.353750470103023
+                                                 },
+                                                 {
+                                                     "month":  6,
+                                                     "n_rows":  31116,
+                                                     "gain":  -0.7243135241697019
+                                                 },
+                                                 {
+                                                     "month":  7,
+                                                     "n_rows":  24681,
+                                                     "gain":  10.947719640674904
+                                                 },
+                                                 {
+                                                     "month":  8,
+                                                     "n_rows":  29446,
+                                                     "gain":  1.055780531344908
+                                                 },
+                                                 {
+                                                     "month":  9,
+                                                     "n_rows":  23922,
+                                                     "gain":  3.145284112771037
+                                                 },
+                                                 {
+                                                     "month":  10,
+                                                     "n_rows":  526,
+                                                     "gain":  -25.41014406955975
+                                                 }
+                                             ],
+                                  "full_row_rms_shift":  0.0020015242869967915,
+                                  "increment_correlation":  -0.05542332217639845,
+                                  "gain_increment_vs_v343":  0.4461187599381629
+                              },
+    "restrictions":  {
+                         "official_train_only":  true,
+                         "frozen_v343":  true,
+                         "frozen_beta_cell_and_weight":  true,
+                         "test_csv_read":  false,
+                         "test_aggregate_used":  false,
+                         "public_score_used_for_selection":  false,
+                         "row_local_inference":  true,
+                         "beta_pool_fitted_on_2024_only":  true,
+                         "terminal_snapshots_fit_through_2024":  true,
+                         "runtime_audit_pending":  false
+                     }
+}

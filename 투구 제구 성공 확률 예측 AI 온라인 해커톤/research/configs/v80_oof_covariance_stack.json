@@ -1,0 +1,31 @@
+{
+  "protocol": "V80_OOF_COVARIANCE_STACK_V1",
+  "common_candidates": [
+    "base_v17",
+    "base_v19",
+    "base_v20",
+    "base_v21",
+    "v26_exact_diversity_shift",
+    "v49_temporal_stack_shift"
+  ],
+  "max_total_candidate_weight": 0.25,
+  "ridge": 1e-06,
+  "max_group_brier_increase": 0.0,
+  "min_group_rows": 1000,
+  "nonzero_weight_tolerance": 1e-08,
+  "gates": {
+    "gain_strictly_positive": true,
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "minimum_domain_gain_min": 0.0
+  },
+  "transitions": [
+    "late23_to_full24",
+    "early24_to_late24"
+  ],
+  "same_axis_headroom_is_diagnostic_only": true,
+  "test_csv_read": false,
+  "test_aggregate_used": false,
+  "public_score_used_for_weights": false,
+  "eligible_for_packaging_requires_bootstrap_and_reality_check": true
+}

@@ -1,0 +1,9 @@
+catboost==1.2.8
+lightgbm==4.6.0
+xgboost==3.2.0
+torch==2.7.1
+joblib==1.5.1
+numpy==2.2.6
+pandas==2.2.3
+scipy==1.15.3
+scikit-learn==1.6.1

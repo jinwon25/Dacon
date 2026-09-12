@@ -1,0 +1,22 @@
+{
+  "protocol": "V109_V104_PUBLIC_PROBE_V1",
+  "parent": "artifacts/standalone_champion_1161/standalone_champion_1161.zip",
+  "candidate": "v104 source-stability majority-two mask over v103 fixed union",
+  "recipe": {
+    "route": "R_CORE",
+    "fm_rank": 16,
+    "fm_policy": "source_mean",
+    "fm_eta": 0.1,
+    "conditional_eta": 0.1,
+    "mask_policy": "majority_two",
+    "safe_count": ["0-0", "1-1", "1-2", "2-0", "3-1", "3-2"],
+    "safe_history": ["1000+", "200-999", "30-199"],
+    "safe_platoon": ["1-1", "2-1", "2-2"],
+    "final_source_windows": ["full_2023", "late_2024"]
+  },
+  "authorization": "User explicitly authorized one automatic DACON public probe on 2026-08-22 despite local promotion-gate failure.",
+  "known_risk": "full-2024 crossed bootstrap p05 and late-2024 month gate are negative; this is a leaderboard probe, not a locally promoted model",
+  "test_aggregate_used": false,
+  "row_local_inference": true,
+  "public_score_used_for_recipe": false
+}

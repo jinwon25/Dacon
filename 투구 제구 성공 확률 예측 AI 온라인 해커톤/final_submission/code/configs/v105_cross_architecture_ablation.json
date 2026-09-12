@@ -1,0 +1,35 @@
+{
+  "protocol": "V105_CROSS_ARCHITECTURE_ABLATION_V1",
+  "hypothesis": "Paired conditional-minus-baseline prediction deltas cancel architecture-specific level calibration; agreement between LightGBM and MLP deltas isolates portable baseball context resolution.",
+  "audit_years": [2022, 2023, 2024],
+  "conditional_columns": [
+    "prior_pitcher_rate",
+    "prior_pitcher_n",
+    "prior_hand_rate",
+    "prior_hand_dev",
+    "prior_hand_n",
+    "prior_hand_reliability",
+    "prior_count_rate",
+    "prior_count_dev",
+    "prior_count_n",
+    "prior_count_reliability"
+  ],
+  "policies": ["mlp_only", "mean", "sign_mean", "sign_min"],
+  "eta_cap": 0.25,
+  "bootstrap_resamples": 3000,
+  "block_size": 2000,
+  "seed": 20260822,
+  "selection_gate": {
+    "minimum_positive_month_fraction": 0.75,
+    "worst_month_gain_strictly_above": -5.0,
+    "minimum_domain_gain": 0.0,
+    "reality_check_alpha": 0.1
+  },
+  "restrictions": {
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_for_selection": false,
+    "locked_2024_used_for_policy_selection": false,
+    "row_local_inference": true
+  }
+}

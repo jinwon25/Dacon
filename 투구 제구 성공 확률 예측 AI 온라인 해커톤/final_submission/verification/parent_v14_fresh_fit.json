@@ -1,0 +1,71 @@
+{
+  "component": "v14_refinement",
+  "reference_inference_sha256": "d44578dc50220ce84dd4b8489bbae680afdcf93f931ed4236287b5a9e6f5aaaa",
+  "candidate_files_sha256": {
+    "v14_anchor_ridge.joblib": "7cb3388b40936431167737322a6910fa10230efcae995144e77b9fe7ca235b82",
+    "v14_f_trend_lgb.txt": "f26a0dc5fe11c472d90f0cec7ae5cf9a6630ccfef944792d5fb711072fd31c6b",
+    "v14_refinement_preprocess.joblib": "c0d5420160a3027bdab29e4fe038ecdff766793e0f07f7bf5179dea5e7d6645e",
+    "v14_refinement_spec.json": "82e1ab1cb6cbb9e366e8bdd8f43cbd08845fae141a091983729b67f9cfcadcbd"
+  },
+  "native_assets": {
+    "v14_anchor_ridge.joblib": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "v14_f_trend_lgb.txt": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "v14_refinement_preprocess.joblib": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "v14_refinement_spec.json": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    }
+  },
+  "native_model_and_state_parity": true,
+  "final_ensemble_doses_excluded_from_model_fit_comparison": {
+    "anchor_weight": {
+      "submitted": 0.2765,
+      "initial_fit": 0.2
+    },
+    "f_trend_alpha": {
+      "submitted": 0.207375,
+      "initial_fit": 0.15
+    }
+  },
+  "assembly_annotations_excluded": {
+    "candidate": {
+      "submitted": "submit_v14",
+      "initial_fit": "v14_reliability_anchor_and_f_trend_v1"
+    },
+    "selection_rule": {
+      "submitted": "three-transition conservative F trend; three-transition high-reliability anchor gate",
+      "initial_fit": "anchor gate positive on 2021->2022, 2022->2023, 2023->2024; F alpha=.15 maximises three-transition minimum"
+    },
+    "v124_public_quadratic_stack": {
+      "submitted": {
+        "protocol": "V124_PUBLIC_QUADRATIC_STACK_V1",
+        "axis": "v17_v14_domain_components",
+        "selected_scale_or_eta": 1.3825,
+        "selection_source": "official sequential Public deltas plus strict-forward 2023-to-2024 OOF Brier curvature; no evaluation-row aggregate",
+        "row_local_inference": true,
+        "test_aggregate_used": false
+      },
+      "initial_fit": null
+    }
+  },
+  "serialization_defaults_excluded": {},
+  "whole_parent_ensemble_fresh_fit": false,
+  "private_score_recomputed": false
+}

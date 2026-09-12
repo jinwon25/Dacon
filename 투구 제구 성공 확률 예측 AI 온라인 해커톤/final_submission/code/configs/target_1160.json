@@ -1,0 +1,22 @@
+{
+  "target_public_score": 1160.0,
+  "champion_submission": "submit_v20.zip",
+  "champion_public_score": 1151.472428719,
+  "champion_submission_id": 1534122,
+  "required_public_gain": 8.527571281,
+  "rank_snapshot": 12,
+  "daily_submissions_remaining": 1,
+  "candidate_policy": {
+    "frozen_parent": "submit_v20.zip",
+    "minimum_positive_forward_folds": 3,
+    "minimum_positive_month_fraction": 0.75,
+    "minimum_resampling_improvement_probability": 0.95,
+    "require_positive_all_domains": true,
+    "allow_public_weight_tuning": false
+  },
+  "notes": [
+    "v20 improved Public by 7.3206223437 over v19 but reached only 51.37% of its latest-year local gain.",
+    "The final daily slot is reserved for a signal orthogonal to v20 with predeclared forward validation.",
+    "Do not retune v20 lookup or PFD weights against submission 1534122."
+  ]
+}

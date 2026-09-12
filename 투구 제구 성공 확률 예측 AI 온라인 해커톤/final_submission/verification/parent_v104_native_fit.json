@@ -1,0 +1,181 @@
+{
+  "protocol": "PARENT_V56_V104_NATIVE_FIT_AUDIT_V1",
+  "reference_zip_sha256": "D44578DC50220CE84DD4B8489BBAE680AFDCF93F931ED4236287B5A9E6F5AAAA",
+  "roots": {
+    "model/v124/model": {
+      "parent/v56_fm/vocabularies.json": {
+        "candidate_bytes": 12050,
+        "reference_bytes": 12050,
+        "candidate_sha256": "A6463E51F45309B548D4FD15B87EE3020F034FAEBE695ACF72500243DEE3DD57",
+        "reference_sha256": "A6463E51F45309B548D4FD15B87EE3020F034FAEBE695ACF72500243DEE3DD57",
+        "byte_identical": true
+      },
+      "parent/v56_fm/metadata.json": {
+        "candidate_bytes": 2970,
+        "reference_bytes": 2970,
+        "candidate_sha256": "A9F9CEAB0EA1933D540B6B06D0F4750DC34CC7F2B2AE9826DA54402D2D0CE630",
+        "reference_sha256": "A9F9CEAB0EA1933D540B6B06D0F4750DC34CC7F2B2AE9826DA54402D2D0CE630",
+        "byte_identical": true
+      },
+      "parent/v56_fm/embeddings.npz": {
+        "keys_equal": true,
+        "array_equal": true,
+        "max_abs": 0.0
+      },
+      "r_fm/older/vocabularies.json": {
+        "candidate_bytes": 9746,
+        "reference_bytes": 9746,
+        "candidate_sha256": "34B282877D1BC5B0BEFD3C687A9176E78BFEBCFE687511CD6752E8D5F9634EF2",
+        "reference_sha256": "34B282877D1BC5B0BEFD3C687A9176E78BFEBCFE687511CD6752E8D5F9634EF2",
+        "byte_identical": true
+      },
+      "r_fm/older/metadata.json": {
+        "candidate_bytes": 1910,
+        "reference_bytes": 1910,
+        "candidate_sha256": "C7D3FCBEEEA685EB1467203996869A2A2BBBB1A608B70271F19F30D9F77314A9",
+        "reference_sha256": "C7D3FCBEEEA685EB1467203996869A2A2BBBB1A608B70271F19F30D9F77314A9",
+        "byte_identical": true
+      },
+      "r_fm/recent/vocabularies.json": {
+        "candidate_bytes": 8270,
+        "reference_bytes": 8270,
+        "candidate_sha256": "B0B8D5400D3A26CA499471CD3302E9C1ADE11A8FEA03BD8FAC318B6EE5D8E084",
+        "reference_sha256": "B0B8D5400D3A26CA499471CD3302E9C1ADE11A8FEA03BD8FAC318B6EE5D8E084",
+        "byte_identical": true
+      },
+      "r_fm/recent/metadata.json": {
+        "candidate_bytes": 1915,
+        "reference_bytes": 1915,
+        "candidate_sha256": "A2C9D581B3092C854F72C16F7CC3B96BB9DF1C5F6301740951F2B983FB35A895",
+        "reference_sha256": "A2C9D581B3092C854F72C16F7CC3B96BB9DF1C5F6301740951F2B983FB35A895",
+        "byte_identical": true
+      },
+      "conditional/feature_spec.json": {
+        "candidate_bytes": 10245,
+        "reference_bytes": 10245,
+        "candidate_sha256": "31576602805FDD7C16E257355A91E038A5536FF17C31AEC2EB829AB0DD6CD413",
+        "reference_sha256": "31576602805FDD7C16E257355A91E038A5536FF17C31AEC2EB829AB0DD6CD413",
+        "byte_identical": true
+      },
+      "conditional/baseline_lgb.txt": {
+        "candidate_bytes": 1890335,
+        "reference_bytes": 1890335,
+        "candidate_sha256": "A8EFFC58722B01C307F033D1D645BA8CAB897CC11DFC9D997FE1383010229909",
+        "reference_sha256": "A8EFFC58722B01C307F033D1D645BA8CAB897CC11DFC9D997FE1383010229909",
+        "byte_identical": true
+      },
+      "conditional/conditional_lgb.txt": {
+        "candidate_bytes": 1889778,
+        "reference_bytes": 1889778,
+        "candidate_sha256": "3A08210C93043AE3ED7C985971530CE91A3819CC5AB2B8EA2E31B2078CF54C86",
+        "reference_sha256": "3A08210C93043AE3ED7C985971530CE91A3819CC5AB2B8EA2E31B2078CF54C86",
+        "byte_identical": true
+      },
+      "conditional/bank.joblib": {
+        "candidate_bytes": 275257,
+        "reference_bytes": 275257,
+        "candidate_sha256": "C8B577A1273C014099121C997DF9BE703CE6B23D933A09AA3F18877AD9FCDC6B",
+        "reference_sha256": "C8B577A1273C014099121C997DF9BE703CE6B23D933A09AA3F18877AD9FCDC6B",
+        "byte_identical": true
+      },
+      "r_fm/older/embeddings.npz": {
+        "keys_equal": true,
+        "array_equal": true,
+        "max_abs": 0.0
+      },
+      "r_fm/recent/embeddings.npz": {
+        "keys_equal": true,
+        "array_equal": true,
+        "max_abs": 0.0
+      }
+    },
+    "model/v124_bridge/model": {
+      "parent/v56_fm/vocabularies.json": {
+        "candidate_bytes": 12050,
+        "reference_bytes": 12050,
+        "candidate_sha256": "A6463E51F45309B548D4FD15B87EE3020F034FAEBE695ACF72500243DEE3DD57",
+        "reference_sha256": "A6463E51F45309B548D4FD15B87EE3020F034FAEBE695ACF72500243DEE3DD57",
+        "byte_identical": true
+      },
+      "parent/v56_fm/metadata.json": {
+        "candidate_bytes": 2970,
+        "reference_bytes": 2970,
+        "candidate_sha256": "A9F9CEAB0EA1933D540B6B06D0F4750DC34CC7F2B2AE9826DA54402D2D0CE630",
+        "reference_sha256": "A9F9CEAB0EA1933D540B6B06D0F4750DC34CC7F2B2AE9826DA54402D2D0CE630",
+        "byte_identical": true
+      },
+      "parent/v56_fm/embeddings.npz": {
+        "keys_equal": true,
+        "array_equal": true,
+        "max_abs": 0.0
+      },
+      "r_fm/older/vocabularies.json": {
+        "candidate_bytes": 9746,
+        "reference_bytes": 9746,
+        "candidate_sha256": "34B282877D1BC5B0BEFD3C687A9176E78BFEBCFE687511CD6752E8D5F9634EF2",
+        "reference_sha256": "34B282877D1BC5B0BEFD3C687A9176E78BFEBCFE687511CD6752E8D5F9634EF2",
+        "byte_identical": true
+      },
+      "r_fm/older/metadata.json": {
+        "candidate_bytes": 1910,
+        "reference_bytes": 1910,
+        "candidate_sha256": "C7D3FCBEEEA685EB1467203996869A2A2BBBB1A608B70271F19F30D9F77314A9",
+        "reference_sha256": "C7D3FCBEEEA685EB1467203996869A2A2BBBB1A608B70271F19F30D9F77314A9",
+        "byte_identical": true
+      },
+      "r_fm/recent/vocabularies.json": {
+        "candidate_bytes": 8270,
+        "reference_bytes": 8270,
+        "candidate_sha256": "B0B8D5400D3A26CA499471CD3302E9C1ADE11A8FEA03BD8FAC318B6EE5D8E084",
+        "reference_sha256": "B0B8D5400D3A26CA499471CD3302E9C1ADE11A8FEA03BD8FAC318B6EE5D8E084",
+        "byte_identical": true
+      },
+      "r_fm/recent/metadata.json": {
+        "candidate_bytes": 1915,
+        "reference_bytes": 1915,
+        "candidate_sha256": "A2C9D581B3092C854F72C16F7CC3B96BB9DF1C5F6301740951F2B983FB35A895",
+        "reference_sha256": "A2C9D581B3092C854F72C16F7CC3B96BB9DF1C5F6301740951F2B983FB35A895",
+        "byte_identical": true
+      },
+      "conditional/feature_spec.json": {
+        "candidate_bytes": 10245,
+        "reference_bytes": 10245,
+        "candidate_sha256": "31576602805FDD7C16E257355A91E038A5536FF17C31AEC2EB829AB0DD6CD413",
+        "reference_sha256": "31576602805FDD7C16E257355A91E038A5536FF17C31AEC2EB829AB0DD6CD413",
+        "byte_identical": true
+      },
+      "conditional/baseline_lgb.txt": {
+        "candidate_bytes": 1890335,
+        "reference_bytes": 1890335,
+        "candidate_sha256": "A8EFFC58722B01C307F033D1D645BA8CAB897CC11DFC9D997FE1383010229909",
+        "reference_sha256": "A8EFFC58722B01C307F033D1D645BA8CAB897CC11DFC9D997FE1383010229909",
+        "byte_identical": true
+      },
+      "conditional/conditional_lgb.txt": {
+        "candidate_bytes": 1889778,
+        "reference_bytes": 1889778,
+        "candidate_sha256": "3A08210C93043AE3ED7C985971530CE91A3819CC5AB2B8EA2E31B2078CF54C86",
+        "reference_sha256": "3A08210C93043AE3ED7C985971530CE91A3819CC5AB2B8EA2E31B2078CF54C86",
+        "byte_identical": true
+      },
+      "conditional/bank.joblib": {
+        "candidate_bytes": 275257,
+        "reference_bytes": 275257,
+        "candidate_sha256": "C8B577A1273C014099121C997DF9BE703CE6B23D933A09AA3F18877AD9FCDC6B",
+        "reference_sha256": "C8B577A1273C014099121C997DF9BE703CE6B23D933A09AA3F18877AD9FCDC6B",
+        "byte_identical": true
+      },
+      "r_fm/older/embeddings.npz": {
+        "keys_equal": true,
+        "array_equal": true,
+        "max_abs": 0.0
+      },
+      "r_fm/recent/embeddings.npz": {
+        "keys_equal": true,
+        "array_equal": true,
+        "max_abs": 0.0
+      }
+    }
+  },
+  "all_passed": true
+}

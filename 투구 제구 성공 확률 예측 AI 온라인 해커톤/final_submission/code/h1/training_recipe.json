@@ -1,0 +1,27 @@
+{
+  "archive_sha256": "d338e9eef715c3cc84c0c5cd9c830925a93d85bf9518bfb0dcd0d0b052f995d6",
+  "catboost_version_from_model_metadata": "1.2.10",
+  "features": 82,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "iterations": 1200,
+  "depth": 8,
+  "learning_rate": 0.02,
+  "l2_leaf_reg": 100.0,
+  "border_count": 32,
+  "thread_count": 16,
+  "alpha": 1.09,
+  "center": 0.5854452601930041,
+  "center_policy": "frozen existing calibration parameter; not re-estimated at depth 8",
+  "required_versions": {
+    "catboost": "1.2.10",
+    "scikit-learn": "1.7.2",
+    "joblib": "1.5.3",
+    "pandas": "2.3.3",
+    "numpy": "2.2.6"
+  },
+  "full_fit_parity_verified": true
+}

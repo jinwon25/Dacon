@@ -1,0 +1,21 @@
+{
+  "params": {
+    "n_estimators": 1800,
+    "learning_rate": 0.006,
+    "max_depth": 10,
+    "min_child_weight": 6000,
+    "subsample": 0.7,
+    "colsample_bytree": 0.5,
+    "reg_lambda": 50.0,
+    "reg_alpha": 1.0,
+    "tree_method": "hist",
+    "device": "cuda:0",
+    "eval_metric": "logloss",
+    "verbosity": 0
+  },
+  "train_rows": 1475092,
+  "feature_count": 114,
+  "target": "control_success",
+  "history_rule": "official_train_only",
+  "test_rule": "row-local lookup only"
+}

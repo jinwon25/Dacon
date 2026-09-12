@@ -1,0 +1,14 @@
+{
+  "protocol": "V22_LOW_VARIANCE_FINAL_2025_V1",
+  "profile": "balanced",
+  "train_sha256": "D2081186B458B49F60B082BE480C273135833E15BA59A76D033AF28BCF8763FF",
+  "reference_model_read_during_fit": false,
+  "test_values_read_during_fit": false,
+  "private_score_recomputed": false,
+  "artifacts": {
+    "v22_low_variance_spec.json": {
+      "size_bytes": 941,
+      "sha256": "77F9B56DF3A4B3D5A265759387252F1E1E4C2239AD4E11697BDAB2A8AFF100DB"
+    }
+  }
+}

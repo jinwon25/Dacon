@@ -1,0 +1,36 @@
+{
+  "protocol": "V84_FIXED_V56_F_ROUTE_PROBE_V1",
+  "parent": "standalone_champion_1159 / Public 1159.33522",
+  "challenger": "v56 two-source shared pairwise FM",
+  "recipe": {
+    "rank": 16,
+    "risk": "source_domain_equal",
+    "route": "F",
+    "space": "logit",
+    "eta": 0.1,
+    "correction_clip": 0.25,
+    "source_periods": [2023, 2024],
+    "source_windows": ["full_2023", "late_2024"]
+  },
+  "recipe_frozen_before_2025": true,
+  "selection_evidence": {
+    "full_2022_gain": 0.1837,
+    "full_2022_worst_month_gain": -6.5616,
+    "late_2023_gain": 21.6487
+  },
+  "conditional_headroom_above_public_1159_oof_parent": {
+    "full_2024_gain": 1.0181164438556602,
+    "full_2024_positive_month_fraction": 0.75,
+    "full_2024_worst_month_gain": -4.712600377,
+    "full_2024_minimum_domain_gain": 0.0,
+    "late_2024_gain": 2.916551947110315,
+    "late_2024_positive_month_fraction": 1.0,
+    "late_2024_worst_month_gain": 0.359626435,
+    "late_2024_minimum_domain_gain": 0.0
+  },
+  "evidence_caveat": "The FM family has prior 2024 inspection and is diagnostic rather than pristine nested evidence.",
+  "public_probe_authorized_by_user": true,
+  "test_aggregate_used": false,
+  "row_local_inference": true,
+  "standalone_required": true
+}

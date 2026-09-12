@@ -1,0 +1,45 @@
+{
+  "protocol": "V148_OOF_CONTRACT_BUNDLE_V1",
+  "champion": "submit_v148.zip",
+  "champion_public_score": 1170.3014697177,
+  "deployed_weight_toward_v138": 0.15,
+  "formula": "clip(v142 + 0.15 * (v138 - v142), 0.001, 0.999)",
+  "alignment_verification": {
+    "rows": 253507,
+    "r_core_rows": 178729,
+    "late_rows": 76896,
+    "active_mask_equals_r_core": true,
+    "late_axis_consistent": true,
+    "raw_index_strictly_increasing": true
+  },
+  "reconstruction_verification": {
+    "audit_weight": 0.05,
+    "reproduced_gain_vs_v124": 7.198934146857027,
+    "published_gain_vs_v124": 7.198934146857027,
+    "reproduced_late_gain_vs_v124": 12.964273655657848,
+    "published_late_gain_vs_v124": 12.964273655657848,
+    "stored_axis_matches_formula": true
+  },
+  "champion_axis": {
+    "rows": 253507,
+    "mean": 0.4890477508784077,
+    "min": 0.31432442192787946,
+    "max": 0.6566340992882577,
+    "gain_vs_v124": 7.662252045514947,
+    "late_gain_vs_v124": 13.776562841982809
+  },
+  "files": {
+    "v148_full_2024.npz": {
+      "sha256": "972383D4DE481DCF8A27FCC497C9C88BC08FCD6612B08C4E3F0E37A824EDF2F9",
+      "bytes": 8168945
+    }
+  },
+  "restrictions": {
+    "contains_official_train_labels": true,
+    "contains_player_identifiers": true,
+    "official_team_members_only": true,
+    "public_redistribution_prohibited": true,
+    "third_party_artifacts_excluded": true,
+    "full_2024_is_development_contaminated": true
+  }
+}

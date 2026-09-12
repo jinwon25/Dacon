@@ -1,0 +1,35 @@
+{
+  "component": "trackman",
+  "reference_inference_sha256": "d44578dc50220ce84dd4b8489bbae680afdcf93f931ed4236287b5a9e6f5aaaa",
+  "candidate_files_sha256": {
+    "trackman_lgb_model.txt": "cacbb19d038be6ea389d733aca3dd12c2195e2e93c219902e544c078e6d748bc",
+    "trackman_feature_spec.json": "1ad2ed5d46fc76158419a58f9daee56810591876dd1b8b33ffad778ff6b3e8dd",
+    "trackman_pitcher_profiles.csv": "a7ef358327da132955e783e62622f48517b64c0f990cd6adf7dcac4d1492e304"
+  },
+  "native_assets": {
+    "trackman_lgb_model.txt": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "trackman_feature_spec.json": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "trackman_pitcher_profiles.csv": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    }
+  },
+  "native_model_and_state_parity": true,
+  "final_ensemble_doses_excluded_from_model_fit_comparison": {},
+  "assembly_annotations_excluded": {},
+  "serialization_defaults_excluded": {},
+  "whole_parent_ensemble_fresh_fit": false,
+  "private_score_recomputed": false
+}

@@ -1,0 +1,11 @@
+entity,stat,denominator,rate_column,n_checked,round_error_p999,round_error_max,count_min,count_max,negative_count_rows,count_gt_denominator_rows
+pitcher,success,asof_pitcher_n,asof_pitcher_success_rate,1474300,0.005821402000149881,0.007588000000396278,0.0,8708.0,0,0
+pitcher,reverse,asof_pitcher_n,asof_pitcher_reverse_rate,1474300,0.00583370100008472,0.007642000000032567,0.0,3550.0,0,0
+pitcher,middle,asof_pitcher_n,asof_pitcher_middle_rate,1474300,0.005822000000080152,0.007650000000012369,0.0,2565.0,0,0
+pitcher,ball,asof_pitcher_n,asof_pitcher_ball_rate,1474300,0.005815999999867927,0.007620999999744527,0.0,5329.0,0,0
+pitcher,strike,asof_pitcher_n,asof_pitcher_strike_rate,1474300,0.0058437010001508765,0.007599999999911233,0.0,7141.0,0,0
+batter,success,asof_batter_n,asof_batter_success_rate,1474262,0.005659999999807042,0.006919999999809079,0.0,7178.0,0,0
+batter,middle,asof_batter_n,asof_batter_middle_rate,1474262,0.005650000000059663,0.006891999999879772,0.0,2019.0,0,0
+pitchmix,fastball,asof_pitcher_pitchmix_n,asof_pitcher_fastball_rate,1474300,0.005869701000129798,0.007594000000608503,0.0,8638.0,0,0
+pitchmix,breaking,asof_pitcher_pitchmix_n,asof_pitcher_breaking_rate,1474300,0.005859000000191827,0.007671999999729451,0.0,6272.0,0,0
+pitchmix,offspeed,asof_pitcher_pitchmix_n,asof_pitcher_offspeed_rate,1474300,0.005696000000170898,0.007642999999916356,0.0,4704.0,0,0

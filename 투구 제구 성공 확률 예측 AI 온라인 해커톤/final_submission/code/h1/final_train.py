@@ -1,0 +1,471 @@
+r"""최종 모델 학습 — 시드 앙상블 + 과신 교정(shrinkage).
+
+배경: 이 문제는 신호가 희박해서(BSS ~0.006) 모델이 조금만 확신해도 Brier 가
+손해를 본다. 두 가지로 대응한다.
+
+1. 시드 앙상블 — 같은 설정을 여러 시드로 학습해 평균낸다. 개별 모델의 분산이
+   깎이면서 Brier 가 거의 항상 내려간다.
+2. 과신 교정 — 예측을 기준선 쪽으로 당긴다.  p' = c + a*(p - c)
+   최적 a 는 (p-c) 로 (y-c) 를 설명하는 회귀 기울기라 닫힌 해로 구해진다.
+   a < 1 이면 모델이 과신하고 있다는 뜻이다.
+
+저장 형식은 커스텀 클래스를 쓰지 않는다. 평가 서버에서 joblib.load 가 클래스를
+찾지 못해 실패하는 사고를 피하려고, sklearn 객체와 순수 dict 만 담는다.
+
+앙상블 구성은 두 가지로 지정한다. 기본은 한 모양(leaves 고정)을 시드만 바꿔
+쌓는 시드 앙상블이고, --spec 을 주면 잎 개수가 다른 모델을 섞는 다양성 앙상블이
+된다. 어느 쪽이 나은지는 ens_test.py 가 폴드에서 재 준다.
+
+사용법:
+    .\.venv\Scripts\python.exe final_train.py                 # 검증만
+    .\.venv\Scripts\python.exe final_train.py --seeds 5
+    .\.venv\Scripts\python.exe final_train.py --seeds 5 --save # 전체학습+저장
+    .\.venv\Scripts\python.exe final_train.py --spec "L7,L10,L15,L20,L31" --save
+    .\.venv\Scripts\python.exe final_train.py --spec "L10x3,L7,L15,L20,L31" --save
+"""
+import argparse
+import os
+import time
+
+import joblib
+import numpy as np
+import pandas as pd
+from sklearn.compose import ColumnTransformer
+from sklearn.ensemble import HistGradientBoostingClassifier
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OrdinalEncoder
+
+DATA_DIR = "./data"
+MODEL_PATH = "./model/rf.pkl"
+ID = "row_id"
+TARGET = "control_success"
+CAT_COLS = ["top_bottom", "game_type", "base_state"]
+VAL_SEASON = 2024
+RF_BASELINE = 415.57
+
+# 국면 이동 보정에 쓰는 피처. 직전 경기의 성공률이라 평가 시즌의 국면을 실시간
+# 으로 반영한다 — 6시즌 내내 실제 성공률을 표준편차 0.0031 로 맞혔다.
+# 실제 이동은 추론 시점(script.py)에 평가셋 전체 평균으로 수행한다.
+PREV1 = "asof_pitcher_prev1_game_success_rate"
+
+# 경력 통산 비율 — 국면이 바뀌어도 늦게 따라가는 것들. --detrend 를 주면 시즌별
+# 리그 평균을 빼서 "리그 대비 상대 위치"로 바꾼다. 구종 비율은 성향이지 성과가
+# 아니라 제외했다. sweep_shift.py 와 같은 목록을 쓴다.
+CUMUL = [
+    "asof_pitcher_success_rate", "asof_pitcher_reverse_rate",
+    "asof_pitcher_middle_rate", "asof_pitcher_ball_rate",
+    "asof_pitcher_strike_rate",
+    "asof_batter_success_rate", "asof_batter_middle_rate",
+]
+
+# 이름 -> (leaves, min_leaf, n_iter). ens_test.py 와 같은 표를 쓴다. 반복수는
+# 모양마다 다르다 — 잎이 적을수록 한 번의 갱신이 작아 더 많이 돌아야 한다.
+SHAPES = {
+    "L7":  (7,  1000, 1400),
+    "L10": (10, 1000, 1000),
+    "L15": (15, 1000,  860),
+    "L20": (20, 1000,  700),
+    "L31": (31,  200,  530),
+}
+
+# ---- 상황 조건부 Trackman 피처 (4-9) ----
+# 메인 데이터의 구종 피처는 투수별 전체 평균 하나뿐이다. trackman 에는 볼카운트와
+# 타자 좌우가 있어 "이 투수가 0-2 에서 변화구를 얼마나 던지는가"를 만들 수 있고,
+# 그 값은 행마다 달라지므로 pitcher_id 와 중복되지 않는다.
+TM_PATH = f"{DATA_DIR}/trackman_history.csv"
+ID_MAP_PATH = "pitcher_id_map.csv"
+MIN_CONF = 0.9
+MIN_COUNT_CELL = 30
+MIN_HAND_CELL = 50
+HAND = {2: "Right", 1: "Left"}      # 비율 대조로 확정 (투수 74:26)
+KINDS = ["breaking", "fastball", "offspeed"]
+COUNT_FEATS = [f"tmc_{k}_dev" for k in KINDS] + ["tmc_speed_dev", "tmc_n"]
+HAND_FEATS = [f"tmh_{k}_dev" for k in KINDS] + ["tmh_speed_dev", "tmh_n"]
+COUNT_KEY = ["pitcher_id", "balls_before", "strikes_before"]
+HAND_KEY = ["pitcher_id", "batter_hand"]
+
+
+def _summarize(df, keys, prefix, min_cell):
+    g = df.groupby(keys)
+    out = pd.DataFrame({f"{prefix}_n": g.size()})
+    for k in KINDS:
+        out[f"{prefix}_{k}"] = g["is_" + k].mean()
+    out[f"{prefix}_speed"] = g["rel_speed"].mean()
+    return out[out[f"{prefix}_n"] >= min_cell]
+
+
+def _deviate(tab, base, prefix, feats):
+    """조건부 값에서 그 투수의 전체 값을 뺀다.
+
+    전체 값은 이미 `asof_pitcher_*_rate` 로 모델에 있으므로, 편차가 곧 순수한
+    증분 정보다. 트리는 A-B 를 축 수직 분할로만 근사하니 직접 줘야 한다 (4-5).
+    """
+    tab = tab.join(base, on="pitcher_id")
+    for k in KINDS:
+        tab[f"{prefix}_{k}_dev"] = tab[f"{prefix}_{k}"] - tab[f"tmp_{k}"]
+    tab[f"{prefix}_speed_dev"] = tab[f"{prefix}_speed"] - tab["tmp_speed"]
+    return tab[feats]
+
+
+def load_trackman():
+    id_map = pd.read_csv(ID_MAP_PATH)
+    id_map = id_map[id_map["conf"] >= MIN_CONF]
+    tm = pd.read_csv(TM_PATH, encoding="utf-8-sig",
+                     usecols=["season", "pitcher_trackman_id", "pitch_type_group",
+                              "balls_before", "strikes_before", "batter_hand",
+                              "rel_speed"])
+    tm["pitcher_id"] = tm["pitcher_trackman_id"].map(
+        id_map.set_index("pitcher_trackman_id")["pitcher_id"])
+    tm = tm.dropna(subset=["pitcher_id"])
+    tm["pitcher_id"] = tm["pitcher_id"].astype(np.int64)
+    for k in KINDS:
+        tm["is_" + k] = (tm["pitch_type_group"] == k).astype(float)
+    return tm
+
+
+def ctx_tables(tm, upto):
+    """upto 미만 시즌의 trackman 으로 (카운트표, 좌우표) 를 만든다."""
+    past = tm[tm["season"] < upto]
+    if not len(past):
+        return None, None
+    base = _summarize(past, ["pitcher_id"], "tmp", 0)
+    cnt = _deviate(_summarize(past, COUNT_KEY, "tmc", MIN_COUNT_CELL),
+                   base, "tmc", COUNT_FEATS)
+    hnd = _deviate(_summarize(past, HAND_KEY, "tmh", MIN_HAND_CELL),
+                   base, "tmh", HAND_FEATS)
+    return cnt, hnd
+
+
+def attach_ctx_train(train, tm):
+    """학습 프레임에 시점 규칙을 지켜 상황 피처를 붙인다.
+
+    season S 의 행에는 S 미만 시즌의 trackman 만 쓴다. 평가(2025)도 2019~2024
+    전량을 쓰므로 학습과 추론의 피처 의미가 일치한다.
+    """
+    cparts, hparts = [], []
+    for S in sorted(train["season"].unique()):
+        cnt, hnd = ctx_tables(tm, S)
+        if cnt is None:
+            continue
+        cnt = cnt.reset_index(); cnt["season"] = S; cparts.append(cnt)
+        hnd = hnd.reset_index(); hnd["season"] = S; hparts.append(hnd)
+    cnt = pd.concat(cparts).set_index(COUNT_KEY[:1] + ["season"] + COUNT_KEY[1:])
+    hnd = pd.concat(hparts).set_index(HAND_KEY[:1] + ["season"] + HAND_KEY[1:])
+    out = train.copy()
+    out["_hand"] = out["batter_hand"].map(HAND)
+    out = out.join(cnt, on=["pitcher_id", "season", "balls_before",
+                            "strikes_before"])
+    out = out.join(hnd, on=["pitcher_id", "season", "_hand"])
+    return out.drop(columns=["_hand"])
+
+
+def pack_table(tab, keys):
+    """pkl 에 담을 순수 형태로 바꾼다. 커스텀 클래스를 만들지 않는다 (6-3)."""
+    t = tab.reset_index()
+    return {"keys": [list(map(str, k)) for k in t[keys].to_numpy()],
+            "cols": [c for c in t.columns if c not in keys],
+            "vals": t[[c for c in t.columns if c not in keys]]
+                    .to_numpy(dtype=float).tolist()}
+
+
+def parse_args():
+    p = argparse.ArgumentParser()
+    p.add_argument("--lr", type=float, default=0.02)
+    p.add_argument("--leaves", type=int, default=10)
+    p.add_argument("--min-leaf", type=int, default=1000)
+    p.add_argument("--l2", type=float, default=1.0)
+    p.add_argument("--n-iter", type=int, default=1000,
+                   help="곡선에서 찾은 최적 반복수 (조기종료 없이 고정)")
+    p.add_argument("--seeds", type=int, default=5)
+    p.add_argument("--spec", default=None,
+                   help="다양성 앙상블 구성. 쉼표로 모양 이름을 나열하고 "
+                        "'L10x3' 처럼 개수를 붙이면 그 모양을 시드만 바꿔 그만큼 "
+                        f"쌓는다. 쓸 수 있는 이름: {', '.join(SHAPES)}. "
+                        "주면 --leaves/--min-leaf/--n-iter/--seeds 는 무시된다.")
+    p.add_argument("--keep-ids", action="store_true",
+                   help="pitcher_id/batter_id 를 남긴다. 기본은 제거 — 점수는 "
+                        "같은데(+1.27, 노이즈 범위) 2025 신인 ID 노출을 피할 수 "
+                        "있다. 팀 ID 는 빼면 -20.45 라 항상 남긴다.")
+    p.add_argument("--calibrate", action="store_true",
+                   help="축소 보정을 실제로 적용한다. 기본은 측정만 하고 쓰지 않음 "
+                        "— 연도별 편차가 불안정해 전년도 보정을 옮기면 손해였다 "
+                        "(offset_test.py 참고).")
+    p.add_argument("--detrend", action="store_true",
+                   help="누적형 비율 피처에서 시즌별 리그 평균을 뺀다. 절대 수준 "
+                        "대신 리그 대비 상대 위치만 남아 국면 이동에 둔감해진다. "
+                        "추론에서도 같은 변환이 적용된다 (script.py).")
+    p.add_argument("--shift", action="store_true",
+                   help="🚫 규칙 위반. 켜지 말 것. 평가셋 전체의 prev1 평균으로 "
+                        "예측 중심을 옮기는데, data_description.md 5) 가 "
+                        "'평가 데이터 전체를 보고 만든 사후 보정값'을 금지한다. "
+                        "제출 불가이며 실험 재현용으로만 남겨둔다 (README 4-6).")
+    p.add_argument("--ctx-keep-n", action="store_true",
+                   help="🚫 권하지 않음. 표본 수 컬럼(tmc_n/tmh_n)을 피처로 "
+                        "남긴다. 이 값은 시즌에 따라 단조 증가하는 **시계**라 "
+                        "학습 기간 안에서만 유용하고 2025 에서는 포화된다. "
+                        "6회차 제출이 이걸 달고 나가 LB 가 떨어졌다 (4-9).")
+    p.add_argument("--no-ctx", action="store_true",
+                   help="상황 조건부 Trackman 피처를 끈다. 기본은 켬 — 2폴드 "
+                        "x 6시드에서 +29.31 (표준오차 4.08) 로 채택됐다 (4-9).")
+    p.add_argument("--drop-feats", default=None,
+                   help="쉼표로 구분한 피처 이름을 학습에서 뺀다. 추론은 pkl 의 "
+                        "features 목록을 따르므로 script.py 는 손댈 필요가 없다. "
+                        "실험 후보를 만들 때만 쓴다 — 기본값은 확정 설정 그대로다.")
+    p.add_argument("--model-out", default=MODEL_PATH,
+                   help="pkl 저장 경로. 기본은 model/rf.pkl 이다. 후보 모델을 "
+                        "만들 때 반드시 다른 경로를 줄 것 — 베이스라인 pkl 을 "
+                        "덮어쓰면 되돌릴 수 없다.")
+    p.add_argument("--save", action="store_true")
+    return p.parse_args()
+
+
+def build_members(args):
+    """앙상블 구성원 목록 -> [(라벨, leaves, min_leaf, n_iter, seed), ...]
+
+    --spec 이 없으면 예전 그대로 한 모양을 시드만 바꿔 쌓는다.
+    """
+    if not args.spec:
+        return [(f"s{seed}", args.leaves, args.min_leaf, args.n_iter, seed)
+                for seed in range(42, 42 + args.seeds)]
+
+    members = []
+    for token in args.spec.split(","):
+        token = token.strip()
+        name, _, count = token.partition("x")
+        if name not in SHAPES:
+            raise SystemExit(f"모르는 모양: {name!r} (가능: {', '.join(SHAPES)})")
+        leaves, min_leaf, n_iter = SHAPES[name]
+        for k in range(int(count) if count else 1):
+            # 같은 모양을 여러 개 쌓을 때만 시드를 벌린다. 모양이 다르면
+            # 시드가 같아도 예측이 충분히 갈린다.
+            members.append((f"{name}-s{42 + k}", leaves, min_leaf, n_iter, 42 + k))
+    if not members:
+        raise SystemExit("--spec 이 비어 있다")
+    return members
+
+
+def make_pipeline(args, features, leaves, min_leaf, n_iter, seed):
+    num_cols = [c for c in features if c not in CAT_COLS]
+    pre = ColumnTransformer([
+        ("cat", OrdinalEncoder(handle_unknown="use_encoded_value",
+                               unknown_value=-1), CAT_COLS),
+        ("num", "passthrough", num_cols),
+    ])
+    clf = HistGradientBoostingClassifier(
+        max_iter=n_iter,
+        learning_rate=args.lr,
+        max_leaf_nodes=leaves,
+        min_samples_leaf=min_leaf,
+        l2_regularization=args.l2,
+        early_stopping=False,
+        random_state=seed,
+    )
+    return Pipeline([("pre", pre), ("clf", clf)])
+
+
+def strip_rng(pipe):
+    """pkl 에서 numpy 난수 객체를 걷어낸다.
+
+    HGB 는 학습 중 피처 서브샘플링에 쓰려고 `_feature_subsample_rng`
+    (np.random.Generator, PCG64) 를 들고 있는데, 이게 그대로 직렬화된다.
+    numpy 는 이 객체의 피클 형식을 버전마다 바꿔 왔기 때문에, 평가 서버의
+    numpy 가 학습 환경보다 낮으면 로드가 통째로 실패한다.
+
+        ValueError: <class 'numpy.random._pcg64.PCG64'> is not a known
+                    BitGenerator module.
+
+    추론 경로는 `_predictors` 만 쓰므로 이 속성은 필요 없다. requirements.txt
+    의 numpy 핀과 별개로, 애초에 안 담는 쪽이 안전하다.
+    """
+    clf = pipe.named_steps["clf"]
+    if hasattr(clf, "_feature_subsample_rng"):
+        del clf._feature_subsample_rng
+    return pipe
+
+
+def score_of(y, p, base):
+    return max(0, 100000 * (1 - ((p - y) ** 2).mean() / base))
+
+
+def fit_shrinkage(y, p, center):
+    """p' = center + a*(p-center) 의 Brier 최소화 해. 회귀 기울기와 같다."""
+    d = p - center
+    var = (d ** 2).mean()
+    if var <= 0:
+        return 1.0
+    return float((d * (y - center)).mean() / var)
+
+
+def main():
+    args = parse_args()
+    members = build_members(args)
+
+    test_cols = pd.read_csv(os.path.join(DATA_DIR, "test.csv"),
+                            encoding="utf-8-sig", nrows=0).columns
+    all_features = [c for c in test_cols if c != ID]
+    drop = [] if args.keep_ids else ["pitcher_id", "batter_id"]
+    features = [c for c in all_features if c not in drop]
+    train = pd.read_csv(os.path.join(DATA_DIR, "train.csv"),
+                        encoding="utf-8-sig", usecols=all_features + [TARGET])
+    if drop:
+        print(f"제거 컬럼: {drop}")
+
+    ctx_pack = None
+    if not args.no_ctx:
+        tm = load_trackman()
+        train = attach_ctx_train(train, tm)
+        # 기본은 표본 수 컬럼 제외. 시계라서 시즌 경계를 못 넘는다 (4-9).
+        ctx_feats = [c for c in COUNT_FEATS + HAND_FEATS
+                     if args.ctx_keep_n or c not in ("tmc_n", "tmh_n")]
+        features = features + ctx_feats
+        print(f"상황 피처 {len(ctx_feats)}개 "
+              f"{'(시계 포함 — 권장하지 않음)' if args.ctx_keep_n else '(시계 제외)'}")
+        cov = train["tmc_n"].notna().mean(), train["tmh_n"].notna().mean()
+        print(f"학습 커버리지 카운트 {cov[0]:.1%} 좌우 {cov[1]:.1%}")
+        # 추론용 표는 **전 기간** trackman 으로 만든다. 평가는 2025 이고
+        # trackman 은 2024 까지이므로 전량이 과거다.
+        c_all, h_all = ctx_tables(tm, 9999)
+        ctx_pack = {"count": pack_table(c_all, COUNT_KEY),
+                    "hand": pack_table(h_all, HAND_KEY),
+                    "hand_map": {str(k): v for k, v in HAND.items()},
+                    "count_key": COUNT_KEY, "hand_key": HAND_KEY}
+        print(f"추론용 표: 카운트 {len(c_all):,}셀, 좌우 {len(h_all):,}셀")
+
+    if args.drop_feats:
+        gone = [c.strip() for c in args.drop_feats.split(",") if c.strip()]
+        unknown = [c for c in gone if c not in features]
+        if unknown:
+            raise SystemExit(f"모르는 피처: {unknown}")
+        features = [c for c in features if c not in gone]
+        print(f"추가 제거: {gone} -> 피처 {len(features)}개")
+
+    if args.detrend:
+        # 시즌별 리그 평균 차감. 평가셋은 한 시즌이므로 추론에서 평가셋 전체
+        # 평균을 빼는 것과 같은 연산이다.
+        for c in CUMUL:
+            train[c] = train[c] - train.groupby("season")[c].transform("mean")
+        print(f"상대화: 누적형 {len(CUMUL)}개에서 시즌별 리그 평균 차감")
+
+    is_val = train["season"] == VAL_SEASON
+    X_tr, y_tr = train.loc[~is_val, features], train.loc[~is_val, TARGET]
+    X_va = train.loc[is_val, features]
+    y_va = train.loc[is_val, TARGET].to_numpy()
+
+    r = y_va.mean()
+    base = r * (1 - r)
+    center = float(y_tr.mean())      # 학습 데이터 성공률. 검증 정답은 쓰지 않는다.
+
+    print(f"학습 {len(X_tr)} | 검증 {len(X_va)} ({VAL_SEASON} 시즌)")
+    if args.spec:
+        print(f"설정: lr={args.lr} l2={args.l2} spec={args.spec} "
+              f"({len(members)}개 모델)")
+    else:
+        print(f"설정: lr={args.lr} leaves={args.leaves} min_leaf={args.min_leaf} "
+              f"l2={args.l2} n_iter={args.n_iter} seeds={args.seeds}")
+    print(f"중심값 c={center:.4f} | 검증 기준선 r(1-r)={base:.6f}\n")
+
+    # ---- 구성원별 학습 & 누적 평균 ----
+    # 보정 후 열이 실제 판단 기준이다. 앙상블은 예측의 퍼짐을 줄이는데, 보정 전
+    # 점수에서는 그게 중심 오차를 덮어주는 이득으로 보여 과대평가된다 (4-5).
+    r_hat = float(X_va[PREV1].dropna().mean())
+
+    def shifted(p):
+        return score_of(y_va, np.clip(p + (r_hat - p.mean()), 0.0, 1.0), base)
+
+    print(f"{'구성원':>9} {'단일':>9} {'단일+보정':>11} "
+          f"{'누적':>9} {'누적+보정':>11}")
+    print("-" * 54)
+    acc = np.zeros(len(X_va))
+    for k, (label, leaves, min_leaf, n_iter, seed) in enumerate(members, start=1):
+        m = make_pipeline(args, features, leaves, min_leaf, n_iter, seed)
+        t = time.time()
+        m.fit(X_tr, y_tr)
+        p = m.predict_proba(X_va)[:, 1]
+        acc += p
+        ens = acc / k
+        print(f"{label:>9} {score_of(y_va, p, base):9.2f} {shifted(p):11.2f} "
+              f"{score_of(y_va, ens, base):9.2f} {shifted(ens):11.2f}"
+              f"   [{time.time()-t:.0f}s]")
+
+    p_ens = acc / len(members)
+    s_raw = score_of(y_va, p_ens, base)
+
+    # ---- 과신 교정 ----
+    a = fit_shrinkage(y_va, p_ens, center)
+    p_cal = np.clip(center + a * (p_ens - center), 0.0, 1.0)
+    s_cal = score_of(y_va, p_cal, base)
+
+    # ---- 국면 이동 보정 ----
+    # 검증 정답은 쓰지 않는다. 검증 시즌의 prev1 평균으로 그 해 성공률을 추정하고
+    # 예측 중심을 거기에 맞춘다. 추론 때 script.py 가 하는 것과 같은 계산이다.
+    r_hat = float(X_va[PREV1].dropna().mean())
+    p_shift = np.clip(p_ens + (r_hat - p_ens.mean()), 0.0, 1.0)
+    s_shift = score_of(y_va, p_shift, base)
+
+    print("\n=== 결과 ===")
+    print(f"  앙상블 원본     {s_raw:8.2f}   범위 {p_ens.min():.4f}~{p_ens.max():.4f}")
+    print(f"  중심 편차      {p_ens.mean() - r:+8.4f}   (예측 {p_ens.mean():.4f} vs 실제 {r:.4f})")
+    print(f"  국면 보정 후    {s_shift:8.2f}   ({s_shift - s_raw:+.2f}) "
+          f"추정 {r_hat:.4f} {'[적용]' if args.shift else '[미적용]'}")
+    if a < 0.97:
+        verdict = "(과신 → 예측을 좁혀야 이득)"
+    elif a > 1.03:
+        verdict = "(과소확신 → 예측을 벌려야 이득)"
+    else:
+        verdict = "(1 에 가까움 = 이미 잘 맞음)"
+    print(f"  축소계수 a      {a:8.4f}   {verdict}")
+    print(f"  교정 시        {s_cal:8.2f}   ({s_cal - s_raw:+.2f})")
+    print(f"  RF 베이스라인 대비 {s_raw - RF_BASELINE:+.2f}")
+
+    # 이 a 는 2024 에서 잰 값이라 2025 에 그대로 옮기면 위험하다. offset_test 에서
+    # 전년도 보정을 옮겨 쓴 결과가 2승이 아니라 1승 1패였고, 선형보정은 -472 였다.
+    # 그래서 기본값은 보정 없이(a=1) 저장한다.
+    alpha_out = a if args.calibrate else 1.0
+    if not args.calibrate:
+        print("  → 보정 미적용(a=1)으로 저장. 적용하려면 --calibrate")
+
+    if not args.save:
+        print("\n(저장하려면 --save)")
+        return
+
+    # ---- 전체 데이터로 재학습 ----
+    # 학습량이 늘었으니 반복수에 10% 여유를 준다.
+    print(f"\n전체 데이터 재학습 (반복수 +10%) ...")
+    models = []
+    for label, leaves, min_leaf, n_iter, seed in members:
+        n_iter_full = int(n_iter * 1.1)
+        m = make_pipeline(args, features, leaves, min_leaf, n_iter_full, seed)
+        t = time.time()
+        m.fit(train[features], train[TARGET])
+        models.append(strip_rng(m))
+        print(f"  {label} (n_iter={n_iter_full}) 완료 [{time.time()-t:.0f}s]")
+
+    bundle = {
+        "models": models,
+        "alpha": alpha_out,
+        "center": float(train[TARGET].mean()),
+        # 학습에 쓴 컬럼과 순서. 추론 때 test.csv 에서 이대로 골라내야 한다.
+        # 열이 하나라도 다르면 ColumnTransformer 가 이름 불일치로 실패한다.
+        "features": list(features),
+        # 어떤 구성으로 만든 pkl 인지 남긴다. script.py 는 읽지 않는다.
+        "spec": [label for label, *_ in members],
+        # 국면 이동 보정. script.py 가 평가셋에서 이 피처의 평균을 내어
+        # 예측 중심을 옮긴다. 없으면 보정을 하지 않는다.
+        "shift": {"feature": PREV1, "bias": 0.0} if args.shift else None,
+        # 피처 정의의 일부다. 학습에서 뺐으면 추론에서도 반드시 뺀다.
+        "detrend": {"columns": list(CUMUL)} if args.detrend else None,
+        # 상황 조건부 Trackman 조회표 (4-9). 평가 서버에 trackman 파일이
+        # 있다는 보장이 없어 표를 통째로 담는다. 각 행은 자기 (투수, 카운트) /
+        # (투수, 타자좌우) 만 조회하므로 행 독립이다.
+        "ctx": ctx_pack,
+        "note":"predict: mean(predict_proba[:,1]) -> center + alpha*(p-center) -> clip(0,1)",
+    }
+    out_path = args.model_out
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    joblib.dump(bundle, out_path, compress=3)
+    print(f"\n저장 완료: {out_path} "
+          f"({os.path.getsize(out_path)/1e6:.1f} MB, 모델 {len(models)}개)")
+
+
+if __name__ == "__main__":
+    main()

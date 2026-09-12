@@ -1,0 +1,12 @@
+# Deployment gate
+
+- parent: `submit_v2.zip`
+- n_sample_rows: `5`
+- n_benchmark_rows: `245789`
+- finite_and_probability_range: `True`
+- order_checks: `{'reverse_order_max_abs': 1.1102230246251565e-16, 'shuffled_order_max_abs': 1.1102230246251565e-16, 'chunked_max_abs': 1.1102230246251565e-16}`
+- offline_static_check: `True`
+- row_local_static_check: `True`
+- benchmark_seconds: `10.26701900002081`
+- peak_rss_mb_observed: `330.13671875`
+- parent_prediction_parity_note: `parent itself is the reference; correction-off candidate parity is not applicable because no candidate was promoted`

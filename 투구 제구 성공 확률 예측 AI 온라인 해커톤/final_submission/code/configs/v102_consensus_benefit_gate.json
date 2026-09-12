@@ -1,0 +1,20 @@
+{
+  "protocol": "V102_CONSENSUS_BENEFIT_GATE_V1",
+  "frozen_before_run": "2026-08-22",
+  "parent_candidate": "v100 source-selected sign_mean cross-family consensus",
+  "model": "Ridge",
+  "ridge_alpha": 200.0,
+  "gate_style": "soft_positive",
+  "soft_scale_quantile": 0.9,
+  "source_axes": ["early2022_to_late2022", "full2022_to_late2023"],
+  "locked_axis": "full2024",
+  "source_minimum_positive_month_fraction": 0.6666666666666666,
+  "locked_minimum_positive_month_fraction": 0.75,
+  "worst_month_gain_strictly_above": -5.0,
+  "prohibited": [
+    "2024 labels in gate fitting or selection",
+    "player IDs",
+    "test aggregates, order, frequency or distribution",
+    "Public-score-derived threshold or weight"
+  ]
+}

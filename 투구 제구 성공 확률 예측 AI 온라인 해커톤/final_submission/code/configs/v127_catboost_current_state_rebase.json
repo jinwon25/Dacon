@@ -1,0 +1,35 @@
+{
+  "protocol": "V127_CATBOOST_CURRENT_STATE_REBASE_V1",
+  "hypothesis": "The externally documented D/X/H1 current-season decomposition exposes raw failure-type, batter-middle, and correctly-denominated pitch-mix state that the v19 lineage smooths away or omits, and therefore can explain residual error above exact v104.",
+  "feature_families": [
+    "catboost_d13",
+    "missing_state9",
+    "delta_state11",
+    "catboost_context14",
+    "missing_plus_context23",
+    "full_dxh1_27"
+  ],
+  "routes": ["ALL", "R_CORE", "F"],
+  "ridge_alpha_grid": [100.0, 1000.0, 10000.0, 100000.0],
+  "eta_grid": [0.1, 0.25, 0.5, 1.0],
+  "correction_cap": 0.04,
+  "source_gate": {
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "active_domain_gain_min": 0.0
+  },
+  "locked_gate": {
+    "gain_min": 5.7,
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "active_domain_gain_min": 0.0
+  },
+  "restrictions": {
+    "external_2025_outcomes_used": false,
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_for_selection": false,
+    "full_2024_used_for_recipe_selection": false,
+    "row_local_inference": true
+  }
+}

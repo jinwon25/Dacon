@@ -1,0 +1,24 @@
+{
+  "os": "Windows-10-10.0.26200-SP0",
+  "python": "3.11.2",
+  "libraries": {
+    "numpy": "2.2.6",
+    "pandas": "2.2.3",
+    "scipy": "1.15.3",
+    "scikit-learn": "1.6.1",
+    "joblib": "1.5.1",
+    "catboost": "1.2.8",
+    "lightgbm": "4.6.0",
+    "xgboost": "3.0.1",
+    "torch": "2.7.1",
+    "pytest": "9.0.3"
+  },
+  "data_and_checkpoint_hashes": "pass",
+  "reproduction_inputs_ready": true,
+  "all_model_exact_fresh_fit_verified": false,
+  "known_limitations": [
+    "Fallback XGBoost exact CUDA training parity has not been established",
+    "The complete initial-to-v343 fresh training chain has not been verified as one uninterrupted run",
+    "Cross-version and CPU/GPU model-training parity is not established"
+  ]
+}

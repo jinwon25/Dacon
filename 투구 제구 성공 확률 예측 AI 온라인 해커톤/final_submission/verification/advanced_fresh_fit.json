@@ -1,0 +1,17 @@
+{
+  "component": "advanced",
+  "reference_inference_sha256": "d44578dc50220ce84dd4b8489bbae680afdcf93f931ed4236287b5a9e6f5aaaa",
+  "candidate_files_sha256": {
+    "advanced_domain_residual_lgb.txt": "424b9ffcc604967e59046d5436b578a5f76e9c1bb64c4d2d765d5e45c710005c",
+    "advanced_domain_residual_spec.json": "54843a3f753073d9076e9cb569eaa34ea15e77991963eae40a30d331fdbec538"
+  },
+  "native_assets": {
+    "advanced_domain_residual_lgb.txt": {"within_tolerance": true, "maximum_numeric_abs_difference": 0.0, "mismatch_count": 0, "first_mismatches": []},
+    "advanced_domain_residual_spec.json": {"within_tolerance": true, "maximum_numeric_abs_difference": 0.0, "mismatch_count": 0, "first_mismatches": []}
+  },
+  "native_model_and_state_parity": true,
+  "final_ensemble_doses_excluded_from_model_fit_comparison": {"eta": {"submitted": 0.9, "initial_fit": 0.9}},
+  "assembly_annotations_excluded": {},
+  "whole_parent_ensemble_fresh_fit": false,
+  "private_score_recomputed": false
+}
