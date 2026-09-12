@@ -1,5 +1,22 @@
 # 보고서 빠른 안내
 
+## 제출 원장 규칙
+
+[`submissions.csv`](submissions.csv)는 제출 이력의 **권위 있는 단일 출처**다. 집계가
+어긋나지 않도록 다음을 지킨다.
+
+- **제출 1건당 정확히 1행.** 같은 제출을 나중에 다른 관점에서 다시 기록할 일이 생기면
+  새 행을 추가하지 말고 기존 행의 `local_validation`·`notes`를 확장한다.
+- `submission_id`가 비는 경우가 있다. 리더보드 응답이 ID를 주지 않은 제출이며, 그 사정을
+  `notes`에 적는다(현재 8건).
+- `public_score`가 `<`로 시작하면 best-only 리더보드에서 개별 점수가 노출되지 않아
+  상한만 아는 제출이다.
+- 판단 근거는 원장이 아니라 이 디렉터리의 보고서에 남기고, 원장에는 링크나 파일명을 적는다.
+
+2026-09-12에 v335(제출 `76835`)가 v290 계보와 v320 포트폴리오 두 관점으로 중복 기록된
+것을 한 행으로 병합했다. 두 기록의 내용은 모두 보존했다.
+
+
 - [`v355_public_result_20260901.md`](v355_public_result_20260901.md): **v355 기각** — Public 1177.9105932872, v345 대비 -5.0391037328; TrackMan-PFD+후반기 계층 결합 계열은 분해 제출·공개점수 재튜닝 없이 종료
 - [`target1185_v354_late_hierarchy_candidate_20260901.md`](target1185_v354_late_hierarchy_candidate_20260901.md): **다음 제출 1순위 v354** — v353 + 8월 이후 R_ANCHOR 계층 posterior, 세 시간축 `+3.7582/+7.2679/+4.2106`, 강한 cluster·시간 bootstrap과 재현 ZIP
 - [`target1185_v352_v353_trackman_pfd_candidate_20260831.md`](target1185_v352_v353_trackman_pfd_candidate_20260831.md): **v354 직접 부모** — v345와 거의 직교한 training-only TrackMan-PFD, 두 연속 시간 구간 `+0.9761/+0.9521`, 전체-2024 최종 refit과 재현 ZIP
