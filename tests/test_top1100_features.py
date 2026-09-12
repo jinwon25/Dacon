@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.top1100_features import build_features
+from src.archive.top1100_features import build_features
 from tests.test_features import _main_rows
 
 

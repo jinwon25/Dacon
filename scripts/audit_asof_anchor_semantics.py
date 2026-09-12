@@ -11,7 +11,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 TRAIN = ROOT / "data" / "train.csv"
-LOOKUP = ROOT / "JY_fallback_XGB_active50_w030" / "fallback_lookups.joblib"
+LOOKUP = ROOT / "src" / "team_assets" / "JY_fallback_XGB_active50_w030" / "fallback_lookups.joblib"
 
 
 def summarize_entity(frame: pd.DataFrame, entity: str, ncol: str) -> pd.DataFrame:

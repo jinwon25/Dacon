@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.validate_v28_anchor_hand_route import _expected_from_parent
+from src.archive.validate_v28_anchor_hand_route import _expected_from_parent
 
 
 def test_expected_route_recovers_base_and_changes_only_matched_rows() -> None:

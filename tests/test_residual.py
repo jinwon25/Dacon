@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.residual import context_features, eb_delta, ridge_fit_predict
+from src.archive.residual import context_features, eb_delta, ridge_fit_predict
 
 
 def _frame(n=20):

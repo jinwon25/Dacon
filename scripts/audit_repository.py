@@ -37,7 +37,7 @@ ALLOWED_LFS_FILES = {
     "artifacts/standalone_champion_1162/standalone_champion_1162.zip",
 }
 PINNED_REGULAR_BINARY_FILES = {
-    "JY_fallback_XGB_active50_w030/fallback_lookups.joblib": {
+    "src/team_assets/JY_fallback_XGB_active50_w030/fallback_lookups.joblib": {
         "bytes": 862_763,
         "sha256": "374E7BA22AD181F488A082C04A0BBCE456B164F45D05F62FEF3AF209030DB3C5",
     },

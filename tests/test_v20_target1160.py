@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 import src.archive.v10_overlay_script as inference
-from src.train_v20_target1160 import _fit_eb, _read_indexed_rows
+from src.archive.train_v20_target1160 import _fit_eb, _read_indexed_rows
 
 
 def test_v20_overlay_is_identity_without_spec(tmp_path, monkeypatch):

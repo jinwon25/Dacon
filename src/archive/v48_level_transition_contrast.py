@@ -25,7 +25,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.data import read_main
+from src.archive.data import read_main
 from src.temporal_stable_conditional import _add_domain_and_pressure
 from src.core.diagnostics import diagnostics, v27_parent
 from src.core.axes import _cached_v25_axes

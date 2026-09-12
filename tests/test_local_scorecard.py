@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from src.local_scorecard import build_scorecard
+from src.archive.local_scorecard import build_scorecard
 
 
 def _metrics() -> pd.DataFrame:

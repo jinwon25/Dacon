@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.audit_champion_private_artifacts import (
+from src.archive.audit_champion_private_artifacts import (
     audit_private_release,
     domain3,
     sha256_array,

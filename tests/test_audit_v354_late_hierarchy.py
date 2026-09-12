@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.audit_v354_late_hierarchy import predict_partitioned
+from src.archive.audit_v354_late_hierarchy import predict_partitioned
 
 
 class RowLocalModule:

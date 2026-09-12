@@ -58,7 +58,7 @@ def build_features(
     *,
     encode_categories: bool = True,
 ) -> pd.DataFrame:
-    """Mirror src.features.FeatureBuilder using only frozen train artifacts."""
+    """Mirror src.archive.features.FeatureBuilder using only frozen train artifacts."""
     base_columns = list(spec["base_columns"])
     missing = [column for column in base_columns if column not in frame.columns]
     if missing:

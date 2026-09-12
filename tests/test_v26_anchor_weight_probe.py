@@ -1,6 +1,6 @@
 import pytest
 
-from src.package_v26_anchor_weight_probe import PROBE_ETA, SOURCE_ETA, build
+from src.archive.package_v26_anchor_weight_probe import PROBE_ETA, SOURCE_ETA, build
 
 
 def test_v26_probe_is_equally_spaced_from_v22_and_v25() -> None:

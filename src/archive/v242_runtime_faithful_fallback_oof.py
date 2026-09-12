@@ -21,7 +21,7 @@ import numpy as np
 import pandas as pd
 import xgboost as xgb
 
-from JY_fallback_XGB_active50_w030 import fallback_xgb_frozen_runtime as runtime
+from src.team_assets.JY_fallback_XGB_active50_w030 import fallback_xgb_frozen_runtime as runtime
 from src.archive.v217_rebuild_fallback_xgb_oof import (
     PARAMS,
     SPECS,

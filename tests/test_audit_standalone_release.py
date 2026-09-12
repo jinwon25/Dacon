@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from src.audit_standalone_release import audit_release, scale_proxy
+from src.archive.audit_standalone_release import audit_release, scale_proxy
 
 
 SCRIPT = '''from pathlib import Path

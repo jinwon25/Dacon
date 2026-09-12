@@ -1,6 +1,6 @@
 import pandas as pd
 
-from src.context_residual_screen import add_fixed_context, context_groups
+from src.archive.context_residual_screen import add_fixed_context, context_groups
 
 
 def test_fixed_context_does_not_require_target():

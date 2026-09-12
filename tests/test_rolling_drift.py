@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
 
-from src.calibration import apply_logit_offset, forecast_base_rate
+from src.archive.calibration import apply_logit_offset, forecast_base_rate
 from src.metrics import probability_logit
-from src.rolling_drift import build_rolling_damped_ensemble
+from src.archive.rolling_drift import build_rolling_damped_ensemble
 
 
 def test_fixed_damped_ensemble_is_probability_level_average():

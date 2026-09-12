@@ -19,7 +19,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.data import read_main
+from src.archive.data import read_main
 from src.core.diagnostics import v27_parent
 from src.core.axes import _cached_v25_axes
 

@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.audit_v352_trackman_pfd import predict_partitioned
+from src.archive.audit_v352_trackman_pfd import predict_partitioned
 
 
 class RowLocalModule:

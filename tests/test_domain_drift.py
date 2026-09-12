@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.domain_drift import (
+from src.archive.domain_drift import (
     apply_game_type_offsets,
     fit_game_type_regime_offsets,
 )

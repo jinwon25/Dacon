@@ -17,7 +17,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.champion_oof import _load_year
+from src.archive.champion_oof import _load_year
 from src.core.diagnostics import diagnostics, v27_parent
 from src.core.axes import _cached_v25_axes
 from src.archive.v31_dynamic_hierarchical_residual import _prepare

@@ -66,7 +66,7 @@ python (Join-Path $release "script.py")
 ### 3. 저장소 감사기로 재검증
 
 ```powershell
-python -m src.audit_standalone_release `
+python -m src.archive.audit_standalone_release `
   --package submissions/releases/v335/submit_v335_anchor_lowrank_complement.zip `
   --test-csv data/test.csv `
   --scale-rows 245789 `
@@ -113,7 +113,7 @@ python -m src.champion.v319_finalize_futures_lowrank --help
 python -m src.champion.v320_build_futures_portfolio_package --help
 python -m src.archive.v335_anchor_lowrank_complement_audit --help
 python -m src.champion.v335_build_anchor_lowrank_package --help
-python -m src.audit_v335_anchor_lowrank --help
+python -m src.archive.audit_v335_anchor_lowrank --help
 ```
 
 재구축 결과는 기존 챔피언을 덮어쓰지 않고 새 디렉터리에 만든 뒤 SHA·수식 parity·행 독립성·

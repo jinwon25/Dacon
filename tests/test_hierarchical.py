@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.hierarchical import HierarchicalBackoff
+from src.archive.hierarchical import HierarchicalBackoff
 
 
 def _frame():

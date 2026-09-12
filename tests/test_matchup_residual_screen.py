@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.matchup_residual_screen import _map_effect
+from src.archive.matchup_residual_screen import _map_effect
 
 
 def test_map_effect_unseen_key_has_zero_correction():

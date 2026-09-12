@@ -7,14 +7,14 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.features import FeatureBuilder
+from src.archive.features import FeatureBuilder
 
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
 
 
 def _inference_module():
-    spec = importlib.util.spec_from_file_location("submission_inference", PROJECT_DIR / "script.py")
+    spec = importlib.util.spec_from_file_location("submission_inference", PROJECT_DIR / "src" / "archive" / "v2_offline_entrypoint_script.py")
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)

@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.champion_oof import _eb_correction
+from src.archive.champion_oof import _eb_correction
 
 
 def test_eb_correction_is_fit_only_and_domain_local() -> None:

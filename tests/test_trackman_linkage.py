@@ -1,6 +1,6 @@
 import pandas as pd
 
-from src.trackman_linkage import (
+from src.archive.trackman_linkage import (
     link_pitchers,
     main_annual_fingerprints,
     trackman_annual_fingerprints,

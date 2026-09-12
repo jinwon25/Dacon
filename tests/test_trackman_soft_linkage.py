@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.trackman_soft_linkage import bootstrap_soft_linkage
+from src.archive.trackman_soft_linkage import bootstrap_soft_linkage
 
 
 def test_bootstrap_soft_linkage_is_one_to_one_and_reproducible():

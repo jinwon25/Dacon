@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.target_encoding_audit import audit
+from src.archive.target_encoding_audit import audit
 
 
 def test_target_encoding_audit_detects_order_and_future_effects():

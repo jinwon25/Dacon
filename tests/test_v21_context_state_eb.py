@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.train_v21_context_state_eb import add_v21_features
+from src.archive.train_v21_context_state_eb import add_v21_features
 
 
 def test_add_v21_features_has_fixed_row_local_bins() -> None:

@@ -17,7 +17,7 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression, Ridge
 
-from src.evaluate_v14_v15_robust import _candidate_fold
+from src.archive.evaluate_v14_v15_robust import _candidate_fold
 from src.temporal_stable_conditional import _add_domain_and_pressure
 from src.archive.v14_component_audit import Fold, V13_CORE, V13_F_WEIGHT, fit_stable_component, predict_recipe
 

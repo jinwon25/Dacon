@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.trackman_latent_integration import _pitch_weights
+from src.archive.trackman_latent_integration import _pitch_weights
 
 
 def test_pitch_weights_are_row_local_and_sum_to_one():

@@ -2,10 +2,10 @@ import numpy as np
 import pandas as pd
 from pandas.testing import assert_frame_equal
 
-from src.calibration import BetaCalibrator, InterceptCalibrator, fit_constrained_blend
-from src.features import FeatureBuilder
+from src.archive.calibration import BetaCalibrator, InterceptCalibrator, fit_constrained_blend
+from src.archive.features import FeatureBuilder
 from src.metrics import cluster_bootstrap_delta
-from src.validation import historical_oof_indices, walk_forward_splits
+from src.archive.validation import historical_oof_indices, walk_forward_splits
 from tests.test_features import _main_rows
 
 

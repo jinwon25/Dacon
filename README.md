@@ -104,7 +104,7 @@ xgboost==3.2.0
 스키마·확률 범위·셔플/분할 행 독립성·전체 규모 추론을 검사한다.
 
 ```powershell
-python -m src.audit_standalone_release `
+python -m src.archive.audit_standalone_release `
   --package submissions/releases/v335/submit_v335_anchor_lowrank_complement.zip `
   --test-csv data/test.csv `
   --scale-rows 245789 `
@@ -134,7 +134,7 @@ python -m src.champion.v319_finalize_futures_lowrank --help
 python -m src.champion.v320_build_futures_portfolio_package --help
 python -m src.archive.v335_anchor_lowrank_complement_audit --help
 python -m src.champion.v335_build_anchor_lowrank_package --help
-python -m src.audit_v335_anchor_lowrank --help
+python -m src.archive.audit_v335_anchor_lowrank --help
 ```
 
 공식 원본 데이터, 인증정보와 일반 대용량 ZIP·OOF는 Git에 올리지 않는다. 다만 PRIVATE

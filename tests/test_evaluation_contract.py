@@ -3,7 +3,7 @@ from __future__ import annotations
 import pandas as pd
 import pytest
 
-from src.evaluation_contract import assess_candidate_evidence
+from src.archive.evaluation_contract import assess_candidate_evidence
 
 
 def _row(axis: str, role: str, gain: float = 2.0) -> dict[str, object]:

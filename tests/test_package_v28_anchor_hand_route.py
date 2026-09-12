@@ -1,4 +1,4 @@
-from src.package_v28_anchor_hand_route import NEW_BLOCK, OLD_BLOCK, _patch_script
+from src.archive.package_v28_anchor_hand_route import NEW_BLOCK, OLD_BLOCK, _patch_script
 
 
 def test_patch_replaces_only_the_frozen_eta_block() -> None:

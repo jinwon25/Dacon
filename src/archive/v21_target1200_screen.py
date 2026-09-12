@@ -19,8 +19,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.multi_year_state_ensemble_screen import DOMAINS, _load_fold
-from src.state_mode_joint_screen import (
+from src.archive.multi_year_state_ensemble_screen import DOMAINS, _load_fold
+from src.archive.state_mode_joint_screen import (
     MODE_MULTIPLIERS,
     STATE_MULTIPLIERS,
     _candidate,

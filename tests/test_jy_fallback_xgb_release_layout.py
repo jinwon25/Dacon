@@ -6,7 +6,7 @@ def test_uploaded_release_builder_uses_its_flat_directory() -> None:
     root = Path(__file__).resolve().parents[1]
     script = (
         root
-        / "JY_fallback_XGB_active50_w030"
+        / "src" / "team_assets" / "JY_fallback_XGB_active50_w030"
         / "build_jy_xgb_active_high50_zip.py"
     )
     namespace = runpy.run_path(str(script), run_name="jy_fallback_layout_test")

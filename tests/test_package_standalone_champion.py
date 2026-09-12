@@ -7,7 +7,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from src.package_standalone_champion import (
+from src.archive.package_standalone_champion import (
     build,
     materialize,
     official_row_independence_test,

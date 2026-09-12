@@ -6,7 +6,7 @@ import pandas as pd
 import pytest
 
 from src.temporal_stable_conditional import _add_domain_and_pressure
-from src.train_v14_refinement import _trend_features
+from src.archive.train_v14_refinement import _trend_features
 from src.archive.v10_overlay_script import _v14_trend_matrix
 
 

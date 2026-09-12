@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.trackman_privileged_alignment import (
+from src.archive.trackman_privileged_alignment import (
     align_pitch_rows,
     detect_main_game_ids,
     match_game_sequences,

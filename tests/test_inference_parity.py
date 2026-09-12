@@ -5,9 +5,9 @@ import numpy as np
 import pytest
 from pandas.testing import assert_frame_equal
 
-import script
-from src.data import read_main
-from src.features import FeatureBuilder
+from src.archive import v2_offline_entrypoint_script as script
+from src.archive.data import read_main
+from src.archive.features import FeatureBuilder
 
 
 PROJECT = Path(__file__).resolve().parents[1]

@@ -38,7 +38,7 @@ from src.archive.v168_jy_exact_contract_reaudit import (
     rcore_mask,
 )
 from src.core.contract import _load_contract_axis
-from src.data import read_main
+from src.archive.data import read_main
 
 
 PROTOCOL = "V170_CURRENT_RESIDUAL_CATBOOST_V1"

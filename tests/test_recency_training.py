@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from src.recency_training import season_decay_weights
+from src.archive.recency_training import season_decay_weights
 
 
 def test_season_decay_weights_are_mean_one_and_half_by_age():

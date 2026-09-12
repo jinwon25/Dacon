@@ -124,7 +124,7 @@ python -m src.archive.v16_multiseason_screen `
 아래는 v17에서 사용한 pressure 후보를 별도 보고서 이름으로 다시 평가하는 예다.
 
 ```powershell
-python -m src.evaluate_v16_robust `
+python -m src.archive.evaluate_v16_robust `
   --selected multi_pitcher_batter_hand_pressure_d1_a3200_w1.5 `
   --artifact-dir v16_multiseason_20260815_02 `
   --parent-f-alpha 0.15 `
@@ -137,7 +137,7 @@ python -m src.evaluate_v16_robust `
 ### 5.3 최종 residual spec 학습
 
 ```powershell
-python -m src.train_v16_residual `
+python -m src.archive.train_v16_residual `
   --output-dir artifacts/v19_residual_final_<run_id> `
   --group pitcher_batter_hand_pressure `
   --decay 1 `
@@ -153,13 +153,13 @@ python -m src.train_v16_residual `
 현재 패키저는 v14를 부모로 pressure residual 한 층을 추가하는 구조다. v17을 재현할 때는 SHA-256이 정확히 일치하는 v14 부모와 v17 residual artifact를 사용한다.
 
 ```powershell
-python -m src.package_v16_residual `
+python -m src.archive.package_v16_residual `
   --parent submit_v14.zip `
   --output submit_v17_rebuild.zip `
   --artifact-dir v17_residual_final_20260815 `
   --expected-parent-sha256 AC8E135FBA8DBF41E331A8F4E2AAA658F0AF6675DD5F3B6C89EF51E9BC02977E
 
-python -m src.validate_v16_residual `
+python -m src.archive.validate_v16_residual `
   --candidate submit_v17_rebuild.zip `
   --parent submit_v14.zip `
   --report reports/v17_rebuild_validation_<run_id>.md

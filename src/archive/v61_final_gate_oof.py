@@ -18,9 +18,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.data import read_main, read_trackman
-from src.features import hierarchical_prior
-from src.trackman_linkage import build_pitcher_profile_table
+from src.archive.data import read_main, read_trackman
+from src.archive.features import hierarchical_prior
+from src.archive.trackman_linkage import build_pitcher_profile_table
 from src.core.diagnostics import diagnostics
 from src.core.axes import _cached_v25_axes
 from src.archive.v58_eta15_rebase_audit import CURRENT_ETA, eta_parent
