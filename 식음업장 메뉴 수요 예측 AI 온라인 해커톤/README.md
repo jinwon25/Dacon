@@ -3,16 +3,17 @@
 데이콘 [**식음업장 메뉴 수요 예측 AI 온라인 해커톤**](https://dacon.io/competitions/official/236559/overview/description) 솔루션.
 리조트 내 9개 영업장 · 193개 메뉴의 과거 판매 데이터로 **다음 7일 메뉴별 매출수량**을 예측한다.
 
-> 상태: **연구 중**. 현재 최고 제출 **LB Private 0.5481** (가중 SMAPE, 낮을수록 좋음) — 업장별 nz-mean 블렌드. 공식 LSTM 베이스라인(Private 0.6939) 대비 **-0.1458**. 모델 개선 진행 중.
+> **최종 352위 / 817팀** · **Private 0.5481** (가중 SMAPE, 낮을수록 좋음)
+> 업장별 nz-mean 블렌드. 공식 LSTM 베이스라인(Private 0.6939) 대비 **-0.1458**.
 
-## 현재 결과 (LB 진행)
+## 최종 결과
 
 | 후보 | 로컬 가중 SMAPE | LB Private | 비고 |
 |---|---:|---:|---|
 | 공식 LSTM 베이스라인 (메뉴별 개별 LSTM) | — | 0.693935 | 대회 제공 |
 | 전역 블렌드 (0.4·요일평균 + 0.6·28일평균) | 0.6791 | 0.6695 | 무학습, 베이스라인 추월 |
 | **업장별 nz-mean 블렌드 (tuned)** | 0.5850* | **0.5481** | ★ 현재 최고 (Public 0.5485) |
-| + wd_nz 성분 (4-blend) | 0.5715* | (재제출 대기) | nested OOF 추가 개선 |
+| + wd_nz 성분 (4-blend) | 0.5715* | (미제출) | nested OOF는 개선됐으나 대회 종료로 검증 못 함 |
 
 `*` = nested OOF(정직) 가중 SMAPE. 단독 글로벌 LightGBM은 0.841로 요일평균(0.74)에도 못 미쳐 폐기.
 
@@ -126,11 +127,14 @@ python src/predict_tuned.py     # -> submissions/tuned_submission.csv (현재 �
 
 대회 데이터는 `data/`(`data/train/`, `data/test/`, `data/sample_submission.csv`)에 배치한다.
 
-## 다음 단계 (`docs/WORK_LOG.md` 상세)
+## 남은 개선 여지 (대회 종료 시점)
 
-1. 갱신된 4-blend(wd_nz 포함, nested OOF 0.5715) 재제출 → LB 변환율 확인.
-2. LGBM을 **residual 보정**으로(target = y − 블렌드)해 단독 GBDT 실패를 우회, 메뉴 단위 편차 흡수.
-3. 고가중 담하·미라시아(여전히 ~0.56~0.60) 집중 — 가장 큰 남은 레버.
+종료 시점에 로컬로는 확인됐지만 리더보드로 검증하지 못한 축이다.
+
+1. 4-blend(wd_nz 포함)는 nested OOF `0.5715`로 제출본보다 좋았으나 제출 기회 안에 넣지 못했다.
+2. LGBM을 **residual 보정**(target = y − 블렌드)으로 돌리면 단독 GBDT의 실패를 우회하면서
+   메뉴 단위 편차를 흡수할 여지가 있었다.
+3. 가중치가 큰 담하·미라시아가 끝까지 `~0.56~0.60`에 머물렀다 — 가장 큰 미해결 레버.
 
 ## 환경
 
