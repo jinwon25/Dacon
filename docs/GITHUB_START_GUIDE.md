@@ -24,8 +24,8 @@
 5. 원하는 작업 폴더에서 저장소를 clone해 주세요.
 
 ```powershell
-git clone https://github.com/Lg-Aimers-chungang/hackathon.git
-cd pitch-control-probability
+git clone https://github.com/jinwon25/lg-aimers9-pitch-control.git
+cd lg-aimers9-pitch-control
 git config user.name "GitHub 표시 이름"
 git config user.email "GitHub에 등록한 이메일 또는 noreply 이메일"
 python -m venv .venv

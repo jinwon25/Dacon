@@ -28,8 +28,8 @@ Private Score 재현용 최종 제출 패키지는 [`final_submission/`](final_s
 ## 가장 먼저 할 일
 
 ```powershell
-git clone https://github.com/jinwon25/pitch-control-probability.git
-cd pitch-control-probability
+git clone https://github.com/jinwon25/lg-aimers9-pitch-control.git
+cd lg-aimers9-pitch-control
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
