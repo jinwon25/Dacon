@@ -629,7 +629,7 @@ def main() -> None:
     parser.add_argument(
         "--config",
         type=Path,
-        default=Path("configs/v78_environment_stable_residual.json"),
+        default=Path("research/configs/v78_environment_stable_residual.json"),
     )
     parser.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args()

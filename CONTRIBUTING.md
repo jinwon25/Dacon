@@ -45,7 +45,7 @@ docs/experiment-protocol
 6. 추론 시간, peak RSS, 배치 불변성
 7. 생성 산출물의 SHA-256과 재현 명령
 
-실패한 실험도 결론과 폐기 이유를 `reports/`에 남겨 주세요. 실패 기록은 같은 방향을 반복하지 않게 해 주는 중요한 팀 자산입니다.
+실패한 실험도 결론과 폐기 이유를 `research/reports/`에 남겨 주세요. 실패 기록은 같은 방향을 반복하지 않게 해 주는 중요한 팀 자산입니다.
 
 ## 커밋은 필요한 파일만 선택해 주세요
 
@@ -59,7 +59,7 @@ git diff
 그 다음 필요한 파일만 명시해서 추가해 주세요.
 
 ```powershell
-git add -- src/example.py tests/test_example.py reports/example.md
+git add -- src/example.py tests/test_example.py research/reports/example.md
 git commit -m "exp: evaluate core reliability router"
 ```
 
@@ -96,4 +96,4 @@ python scripts/audit_repository.py --include-untracked
 - 공식 ZIP 구조와 시간·메모리·offline 추론 제한을 통과해야 합니다.
 - 부모 ZIP과 변경 파일의 정확한 계보를 확인해야 합니다.
 
-제출 후에는 결과를 즉시 `reports/submissions.csv`에 추가하고, 최고점이 갱신되면 `README.md`와 `docs/PROJECT_STATUS.md`도 함께 갱신해 주세요.
+제출 후에는 결과를 즉시 `research/reports/submissions.csv`에 추가하고, 최고점이 갱신되면 `README.md`와 `docs/PROJECT_STATUS.md`도 함께 갱신해 주세요.

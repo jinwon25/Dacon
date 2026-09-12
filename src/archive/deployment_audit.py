@@ -59,8 +59,8 @@ def run(project: Path) -> dict:
         "peak_rss_mb_observed": rss_mb,
         "parent_prediction_parity_note": "parent itself is the reference; correction-off candidate parity is not applicable because no candidate was promoted",
     }
-    (project / "reports/deployment_gate_20260809.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
-    (project / "reports/deployment_gate_20260809.md").write_text("# Deployment gate\n\n" + "\n".join(f"- {key}: `{value}`" for key, value in result.items()) + "\n", encoding="utf-8")
+    (project / "research/reports/deployment_gate_20260809.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
+    (project / "research/reports/deployment_gate_20260809.md").write_text("# Deployment gate\n\n" + "\n".join(f"- {key}: `{value}`" for key, value in result.items()) + "\n", encoding="utf-8")
     print(json.dumps(result, indent=2))
     return result
 

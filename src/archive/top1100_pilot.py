@@ -229,7 +229,7 @@ def run(project: Path, train_cap: int = 450_000, models: tuple[str, ...] = ("log
 
     result = pd.DataFrame(rows)
     result["run_seconds"] = time.perf_counter() - started
-    out = project / "reports" / "top1100" / "fold_metrics.csv"
+    out = project / "research" / "reports" / "top1100" / "fold_metrics.csv"
     old = pd.read_csv(out) if out.exists() else pd.DataFrame()
     merged = pd.concat([old, result], ignore_index=True) if not old.empty else result
     merged.to_csv(out, index=False)

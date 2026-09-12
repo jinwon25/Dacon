@@ -21,7 +21,7 @@ def _skill(target: np.ndarray, brier: float) -> float:
 
 
 def run(project_dir: Path) -> int:
-    ledger_path = project_dir / "reports" / "experiments.csv"
+    ledger_path = project_dir / "research" / "reports" / "experiments.csv"
     ledger = pd.read_csv(ledger_path)
     columns = ledger.columns.tolist()
     existing = set(ledger["experiment_id"].astype(str))
@@ -33,7 +33,7 @@ def run(project_dir: Path) -> int:
     }
     rows: list[dict[str, object]] = []
 
-    drift = pd.read_csv(project_dir / "reports" / "domain_drift_results.csv")
+    drift = pd.read_csv(project_dir / "research" / "reports" / "domain_drift_results.csv")
     for record in drift.to_dict("records"):
         year = int(record["outer_validation_season"])
         rows.append(
@@ -66,7 +66,7 @@ def run(project_dir: Path) -> int:
             }
         )
 
-    rf = pd.read_csv(project_dir / "reports" / "rf_seed_results.csv")
+    rf = pd.read_csv(project_dir / "research" / "reports" / "rf_seed_results.csv")
     for record in rf.to_dict("records"):
         year = int(record["outer_validation_season"])
         rows.append(
@@ -99,7 +99,7 @@ def run(project_dir: Path) -> int:
             }
         )
 
-    features = pd.read_csv(project_dir / "reports" / "domain_feature_results.csv")
+    features = pd.read_csv(project_dir / "research" / "reports" / "domain_feature_results.csv")
     for record in features.to_dict("records"):
         year = int(record["outer_validation_season"])
         rows.append(

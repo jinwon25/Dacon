@@ -92,7 +92,7 @@ python -m pytest -q tests/test_metrics.py tests/test_features.py tests/test_repo
 필요한 파일만 선택해서 commit해 주세요.
 
 ```powershell
-git add -- src/변경한파일.py tests/test_변경한파일.py reports/실험기록.md
+git add -- src/변경한파일.py tests/test_변경한파일.py research/reports/실험기록.md
 git commit -m "exp: describe the experiment briefly"
 git push -u origin exp/my-first-experiment
 ```

@@ -37,7 +37,7 @@ def run(project: Path) -> pd.DataFrame:
                     t = tm["prediction"].astype(float)
                 c = np.clip(0.95*a + 0.05*t, 1e-4, 1 - 1e-4)
                 rows.append({"baseline": "v2_frozen_replay", "arm": "C_Trackman_5pct_only", "outer_validation_season": year, "n_rows": len(y), "brier": float(np.mean((c-y)**2)), "delta_vs_A": float(np.mean((c-y)**2)-np.mean((a-y)**2)), "inner_selected_lgb_iterations": inner_rounds, "outer_target_used_for_selection": True, "status": "legacy Trackman cache; diagnostic only"})
-            hybrid_path = project / "reports/hybrid_candidate_results.csv"
+            hybrid_path = project / "research/reports/hybrid_candidate_results.csv"
             if hybrid_path.exists():
                 hybrid = pd.read_csv(hybrid_path)
                 match = hybrid.loc[hybrid["outer_validation_season"].eq(year)]
@@ -46,8 +46,8 @@ def run(project: Path) -> pd.DataFrame:
                     rows.append({"baseline": "v2_frozen_replay", "arm": "D_full_v2", "outer_validation_season": year, "n_rows": len(y), "brier": d_brier, "delta_vs_A": d_brier - float(np.mean((a-y)**2)), "inner_selected_lgb_iterations": inner_rounds, "outer_target_used_for_selection": True, "status": "legacy hybrid report; diagnostic only"})
             rows.append({"baseline": "v2_nested", "arm": "A/B/C/D_primary", "outer_validation_season": year, "n_rows": len(y), "brier": np.nan, "delta_vs_A": np.nan, "inner_selected_lgb_iterations": inner_rounds, "outer_target_used_for_selection": False, "status": "BLOCKED: strict fixed-fit retraining exceeded runtime window; no nested OOF artifact"})
     out = pd.DataFrame(rows)
-    out.to_csv(project / "reports/champion_v2_nested_results.csv", index=False)
-    out.loc[out["arm"].isin(["A_original_incumbent", "B_R_recency_substitution", "C_Trackman_5pct_only", "D_full_v2"]), ["baseline", "arm", "outer_validation_season", "brier", "delta_vs_A", "status"]].to_csv(project / "reports/v2_component_ablation.csv", index=False)
+    out.to_csv(project / "research/reports/champion_v2_nested_results.csv", index=False)
+    out.loc[out["arm"].isin(["A_original_incumbent", "B_R_recency_substitution", "C_Trackman_5pct_only", "D_full_v2"]), ["baseline", "arm", "outer_validation_season", "brier", "delta_vs_A", "status"]].to_csv(project / "research/reports/v2_component_ablation.csv", index=False)
     (project / "artifacts/followup/v2_nested_provenance.json").write_text('{"primary_status":"BLOCKED","reason":"strict fixed-fit nested retraining exceeded the local runtime window; outer-target-dependent caches remain diagnostic only","outer_target_used_for_selection":false}', encoding="utf-8")
     print(out.to_string(index=False))
     return out

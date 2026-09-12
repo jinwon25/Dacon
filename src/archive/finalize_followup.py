@@ -12,8 +12,8 @@ from src.archive.experiment_tracking import append_experiment
 
 
 def run(project_dir: Path) -> int:
-    experiments_path = project_dir / "reports" / "experiments.csv"
-    walk_path = project_dir / "reports" / "walk_forward_results.csv"
+    experiments_path = project_dir / "research" / "reports" / "experiments.csv"
+    walk_path = project_dir / "research" / "reports" / "walk_forward_results.csv"
     walk = pd.read_csv(walk_path, encoding="utf-8")
     existing = (
         set(

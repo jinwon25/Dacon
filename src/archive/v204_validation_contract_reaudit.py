@@ -181,7 +181,7 @@ def run(
             bridge_manifest["restrictions"]["full_2024_is_development_contaminated"]
         ),
     }
-    experiments_path = project / "reports/experiments.csv"
+    experiments_path = project / "research/reports/experiments.csv"
     experiment_rows = (
         int(sum(1 for _ in experiments_path.open(encoding="utf-8-sig")) - 1)
         if experiments_path.exists()

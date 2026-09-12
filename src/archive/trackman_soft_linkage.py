@@ -34,7 +34,7 @@ def bootstrap_soft_linkage(cost: np.ndarray, repeats: int = 200, seed: int = 42)
 
 
 def _summary_from_existing_linkage(project: Path) -> pd.DataFrame:
-    path = project / "reports/trackman_linkage.csv"
+    path = project / "research/reports/trackman_linkage.csv"
     if not path.exists():
         raise FileNotFoundError(path)
     link = pd.read_csv(path)
@@ -59,7 +59,7 @@ def run(project: Path, repeats: int = 200) -> pd.DataFrame:
     # A small real cost matrix is reconstructed from the top candidate rows in
     # the existing target-free linkage artifact. It is only a stability smoke
     # test; it is not used to make a submission profile.
-    link = pd.read_csv(project / "reports/trackman_linkage.csv")
+    link = pd.read_csv(project / "research/reports/trackman_linkage.csv")
     subset = link.sort_values(["tm_link_distance", "tm_link_assignment_rank"]).drop_duplicates("pitcher_id").head(64)
     diagonal = subset["tm_link_distance"].to_numpy(dtype=float)
     cost = np.full((len(diagonal), len(diagonal)), float(np.nanmax(diagonal) + 0.15))
@@ -79,8 +79,8 @@ def run(project: Path, repeats: int = 200) -> pd.DataFrame:
         "repeats": int(repeats),
         "status": "bootstrap utility smoke test; no outcome used",
     }, index=[0])], ignore_index=True)
-    rows.to_csv(project / "reports/trackman_soft_linkage_results.csv", index=False)
-    (project / "reports/trackman_soft_linkage_audit_20260809.md").write_text(
+    rows.to_csv(project / "research/reports/trackman_soft_linkage_results.csv", index=False)
+    (project / "research/reports/trackman_soft_linkage_audit_20260809.md").write_text(
         "# Trackman soft-linkage audit\n\n"
         "The existing linkage report provides target-free distance, assignment rank, margin, common-origin stability and confidence. The two hand mappings (1→Left/2→Right and its reverse) are not identifiable from the aggregate report alone; the full annual-fingerprint rerun is therefore marked ambiguous and no new correction is promoted. A reusable 200-repeat Dirichlet-perturbed Hungarian routine was executed as a smoke test on the cached candidate cost submatrix.\n\n"
         "`asof_pitcher_pitchmix_n` must be audited for cumulative versus season-reset semantics before clipping negative deltas. Until that audit is run on the origin-specific annual table, medium/low/unmatched rows remain bitwise v2.\n\n"

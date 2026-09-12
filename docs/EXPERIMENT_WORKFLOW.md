@@ -128,8 +128,8 @@ python -m src.archive.evaluate_v16_robust `
   --selected multi_pitcher_batter_hand_pressure_d1_a3200_w1.5 `
   --artifact-dir v16_multiseason_20260815_02 `
   --parent-f-alpha 0.15 `
-  --output-json reports/v19_pressure_audit_<run_id>.json `
-  --output-markdown reports/v19_pressure_audit_<run_id>.md
+  --output-json research/reports/v19_pressure_audit_<run_id>.json `
+  --output-markdown research/reports/v19_pressure_audit_<run_id>.md
 ```
 
 `--artifact-dir`는 프로젝트의 `artifacts/` 아래 디렉터리 이름이다. screen 출력의 실제 후보명과 cache 파일이 일치하는지 확인한다.
@@ -162,7 +162,7 @@ python -m src.archive.package_v16_residual `
 python -m src.archive.validate_v16_residual `
   --candidate submit_v17_rebuild.zip `
   --parent submit_v14.zip `
-  --report reports/v17_rebuild_validation_<run_id>.md
+  --report research/reports/v17_rebuild_validation_<run_id>.md
 ```
 
 새 후보를 v17 ZIP 위에 다시 쌓을 때 이 패키저를 그대로 사용하면 lineage 검증의 `added member` 가정이 깨진다. 다음 후보는 다음 중 하나로 구성한다.
@@ -195,7 +195,7 @@ python -m src.archive.validate_v16_residual `
 clean transfer 관측 3개 전까지 억제하며, 이후에도 승격 근거로 사용하지 않는다. Public
 결과는 모델 선택 규칙이나 blend weight를 사후 미세조정하는 학습 데이터로 쓰지 않는다.
 
-팀원 모델을 혼합할 때는 `configs/oof_bundle_contract_v1.json` 형식의 exact temporal OOF만
+팀원 모델을 혼합할 때는 `research/configs/oof_bundle_contract_v1.json` 형식의 exact temporal OOF만
 받고 `src/archive/v77_team_oof_constrained_blend.py`로 정렬·SHA-256·strict-forward 경계와 source
 월·domain 비악화 제약을 검증한다. 제출 ZIP이나 Public 점수만 있는 모델의 weight는 정하지
 않는다. v77 결과도 bootstrap·Reality Check를 통과하기 전에는 승격 근거가 아니다.

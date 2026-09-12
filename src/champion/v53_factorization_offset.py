@@ -488,7 +488,7 @@ def run(project: Path, output_dir: Path) -> dict[str, object]:
     summary = {
         "protocol": "V53_ROLLING_DOMAIN_CENTERED_FM_OFFSET_V1",
         "parent": "submit_v27.zip / Public 1157.9736407889",
-        "preregistration": "reports/top1100/experiment_registry.csv F1_fm_pilot_01/02",
+        "preregistration": "research/reports/top1100/experiment_registry.csv F1_fm_pilot_01/02",
         "configuration": {
             "ranks": list(RANKS),
             "pairs": [list(pair) for pair in PAIR_NAMES],

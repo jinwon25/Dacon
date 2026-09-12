@@ -40,7 +40,7 @@ def _damped_prediction(
 
 def run(project_dir: Path, n_resamples: int = 10_000) -> pd.DataFrame:
     config = json.loads(
-        (project_dir / "configs" / "followup.json").read_text(encoding="utf-8")
+        (project_dir / "research" / "configs" / "followup.json").read_text(encoding="utf-8")
     )
     train = read_main(project_dir / "data" / "train.csv")
     folds, caches = _load_all_caches(project_dir, config, train)
@@ -115,7 +115,7 @@ def run(project_dir: Path, n_resamples: int = 10_000) -> pd.DataFrame:
         )
 
     result_frame = pd.DataFrame(rows)
-    output = project_dir / "reports" / "damped_bootstrap_audit.csv"
+    output = project_dir / "research" / "reports" / "damped_bootstrap_audit.csv"
     result_frame.to_csv(output, index=False)
     return result_frame
 

@@ -252,7 +252,7 @@ def run(project: Path, output_dir: Path) -> dict[str, object]:
     summary = {
         "protocol": "V54_TWO_SOURCE_HORIZON_FACTORIZATION_V1",
         "parent": "submit_v27.zip / Public 1157.9736407889",
-        "preregistration": "reports/top1100/experiment_registry.csv F6_horizon_01",
+        "preregistration": "research/reports/top1100/experiment_registry.csv F6_horizon_01",
         "configuration": {
             "ranks": list(RANKS),
             "experts": list(EXPERTS),

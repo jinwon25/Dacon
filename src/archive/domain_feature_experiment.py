@@ -24,12 +24,12 @@ def run(
     variant_names: list[str] | None = None,
 ) -> pd.DataFrame:
     domain_config = json.loads(
-        (project_dir / "configs" / "domain_experiments.json").read_text(
+        (project_dir / "research" / "configs" / "domain_experiments.json").read_text(
             encoding="utf-8"
         )
     )
     followup_config = json.loads(
-        (project_dir / "configs" / "followup.json").read_text(encoding="utf-8")
+        (project_dir / "research" / "configs" / "followup.json").read_text(encoding="utf-8")
     )
     train = read_main(project_dir / "data" / "train.csv")
     folds, caches = _load_all_caches(project_dir, followup_config, train)
@@ -88,7 +88,7 @@ def run(
             del result
             gc.collect()
     output = pd.DataFrame(rows)
-    output_path = project_dir / "reports" / "domain_feature_results.csv"
+    output_path = project_dir / "research" / "reports" / "domain_feature_results.csv"
     if output_path.exists():
         previous = pd.read_csv(output_path)
         output = pd.concat([previous, output], ignore_index=True)

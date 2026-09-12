@@ -376,7 +376,7 @@ def _markdown(result: dict[str, Any]) -> str:
 def run(project: Path, output_json: Path, output_markdown: Path) -> dict[str, Any]:
     project = project.resolve()
     config = json.loads(
-        (project / "configs" / "local_evaluation_v2.json").read_text(
+        (project / "research" / "configs" / "local_evaluation_v2.json").read_text(
             encoding="utf-8"
         )
     )
@@ -406,7 +406,7 @@ def run(project: Path, output_json: Path, output_markdown: Path) -> dict[str, An
         n_resamples=int(config["bootstrap_resamples"]),
         seed=int(config["seed"]) + 999,
     )
-    experiment_registry = pd.read_csv(project / "reports" / "experiments.csv")
+    experiment_registry = pd.read_csv(project / "research" / "reports" / "experiments.csv")
     registered_2024 = int(
         experiment_registry["validation_split"].astype(str).str.contains("2024").sum()
     )
@@ -473,12 +473,12 @@ def main() -> None:
     parser.add_argument(
         "--output-json",
         type=Path,
-        default=Path("reports/local_evaluation_v2_20260815.json"),
+        default=Path("research/reports/local_evaluation_v2_20260815.json"),
     )
     parser.add_argument(
         "--output-markdown",
         type=Path,
-        default=Path("reports/local_evaluation_v2_20260815.md"),
+        default=Path("research/reports/local_evaluation_v2_20260815.md"),
     )
     args = parser.parse_args()
     run(args.project, args.output_json, args.output_markdown)

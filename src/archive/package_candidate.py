@@ -44,7 +44,7 @@ def _write_zip(package_dir: Path, output: Path) -> None:
 
 def run(project_dir: Path, output_name: str) -> dict[str, object]:
     project_dir = project_dir.resolve()
-    gate_path = project_dir / "reports" / "domain_drift_results.csv"
+    gate_path = project_dir / "research" / "reports" / "domain_drift_results.csv"
     if not gate_path.exists():
         raise FileNotFoundError("run domain_drift.py before packaging")
     import pandas as pd

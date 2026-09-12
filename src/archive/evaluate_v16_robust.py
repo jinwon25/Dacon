@@ -74,7 +74,7 @@ def run(
     parent_f_alpha: float = 0.15,
 ) -> dict[str, object]:
     project = project.resolve()
-    config = json.loads((project / "configs" / "local_evaluation_v2.json").read_text(encoding="utf-8"))
+    config = json.loads((project / "research" / "configs" / "local_evaluation_v2.json").read_text(encoding="utf-8"))
     train = _add_domain_and_pressure(pd.read_csv(project / "data" / "train.csv", low_memory=False))
     v14_folds = load_v14_folds(project, train)
     artifact_dir = project / "artifacts" / artifact_dir_name
@@ -197,8 +197,8 @@ def run(
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--project", type=Path, default=Path("."))
-    parser.add_argument("--output-json", type=Path, default=Path("reports/v16_robust_evaluation_20260815.json"))
-    parser.add_argument("--output-markdown", type=Path, default=Path("reports/v16_robust_evaluation_20260815.md"))
+    parser.add_argument("--output-json", type=Path, default=Path("research/reports/v16_robust_evaluation_20260815.json"))
+    parser.add_argument("--output-markdown", type=Path, default=Path("research/reports/v16_robust_evaluation_20260815.md"))
     parser.add_argument("--selected", default=SELECTED)
     parser.add_argument("--artifact-dir", default=ARTIFACT_DIR)
     parser.add_argument("--parent-f-alpha", type=float, default=0.15)

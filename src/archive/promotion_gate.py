@@ -49,8 +49,8 @@ def _bootstrap_fraction(project: Path, recipe: str, repeats: int = 500) -> tuple
 
 
 def evaluate(project: Path) -> pd.DataFrame:
-    results = pd.read_csv(project / "reports/residual_recipe_results.csv")
-    config = json.loads((project / "configs/next_cycle_20260809.json").read_text(encoding="utf-8"))
+    results = pd.read_csv(project / "research/reports/residual_recipe_results.csv")
+    config = json.loads((project / "research/configs/next_cycle_20260809.json").read_text(encoding="utf-8"))
     rows = []
     for recipe, group in results.groupby("recipe", observed=True):
         if not (project / "artifacts/followup/residual_predictions.npz").exists() or group["brier"].isna().all():
@@ -75,7 +75,7 @@ def evaluate(project: Path) -> pd.DataFrame:
         }
         rows.append({"recipe": recipe, "delta_2022": deltas.get(2022, np.nan), "delta_2023": deltas.get(2023, np.nan), "delta_2024": deltas.get(2024, np.nan), "recency_weighted_delta": rw, "worst_fold_delta": worst, "strict_fold_count": strict_count, "bootstrap_fraction_negative": frac, "bootstrap_2024_fraction_negative": frac24, "checks": json.dumps(checks, sort_keys=True), "pass": all(checks.values())})
     out = pd.DataFrame(rows)
-    out.to_csv(project / "reports/next_cycle_bootstrap.csv", index=False)
+    out.to_csv(project / "research/reports/next_cycle_bootstrap.csv", index=False)
     return out
 
 

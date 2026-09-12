@@ -26,7 +26,7 @@ def decompose(y: np.ndarray, p: np.ndarray, bins: int = 20) -> dict:
 
 
 def run(project: Path) -> None:
-    out_dir = project / "reports/top1100"; art_dir = project / "artifacts/top1100"
+    out_dir = project / "research/reports/top1100"; art_dir = project / "artifacts/top1100"
     train = read_main(project / "data/train.csv")
     valid = train.loc[train["season"] == 2024].copy().reset_index(drop=True)
     y = valid["control_success"].to_numpy(dtype=float)
@@ -63,7 +63,7 @@ def run(project: Path) -> None:
     corr = pd.DataFrame(np.corrcoef(np.vstack([preds[n] for n in names])), index=names, columns=names)
     corr.to_csv(out_dir / "model_diversity.csv")
 
-    frozen = pd.read_csv(project / "reports/champion_v2_nested_results.csv")
+    frozen = pd.read_csv(project / "research/reports/champion_v2_nested_results.csv")
     drow = frozen[(frozen["baseline"] == "v2_frozen_replay") & (frozen["arm"] == "D_full_v2")]
     frozen_2024 = float(drow.loc[drow["outer_validation_season"] == 2024, "brier"].iloc[0]) if not drow.empty else float("nan")
     contract = json.loads((art_dir / "data_contract.json").read_text(encoding="utf-8"))

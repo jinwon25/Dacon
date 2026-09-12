@@ -30,11 +30,11 @@ R_ANCHOR low-rank 보완을 결합한다. 중간 v320을 제출하지 않았으�
 관측 시점의 한계였을 뿐이다. 이후 제출 이력 ID `61440`으로 v154의 실제 Public 점수가
 **1168.4038526829**로 확인됐다 (v148 대비 `-1.8976170348`, v142 대비 `-1.2239405993`).
 v154가 승격되지 않은 진짜 이유는 "리더보드 미갱신"이 아니라 **명확한 하락**이다.
-v154와 그 exact 버전인 v152(`configs/v152_may_maturity_bridge_audit.json`,
+v154와 그 exact 버전인 v152(`research/configs/v152_may_maturity_bridge_audit.json`,
 `bridge_weight_toward_v138≈0.85`)가 공유하는 핵심 가설 — "v142→v138 브릿지 가중치를
 0.15에서 0.85로 올리면 Public이 개선된다" — 은 이 실측으로 **기각**됐다. v152는 v154와
 같은 축(같은 신호의 93.7982% 보존)을 쓰므로 함께 기각 상태로 취급하며, 새로운 독립
-증거 없이 이 가중치·이 축을 재포장하지 않는다. `configs/v154_maturity_delta_submission_package.json`의
+증거 없이 이 가중치·이 축을 재포장하지 않는다. `research/configs/v154_maturity_delta_submission_package.json`의
 `public_estimate`(conservative 1172.6022 / centre 1173.1802 / optimistic 1173.6802)는
 실측과 약 4.2점 어긋났고 방향(양수 예상)도 실제(음수 전이)와 반대였다 — 로컬 quadratic
 곡률 + 단일 관측 델타(v142→v148, weight 0→0.15)로 weight 0.85까지 외삽하는 calibration
@@ -88,7 +88,7 @@ standalone으로 만들며, 평가 v3를 통과하기 전에는 champion 파일�
 - 1180 목표는 v335의 공식 Public `1181.7100031613`으로 달성했다.
 - 다음 목표 1185까지 공식 점수 `3.2899968387`이 남아 있다.
 - 2024 label은 반복 연구에 사용돼 `development_contaminated`다. 독립 holdout으로 부르지 않는다.
-- 새 후보는 `configs/evaluation_v3.json`과 `src/evaluation_contract.py`를 통과해야 한다.
+- 새 후보는 `research/configs/evaluation_v3.json`과 `src/evaluation_contract.py`를 통과해야 한다.
 - primary evidence는 서로 다른 `nested_outer` 또는 `locked_shadow` 축 최소 2개다.
 - 전체 family trial ledger, White Reality Check, pitcher/crossed/block bootstrap을 요구한다.
 - local→Public 단일 환산은 금지하며 clean transfer 3개 전에는 projection을 표시하지 않는다.

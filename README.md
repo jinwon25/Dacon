@@ -25,7 +25,7 @@ LG Aimers 9기 `투구 제구 성공 확률 예측 AI 온라인 해커톤`의 �
 상호작용을 결합하고, `R_ANCHOR`에만 동일한 low-rank 방향을 추가한 row-local 패키지다.
 `R_CORE`는 v290과 동일하게 보존한다. 2026-08-31 00:00:45 KST 제출에서 Public
 `1181.7100031613`을 확인해 목표 1180을 달성했다. 상세 근거와 재현 절차는
-[`reports/v335_public_result_20260831.md`](reports/v335_public_result_20260831.md)에 있다.
+[`research/reports/v335_public_result_20260831.md`](research/reports/v335_public_result_20260831.md)에 있다.
 
 ## 가장 먼저 할 일
 
@@ -199,7 +199,7 @@ output[R_CORE] = v290[R_CORE]
 ```
 
 모델 변화, 로컬 증분과 실제 Public 전이는
-[`reports/v335_public_result_20260831.md`](reports/v335_public_result_20260831.md)에 정리돼 있다.
+[`research/reports/v335_public_result_20260831.md`](research/reports/v335_public_result_20260831.md)에 정리돼 있다.
 
 ## 과거 JY 순차 게이트 연구
 
@@ -219,9 +219,9 @@ bridge를 만들었다. 순차 감사에서 `runners_or_high_li_bridge027`은 lo
 `+0.0173919396` 개선됐다.
 
 상세 근거는
-[`reports/jy_runners_high_li_bridge027_public_result_20260828.md`](reports/jy_runners_high_li_bridge027_public_result_20260828.md),
+[`research/reports/jy_runners_high_li_bridge027_public_result_20260828.md`](research/reports/jy_runners_high_li_bridge027_public_result_20260828.md),
 순차 감사 표는
-[`reports/jy_runners_high_li_bridge027_sequential_gate_audit.csv`](reports/jy_runners_high_li_bridge027_sequential_gate_audit.csv)에 있다.
+[`research/reports/jy_runners_high_li_bridge027_sequential_gate_audit.csv`](research/reports/jy_runners_high_li_bridge027_sequential_gate_audit.csv)에 있다.
 
 ## 누수 방지와 승격 규칙
 
@@ -231,7 +231,7 @@ bridge를 만들었다. 순차 감사에서 `runners_or_high_li_bridge027`은 lo
 - calibration과 blend는 시간 순서를 지킨 OOF에서 결정한다.
 - 2024 label은 반복 연구에 사용됐으므로 `development_contaminated`로 취급한다.
 - Public 점수로 같은 계열의 강도나 route를 사후 미세 조정하지 않는다.
-- 새 후보는 [`configs/evaluation_v3.json`](configs/evaluation_v3.json)의 다중 시간축,
+- 새 후보는 [`research/configs/evaluation_v3.json`](research/configs/evaluation_v3.json)의 다중 시간축,
   월·domain, crossed/block bootstrap, Reality Check와 패키지 감사를 통과해야 한다.
 
 행 순서나 배치 크기를 바꿔도 같은 행의 예측이 유지돼야 한다. 공식 규칙과 구현 근거는
@@ -264,17 +264,17 @@ python scripts\audit_jy_sequential_gates.py
 python scripts\audit_jy_next_final.py
 ```
 
-최종 제출 이력과 해시는 [`reports/submissions.csv`](reports/submissions.csv)에 기록한다.
+최종 제출 이력과 해시는 [`research/reports/submissions.csv`](research/reports/submissions.csv)에 기록한다.
 
 ## 폴더 구조
 
 ```text
 .github/       협업·CI 설정
-configs/       동결된 실험 및 패키징 계약
+research/configs/       동결된 실험 및 패키징 계약
 data/          공식 원본 데이터, Git 제외
 docs/          프로젝트 현황·인계·규칙
 notebooks/     과거 및 탐색 워크벤치
-reports/       실험 결과와 제출 원장
+research/reports/       실험 결과와 제출 원장
 scripts/       저장소 보조 감사
 src/           학습·평가·패키징·추론 구현
 submissions/   제출 계보와 PRIVATE 전달용 확정 ZIP
@@ -282,7 +282,7 @@ tests/         데이터 비의존 및 로컬 통합 테스트
 artifacts/     모델·OOF·패키지 산출물, 원칙적으로 Git 제외
 ```
 
-과거 v11~v167의 상세 실험과 실패 기록은 삭제하지 않고 `reports/`와
+과거 v11~v167의 상세 실험과 실패 기록은 삭제하지 않고 `research/reports/`와
 [`docs/PROJECT_MEMORY.md`](docs/PROJECT_MEMORY.md)에 보존한다. 현재 판단에는 최신 상태 문서와
 JY champion 최종 보고서를 우선한다.
 
@@ -292,12 +292,12 @@ JY champion 최종 보고서를 우선한다.
 |---|---|
 | [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) | 현재 v335 챔피언과 운영 기준 |
 | [`docs/STANDALONE_CHAMPION.md`](docs/STANDALONE_CHAMPION.md) | 최신 단일 ZIP 실행·감사·전달 |
-| [`reports/v335_public_result_20260831.md`](reports/v335_public_result_20260831.md) | 1180 달성과 v335 승격 근거 |
-| [`reports/jy_runners_high_li_bridge027_public_result_20260828.md`](reports/jy_runners_high_li_bridge027_public_result_20260828.md) | 1172.137 갱신 근거 |
-| [`reports/target1180_v167_public_result_20260825.md`](reports/target1180_v167_public_result_20260825.md) | v167 기준선 근거 |
-| [`reports/target1170_v142_v148_public_result_20260823.md`](reports/target1170_v142_v148_public_result_20260823.md) | 직전 1170 달성 근거 |
-| [`reports/target1173_v149_v154_final_submission_20260823.md`](reports/target1173_v149_v154_final_submission_20260823.md) | 마지막 제출 연구와 비승격 판정 |
-| [`reports/submissions.csv`](reports/submissions.csv) | 제출 ID·점수·해시 원장 |
+| [`research/reports/v335_public_result_20260831.md`](research/reports/v335_public_result_20260831.md) | 1180 달성과 v335 승격 근거 |
+| [`research/reports/jy_runners_high_li_bridge027_public_result_20260828.md`](research/reports/jy_runners_high_li_bridge027_public_result_20260828.md) | 1172.137 갱신 근거 |
+| [`research/reports/target1180_v167_public_result_20260825.md`](research/reports/target1180_v167_public_result_20260825.md) | v167 기준선 근거 |
+| [`research/reports/target1170_v142_v148_public_result_20260823.md`](research/reports/target1170_v142_v148_public_result_20260823.md) | 직전 1170 달성 근거 |
+| [`research/reports/target1173_v149_v154_final_submission_20260823.md`](research/reports/target1173_v149_v154_final_submission_20260823.md) | 마지막 제출 연구와 비승격 판정 |
+| [`research/reports/submissions.csv`](research/reports/submissions.csv) | 제출 ID·점수·해시 원장 |
 | [`submissions/README.md`](submissions/README.md) | 제출 파일 보관 규칙과 계보 |
 | [`docs/EXPERIMENT_WORKFLOW.md`](docs/EXPERIMENT_WORKFLOW.md) | 공통 실험·검증 절차 |
 | [`docs/GITHUB_START_GUIDE.md`](docs/GITHUB_START_GUIDE.md) | 팀원 GitHub 시작 안내 |

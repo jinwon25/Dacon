@@ -225,7 +225,7 @@ def validate(
     )
     result = pd.DataFrame(rows).sort_values("brier", kind="stable")
     result.to_csv(
-        project_dir / "reports" / "f_regime_catboost_results.csv",
+        project_dir / "research" / "reports" / "f_regime_catboost_results.csv",
         index=False,
         encoding="utf-8",
     )
@@ -282,7 +282,7 @@ def backtest(
         gc.collect()
     result = pd.DataFrame(rows)
     result.to_csv(
-        project_dir / "reports" / "f_regime_catboost_backtest.csv",
+        project_dir / "research" / "reports" / "f_regime_catboost_backtest.csv",
         index=False,
         encoding="utf-8",
     )
@@ -347,7 +347,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--project-dir", type=Path, default=Path("."))
     parser.add_argument(
-        "--config", type=Path, default=Path("configs/f_regime_catboost.json")
+        "--config", type=Path, default=Path("research/configs/f_regime_catboost.json")
     )
     parser.add_argument(
         "--stages",

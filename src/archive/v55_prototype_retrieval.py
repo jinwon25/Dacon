@@ -466,7 +466,7 @@ def run(project: Path, output_dir: Path) -> dict[str, object]:
     summary = {
         "protocol": "V55_TRAIN_ONLY_BUCKET_PROTOTYPE_RETRIEVAL_V1",
         "parent": "submit_v27.zip / Public 1157.9736407889",
-        "preregistration": "reports/top1100/experiment_registry.csv F5_retrieval_01",
+        "preregistration": "research/reports/top1100/experiment_registry.csv F5_retrieval_01",
         "configuration": {
             "bucket_columns": list(BUCKET_COLUMNS),
             "numeric_columns": list(NUMERIC_COLUMNS),

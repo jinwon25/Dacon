@@ -215,7 +215,7 @@ def main() -> None:
         default=Path("artifacts/state_mode_joint_final_20260816/manifest.json"),
     )
     parser.add_argument(
-        "--report", type=Path, default=Path("reports/v19_validation.md")
+        "--report", type=Path, default=Path("research/reports/v19_validation.md")
     )
     args = parser.parse_args()
     project = args.project.resolve()

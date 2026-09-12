@@ -202,7 +202,7 @@ def _write_report(
 
 def run(project_dir: Path, n_resamples: int = 10_000) -> pd.DataFrame:
     config = json.loads(
-        (project_dir / "configs" / "followup.json").read_text(encoding="utf-8")
+        (project_dir / "research" / "configs" / "followup.json").read_text(encoding="utf-8")
     )
     spec = config["rolling_damped_ensemble"]
     methods = [str(value) for value in spec["methods"]]
@@ -323,7 +323,7 @@ def run(project_dir: Path, n_resamples: int = 10_000) -> pd.DataFrame:
     )
     result["passes_statistical_gate"] = all(checks.values())
 
-    reports = project_dir / "reports"
+    reports = project_dir / "research" / "reports"
     result.to_csv(reports / "rolling_drift_results.csv", index=False, encoding="utf-8")
     bootstrap.to_csv(
         reports / "rolling_drift_bootstrap.csv", index=False, encoding="utf-8"

@@ -148,7 +148,7 @@ def main() -> None:
         raise RuntimeError(f"immutable manifest already exists with different content: {manifest_path}")
     manifest_path.write_text(encoded, encoding="utf-8")
 
-    report = project / "reports" / "champion_v2_audit_20260809.md"
+    report = project / "research" / "reports" / "champion_v2_audit_20260809.md"
     report.write_text(
         "# Champion v2 audit\n\n"
         "- `submit_v2.zip` SHA-256: **verified**\n"

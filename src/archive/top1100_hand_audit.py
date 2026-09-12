@@ -28,14 +28,14 @@ def run(project: Path) -> pd.DataFrame:
             {"season": int(season), "mapping": "1=Right,2=Left", "l1_share_error": err_1_right},
         ])
     out = pd.DataFrame(rows)
-    out.to_csv(project / "reports/top1100/hand_mapping_audit.csv", index=False)
+    out.to_csv(project / "research/reports/top1100/hand_mapping_audit.csv", index=False)
     summary = out.groupby("mapping", as_index=False)["l1_share_error"].agg(["mean", "median", "max"]).reset_index()
     best = str(summary.loc[summary["mean"].idxmin(), "mapping"])
     report = "# Target-free hand mapping audit\n\n"
     report += "This compares only season-level pitcher-hand shares; no outcome or target-derived statistic is used.\n\n"
     report += "```csv\n" + summary.to_csv(index=False) + "```\n\n"
     report += f"Lower aggregate share error: **{best}**. This is an aggregate consistency result, not player identity accuracy; it does not by itself unlock Trackman linkage.\n"
-    (project / "reports/top1100/hand_mapping_audit.md").write_text(report, encoding="utf-8")
+    (project / "research/reports/top1100/hand_mapping_audit.md").write_text(report, encoding="utf-8")
     print(summary.to_string(index=False))
     return out
 

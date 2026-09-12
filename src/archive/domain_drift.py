@@ -175,7 +175,7 @@ def _bootstrap_rows(
 
 def run(project_dir: Path, n_resamples: int = 10_000) -> pd.DataFrame:
     config = json.loads(
-        (project_dir / "configs" / "followup.json").read_text(encoding="utf-8")
+        (project_dir / "research" / "configs" / "followup.json").read_text(encoding="utf-8")
     )
     train = read_main(project_dir / "data" / "train.csv")
     folds, caches = _load_all_caches(project_dir, config, train)
@@ -279,7 +279,7 @@ def run(project_dir: Path, n_resamples: int = 10_000) -> pd.DataFrame:
     )
     result["passes_statistical_gate"] = all(checks.values())
 
-    reports = project_dir / "reports"
+    reports = project_dir / "research" / "reports"
     result.to_csv(reports / "domain_drift_results.csv", index=False)
     pd.concat(offset_rows, ignore_index=True).to_csv(
         reports / "domain_drift_offsets.csv", index=False

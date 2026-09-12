@@ -213,7 +213,7 @@ def main() -> None:
         default=Path("artifacts/v20_target1160_final_20260816/manifest.json"),
     )
     parser.add_argument(
-        "--report", type=Path, default=Path("reports/v20_validation.md")
+        "--report", type=Path, default=Path("research/reports/v20_validation.md")
     )
     args = parser.parse_args()
     project = args.project.resolve()

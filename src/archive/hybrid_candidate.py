@@ -87,7 +87,7 @@ def run(project_dir: Path, resamples: int = 10_000) -> pd.DataFrame:
     project_dir = project_dir.resolve()
     train = read_main(project_dir / "data" / "train.csv")
     followup = json.loads(
-        (project_dir / "configs" / "followup.json").read_text(encoding="utf-8")
+        (project_dir / "research" / "configs" / "followup.json").read_text(encoding="utf-8")
     )
     rows: list[dict[str, Any]] = []
     bootstrap_rows: list[dict[str, Any]] = []
@@ -178,13 +178,13 @@ def run(project_dir: Path, resamples: int = 10_000) -> pd.DataFrame:
     )
     frame["passes_statistical_gate"] = all(checks.values())
     frame.to_csv(
-        project_dir / "reports" / "hybrid_candidate_results.csv",
+        project_dir / "research" / "reports" / "hybrid_candidate_results.csv",
         index=False,
         encoding="utf-8",
     )
     bootstrap = pd.DataFrame(bootstrap_rows)
     bootstrap.to_csv(
-        project_dir / "reports" / "hybrid_candidate_bootstrap.csv",
+        project_dir / "research" / "reports" / "hybrid_candidate_bootstrap.csv",
         index=False,
         encoding="utf-8",
     )
@@ -214,7 +214,7 @@ def run(project_dir: Path, resamples: int = 10_000) -> pd.DataFrame:
             "- Selection caveat: all four outer years have already been reused extensively as development data; Public submission is a deployment probe, not independent proof.",
         ]
     )
-    (project_dir / "reports" / "hybrid_candidate_findings.md").write_text(
+    (project_dir / "research" / "reports" / "hybrid_candidate_findings.md").write_text(
         "\n".join(lines) + "\n", encoding="utf-8"
     )
     print(frame.to_string(index=False))

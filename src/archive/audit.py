@@ -294,7 +294,7 @@ def generate_audit(project_dir: Path, output_path: Path) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--project-dir", type=Path, default=Path("."))
-    parser.add_argument("--output", type=Path, default=Path("reports/data_audit.md"))
+    parser.add_argument("--output", type=Path, default=Path("research/reports/data_audit.md"))
     args = parser.parse_args()
     project_dir = args.project_dir.resolve()
     output = args.output if args.output.is_absolute() else project_dir / args.output

@@ -218,7 +218,7 @@ def main() -> None:
     parser.add_argument("--candidate", type=Path, default=Path("submit_v13.zip"))
     parser.add_argument("--incumbent", type=Path, default=Path("submit_v11.zip"))
     parser.add_argument(
-        "--report", type=Path, default=Path("reports/v13_recent_exact_validation.md")
+        "--report", type=Path, default=Path("research/reports/v13_recent_exact_validation.md")
     )
     args = parser.parse_args()
     project = args.project.resolve()

@@ -51,7 +51,7 @@ def run(
 ) -> pd.DataFrame:
     spec = json.loads(config_path.read_text(encoding="utf-8"))
     followup = json.loads(
-        (project_dir / "configs" / "followup.json").read_text(encoding="utf-8")
+        (project_dir / "research" / "configs" / "followup.json").read_text(encoding="utf-8")
     )
     years = validation_seasons or [int(v) for v in spec["validation_seasons"]]
     train = read_main(project_dir / "data" / "train.csv")
@@ -155,7 +155,7 @@ def run(
             gc.collect()
     frame = pd.DataFrame(rows)
     _upsert_csv(
-        project_dir / "reports" / "recency_training_results.csv",
+        project_dir / "research" / "reports" / "recency_training_results.csv",
         frame,
         ["outer_validation_season", "half_life", "candidate"],
     )
@@ -167,7 +167,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--project-dir", type=Path, default=Path("."))
     parser.add_argument(
-        "--config", type=Path, default=Path("configs/recency_training.json")
+        "--config", type=Path, default=Path("research/configs/recency_training.json")
     )
     parser.add_argument("--years", nargs="+", type=int)
     parser.add_argument("--half-lives", nargs="+", type=float)

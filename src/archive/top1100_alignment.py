@@ -100,7 +100,7 @@ def run(project: Path, placebo_repeats: int = 20) -> None:
     matches = _match_bucket(main_games, tm_games, main_x, tm_x)
     candidates = matches.sort_values(["season", "main_game_idx", "distance"]).copy()
     candidates["confidence"] = np.select([candidates["distance"].le(1.6) & candidates["margin"].ge(0.1), candidates["distance"].le(2.2)], ["high", "medium"], default="low")
-    report_dir = project / "reports/top1100"; artifact_dir = project / "artifacts/top1100"; report_dir.mkdir(parents=True, exist_ok=True); artifact_dir.mkdir(parents=True, exist_ok=True)
+    report_dir = project / "research/reports/top1100"; artifact_dir = project / "artifacts/top1100"; report_dir.mkdir(parents=True, exist_ok=True); artifact_dir.mkdir(parents=True, exist_ok=True)
     candidates.to_parquet(artifact_dir / "alignment_game_candidates.parquet", index=False)
     candidates.to_csv(report_dir / "alignment_game_candidates.csv", index=False)
     # Edge table keeps only the interpretable candidate fields; raw row-level
@@ -123,7 +123,7 @@ def run(project: Path, placebo_repeats: int = 20) -> None:
     placebo.to_csv(report_dir / "alignment_placebo_fdr.csv", index=False)
     # Existing annual linkage is preserved as a fallback, annotated with the
     # structural game coverage rather than silently replacing it.
-    old = pd.read_csv(project / "reports/trackman_linkage.csv")
+    old = pd.read_csv(project / "research/reports/trackman_linkage.csv")
     old["alignment_game_match_count"] = old["season"].map(candidates.groupby("season").size()).fillna(0).astype(int)
     old["mapping_method"] = "legacy_annual_fingerprint; structural_game_alignment_audit_only"
     old.to_csv(report_dir / "player_mapping_by_origin.csv", index=False)

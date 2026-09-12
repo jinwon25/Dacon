@@ -70,7 +70,7 @@ standalone 후보 생성 최소 조건:
 
 ## 5. 작업 정리 원칙
 
-- 최종 판단은 `reports/`에 수치와 재현 명령으로 남긴다.
+- 최종 판단은 `research/reports/`에 수치와 재현 명령으로 남긴다.
 - 실패한 대형 cache, 임시 압축 해제본, 중복 ZIP, `__pycache__`, `.pytest_cache`는 삭제한다.
 - 과거 코드·보고서는 재현 근거가 있으면 지우지 않고 역사 자료로 표시한다.
 - 원본 데이터·개인정보·인증정보는 Git/LFS에 올리지 않는다. 모델·OOF·제출 ZIP은
@@ -99,9 +99,9 @@ standalone 후보 생성 최소 조건:
   병합됐고 `팀 브랜치`은 workflow 삭제뿐이므로 exact OOF 전달 전 blend를 금지한다.
 - v44/v64 physical student와 v63 count interaction의 강도·seed·도메인 재탐색을 금지한다.
 - 공개 대회 자료와 최신 문헌 감사는
-  `reports/target1170_research_update_20260822.md`를 기준으로 한다.
+  `research/reports/target1170_research_update_20260822.md`를 기준으로 한다.
 
-최신 상세 결과는 `reports/target1170_research_update_20260822.md`, 실행 방법은
+최신 상세 결과는 `research/reports/target1170_research_update_20260822.md`, 실행 방법은
 `docs/STANDALONE_CHAMPION.md`를 따른다.
 
 ## 7. TrackMan 전수조사 불변 결론 — 2026-08-22
@@ -128,14 +128,14 @@ standalone 후보 생성 최소 조건:
 다음 우선순위는 (1) 팀원 독립 exact OOF constrained blend, (2) nested temporal runner,
 (3) 환경 안정 feature-family residual이다. IVB·고차원 물리·repeatability·TrackMan 구종
 학생 계열 재탐색은 금지한다. 상세 근거는
-`reports/trackman_deep_dive_20260822.md`를 기준으로 한다.
+`research/reports/trackman_deep_dive_20260822.md`를 기준으로 한다.
 
 ## 8. 평가체계 v3 불변 결론 — 2026-08-22
 
 - 공식 점수 구현은 `max(0, 100000 * (1 - Brier / (r*(1-r))))`와 일치한다.
 - 1170까지 `+11.9254443249`이며 테스트 양성률을 `0.4861`로 가정하면 평균 Brier
   약 `2.9791e-05` 감소가 필요하다.
-- `configs/evaluation_v3.json`과 `src/evaluation_contract.py`가 post-1158 후보의
+- `research/configs/evaluation_v3.json`과 `src/evaluation_contract.py`가 post-1158 후보의
   유일한 승격 계약이다.
 - v75에서 full-2024 calibration intercept/slope는 `-0.00488/1.01172`였고 same-axis
   additive/affine gain은 `+0.829/+1.190`뿐이었다. source-only calibration은 월·domain
@@ -146,11 +146,11 @@ standalone 후보 생성 최소 조건:
 - 이 재감사 당시 1158 champion, standalone 경로와 SHA-256은 변함없었다. v58~v76 중 새 Public probe
   자격을 얻은 후보는 없다.
 
-상세 수치와 다음 실행 설계는 `reports/evaluation_reaudit_20260822.md`를 기준으로 한다.
+상세 수치와 다음 실행 설계는 `research/reports/evaluation_reaudit_20260822.md`를 기준으로 한다.
 
 ## 9. v77 팀 OOF·v78 환경 안정 잔차 불변 결론 — 2026-08-22
 
-- 팀 OOF 전달·비교는 `configs/oof_bundle_contract_v1.json`과
+- 팀 OOF 전달·비교는 `research/configs/oof_bundle_contract_v1.json`과
   `src/archive/v77_team_oof_constrained_blend.py`만 사용한다. 동일 `(axis,row_id)` 정렬, SHA-256,
   strict-forward 학습 경계, 행 독립성과 원본 데이터 parity가 없는 prediction은 혼합하지 않는다.
 - 현재 팀 브랜치와 로컬 artifact에는 champion과 독립적인 exact final OOF가 없다. Public 점수나
@@ -164,7 +164,7 @@ standalone 후보 생성 최소 조건:
 - 다음 유효 작업은 독립 팀원 exact OOF 확보 → analytic headroom/residual correlation →
   constrained blend → 평가 v3 순서다. 통과 결과만 새 standalone ZIP으로 만든다.
 
-상세 근거는 `reports/target1170_v77_v78_followup_20260822.md`를 기준으로 한다.
+상세 근거는 `research/reports/target1170_v77_v78_followup_20260822.md`를 기준으로 한다.
 
 ## 10. v79~v81 불변 결론 — 2026-08-22
 
@@ -182,7 +182,7 @@ standalone 후보 생성 최소 조건:
 - 다음 유효 입력은 v77 계약의 독립 팀원 exact OOF, 운영진이 명시적으로 허용한 새로운
   정보원, 또는 새 locked shadow다. 그 전에는 현재 standalone 1158.0746을 유지한다.
 
-상세 근거는 `reports/target1170_v79_v81_followup_20260822.md`를 기준으로 한다.
+상세 근거는 `research/reports/target1170_v79_v81_followup_20260822.md`를 기준으로 한다.
 
 ## 11. v82 탐색적 Public probe — 2026-08-22
 
@@ -208,7 +208,7 @@ standalone 후보 생성 최소 조건:
   SHA-256은 그대로 `6F6B...4AB1`이다.
 - Public 결과를 보고 strict weight·route를 역조정하지 않는다.
 
-상세 근거는 `reports/target1170_v82_public_probe_20260822.md`를 기준으로 한다.
+상세 근거는 `research/reports/target1170_v82_public_probe_20260822.md`를 기준으로 한다.
 
 ## 12. v83 새 챔피언 조건부 headroom — 2026-08-22
 
@@ -246,7 +246,7 @@ standalone 후보 생성 최소 조건:
 - 다음 경로는 F를 보호하면서 팀원 exact OOF constrained stack, R_CORE 동적 계층
   uncertainty, 다중 실패유형 일관 결합 순서다.
 
-상세 근거는 `reports/target1170_v84_public_result_20260822.md`를 기준으로 한다.
+상세 근거는 `research/reports/target1170_v84_public_result_20260822.md`를 기준으로 한다.
 
 ## 14. v85~v91 후속 검증 — 2026-08-22
 
@@ -273,7 +273,7 @@ standalone 후보 생성 최소 조건:
 - 다음 새 family는 완전 nested temporal runner 안의 다중 실패유형 구조 모델이다. 기존 FM,
   F eta, TrackMan gate, strict month route의 강도·seed·threshold 미세탐색은 금지한다.
 
-상세 근거는 `reports/target1170_v85_v91_followup_20260822.md`를 기준으로 한다.
+상세 근거는 `research/reports/target1170_v85_v91_followup_20260822.md`를 기준으로 한다.
 
 ## 15. 데이터·파이프라인 재감사와 v92~v93 — 2026-08-22
 
@@ -295,7 +295,7 @@ standalone 후보 생성 최소 조건:
   실행되는 standalone ZIP이어야 하며 과거 ZIP 런타임 의존을 금지한다.
 - 이번 사이클은 통과 후보가 없어 ZIP 생성과 DACON 제출을 하지 않았다.
 
-상세 근거는 `reports/target1170_v92_v93_pipeline_audit_20260822.md`를 기준으로 한다.
+상세 근거는 `research/reports/target1170_v92_v93_pipeline_audit_20260822.md`를 기준으로 한다.
 
 ## 16. v94~v96 multi-origin 계약·context 전이 — 2026-08-22
 
@@ -319,7 +319,7 @@ standalone 후보 생성 최소 조건:
   유지한다. 다음 최우선은 팀원 독립 exact OOF+2025 prediction bundle의 v77 constrained blend다.
 - 모든 후속 후보는 처음부터 과거 ZIP 의존성 없는 standalone이어야 한다.
 
-상세 근거는 `reports/target1170_v94_v96_multiorigin_20260822.md`를 기준으로 한다.
+상세 근거는 `research/reports/target1170_v94_v96_multiorigin_20260822.md`를 기준으로 한다.
 
 ## 17. v142~v148 목표 1170 달성 — 2026-08-23
 
@@ -335,7 +335,7 @@ standalone 후보 생성 최소 조건:
   SHA-256은 `7A27BE5878A79934544C741F283C139D40FB20484D52DB494928BCBE27E1E337`이다.
 - 목표 달성 후 남은 일일 제출 quota 1회는 v154 최종 검증 후보에 사용했다.
 
-상세 근거는 `reports/target1170_v142_v148_public_result_20260823.md`를 기준으로 한다.
+상세 근거는 `research/reports/target1170_v142_v148_public_result_20260823.md`를 기준으로 한다.
 
 ## 18. v149~v154 마지막 1173 목표 연구 — 2026-08-23
 
@@ -351,7 +351,7 @@ standalone 후보 생성 최소 조건:
   v148의 `1170.3014697177`, ID `1544757`, 9위를 유지했다.
 - 따라서 최종 공식 champion과 전달 기준은 v148이다. v154는 비승격 마지막 제출 기록이다.
 
-상세 근거는 `reports/target1173_v149_v154_final_submission_20260823.md`를 기준으로 한다.
+상세 근거는 `research/reports/target1173_v149_v154_final_submission_20260823.md`를 기준으로 한다.
 
 ## 19. exact deployed-H1 계약과 v167 Public 1172 갱신 — 2026-08-25
 
@@ -374,4 +374,4 @@ standalone 후보 생성 최소 조건:
 - 실제 개선은 승격 근거로만 사용한다. 동일 affine을 Public에 맞춰 더 조정하거나 test 정답을
   역추정하지 않는다. 목표 1180까지 `7.9227619679`가 남았다.
 
-상세 근거는 `reports/target1180_v167_public_result_20260825.md`를 기준으로 한다.
+상세 근거는 `research/reports/target1180_v167_public_result_20260825.md`를 기준으로 한다.

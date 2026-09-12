@@ -79,7 +79,7 @@ def run(project: Path) -> dict[str, Any]:
             values = chunk["row_id"].astype(str).tolist(); duplicate = duplicate or bool(seen.intersection(values)); seen.update(values)
         schema_checks[f"row_id_unique_{name}"] = not duplicate
     result = {"created_at": pd.Timestamp.now(tz="Asia/Seoul").isoformat(), "schema_checks": schema_checks, "files": {"train": train, "test": test, "trackman_history": trackman, "sample_submission": sample}}
-    out_dir = project / "artifacts/top1100"; report_dir = project / "reports/top1100"; out_dir.mkdir(parents=True, exist_ok=True); report_dir.mkdir(parents=True, exist_ok=True)
+    out_dir = project / "artifacts/top1100"; report_dir = project / "research/reports/top1100"; out_dir.mkdir(parents=True, exist_ok=True); report_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "data_contract.json").write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
     lines = ["# Top-1100 data contract", "", f"Created: `{result['created_at']}`", "", "## Files"]
     for name, info in result["files"].items():

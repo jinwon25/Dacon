@@ -15,7 +15,7 @@ def _sha(path: Path) -> str:
 
 
 def run(project: Path) -> None:
-    report_dir = project / "reports/top1100"; report_dir.mkdir(parents=True, exist_ok=True)
+    report_dir = project / "research/reports/top1100"; report_dir.mkdir(parents=True, exist_ok=True)
     parent = project / "submit_v2.zip"
     debt = pd.DataFrame([
         {"debt": "exact V2 row-level component OOF", "status": "FAIL", "evidence": "strict fixed-fit nested OOF was not completed; frozen cache is diagnostic only"},

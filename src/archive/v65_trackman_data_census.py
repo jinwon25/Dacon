@@ -366,7 +366,7 @@ def run(
     pairs, alignment_audit = _load_alignment_pairs(
         alignment_dir / "pitch_alignment.npz", main, trackman
     )
-    hungarian_path = project / "reports" / "trackman_linkage.csv"
+    hungarian_path = project / "research" / "reports" / "trackman_linkage.csv"
     hungarian = pd.read_csv(hungarian_path) if hungarian_path.exists() else None
 
     season_domain = _season_domain_table(main)

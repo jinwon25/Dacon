@@ -67,7 +67,7 @@ def run(project: Path) -> None:
     frame = _read(project)
     transition, enriched = transition_audit(frame)
     reconstruction = integer_reconstruction(frame)
-    out_dir = project / "artifacts/top1100"; report_dir = project / "reports/top1100"; out_dir.mkdir(parents=True, exist_ok=True); report_dir.mkdir(parents=True, exist_ok=True)
+    out_dir = project / "artifacts/top1100"; report_dir = project / "research/reports/top1100"; out_dir.mkdir(parents=True, exist_ok=True); report_dir.mkdir(parents=True, exist_ok=True)
     transition.to_csv(report_dir / "asof_transition_audit.csv", index=False)
     reconstruction.to_csv(report_dir / "asof_integer_reconstruction.csv", index=False)
     # Keep a compact train artifact for model prototyping; it contains no target.

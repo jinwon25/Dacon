@@ -200,7 +200,7 @@ def main() -> None:
     )
     parser.add_argument("--incumbent-zip", type=Path, default=Path("submit.zip"))
     parser.add_argument(
-        "--report", type=Path, default=Path("reports/candidate_package_validation.md")
+        "--report", type=Path, default=Path("research/reports/candidate_package_validation.md")
     )
     args = parser.parse_args()
     project = args.project_dir.resolve()

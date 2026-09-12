@@ -70,7 +70,7 @@ def _validation_iterations(project_dir: Path) -> tuple[int, list[int]]:
 
 def run(project_dir: Path, output_name: str) -> dict[str, object]:
     project_dir = project_dir.resolve()
-    gate_path = project_dir / "reports" / "hybrid_candidate_results.csv"
+    gate_path = project_dir / "research" / "reports" / "hybrid_candidate_results.csv"
     if not gate_path.exists():
         raise FileNotFoundError("run hybrid_candidate.py before packaging")
     gate = pd.read_csv(gate_path)
@@ -131,7 +131,7 @@ def run(project_dir: Path, output_name: str) -> dict[str, object]:
     if profiles.duplicated(["season", "pitcher_id"]).any():
         raise RuntimeError("Trackman profile keys are not unique")
     config = json.loads(
-        (project_dir / "configs" / "trackman_linkage.json").read_text(
+        (project_dir / "research" / "configs" / "trackman_linkage.json").read_text(
             encoding="utf-8"
         )
     )

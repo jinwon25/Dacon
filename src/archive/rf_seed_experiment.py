@@ -71,7 +71,7 @@ def _prediction_for_seed(
 
 def run(project_dir: Path, years: list[int]) -> pd.DataFrame:
     config = json.loads(
-        (project_dir / "configs" / "followup.json").read_text(encoding="utf-8")
+        (project_dir / "research" / "configs" / "followup.json").read_text(encoding="utf-8")
     )
     train = read_main(project_dir / "data" / "train.csv")
     features = [
@@ -160,9 +160,9 @@ def run(project_dir: Path, years: list[int]) -> pd.DataFrame:
             )
 
     result = pd.DataFrame(rows)
-    result.to_csv(project_dir / "reports" / "rf_seed_results.csv", index=False)
+    result.to_csv(project_dir / "research" / "reports" / "rf_seed_results.csv", index=False)
     pd.DataFrame(bootstrap_rows).to_csv(
-        project_dir / "reports" / "rf_seed_bootstrap.csv", index=False
+        project_dir / "research" / "reports" / "rf_seed_bootstrap.csv", index=False
     )
     print(result.to_string(index=False))
     return result

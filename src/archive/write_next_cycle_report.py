@@ -17,11 +17,11 @@ def _table(path: Path, columns: list[str] | None = None) -> str:
 
 
 def run(project: Path) -> Path:
-    nested = project / "reports/champion_v2_nested_results.csv"
-    residual = project / "reports/residual_recipe_results.csv"
-    trackman = project / "reports/trackman_soft_linkage_results.csv"
-    bootstrap = project / "reports/next_cycle_bootstrap.csv"
-    deploy = project / "reports/deployment_gate_20260809.json"
+    nested = project / "research/reports/champion_v2_nested_results.csv"
+    residual = project / "research/reports/residual_recipe_results.csv"
+    trackman = project / "research/reports/trackman_soft_linkage_results.csv"
+    bootstrap = project / "research/reports/next_cycle_bootstrap.csv"
+    deploy = project / "research/reports/deployment_gate_20260809.json"
     gate = pd.read_csv(bootstrap) if bootstrap.exists() else pd.DataFrame()
     candidate_pass = bool(gate.get("pass", pd.Series(dtype=bool)).any())
     deploy_data = json.loads(deploy.read_text(encoding="utf-8")) if deploy.exists() else {}
@@ -116,7 +116,7 @@ CatBoost는 ordered boosting/범주형 처리의 원 논문을 방법론 후보�
 
 이번 사이클은 연구 복잡도나 모델 수가 아니라 v2 대비 정직한 nested Brier 개선과 배포 재현성만으로 승격 여부를 결정했다.
 """
-    out = project / "reports/next_cycle_findings_20260809.md"
+    out = project / "research/reports/next_cycle_findings_20260809.md"
     out.write_text(report, encoding="utf-8")
     print(out)
     return out

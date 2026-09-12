@@ -271,7 +271,7 @@ def run_wave0(project_dir: Path, config: dict[str, Any]) -> dict[int, dict[str, 
     segment_rows: list[dict[str, Any]] = []
     correlation_rows: list[dict[str, Any]] = []
     bootstrap_rows: list[dict[str, Any]] = []
-    experiments_path = project_dir / "reports" / "experiments.csv"
+    experiments_path = project_dir / "research" / "reports" / "experiments.csv"
 
     for year in years:
         fold = folds[year]
@@ -389,28 +389,28 @@ def run_wave0(project_dir: Path, config: dict[str, Any]) -> dict[int, dict[str, 
         )
 
     _upsert_csv(
-        project_dir / "reports" / "walk_forward_results.csv",
+        project_dir / "research" / "reports" / "walk_forward_results.csv",
         pd.DataFrame(result_rows),
         ["experiment_id"],
     )
     _upsert_csv(
-        project_dir / "reports" / "brier_decomposition.csv",
+        project_dir / "research" / "reports" / "brier_decomposition.csv",
         pd.DataFrame(decomposition_rows),
         ["experiment_id", "n_bins"],
     )
     _upsert_csv(
-        project_dir / "reports" / "reliability_tables.csv",
+        project_dir / "research" / "reports" / "reliability_tables.csv",
         pd.concat(reliability_rows, ignore_index=True),
         ["experiment_id", "bin"],
     )
     _upsert_csv(
-        project_dir / "reports" / "segment_results.csv",
+        project_dir / "research" / "reports" / "segment_results.csv",
         pd.DataFrame(segment_rows),
         ["experiment_id", "outer_validation_season", "segment_type", "segment_value"],
     )
-    _write_csv(project_dir / "reports" / "wave0_correlations.csv", pd.DataFrame(correlation_rows))
+    _write_csv(project_dir / "research" / "reports" / "wave0_correlations.csv", pd.DataFrame(correlation_rows))
     _upsert_csv(
-        project_dir / "reports" / "bootstrap_results.csv",
+        project_dir / "research" / "reports" / "bootstrap_results.csv",
         pd.DataFrame(bootstrap_rows),
         ["experiment_id", "cluster_type"],
     )
@@ -596,16 +596,16 @@ def run_wave1(project_dir: Path, config: dict[str, Any]) -> None:
                 )
 
     _upsert_csv(
-        project_dir / "reports" / "walk_forward_results.csv",
+        project_dir / "research" / "reports" / "walk_forward_results.csv",
         pd.DataFrame(result_rows),
         ["experiment_id"],
     )
     _upsert_csv(
-        project_dir / "reports" / "calibration_results.csv",
+        project_dir / "research" / "reports" / "calibration_results.csv",
         pd.DataFrame(calibration_rows),
         ["experiment_id"],
     )
-    _write_csv(project_dir / "reports" / "base_rate_forecasts.csv", pd.DataFrame(forecast_rows))
+    _write_csv(project_dir / "research" / "reports" / "base_rate_forecasts.csv", pd.DataFrame(forecast_rows))
     print(f"[Wave 1] Completed in {time.perf_counter() - started:.1f}s")
 
 
@@ -621,7 +621,7 @@ def main() -> None:
     parser.add_argument(
         "--config",
         type=Path,
-        default=Path("configs/followup.json"),
+        default=Path("research/configs/followup.json"),
     )
     args = parser.parse_args()
     project_dir = args.project_dir.resolve()

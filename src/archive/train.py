@@ -374,7 +374,7 @@ def _render_findings(
 
 def run(project_dir: Path, config_path: Path) -> None:
     config = json.loads(config_path.read_text(encoding="utf-8"))
-    experiments_path = project_dir / "reports" / "experiments.csv"
+    experiments_path = project_dir / "research" / "reports" / "experiments.csv"
     model_dir = project_dir / "model"
     model_dir.mkdir(parents=True, exist_ok=True)
 
@@ -651,7 +651,7 @@ def run(project_dir: Path, config_path: Path) -> None:
     )
 
     _render_findings(
-        project_dir / "reports" / "initial_findings.md",
+        project_dir / "research" / "reports" / "initial_findings.md",
         results,
         calibration_rows,
         best_name,
@@ -675,7 +675,7 @@ def finalize_from_logged_results(
 ) -> None:
     """Recover final artifacts without repeating already logged experiments."""
     config = json.loads(config_path.read_text(encoding="utf-8"))
-    experiments = pd.read_csv(project_dir / "reports" / "experiments.csv")
+    experiments = pd.read_csv(project_dir / "research" / "reports" / "experiments.csv")
     lgb_rows = experiments[
         experiments["experiment_id"].isin(item["name"] for item in config["lightgbm_variants"])
     ].copy()
@@ -786,7 +786,7 @@ def finalize_from_logged_results(
         for row in cal_frame.itertuples(index=False)
     ]
     _render_findings(
-        project_dir / "reports" / "initial_findings.md",
+        project_dir / "research" / "reports" / "initial_findings.md",
         results,
         cal_rows,
         best_name,
@@ -800,7 +800,7 @@ def finalize_from_logged_results(
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--project-dir", type=Path, default=Path("."))
-    parser.add_argument("--config", type=Path, default=Path("configs/default.json"))
+    parser.add_argument("--config", type=Path, default=Path("research/configs/default.json"))
     parser.add_argument("--final-only", action="store_true")
     parser.add_argument("--num-rounds", type=int)
     args = parser.parse_args()

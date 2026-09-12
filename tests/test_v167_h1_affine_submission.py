@@ -15,7 +15,7 @@ from src.core.packaging import _sha256
 
 def test_v167_frozen_affine_and_parent_contract() -> None:
     config = json.loads(
-        Path("configs/v167_h1_affine_submission_package.json").read_text(
+        Path("research/configs/v167_h1_affine_submission_package.json").read_text(
             encoding="utf-8"
         )
     )

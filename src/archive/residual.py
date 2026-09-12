@@ -170,7 +170,7 @@ def run(project: Path) -> pd.DataFrame:
             all_saved[f"{year}_{recipe}"] = pred
         del meta_x, test_x, raw_predictions
     out = pd.DataFrame(rows)
-    out.to_csv(project / "reports/residual_recipe_results.csv", index=False)
+    out.to_csv(project / "research/reports/residual_recipe_results.csv", index=False)
     np.savez_compressed(project / "artifacts/followup/residual_predictions.npz", **all_saved)
     # A compact subgroup report is generated from each outer prediction; it
     # intentionally does not expose player IDs or any target-derived feature.
@@ -183,7 +183,7 @@ def run(project: Path) -> pd.DataFrame:
             for name, mask in {"R": subset.get("count_state", pd.Series(index=subset.index)).astype(str).ne("__MISSING__"), "cold_pitcher": subset["pitcher_conf"].eq(0), "known_pitcher": subset["pitcher_conf"].gt(0)}.items():
                 mask = np.asarray(mask, dtype=bool)
                 if mask.any(): subgroup_rows.append({"recipe": recipe, "outer_validation_season": year, "subgroup": name, "n_rows": int(mask.sum()), "brier": brier_score(y[mask], p[mask]), "delta_v2": brier_score(y[mask], p[mask]) - brier_score(y[mask], base[mask])})
-    pd.DataFrame(subgroup_rows).to_csv(project / "reports/residual_subgroup_results.csv", index=False)
+    pd.DataFrame(subgroup_rows).to_csv(project / "research/reports/residual_subgroup_results.csv", index=False)
     print(out.to_string(index=False))
     return out
 

@@ -58,7 +58,7 @@ def _code_files(project_dir: Path) -> list[Path]:
         path
         for path in files
         if "__pycache__" not in path.parts and path.suffix not in {".pyc", ".pyo"}
-        and path != project_dir / "reports" / "reproducibility_manifest.csv"
+        and path != project_dir / "research" / "reports" / "reproducibility_manifest.csv"
     )
 
 
@@ -125,7 +125,7 @@ def run(project_dir: Path, snapshot_name: str) -> dict[str, object]:
 
     groups: dict[str, list[Path]] = {
         "data": _files_under(project_dir / "data"),
-        "config": _files_under(project_dir / "configs"),
+        "config": _files_under(project_dir / "research" / "configs"),
         "incumbent_model": _files_under(project_dir / "model"),
         "followup_model": _files_under(project_dir / "artifacts" / "followup" / "models"),
         "oof_cache": _files_under(project_dir / "artifacts" / "followup" / "oof"),
@@ -180,7 +180,7 @@ def run(project_dir: Path, snapshot_name: str) -> dict[str, object]:
         ]
     )
 
-    manifest_path = project_dir / "reports" / "reproducibility_manifest.csv"
+    manifest_path = project_dir / "research" / "reports" / "reproducibility_manifest.csv"
     with manifest_path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(
             handle, fieldnames=["group", "path", "size_bytes", "sha256"]

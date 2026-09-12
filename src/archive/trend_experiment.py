@@ -43,7 +43,7 @@ def calibration_curve_frame(
 
 def run(project: Path, config_path: Path) -> None:
     config = json.loads(config_path.read_text(encoding="utf-8"))
-    experiments_path = project / "reports" / "experiments.csv"
+    experiments_path = project / "research" / "reports" / "experiments.csv"
     train = read_main(project / "data" / "train.csv")
     features = [col for col in read_main(project / "data" / "test.csv", nrows=0).columns if col != ID_COL]
     train_idx, valid_idx = season_holdout(train, 2024)
@@ -182,7 +182,7 @@ def run(project: Path, config_path: Path) -> None:
         joblib.dump(final_rf, model_dir / "rf_model.joblib", compress=3)
 
     curve = calibration_curve_frame(target, lgb_result["prediction"], winner["prediction"])
-    curve.to_csv(project / "reports" / "calibration_curve.csv", index=False, encoding="utf-8")
+    curve.to_csv(project / "research" / "reports" / "calibration_curve.csv", index=False, encoding="utf-8")
     metadata_path = model_dir / "metadata.json"
     metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
     metadata.update(
@@ -215,7 +215,7 @@ def run(project: Path, config_path: Path) -> None:
             "The blend score is selection-biased because its small weight grid was selected on the same 2024 OOF; this is explicitly retained as a validation risk.",
         ]
     )
-    findings = project / "reports" / "initial_findings.md"
+    findings = project / "research" / "reports" / "initial_findings.md"
     with findings.open("a", encoding="utf-8") as handle:
         handle.write("\n".join(summary_lines) + "\n")
 
@@ -223,7 +223,7 @@ def run(project: Path, config_path: Path) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--project-dir", type=Path, default=Path("."))
-    parser.add_argument("--config", type=Path, default=Path("configs/default.json"))
+    parser.add_argument("--config", type=Path, default=Path("research/configs/default.json"))
     args = parser.parse_args()
     project = args.project_dir.resolve()
     config = args.config if args.config.is_absolute() else project / args.config

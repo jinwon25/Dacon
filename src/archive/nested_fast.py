@@ -46,7 +46,7 @@ def run(project: Path) -> pd.DataFrame:
             rows.append({"baseline":"v2_nested", "arm":arm, "outer_validation_season":year, "n_rows":len(target), "brier":brier_score(target,pred), "delta_vs_A":0.0 if arm=="A_original" else brier_score(target,pred)-brier_score(target,a), "inner_validation_season":year-1, "selected_lgb_iterations":rounds, "selected_offset":inner_offset, "outer_target_used_for_selection":False, "prediction_source":"strict fixed outer fit using prior inner cache selection"})
         del rf, rec, lgb_raw, lgb_cal
         gc.collect()
-    out = pd.DataFrame(rows); out.to_csv(project / "reports/champion_v2_nested_results.csv", index=False); np.savez_compressed(project / "artifacts/followup/v2_nested_predictions.npz", **saved)
+    out = pd.DataFrame(rows); out.to_csv(project / "research/reports/champion_v2_nested_results.csv", index=False); np.savez_compressed(project / "artifacts/followup/v2_nested_predictions.npz", **saved)
     (project / "artifacts/followup/v2_nested_provenance.json").write_text('{"primary_status":"PASS_BUILDER","outer_target_used_for_selection":false,"selection":"prior inner cache only","trackman":"not included; C/D remain frozen diagnostic"}', encoding="utf-8")
     print(out.to_string(index=False)); return out
 

@@ -203,7 +203,7 @@ def _candidate_predictions(
 
 def run(project_dir: Path) -> None:
     followup_config = json.loads(
-        (project_dir / "configs" / "followup.json").read_text(encoding="utf-8")
+        (project_dir / "research" / "configs" / "followup.json").read_text(encoding="utf-8")
     )
     train = read_main(project_dir / "data" / "train.csv")
     folds, caches = _load_all_caches(project_dir, followup_config, train)
@@ -310,24 +310,24 @@ def run(project_dir: Path) -> None:
         )
 
     _upsert_csv(
-        project_dir / "reports" / "walk_forward_results.csv",
+        project_dir / "research" / "reports" / "walk_forward_results.csv",
         pd.DataFrame(result_rows),
         ["experiment_id"],
     )
     detail = pd.DataFrame(detail_rows)
     scores = pd.DataFrame(gate_rows)
     _upsert_csv(
-        project_dir / "reports" / "ensemble_results.csv",
+        project_dir / "research" / "reports" / "ensemble_results.csv",
         scores,
         ["candidate"],
     )
     _upsert_csv(
-        project_dir / "reports" / "ensemble_parameters.csv",
+        project_dir / "research" / "reports" / "ensemble_parameters.csv",
         detail,
         ["candidate", "outer_validation_season"],
     )
     _upsert_csv(
-        project_dir / "reports" / "bootstrap_results.csv",
+        project_dir / "research" / "reports" / "bootstrap_results.csv",
         pd.DataFrame(bootstrap_rows),
         ["experiment_id", "cluster_type"],
     )

@@ -168,12 +168,12 @@ def run_hierarchical(
                 }
             )
     _upsert_csv(
-        project_dir / "reports" / "walk_forward_results.csv",
+        project_dir / "research" / "reports" / "walk_forward_results.csv",
         pd.DataFrame(rows),
         ["experiment_id"],
     )
     _upsert_csv(
-        project_dir / "reports" / "model_diversity.csv",
+        project_dir / "research" / "reports" / "model_diversity.csv",
         pd.DataFrame(diversity_rows),
         ["experiment_id"],
     )
@@ -190,7 +190,7 @@ def run_models(
 ) -> None:
     rows = []
     diversity_rows = []
-    experiments_path = project_dir / "reports" / "experiments.csv"
+    experiments_path = project_dir / "research" / "reports" / "experiments.csv"
     existing_ids = (
         set(pd.read_csv(experiments_path, usecols=["experiment_id"])["experiment_id"].astype(str))
         if experiments_path.exists()
@@ -259,12 +259,12 @@ def run_models(
                 f"delta={brier_score(target, prediction)-brier_score(target, incumbent):+.9f}"
             )
     _upsert_csv(
-        project_dir / "reports" / "walk_forward_results.csv",
+        project_dir / "research" / "reports" / "walk_forward_results.csv",
         pd.DataFrame(rows),
         ["experiment_id"],
     )
     _upsert_csv(
-        project_dir / "reports" / "model_diversity.csv",
+        project_dir / "research" / "reports" / "model_diversity.csv",
         pd.DataFrame(diversity_rows),
         ["experiment_id"],
     )
@@ -273,7 +273,7 @@ def run_models(
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--project-dir", type=Path, default=Path("."))
-    parser.add_argument("--config", type=Path, default=Path("configs/wave234.json"))
+    parser.add_argument("--config", type=Path, default=Path("research/configs/wave234.json"))
     parser.add_argument("--hierarchical", action="store_true")
     parser.add_argument("--models", nargs="*", default=[])
     parser.add_argument("--years", nargs="+", type=int, default=[2024])
@@ -283,7 +283,7 @@ def main() -> None:
     config = json.loads(config_path.read_text(encoding="utf-8"))
     train = read_main(project_dir / "data" / "train.csv")
     followup_config = json.loads(
-        (project_dir / "configs" / "followup.json").read_text(encoding="utf-8")
+        (project_dir / "research" / "configs" / "followup.json").read_text(encoding="utf-8")
     )
     folds, incumbent_caches = _load_all_caches(project_dir, followup_config, train)
     years = [int(year) for year in args.years]

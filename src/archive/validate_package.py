@@ -142,7 +142,7 @@ def validate(project: Path, zip_path: Path) -> None:
 
 주의: 대표 배치는 실제 비공개 target이 없는 관계로 학습 데이터의 첫 {EVALUATION_ROWS:,}행을 오직 실행 시간·메모리·shape 검증에만 사용했다. 이 배치에서 성능 점수는 계산하지 않았다.
 """
-    (project / "reports" / "package_validation.md").write_text(report, encoding="utf-8")
+    (project / "research" / "reports" / "package_validation.md").write_text(report, encoding="utf-8")
     print(report)
 
 

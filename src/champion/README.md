@@ -39,7 +39,7 @@ python -m src.champion.v148_flat_build_package \
 flattened package. It has a single `main()` and static imports, replacing the
 six-level chain of dynamically loaded parent scripts in the original build.
 Its predictions match the original bit for bit within float noise; see
-`reports/v148_flat_refactor_20260823.md`.
+`research/reports/v148_flat_refactor_20260823.md`.
 
 To verify parity yourself:
 
@@ -61,19 +61,19 @@ python -m src.champion.v142_build_submission_package \
   --parent-zip <v124 zip> --h1-zip <H1 zip> \
   --runtime-script src/champion/v142_runtime_script.py \
   --train-csv data/train.csv --oof-path <oof npz> \
-  --data-dir data --config configs/v142_v141_submission_package.json \
+  --data-dir data --config research/configs/v142_v141_submission_package.json \
   --output-dir artifacts/<run>
 
 # v124 — public quadratic stack
 python -m src.champion.v124_public_quadratic_stack \
   --parent-zip <v104 zip> --data-dir data \
-  --config configs/v124_public_quadratic_stack.json \
+  --config research/configs/v124_public_quadratic_stack.json \
   --output-dir artifacts/<run>
 
 # v104 — source-stability mask
 python -m src.champion.v104_source_stability_mask \
   --train-csv data/train.csv --contract-dir <contract dir> \
-  --v103-dir <v103 run dir> --config configs/<v104 config> \
+  --v103-dir <v103 run dir> --config research/configs/<v104 config> \
   --output-dir artifacts/<run>
 ```
 
@@ -85,7 +85,7 @@ SHA-256, as described in `docs/PROJECT_STATUS.md`.
 
 - Never overwrite a champion artifact in place. Build into a new
   `artifacts/<name>_<date>_NN/` directory.
-- A new candidate must pass `configs/evaluation_v3.json` before it is
+- A new candidate must pass `research/configs/evaluation_v3.json` before it is
   packaged, and the champion pointer only moves after a Public result
   confirms it.
 - Do not add an `src/archive/` import here. If a champion module needs

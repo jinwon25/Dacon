@@ -53,8 +53,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(); parser.add_argument("--project-dir", type=Path, default=Path(".")); args = parser.parse_args(); project = args.project_dir.resolve()
     frame = read_main(project / "data/train.csv", nrows=20_000)
     result = audit(frame)
-    result.to_csv(project / "reports/target_encoding_audit.csv", index=False)
-    (project / "reports/target_encoding_audit_20260809.md").write_text(
+    result.to_csv(project / "research/reports/target_encoding_audit.csv", index=False)
+    (project / "research/reports/target_encoding_audit_20260809.md").write_text(
         "# Target encoding audit\n\n"
         "The legacy `PrequentialTargetEncoder` is isolated from all new models. The implementation relies on raw frame order and a full-frame target prior; no exact official chronological key has been established. A row permutation changes its values, a current label can affect future rows in the same group, and changing one label changes the full-frame prior. Therefore it is not used by the nested residual candidates.\n\n"
         + "```text\n" + result.to_string(index=False) + "\n```\n", encoding="utf-8",

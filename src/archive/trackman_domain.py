@@ -233,14 +233,14 @@ def main() -> None:
     parser.add_argument("--origins", nargs="+", type=int, default=list(range(2020, 2026)))
     args = parser.parse_args()
     project = args.project_dir.resolve()
-    config = json.loads((project / "configs/trackman_linkage.json").read_text(encoding="utf-8"))
+    config = json.loads((project / "research/configs/trackman_linkage.json").read_text(encoding="utf-8"))
     main_df = read_main(project / "data/train.csv")
     tm_df = read_trackman(project / "data/trackman_history.csv")
     profiles, linkage = build_domain_profile_table(main_df, tm_df, args.origins, config["linkage"])
     output = args.output if args.output.is_absolute() else project / args.output
     output.parent.mkdir(parents=True, exist_ok=True)
     profiles.to_csv(output, index=False, encoding="utf-8")
-    linkage.to_csv(project / "reports/trackman_domain_linkage.csv", index=False, encoding="utf-8")
+    linkage.to_csv(project / "research/reports/trackman_domain_linkage.csv", index=False, encoding="utf-8")
     print(f"wrote {output} shape={profiles.shape}")
 
 

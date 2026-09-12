@@ -484,7 +484,7 @@ def run(
     )
     artifacts = project_dir / "artifacts" / "followup"
     artifacts.mkdir(parents=True, exist_ok=True)
-    reports = project_dir / "reports"
+    reports = project_dir / "research" / "reports"
     profiles.to_csv(
         artifacts / "trackman_pitcher_profiles.csv", index=False, encoding="utf-8"
     )
@@ -504,7 +504,7 @@ def run(
         for fold in walk_forward_splits(train, validation_seasons=tuple(years))
     }
     followup_config = json.loads(
-        (project_dir / "configs" / "followup.json").read_text(encoding="utf-8")
+        (project_dir / "research" / "configs" / "followup.json").read_text(encoding="utf-8")
     )
     _, caches = _load_all_caches(project_dir, followup_config, train)
     rows: list[dict[str, Any]] = []
@@ -578,7 +578,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--project-dir", type=Path, default=Path("."))
     parser.add_argument(
-        "--config", type=Path, default=Path("configs/trackman_linkage.json")
+        "--config", type=Path, default=Path("research/configs/trackman_linkage.json")
     )
     parser.add_argument("--years", nargs="+", type=int)
     parser.add_argument("--build-only", action="store_true")

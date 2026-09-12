@@ -191,7 +191,7 @@ def run(project: Path, years: tuple[int, ...] = (2021, 2022, 2023, 2024)) -> tup
         gc.collect()
 
     result = pd.DataFrame(rows)
-    report_path = project / "reports" / "champion_v2_nested_results.csv"
+    report_path = project / "research" / "reports" / "champion_v2_nested_results.csv"
     result.to_csv(report_path, index=False)
     np.savez_compressed(project / "artifacts" / "followup" / "v2_nested_predictions.npz", **{
         f"{year}_{key}": value for year, values in predictions.items() for key, value in values.items()

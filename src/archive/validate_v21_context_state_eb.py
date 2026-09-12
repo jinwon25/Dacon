@@ -201,7 +201,7 @@ def main() -> None:
     parser.add_argument(
         "--parent", type=Path, default=Path("submissions/history/submit_v20.zip")
     )
-    parser.add_argument("--report", type=Path, default=Path("reports/v21_validation.md"))
+    parser.add_argument("--report", type=Path, default=Path("research/reports/v21_validation.md"))
     args = parser.parse_args()
     project = args.project.resolve()
     candidate = args.candidate if args.candidate.is_absolute() else project / args.candidate

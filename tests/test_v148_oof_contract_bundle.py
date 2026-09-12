@@ -27,7 +27,7 @@ ABSOLUTE = Path("artifacts/v141_v124_absolute_h1_c3_20260823_01/selected_axes.np
 
 def test_deployed_weight_matches_champion_config():
     config = json.loads(
-        Path("configs/v148_v142_v138_blend_package.json").read_text(encoding="utf-8")
+        Path("research/configs/v148_v142_v138_blend_package.json").read_text(encoding="utf-8")
     )
     assert float(config["blend_weight_toward_v138"]) == DEPLOYED_WEIGHT
 

@@ -164,7 +164,7 @@ def run(
     raw = read_main(project / "data" / "train.csv")
     trackman = read_trackman(project / "data" / "trackman_history.csv")
     config = json.loads(
-        (project / "configs" / "trackman_linkage.json").read_text(encoding="utf-8")
+        (project / "research" / "configs" / "trackman_linkage.json").read_text(encoding="utf-8")
     )
     profiles, linkage = build_pitcher_profile_table(
         raw,

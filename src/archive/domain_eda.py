@@ -234,7 +234,7 @@ def run(project_dir: Path) -> None:
     segments = _segment_rates(train, derived)
     screen = _feature_screen(train, derived)
     game_error = _incumbent_game_type_error(project_dir, train)
-    reports = project_dir / "reports"
+    reports = project_dir / "research" / "reports"
     segments.to_csv(reports / "domain_segment_rates.csv", index=False)
     screen.to_csv(reports / "domain_feature_screen.csv", index=False)
     game_error.to_csv(reports / "domain_game_type_errors.csv", index=False)
