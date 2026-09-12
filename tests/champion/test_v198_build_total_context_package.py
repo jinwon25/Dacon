@@ -9,7 +9,7 @@ import pytest
 from src.champion import v198_build_total_context_package as v198
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def test_runtime_patch_adds_frozen_gate_and_weight() -> None:

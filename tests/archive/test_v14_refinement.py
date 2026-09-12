@@ -16,7 +16,7 @@ def test_v14_trend_training_and_inference_features_match(project_dir=None):
     # same row-local transformation and column order.
     from pathlib import Path
 
-    project = Path(__file__).resolve().parents[1]
+    project = Path(__file__).resolve().parents[2]
     train_path = project / "data" / "train.csv"
     preprocess_path = (
         project

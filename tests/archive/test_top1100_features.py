@@ -1,7 +1,7 @@
 import numpy as np
 
 from src.archive.top1100_features import build_features
-from tests.test_features import _main_rows
+from tests.archive.test_features import _main_rows
 
 
 def test_top1100_features_are_target_free_and_finite():

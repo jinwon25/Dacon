@@ -9,7 +9,7 @@ import pytest
 from src.champion import v193_build_triyear_stack_package as v193
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def _constants(source: str) -> dict[str, float]:

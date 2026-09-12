@@ -10,7 +10,7 @@ import pytest
 from src.archive.features import FeatureBuilder
 
 
-PROJECT_DIR = Path(__file__).resolve().parents[1]
+PROJECT_DIR = Path(__file__).resolve().parents[2]
 
 
 def _inference_module():

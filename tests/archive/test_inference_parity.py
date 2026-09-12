@@ -10,7 +10,7 @@ from src.archive.data import read_main
 from src.archive.features import FeatureBuilder
 
 
-PROJECT = Path(__file__).resolve().parents[1]
+PROJECT = Path(__file__).resolve().parents[2]
 REQUIRED_LOCAL_FILES = (
     PROJECT / "data" / "test.csv",
     PROJECT / "model" / "feature_spec.json",

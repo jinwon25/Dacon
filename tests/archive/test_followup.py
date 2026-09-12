@@ -6,7 +6,7 @@ from src.archive.calibration import BetaCalibrator, InterceptCalibrator, fit_con
 from src.archive.features import FeatureBuilder
 from src.metrics import cluster_bootstrap_delta
 from src.archive.validation import historical_oof_indices, walk_forward_splits
-from tests.test_features import _main_rows
+from tests.archive.test_features import _main_rows
 
 
 def test_walk_forward_outer_folds_are_strictly_past_only():
