@@ -2,6 +2,7 @@
 모기 비행 궤적 예측 AI 경진대회/data/
 스마트 창고 출고 지연 예측 AI 경진대회/data/
 식음업장 메뉴 수요 예측 AI 온라인 해커톤/data/
+K리그-서울시립대 공개 AI 경진대회/data/
 
 # ---- Heavy outputs / submissions / model checkpoints ----
 모기 비행 궤적 예측 AI 경진대회/outputs/
@@ -9,6 +10,8 @@
 스마트 창고 출고 지연 예측 AI 경진대회/models/
 스마트 창고 출고 지연 예측 AI 경진대회/submissions/
 식음업장 메뉴 수요 예측 AI 온라인 해커톤/submissions/
+K리그-서울시립대 공개 AI 경진대회/submissions/
+K리그-서울시립대 공개 AI 경진대회/catboost_info/
 
 # ---- Generic large/binary artifacts (defense in depth) ----
 *.csv
@@ -28,6 +31,14 @@
 *.tar
 *.tar.gz
 *.7z
+*.whl
+
+# Local linked worktrees
+.git-worktrees/
+
+# Split out into its own repository: github.com/jinwon25/lg-aimers9-pitch-control
+# The folder here is a clone of it, so this repository must not track its files.
+투구 제구 성공 확률 예측 AI 온라인 해커톤/
 
 # Keep example/light reference CSVs if they exist at repo root (none expected)
 !**/sample_submission_template.csv
@@ -43,6 +54,7 @@ dist/
 *.egg-info/
 .eggs/
 .venv/
+.venvs/
 venv/
 env/
 ENV/
@@ -73,4 +85,3 @@ tmp/
 
 # ---- Claude Code workspace ----
 .claude/
-

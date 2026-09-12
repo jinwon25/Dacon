@@ -1,0 +1,34 @@
+# 대회 데이터 (DACON 236647에서 직접 다운로드) — train 42MB, test 2,414개 CSV
+data/
+
+# 학습/추론 산출물 (재생성 가능)
+outputs/
+models/
+
+# DuckDB 영속 DB 파일 (우리는 CSV를 직접 쿼리하므로 보통 안 생기지만 방어용)
+*.duckdb
+*.duckdb.wal
+
+# Build/cache
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Logs
+*.log
+logs_*.log
+catboost_info/
+
+# Local environment / 비밀
+.venv/
+venv/
+env/
+.env            # ★ DACON 개인 토큰 등 비밀값 (절대 커밋 금지)
+.claude/
+
+# DACON 제출 패키지 설치파일(.whl) — 바이너리, 커밋 안 함
+*.whl
+
+# OS
+.DS_Store
+Thumbs.db

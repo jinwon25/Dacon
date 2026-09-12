@@ -1,0 +1,11 @@
+# K리그 최종 패스 좌표 예측 — 재현 환경 (Python 3.11, CPU 가능)
+duckdb==1.5.3          # CSV에 직접 SQL (EDA·피처 엔지니어링)
+numpy==2.2.6
+pandas==2.2.3
+scipy==1.15.3          # 블렌드 가중 최적화(SLSQP)
+scikit-learn==1.6.1
+lightgbm==4.6.0        # 메인 GBDT
+catboost==1.2.8        # 앙상블 멤버
+xgboost==3.0.1         # 앙상블 멤버
+torch==2.7.1           # GRU 시퀀스 모델
+# 제출(선택): dacon_submit_api 0.1.2 — PyPI 아님, 공지의 .whl 직접 설치
