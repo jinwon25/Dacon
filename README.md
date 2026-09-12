@@ -8,7 +8,7 @@
 | 대회 | 상태 | 성적 (지표) | 핵심 접근 |
 |---|---|---|---|
 | [모기 비행 궤적 예측](./모기%20비행%20궤적%20예측%20AI%20경진대회) | **완료 · 2위 / 543팀** | Private **0.703151** (R-Hit@1cm, ↑) | 직교 메커니즘 앙상블 — Kalman 잔차 → Neural ODE → Frenet → 회전물리를 쌓아 상관 0.99 plateau 돌파 (0.6306 → 0.7032) |
-| [투구 제구 성공 확률 예측](https://github.com/jinwon25/lg-aimers9-pitch-control) ↗ | **완료 · 20위 / 1,090팀** (LG Aimers 9기, 5인 팀) | Public **1182.9497** (Brier Skill Score, ↑) | 3-도메인 라우팅 + 부모 보존 국소 보정 — 검증된 부모를 수치적으로 보존한 채 한 도메인에만 신호 주입 (749.52 → 1182.95) |
+| [투구 제구 성공 확률 예측](./투구%20제구%20성공%20확률%20예측%20AI%20온라인%20해커톤) | **완료 · 20위 / 1,090팀** (LG Aimers 9기, 5인 팀) | Public **1182.9497** (Brier Skill Score, ↑) | 3-도메인 라우팅 + 부모 보존 국소 보정 — 검증된 부모를 수치적으로 보존한 채 한 도메인에만 신호 주입 (749.52 → 1182.95) |
 | [스마트 창고 출고 지연 예측](./스마트%20창고%20출고%20지연%20예측%20AI%20경진대회) | **완료 · 32위 / 607팀** (상위 5.3%) | LB **9.86576** (MAE, ↓) | 19-모델 mega-blend (GBDT 7 + Sequence NN 12, SLSQP 가중 최적화) |
 | [제3회 풍력발전량 예측 (BARAM 2026)](./제3회%20풍력발전량%20예측%20AI%20경진대회%20-%20BARAM%202026) | 진행 중 · 291위 / 985팀 | Public **0.6474704399** (0.5·(1-NMAE) + 0.5·FiCR, ↑) | LDAPS/GFS 공간 바람장·물리 피처 LightGBM + 그룹별 public-positive 가중. 승격 게이트를 q05 하한 기준으로 강화 |
 | [식음업장 메뉴 수요 예측](./식음업장%20메뉴%20수요%20예측%20AI%20온라인%20해커톤) | 진행 중 (LG Aimers) | Private **0.5481** (가중 SMAPE, ↓) | 0 제외 SMAPE 특성을 노린 업장별 nz-mean 무학습 블렌드 (0.694 → 0.548). LSTM·단일 GBDT는 열세 |
@@ -51,16 +51,22 @@
 │   ├── sql/, src/, docs/                    # DuckDB EDA + 모델링 + 작업 로그
 │   └── data/, submissions/                  # gitignore (원본·생성 제출)
 │
+├── 투구 제구 성공 확률 예측 AI 온라인 해커톤/   # 5인 팀, 2,378 파일
+│   ├── README.md                            # 솔루션 상세 + 계보
+│   ├── final_submission/                    # Private Score 재현 패키지 (v345)
+│   ├── src/champion, core, archive/         # 챔피언 계보 / 공통 / 종료된 실험
+│   ├── research/reports, configs/           # 실험 기록과 제출 원장
+│   └── data/, artifacts/, submissions/      # gitignore (대회 데이터 파생물)
+│
 └── 내가 축구 감독이라면/                      # 전술 웹서비스 (GitHub Pages로 배포)
     ├── README.md, docs/                     # 기획·설계 문서
     ├── src/, tests/                          # React + TypeScript, Playwright e2e
     └── node_modules/, dist/                  # gitignore (의존성·빌드 산출물)
 ```
 
-**투구 제구 대회**는 이 저장소에 없습니다. 3인 팀 협업 이력과 규모(2,378 파일) 때문에
-[별도 저장소](https://github.com/jinwon25/lg-aimers9-pitch-control)로 분리했습니다.
-대회 제공 데이터에서 파생된 산출물(OOF·제출 ZIP·lookup)은 재배포가 금지되므로
-어느 저장소에도 올리지 않습니다.
+투구 제구 대회는 대회 제공 데이터에서 파생된 산출물(OOF 번들, 제출 ZIP, 선수 연결표)이
+재배포 금지 대상이라 저장소에 올리지 않습니다. 어떤 파일이 왜 제외되는지는
+[해당 프로젝트의 정책](./투구%20제구%20성공%20확률%20예측%20AI%20온라인%20해커톤/README.md)에 정리돼 있습니다.
 
 ## 공통 규칙
 

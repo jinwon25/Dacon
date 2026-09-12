@@ -128,8 +128,8 @@ artifacts/          모델·OOF 산출물, Git 제외 (manifest만 추적)
 ### 0. 환경 설치 (Python 3.11)
 
 ```powershell
-git clone https://github.com/jinwon25/lg-aimers9-pitch-control.git
-cd lg-aimers9-pitch-control
+git clone https://github.com/jinwon25/Dacon.git
+cd "Dacon/투구 제구 성공 확률 예측 AI 온라인 해커톤"
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements-dev.txt
