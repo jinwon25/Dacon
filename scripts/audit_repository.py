@@ -61,6 +61,10 @@ PINNED_REGULAR_BINARY_FILES = {
         "bytes": 101_139_163,
         "sha256": "D44578DC50220CE84DD4B8489BBAE680AFDCF93F931ED4236287B5A9E6F5AAAA",
     },
+    "final_submission/code/fallback_xgb/fallback_lookups.joblib": {
+        "bytes": 876_202,
+        "sha256": "C1626D440D04E926328F7E44966F089F84218EB8FF29986561A3BBECF01239CD",
+    },
 }
 FORBIDDEN_SUFFIXES = {
     ".cbm",

@@ -98,3 +98,6 @@ final_submission/code/data/*
 # Frozen lookup the reproduction package needs; the repository copy under
 # src/team_assets/ is pinned by the same hash in scripts/audit_repository.py.
 !final_submission/code/fallback_xgb/fallback_lookups.joblib
+
+# Internal audit evidence bundle: kept locally, not in history.
+research/reports/internal_audit_20260906/*.zip
