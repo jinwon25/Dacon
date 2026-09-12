@@ -1,0 +1,56 @@
+{
+  "files": [
+    {
+      "file": "build_exp021_final_candidates.py",
+      "sha256": "b4fefd8241a8cd264ebce5dfa495a08105031f8c931a1bfb5adfd502265c6328"
+    },
+    {
+      "file": "exp021_submission_inference.py",
+      "sha256": "5da96d728ee2f105b9396df0b148a68ae8d25b98e5d86ce94695e66d6a47ae3a"
+    },
+    {
+      "file": "temporal_multirate_features.py",
+      "sha256": "9fd3c999c5eaff82b1949c04bd4c7c5d65bd836338e789b8fec8f381f81140e6"
+    },
+    {
+      "file": "temporal_residual_features.py",
+      "sha256": "14fc86683120219cef11f30888a5c48e839f95f3152b4292b558667ca96b9c0d"
+    },
+    {
+      "file": "train_exp017_rolling_residual.py",
+      "sha256": "83e2b72dc1aae1e28dfb2c1134bbf9690e36b90609a556d621de23d6245e81d6"
+    },
+    {
+      "file": "train_exp018_constrained_multiscale.py",
+      "sha256": "53f00e739b874d53e9a0fd3e783a514591106fb8b58ec3a55f9cc4916868395e"
+    },
+    {
+      "file": "train_exp019_histgb_residual.py",
+      "sha256": "0cea6ed7cf82b408a160174bae228e140db1d288d5d6645af3dfc3bb19bdfed2"
+    },
+    {
+      "file": "train_exp019_multirate_residual.py",
+      "sha256": "31a76849c3a7192490f2366eb5b7f2b13546d4bdb5cd953de2168cbfbe8604d4"
+    },
+    {
+      "file": "train_exp019_r_full_residual.py",
+      "sha256": "1a97e55d68f83948ceadfc3a085f99b6583199ef801f2725080c03cf2adc2c2e"
+    },
+    {
+      "file": "train_exp019_stable_monotonic.py",
+      "sha256": "c0454c29008c9a2c9ecb659dce82d5fab02073eeda5a1b9290689f478110824f"
+    },
+    {
+      "file": "train_exp019_team_eb_ensemble.py",
+      "sha256": "d700796b50f23205d660b6f0fec4c9af537add2238edb40e68a6723c86cc209b"
+    },
+    {
+      "file": "train_exp020_low_rank_pitcher_context_eb.py",
+      "sha256": "05bfa596c6622bf7d0c9efb74ff10ac523702649ff741d6e8dc46f07aa8e09bb"
+    },
+    {
+      "file": "train_exp020_pitcher_count_eb_atop_team.py",
+      "sha256": "14c86f0dfe639dd1fa0997c853a7372092c1ee218d3ce61912292ac1bbf0fd7a"
+    }
+  ]
+}

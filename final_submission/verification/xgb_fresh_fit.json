@@ -1,0 +1,13 @@
+{
+  "rows_compared": 32773,
+  "xgboost_version": "3.2.0",
+  "reference_trees": 1800,
+  "candidate_trees": 1800,
+  "identical_trees": 0,
+  "prediction_max_abs": 0.0428127646446228,
+  "prediction_rms": 0.008542847513780908,
+  "exact_fit_parity": false,
+  "private_score_recomputed": false,
+  "reference_inference_modified": false,
+  "scope": "Evenly sampled train rows plus public format test; both models use the same frozen inference features. This does not measure Private Score or isolate the cause of a mismatch."
+}

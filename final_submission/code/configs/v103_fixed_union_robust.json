@@ -1,0 +1,24 @@
+{
+  "protocol": "V103_FIXED_UNION_ROBUST_V1",
+  "hypothesis": "A fixed additive union of the frozen v87 source-mean FM correction and the v98 paired conditional correction may retain complementary row-level error reduction without a learned meta-gate.",
+  "fm_policy": "source_mean",
+  "fm_eta": 0.1,
+  "conditional_eta": 0.1,
+  "bootstrap_resamples": 3000,
+  "block_size": 2000,
+  "seed": 20260822,
+  "selection_gate": {
+    "minimum_positive_month_fraction": 0.75,
+    "worst_month_gain_strictly_above": -5.0,
+    "minimum_domain_gain": 0.0,
+    "require_all_bootstrap_p05_positive": true,
+    "reality_check_alpha": 0.1
+  },
+  "restrictions": {
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_for_selection": false,
+    "row_local_inference": true,
+    "note": "v98 eta=0.1 was previously inspected as a diagnostic, so this is follow-up research evidence rather than a pristine family."
+  }
+}

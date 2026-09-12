@@ -1,0 +1,38 @@
+{
+  "protocol": "PARENT_BASE_FRESH_FIT_V1",
+  "official_train_sha256": "d2081186b458b49f60b082be480c273135833e15ba59a76d033af28bcf8763ff",
+  "rows": 1475092,
+  "feature_count": 47,
+  "lightgbm_variant": {
+    "name": "lgb_engineered_l31",
+    "feature_set": "engineered",
+    "num_leaves": 31,
+    "learning_rate": 0.05,
+    "min_data_in_leaf": 500,
+    "lambda_l2": 2.0,
+    "feature_fraction": 0.9,
+    "bagging_fraction": 0.85
+  },
+  "lightgbm_iterations": 54,
+  "random_forest": {
+    "n_estimators": 100,
+    "max_depth": 10,
+    "min_samples_leaf": 200,
+    "random_state": 42
+  },
+  "versions": {
+    "numpy": "2.2.6",
+    "pandas": "2.2.3",
+    "lightgbm": "4.6.0",
+    "scikit-learn": "1.6.1",
+    "joblib": "1.5.1"
+  },
+  "files_sha256": {
+    "lgb_model.txt": "a8dcefe635ffd16c501dc1ceeec1db3e4eb73e811522fcd39c68547c491034fc",
+    "feature_spec.json": "c3c047b2d47241a25775a9989565f5f14779cf24fa568d8e32f36e1ec0cc1942",
+    "rf_model.joblib": "f6465c7f3f1ef8c6ee2b059798064a554b2282748bea4e1224a4a0517b281cc9"
+  },
+  "reference_model_read_during_fit": false,
+  "test_values_read_during_fit": false,
+  "private_score_recomputed": false
+}

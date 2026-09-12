@@ -1,0 +1,89 @@
+{
+  "protocol": "V342_FINALIZE_WORKLOAD_H1_V1",
+  "status": "full_fit_complete",
+  "output_bundle": "..\\..\\artifacts\\workload_fullfit_20260905_01\\workload_h1_bundle.joblib",
+  "output_sha256": "0F297B5386B648056398F8F0656A829BEA09C947780C0FE8895140755040741E",
+  "output_bytes": 9712794,
+  "source_zip": "..\\..\\submit_v345.zip",
+  "source_zip_sha256": "D44578DC50220CE84DD4B8489BBAE680AFDCF93F931ED4236287B5A9E6F5AAAA",
+  "source_member": "model/h1/model/rf.pkl",
+  "base_feature_count": 82,
+  "workload_feature_count": 19,
+  "augmented_feature_count": 101,
+  "workload_features": [
+    "workload_prev1_log_n",
+    "workload_prev1_missing",
+    "workload_prev1_reliability",
+    "workload_prev1_success_reliable_delta",
+    "workload_prev1_middle_reliable_delta",
+    "workload_prev3_log_n",
+    "workload_prev3_missing",
+    "workload_prev3_reliability",
+    "workload_prev3_success_reliable_delta",
+    "workload_prev3_middle_reliable_delta",
+    "workload_prev5_log_n",
+    "workload_prev5_missing",
+    "workload_prev5_reliability",
+    "workload_prev5_success_reliable_delta",
+    "workload_prev5_middle_reliable_delta",
+    "workload_prev3_minus_prev1_log",
+    "workload_prev5_minus_prev3_log",
+    "workload_prev1_over_prev3",
+    "workload_prev3_over_prev5"
+  ],
+  "model_config": {
+    "iterations": 1200,
+    "learning_rate": 0.02,
+    "depth": 8,
+    "l2_leaf_reg": 100.0,
+    "border_count": 32,
+    "seed": 42
+  },
+  "fits": [
+    {
+      "seed": 42,
+      "rows": 1475092,
+      "features": 101,
+      "fit_seconds": 613.0316617488861,
+      "probe_mean": 0.5526073351507562,
+      "probe_std": 0.056725886185491424
+    },
+    {
+      "seed": 43,
+      "rows": 1475092,
+      "features": 101,
+      "fit_seconds": 745.2798819541931,
+      "probe_mean": 0.5498585065392851,
+      "probe_std": 0.0568722596410255
+    },
+    {
+      "seed": 44,
+      "rows": 1475092,
+      "features": 101,
+      "fit_seconds": 852.3025331497192,
+      "probe_mean": 0.5509229058269303,
+      "probe_std": 0.05733660622813511
+    }
+  ],
+  "preserved_bundle_keys": [
+    "alpha",
+    "asof_prior",
+    "center",
+    "ctx",
+    "detrend",
+    "platoon",
+    "shift",
+    "spec"
+  ],
+  "restrictions": {
+    "official_train_only": true,
+    "v209_feature_family_frozen": true,
+    "v209_model_config_frozen": true,
+    "v209_seeds_frozen": true,
+    "all_available_train_rows_used_for_2025_fit": true,
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_for_selection": false,
+    "row_local_inference": true
+  }
+}

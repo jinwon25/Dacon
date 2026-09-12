@@ -1,0 +1,33 @@
+{
+  "protocol": "V115_FAILURE_PRIOR_SOURCE_STABILITY_MASK_V1",
+  "hypothesis": "Restrict the frozen v113 R_CORE failure-prior correction to count, pitcher-history, and platoon levels with positive gain at both source origins.",
+  "minimum_group_rows_per_source": 200,
+  "policies": [
+    "count_only",
+    "history_only",
+    "platoon_only",
+    "count_history",
+    "count_platoon",
+    "history_platoon",
+    "all_three",
+    "majority_two"
+  ],
+  "bootstrap_resamples": 3000,
+  "block_size": 2000,
+  "seed": 20260823,
+  "selection_gate": {
+    "minimum_positive_month_fraction": 0.75,
+    "worst_month_gain_strictly_above": -5.0,
+    "minimum_domain_gain": 0.0,
+    "reality_check_alpha": 0.1
+  },
+  "restrictions": {
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_for_selection": false,
+    "locked_2024_used_for_policy_selection": false,
+    "v113_alpha_or_route_retuned": false,
+    "row_local_inference": true,
+    "reference_recipe_is_external_and_not_a_clean_holdout": true
+  }
+}

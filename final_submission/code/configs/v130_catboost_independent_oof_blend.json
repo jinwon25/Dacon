@@ -1,0 +1,26 @@
+{
+  "protocol": "V130_CATBOOST_INDEPENDENT_OOF_BLEND_V1",
+  "hypothesis": "The public repository's independently trained CatBoost OOF may contribute orthogonal error resolution to exact v104 even though its standalone Public score is lower.",
+  "families": ["d_raw", "d_post4", "dx_raw", "dx_post4"],
+  "routes": ["ALL", "R_CORE", "F"],
+  "weight_grid": [0.001, 0.0025, 0.005, 0.01, 0.025, 0.05, 0.1],
+  "source_gate": {
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "active_domain_gain_min": 0.0
+  },
+  "locked_gate": {
+    "gain_min": 5.7,
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "active_domain_gain_min": 0.0
+  },
+  "restrictions": {
+    "external_2025_outcomes_used": false,
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_for_selection": false,
+    "full_2024_used_for_recipe_selection": false,
+    "row_local_inference": true
+  }
+}

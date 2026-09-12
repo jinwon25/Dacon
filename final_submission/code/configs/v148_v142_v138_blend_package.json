@@ -1,0 +1,35 @@
+{
+  "protocol": "V148_V142_V138_BLEND_PACKAGE_V1",
+  "package_name": "submit_v148.zip",
+  "parent_v104_sha256": "0C3B6A9D88D31D9AC32FB43FFD642FA07BFCC3367699FA71841E35188FBDA0BA",
+  "h1_package_sha256": "D338E9EEF715C3CC84C0C5CD9C830925A93D85BF9518BFB0DCD0D0B052F995D6",
+  "blend_weight_toward_v138": 0.15,
+  "intermediate_point": {
+    "v17_scale": 1.3825,
+    "v19_scale": 1.0,
+    "v20_scale": 0.7875,
+    "v21_scale": 0.575,
+    "v22_scale": 0.7025,
+    "anchor_eta": 0.3285
+  },
+  "h1_weight": 0.15,
+  "c3_weight": 0.5,
+  "c3": {
+    "windows": {"last1": 1, "last2": 2, "last3": 3, "expanding": 99},
+    "same_hand_shrink": 1000.0,
+    "two_strike_shrink": 1000.0,
+    "runner_on_shrink": 2000.0,
+    "contrast_scale": 0.5,
+    "consensus": "0.85_sign_all_plus_0.15_mean_recent"
+  },
+  "runtime_limit_seconds": 120.0,
+  "scale_proxy_rows": 245789,
+  "restrictions": {
+    "external_2025_outcomes_used": false,
+    "test_aggregate_used_for_prediction": false,
+    "test_distribution_used_for_prediction": false,
+    "full_2024_reused_as_development": true,
+    "public_score_used_only_to_freeze_v142_parent_and_estimate_transfer": true,
+    "row_local_inference": true
+  }
+}

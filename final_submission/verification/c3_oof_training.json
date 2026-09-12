@@ -1,0 +1,23 @@
+{
+  "scope": "Observed fresh five-fold C3 H1 OOF training; fixed recipe, not model selection",
+  "official_train_rows": 1475092,
+  "features": 82,
+  "catboost_version": "1.2.8",
+  "depth": 6,
+  "iterations": 1200,
+  "seed": 42,
+  "folds": [
+    {"year": 2020, "fit_rows": 237413, "audit_rows": 244087, "reported_seconds": 245.9},
+    {"year": 2021, "fit_rows": 481500, "audit_rows": 247088, "reported_seconds": 268.1},
+    {"year": 2022, "fit_rows": 728588, "audit_rows": 247472, "reported_seconds": 472.3},
+    {"year": 2023, "fit_rows": 976060, "audit_rows": 245525, "reported_seconds": 489.9},
+    {"year": 2024, "fit_rows": 1221585, "audit_rows": 253507, "reported_seconds": 628.1}
+  ],
+  "oof_sha256": "8a297011a34648a91263c226f43aac19b0438274fa902f08f8c3a1e330fec88f",
+  "fresh_oof_training_completed": true,
+  "initial_command_exit_code": 1,
+  "initial_failure": "After all five fits completed, table comparison rejected the v142 consensus metadata.",
+  "resolution": "Reused these new OOF values for an explicit table-only refit with the actual deployed v148 configuration; see c3_fresh_fit.json.",
+  "original_inference_modified": false,
+  "private_score_recomputed": false
+}

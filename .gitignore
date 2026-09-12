@@ -85,3 +85,14 @@ desktop.ini
 *.log
 tmp/
 .cache/
+
+# Phase 3 reproduction package: track the code and reports, not the frozen
+# training checkpoints (297MB). Teammates receive those through the private
+# artifact channel described in final_submission/README.md.
+final_submission/code/reproduction_inputs/
+final_submission/code/lineage_inputs/
+final_submission/code/data/*
+!final_submission/code/data/README.md
+# Frozen lookup the reproduction package needs; the repository copy under
+# src/team_assets/ is pinned by the same hash in scripts/audit_repository.py.
+!final_submission/code/fallback_xgb/fallback_lookups.joblib

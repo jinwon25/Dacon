@@ -1,0 +1,39 @@
+{
+  "candidate": "v14_reliability_anchor_and_f_trend_v1",
+  "source_seasons": [
+    2023,
+    2024
+  ],
+  "forecast_season": 2025,
+  "anchor_team_id": 13,
+  "anchor_alpha": 500000.0,
+  "anchor_reliability_threshold": 0.9,
+  "anchor_weight": 0.2,
+  "f_trend_alpha": 0.15,
+  "parent_f_exact_weight": 0.75,
+  "f_trend_num_iterations": 180,
+  "row_local_inference": true,
+  "test_aggregate_used": false,
+  "selection_rule": "anchor gate positive on 2021->2022, 2022->2023, 2023->2024; F alpha=.15 maximises three-transition minimum",
+  "n_anchor_train": 88822,
+  "anchor_feature_count": 65,
+  "n_f_trend_train": 253507,
+  "trend_feature_count": 44,
+  "official_train_sha256": "d2081186b458b49f60b082be480c273135833e15ba59a76d033af28bcf8763ff",
+  "versions": {
+    "numpy": "2.2.6",
+    "pandas": "2.2.3",
+    "lightgbm": "4.6.0",
+    "scikit-learn": "1.6.1",
+    "joblib": "1.5.1"
+  },
+  "reference_model_read_during_fit": false,
+  "test_values_read_during_fit": false,
+  "private_score_recomputed": false,
+  "artifacts": {
+    "v14_anchor_ridge.joblib": 760,
+    "v14_f_trend_lgb.txt": 157930,
+    "v14_refinement_preprocess.joblib": 3134,
+    "v14_refinement_spec.json": 549
+  }
+}

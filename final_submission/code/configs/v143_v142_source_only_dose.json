@@ -1,0 +1,25 @@
+{
+  "protocol": "V143_V142_SOURCE_ONLY_DOSE_V1",
+  "hypothesis": "A small jointly scaled extension of the independently validated H1/C3 direction can retain source stability while adding the remaining resolution above v142.",
+  "scale_grid": [1.0, 1.05, 1.1],
+  "source_axes": ["full_2022", "late_2023"],
+  "source_gate": {
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "active_domain_gain_min": 0.0
+  },
+  "locked_incremental_veto": {
+    "full_gain_min": 0.0,
+    "late_gain_min": 0.0,
+    "worst_month_gain_min_exclusive": -2.0
+  },
+  "restrictions": {
+    "external_2025_outcomes_used": false,
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_for_grid_selection": false,
+    "public_score_used_only_to_freeze_v142_as_parent": true,
+    "full_2024_used_for_grid_selection": false,
+    "row_local_inference": true
+  }
+}

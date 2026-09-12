@@ -1,0 +1,100 @@
+{
+  "arrays": {
+    "lowrank": {
+      "source_years": {
+        "exact": true,
+        "max_abs": 0.0
+      },
+      "pitcher_ids_2020": {
+        "exact": true,
+        "max_abs": 0.0
+      },
+      "matrix_2020": {
+        "exact": true,
+        "max_abs": 0.0
+      },
+      "pitcher_ids_2021": {
+        "exact": true,
+        "max_abs": 0.0
+      },
+      "matrix_2021": {
+        "exact": true,
+        "max_abs": 0.0
+      },
+      "pitcher_ids_2022": {
+        "exact": true,
+        "max_abs": 0.0
+      },
+      "matrix_2022": {
+        "exact": true,
+        "max_abs": 0.0
+      },
+      "pitcher_ids_2023": {
+        "exact": true,
+        "max_abs": 0.0
+      },
+      "matrix_2023": {
+        "exact": true,
+        "max_abs": 0.0
+      },
+      "pitcher_ids_2024": {
+        "exact": true,
+        "max_abs": 0.0
+      },
+      "matrix_2024": {
+        "exact": true,
+        "max_abs": 0.0
+      }
+    },
+    "transition": {
+      "pitcher_ids": {
+        "exact": true,
+        "max_abs": 0.0
+      },
+      "last_year": {
+        "exact": true,
+        "max_abs": 0.0
+      },
+      "previous_team": {
+        "exact": true,
+        "max_abs": 0.0
+      },
+      "correction_keys": {
+        "exact": true,
+        "max_abs": 0.0
+      },
+      "corrections": {
+        "exact": false,
+        "max_abs": 3.469446951953614e-18
+      },
+      "group_n": {
+        "exact": true,
+        "max_abs": 0.0
+      },
+      "source_years": {
+        "exact": true,
+        "max_abs": 0.0
+      },
+      "query_year": {
+        "exact": true,
+        "max_abs": 0.0
+      },
+      "alpha": {
+        "exact": true,
+        "max_abs": 0.0
+      }
+    }
+  },
+  "all_arrays_exact": false,
+  "all_arrays_within_1e12": true,
+  "source_oof_sha256": {
+    "2020": "bf802f7765cc5885f8491616402a14d90ac50a8db86bb09c87bc9e47710e2cd0",
+    "2021": "01d4c6a9445de629ff3896290163b2a850a247f8061cdcabd8e8b5c46f620103",
+    "2022": "e6e3d926ff8b9f1df9e39513b4060a64c2165d9f3927c9f0dea591cab8cccc09",
+    "2023": "f4c3425ae182ab32f8bab13932215db325494e8f2b769e6db28d7f543eb9df27",
+    "2024": "ae709049dcdf39c27283809a5dc543358eee2c7d77522b371fba3a9a0e6ed874"
+  },
+  "oof_fresh_training_proven_by_this_command": false,
+  "reference_inference_modified": false,
+  "private_score_recomputed": false
+}

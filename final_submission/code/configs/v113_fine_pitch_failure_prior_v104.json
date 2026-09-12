@@ -1,0 +1,34 @@
+{
+  "protocol": "V113_FINE_PITCH_FAILURE_PRIOR_V104_V1",
+  "hypothesis": "A frozen train-only prior over pitcher x historical fine pitch type x batter hand x count separates reverse, middle, and way-off failure mechanisms left in the v104 residual.",
+  "fine_pitch_types": ["Fastball", "Slider", "Curveball", "ChangeUp", "Splitter", "Sinker", "Cutter", "Other"],
+  "outcome_shrink": 10.0,
+  "selection_shrink": 300.0,
+  "component_weights": {
+    "reverse": -0.75,
+    "middle": 1.5,
+    "wayoff": -0.5
+  },
+  "route_domains": ["R_CORE"],
+  "alpha_cap": 1.0,
+  "family_alpha": [0.0, 0.25, 0.5, 0.75, 1.0],
+  "bootstrap_resamples": 3000,
+  "block_size": 2000,
+  "seed": 20260823,
+  "selection_gate": {
+    "minimum_positive_month_fraction": 0.75,
+    "worst_month_gain_strictly_above": -5.0,
+    "minimum_domain_gain": 0.0,
+    "reality_check_alpha": 0.1
+  },
+  "restrictions": {
+    "current_audit_pitch_type_used": false,
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_for_recipe_or_weight": false,
+    "v104_recipe_retuned": false,
+    "locked_2024_used_for_alpha": false,
+    "row_local_inference": true,
+    "reference_recipe_is_external_and_not_a_clean_holdout": true
+  }
+}

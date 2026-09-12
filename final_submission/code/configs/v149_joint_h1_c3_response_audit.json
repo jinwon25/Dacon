@@ -1,0 +1,37 @@
+{
+  "protocol": "V149_JOINT_H1_C3_RESPONSE_AUDIT_V1",
+  "hypothesis": "Jointly retuning the independently forward-validated H1 state and C3 context directions can recover headroom hidden by the sequential v142 recipe, while separate base-bridge and consensus-mix controls use the v148 Public response without changing the row-local model family.",
+  "h1_weight_grid": [0.05, 0.1, 0.15, 0.2, 0.25, 0.3],
+  "c3_weight_grid": [0.1, 0.25, 0.5, 0.75, 1.0, 1.25],
+  "base_bridge_grid": [0.0, 0.15, 0.25, 0.5, 0.75, 1.0],
+  "consensus_mix_grid": [0.0, 0.15, 0.25, 0.5, 0.75, 1.0],
+  "source_gate": {
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "active_domain_gain_min": 0.0
+  },
+  "locked_gate": {
+    "gain_vs_v124_min": 8.5,
+    "late_gain_vs_v124_min": 14.0,
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -7.5,
+    "incremental_gain_vs_v148_min": 2.5
+  },
+  "public_calibration": {
+    "v124_score": 1164.2949203402,
+    "v142_score": 1169.6277932822,
+    "v148_score": 1170.3014697177,
+    "v142_local_gain_vs_v124": 6.943060261765936,
+    "v148_local_increment_vs_v142": 0.719191783749,
+    "conservative_transfer_ratio": 0.75,
+    "target_score_min": 1173.0
+  },
+  "restrictions": {
+    "external_2025_outcomes_used": false,
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "full_2024_reused_as_development": true,
+    "public_scores_used_only_as_scalar_transfer_anchors": true,
+    "row_local_inference": true
+  }
+}

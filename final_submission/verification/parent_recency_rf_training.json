@@ -1,0 +1,24 @@
+{
+  "protocol": "PARENT_RECENCY_RF_FRESH_FIT_V1",
+  "official_train_sha256": "d2081186b458b49f60b082be480c273135833e15ba59a76d033af28bcf8763ff",
+  "rows": 1475092,
+  "feature_count": 47,
+  "half_life_seasons": 1.0,
+  "anchor_season": 2024,
+  "random_forest": {
+    "n_estimators": 100,
+    "max_depth": 10,
+    "min_samples_leaf": 200,
+    "random_state": 42
+  },
+  "versions": {
+    "numpy": "2.2.6",
+    "pandas": "2.2.3",
+    "scikit-learn": "1.6.1",
+    "joblib": "1.5.1"
+  },
+  "file_sha256": "64b2aa6aa3afe66caaf57cef443ac2987cdba466fa0753cba02c02aaedd8715f",
+  "reference_model_read_during_fit": false,
+  "test_values_read_during_fit": false,
+  "private_score_recomputed": false
+}

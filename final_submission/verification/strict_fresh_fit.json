@@ -1,0 +1,67 @@
+{
+  "reference_inference_sha256": "d44578dc50220ce84dd4b8489bbae680afdcf93f931ed4236287b5a9e6f5aaaa",
+  "candidate_zip_sha256": "af930bde089655be08acba9c1a057349e908c19df66f8fe4e499d3e9801faf15",
+  "native_assets": {
+    "history_state.json": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "multirate_state.json": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "feature_schemas.json": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "histgradientboosting.json": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "group_effects.json": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "team_effects.json": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "pitcher_count_effects.json": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "lowrank_effects.json": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "rfull_lightgbm.txt": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    }
+  },
+  "rows_compared": 5,
+  "prediction_fixture": "Official public sample, not hidden test; complete native model/state comparison is reported separately.",
+  "prediction_max_abs": 0.0,
+  "strict_fit_parity": true,
+  "whole_parent_ensemble_fresh_fit": false,
+  "private_score_recomputed": false,
+  "metadata_note": "Timing/version annotations excluded; candidate identity checked."
+}

@@ -1,0 +1,54 @@
+{
+  "strict_fit_parity": true,
+  "maximum_table_abs_difference": 0.0,
+  "oof_years": [
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "oof_sha256": "8a297011a34648a91263c226f43aac19b0438274fa902f08f8c3a1e330fec88f",
+  "oof_fresh_training_proven_by_this_command": false,
+  "oof_source": "Explicit table-only refit from the supplied OOF; verify its training separately.",
+  "official_data_sha256": {
+    "train.csv": "d2081186b458b49f60b082be480c273135833e15ba59a76d033af28bcf8763ff",
+    "trackman_history.csv": "f7818f9ee0ccefe7c2cf69fa99efe6e5cb882d8b886dd96d2394bcf3b53f33a9"
+  },
+  "reference_inference_sha256": "d44578dc50220ce84dd4b8489bbae680afdcf93f931ed4236287b5a9e6f5aaaa",
+  "fixed_h1_recipe": {
+    "iterations": 1200,
+    "learning_rate": 0.02,
+    "depth": 6,
+    "l2_leaf_reg": 100.0,
+    "border_count": 32,
+    "seed": 42,
+    "post_shrink": [
+      300.0,
+      2000.0,
+      800.0,
+      2000.0
+    ],
+    "post_weight": [
+      0.2,
+      0.825,
+      0.28,
+      0.45
+    ]
+  },
+  "fixed_c3_recipe": {
+    "windows": {
+      "last1": 1,
+      "last2": 2,
+      "last3": 3,
+      "expanding": 99
+    },
+    "same_hand_shrink": 1000.0,
+    "two_strike_shrink": 1000.0,
+    "runner_on_shrink": 2000.0,
+    "contrast_scale": 0.5,
+    "consensus": "0.85_sign_all_plus_0.15_mean_recent"
+  },
+  "reference_inference_modified": false,
+  "private_score_recomputed": false
+}

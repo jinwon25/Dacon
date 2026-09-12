@@ -1,0 +1,42 @@
+{
+  "protocol": "V153_MAY_MATURITY_BRIDGE_PACKAGE_V1",
+  "package_name": "submit_v153.zip",
+  "parent_v104_sha256": "0C3B6A9D88D31D9AC32FB43FFD642FA07BFCC3367699FA71841E35188FBDA0BA",
+  "mature_v124_sha256": "5E6E961717A527AA39DDF7FD2447ED6E08BFFB4CDBF80D0024AE761ADE3A193A",
+  "h1_package_sha256": "D338E9EEF715C3CC84C0C5CD9C830925A93D85BF9518BFB0DCD0D0B052F995D6",
+  "bridge_weight_toward_v138": 0.85,
+  "excluded_months": [5],
+  "intermediate_point": {
+    "v17_scale": 1.0675,
+    "v19_scale": 1.0,
+    "v20_scale": 0.9625,
+    "v21_scale": 0.925,
+    "v22_scale": 0.9475,
+    "anchor_eta": 0.1815
+  },
+  "h1_weight": 0.15,
+  "c3_weight": 0.5,
+  "c3": {
+    "windows": {"last1": 1, "last2": 2, "last3": 3, "expanding": 99},
+    "same_hand_shrink": 1000.0,
+    "two_strike_shrink": 1000.0,
+    "runner_on_shrink": 2000.0,
+    "contrast_scale": 0.5,
+    "consensus": "0.15_sign_all_plus_0.85_mean_recent"
+  },
+  "public_estimate": {
+    "conservative": 1172.6735,
+    "family_transfer_centre": 1173.2897,
+    "optimistic": 1173.8228
+  },
+  "runtime_limit_seconds": 120.0,
+  "scale_proxy_rows": 245789,
+  "restrictions": {
+    "external_2025_outcomes_used": false,
+    "test_aggregate_used_for_prediction": false,
+    "test_distribution_used_for_prediction": false,
+    "may_gate_selected_on_full_2022_source_only": true,
+    "public_score_used_only_for_frozen_bridge_transfer_estimation": true,
+    "row_local_inference": true
+  }
+}

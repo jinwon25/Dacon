@@ -1,0 +1,28 @@
+{
+  "protocol": "V117_V116_PUBLIC_PROBE_V1",
+  "parent": "artifacts/standalone_champion_1162/standalone_champion_1162.zip",
+  "candidate": "v116 cross-origin-ridged reverse/middle/way-off historical failure prior",
+  "recipe": {
+    "route": "R_CORE",
+    "components": ["reverse", "middle", "wayoff"],
+    "ridge_lambda": 10.0,
+    "weights": [-0.8284325958125329, 1.486236424982876, -0.6076899786289343],
+    "outcome_shrink": 10.0,
+    "selection_shrink": 300.0,
+    "history_cutoff": "all official train seasons through 2024",
+    "current_pitch_type_used": false
+  },
+  "authorization": "User explicitly authorized automatic DACON submission of meaningful candidates on 2026-08-23.",
+  "local_evidence": {
+    "full_2022_gain": 3.669824990959569,
+    "late_2023_gain": 12.18386728953913,
+    "full_2024_gain": 5.430451996313309,
+    "late_2024_gain": 6.213883866168544,
+    "full_2024_positive_month_fraction": 0.875,
+    "full_2024_worst_month_gain": -2.27090499523851
+  },
+  "known_risk": "Pitcher and crossed-cluster bootstrap p05 remain negative; this is a controlled leaderboard transfer probe, not a fully locally promoted model.",
+  "test_aggregate_used": false,
+  "row_local_inference": true,
+  "public_score_used_for_recipe": false
+}

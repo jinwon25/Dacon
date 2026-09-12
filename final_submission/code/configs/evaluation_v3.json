@@ -1,0 +1,56 @@
+{
+  "protocol": "POST_1161_NESTED_DEPENDENCE_AWARE_V3",
+  "champion_public": 1161.2020600422,
+  "champion_sha256": "C033FC38A5F9681E45B0BD2494359B8BD1387EE44E5F318C5B7A5547CFE6C4F7",
+  "champion_package": "artifacts/standalone_champion_1161/standalone_champion_1161.zip",
+  "official_metric": "max(0, 100000 * (1 - brier / (r * (1-r))))",
+  "official_test_split": "Public evaluates 100% of the hidden 245789-row test; final Private is the closing Public result",
+  "comparison_metric": "paired unclipped BSS-equivalent gain vs exact incumbent",
+  "target_public": 1170.0,
+  "target_gap": 8.7979399578,
+  "evidence_roles": {
+    "nested_outer": "all feature selection, tuning and calibration repeated inside the outer fold",
+    "locked_shadow": "target-free split fixed before the family recipe is run and result not reused for tuning",
+    "development_contaminated": "labels or aggregate results already informed human/model design; diagnostic only"
+  },
+  "gates": {
+    "minimum_primary_axes": 2,
+    "minimum_month_positive_fraction": 0.75,
+    "worst_month_gain_strictly_above": -5.0,
+    "minimum_domain_gain": 0.0,
+    "require_pitcher_bootstrap_p05_positive": true,
+    "require_crossed_pitcher_batter_bootstrap_p05_positive": true,
+    "require_block_bootstrap_p05_positive": true,
+    "reality_check_alpha": 0.1,
+    "family_trial_ledger_required": true,
+    "exact_parent_parity_required": true
+  },
+  "public_projection": {
+    "single_transfer_factor_allowed": false,
+    "minimum_clean_transfer_observations": 3,
+    "use": "scenario only; never a promotion gate"
+  },
+  "runtime": {
+    "official_inference_limit_seconds": 600,
+    "internal_soft_guard_seconds": 120,
+    "note": "120 seconds is an intentionally stricter engineering guard, not the official limit"
+  },
+  "row_independence_tolerance": 1e-12,
+  "latest_public_probe": {
+    "candidate": "v84 fixed v56 shared FM on F",
+    "submission_id": 59988,
+    "leaderboard_record_id": 1543508,
+    "public_score": 1161.2020600422,
+    "previous_public_score": 1159.3352239501,
+    "public_gain": 1.8668360921,
+    "promoted": true,
+    "decision": "promote exact v84 package as standalone_champion_1161; freeze the successful F recipe and move to orthogonal R-domain families"
+  },
+  "latest_research_cycle": {
+    "range": "v94-v96",
+    "report": "reports/target1170_v94_v96_multiorigin_20260822.md",
+    "submitted": false,
+    "champion_changed": false,
+    "decision": "retain Public 1161.2020600422; multi-origin context transport reversed on exact 2024 and within-season exact replication disagreed across 2022/2024; wait for independent row-aligned OOF or a genuinely new information source before another submission"
+  }
+}

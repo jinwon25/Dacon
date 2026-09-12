@@ -1,0 +1,26 @@
+{
+  "protocol": "V154_MATURITY_DELTA_DISTILLATION_AUDIT_V1",
+  "bridge_weight": 0.85,
+  "maturity_months": [5],
+  "public_before_gate": 1171.524242763367,
+  "family_transfer_rate": 0.7680868,
+  "target_public": 1173.0,
+  "training": {
+    "num_boost_round": 800,
+    "early_stopping_rounds": 60,
+    "learning_rate": 0.04,
+    "num_leaves": 63,
+    "min_data_in_leaf": 100,
+    "lambda_l2": 5.0,
+    "seed": 154
+  },
+  "restrictions": {
+    "official_train_only": true,
+    "outcome_target_used": false,
+    "distillation_target_is_frozen_v124_minus_intermediate": true,
+    "validation_month_excluded_from_training": true,
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "row_local_inference": true
+  }
+}

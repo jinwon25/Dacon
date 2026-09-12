@@ -1,0 +1,21 @@
+{
+  "component": "corrected",
+  "reference_inference_sha256": "d44578dc50220ce84dd4b8489bbae680afdcf93f931ed4236287b5a9e6f5aaaa",
+  "candidate_files_sha256": {
+    "corrected_state_residual_lgb.txt": "306912ea39c9a684b1162605250d0a4584f323be4877de3c97911e357f06f3d4",
+    "corrected_state_residual_spec.json": "7d8cbeefc3299fa39d862e6738a71654f2b0d6f8ef212deb8645a08083570ed6",
+    "corrected_state_pitcher_prior.csv": "2205b96d29095ff7c426827bca8fed77cadac9cb7ad72d2a359579b91bf883f8",
+    "corrected_state_batter_prior.csv": "b854a4124fdf0ecff3608c87f8e87d80cb686b7c0b1affff6ec87c99b0033383"
+  },
+  "native_assets": {
+    "corrected_state_residual_lgb.txt": {"within_tolerance": true, "maximum_numeric_abs_difference": 0.0, "mismatch_count": 0, "first_mismatches": []},
+    "corrected_state_residual_spec.json": {"within_tolerance": true, "maximum_numeric_abs_difference": 0.0, "mismatch_count": 0, "first_mismatches": []},
+    "corrected_state_pitcher_prior.csv": {"within_tolerance": true, "maximum_numeric_abs_difference": 0.0, "mismatch_count": 0, "first_mismatches": []},
+    "corrected_state_batter_prior.csv": {"within_tolerance": true, "maximum_numeric_abs_difference": 0.0, "mismatch_count": 0, "first_mismatches": []}
+  },
+  "native_model_and_state_parity": true,
+  "final_ensemble_doses_excluded_from_model_fit_comparison": {"eta": {"submitted": 1.0, "initial_fit": 1.0}},
+  "assembly_annotations_excluded": {},
+  "whole_parent_ensemble_fresh_fit": false,
+  "private_score_recomputed": false
+}

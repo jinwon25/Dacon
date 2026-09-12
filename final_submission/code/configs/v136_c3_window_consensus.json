@@ -1,0 +1,41 @@
+{
+  "protocol": "V136_C3_WINDOW_CONSENSUS_V1",
+  "hypothesis": "A fixed consensus across recent and expanding C3 windows reduces calendar-specific residual-table variance while preserving source-year gain.",
+  "consensus": {
+    "mean_all": {"method": "mean", "members": ["last1", "last2", "last3", "expanding"]},
+    "median_all": {"method": "median", "members": ["last1", "last2", "last3", "expanding"]},
+    "mean_recent": {"method": "mean", "members": ["last1", "last2"]},
+    "mean_long": {"method": "mean", "members": ["last2", "last3", "expanding"]}
+  },
+  "families": ["v131_plus_c3", "h1_post4_c3_blend"],
+  "routes": ["ALL", "R_CORE"],
+  "c3": {
+    "same_hand_shrink": 1000.0,
+    "two_strike_shrink": 1000.0,
+    "runner_on_shrink": 2000.0,
+    "contrast_scale": 0.5
+  },
+  "v131_blend_weight": 0.15,
+  "c3_eta_grid": [0.1, 0.25, 0.5, 0.75],
+  "blend_weight_grid": [0.025, 0.05, 0.075, 0.1, 0.15],
+  "source_gate": {
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "active_domain_gain_min": 0.0
+  },
+  "locked_gate": {
+    "gain_min": 5.7,
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "active_domain_gain_min": 0.0
+  },
+  "restrictions": {
+    "external_2025_outcomes_used": false,
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_for_selection": false,
+    "full_2024_used_for_recipe_selection": false,
+    "c3_tables_use_prior_year_oof_residuals_only": true,
+    "row_local_inference": true
+  }
+}

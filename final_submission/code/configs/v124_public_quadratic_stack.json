@@ -1,0 +1,49 @@
+{
+  "protocol": "V124_PUBLIC_QUADRATIC_STACK_V1",
+  "parent_zip_sha256": "0C3B6A9D88D31D9AC32FB43FFD642FA07BFCC3367699FA71841E35188FBDA0BA",
+  "package_name": "submit_v124.zip",
+  "current_champion_public": 1162.6302840289,
+  "target_public": 1170.0,
+  "research_manifest": "artifacts/v123_public_quadratic_stack_20260823_01/research_v2.json",
+  "current_point": {
+    "v17_scale": 1.0,
+    "v19_scale": 1.0,
+    "v20_scale": 1.0,
+    "v21_scale": 1.0,
+    "v22_scale": 1.0,
+    "anchor_eta": 0.15
+  },
+  "selected_point": {
+    "v17_scale": 1.45,
+    "v19_scale": 1.0,
+    "v20_scale": 0.75,
+    "v21_scale": 0.5,
+    "v22_scale": 0.65,
+    "anchor_eta": 0.36
+  },
+  "expected_projection": {
+    "cross_0": 1171.6664933747318,
+    "cross_0.5": 1171.560653581803,
+    "cross_1": 1171.4548137888746,
+    "minimum": 1171.4548137888746
+  },
+  "nested_paths": {
+    "v14": "model/parent/parent/champion/v14_refinement_spec.json",
+    "v16": "model/parent/parent/champion/v16_residual_spec.json",
+    "v20": "model/parent/parent/champion/v20_target1160_spec.json",
+    "v21": "model/parent/parent/champion/v21_context_state_eb_spec.json",
+    "v22": "model/parent/parent/champion/v22_low_variance_spec.json",
+    "v25": "model/parent/parent/champion/v25_postbreak_anchor_spec.json"
+  },
+  "runtime_limit_seconds": 120.0,
+  "restrictions": {
+    "official_dacon_scores_used": true,
+    "same_axis_public_interpolation_allowed_by_faq_reply_320256": true,
+    "test_csv_used_for_weight_selection": false,
+    "test_aggregate_used": false,
+    "test_distribution_used": false,
+    "sample_identification_used": false,
+    "external_2025_outcomes_used": false,
+    "row_local_inference": true
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "protocol": "V98_CONDITIONAL_ABLATION_AXIS_V1",
+  "frozen_before_run": "2026-08-22",
+  "hypothesis": "The paired prediction difference between otherwise identical models with and without strict prior-season conditional features isolates portable matchup/count resolution while cancelling direct-model calibration drift.",
+  "audit_years": [2020, 2021, 2022, 2023, 2024],
+  "selection_years": [2020, 2021],
+  "routes": {
+    "R_CORE": ["R_CORE"],
+    "R_CORE_F": ["R_CORE", "F"],
+    "ALL": ["R_CORE", "R_ANCHOR", "F"]
+  },
+  "eta_cap": 1.0,
+  "conditional_columns": [
+    "prior_pitcher_rate",
+    "prior_pitcher_n",
+    "prior_hand_rate",
+    "prior_hand_dev",
+    "prior_hand_n",
+    "prior_hand_reliability",
+    "prior_count_rate",
+    "prior_count_dev",
+    "prior_count_n",
+    "prior_count_reliability"
+  ],
+  "prohibited": [
+    "raw pitcher_id or batter_id as model features",
+    "game_month as model feature",
+    "same-season labels in conditional features",
+    "audit labels in model fitting or recipe selection",
+    "test aggregates, order, frequency or distribution",
+    "Public-score-derived route or weight"
+  ]
+}

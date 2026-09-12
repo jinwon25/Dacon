@@ -1,0 +1,33 @@
+{
+  "rows_compared": 32773,
+  "features_equal": true,
+  "reference_archive_sha256": "d44578dc50220ce84dd4b8489bbae680afdcf93f931ed4236287b5a9e6f5aaaa",
+  "reference_member": "model/workload_h1/model/rf.pkl",
+  "fresh_bundle_sha256": "0f297b5386b648056398f8f0656a829bea09c947780c0fe8895140755040741e",
+  "prediction_max_abs": 0.0,
+  "models": [
+    {
+      "seed": 42,
+      "trees_equal": true,
+      "borders_equal": true,
+      "scale_and_bias_equal": true,
+      "leaf_values_max_abs": 0.0
+    },
+    {
+      "seed": 43,
+      "trees_equal": true,
+      "borders_equal": true,
+      "scale_and_bias_equal": true,
+      "leaf_values_max_abs": 0.0
+    },
+    {
+      "seed": 44,
+      "trees_equal": true,
+      "borders_equal": true,
+      "scale_and_bias_equal": true,
+      "leaf_values_max_abs": 0.0
+    }
+  ],
+  "strict_fit_parity": true,
+  "private_score_recomputed": false
+}

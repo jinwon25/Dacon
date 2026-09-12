@@ -1,0 +1,55 @@
+{
+  "component": "legacy",
+  "reference_inference_sha256": "d44578dc50220ce84dd4b8489bbae680afdcf93f931ed4236287b5a9e6f5aaaa",
+  "candidate_files_sha256": {
+    "legacy_cb_axis.cbm": "f33cc8c1513fe64b9bb8e5c29becdd4e89b46d7b7c3bdebb4a9dd1cd86f487a4",
+    "legacy_cb_axis_spec.json": "ce3a208f2e88cb3f8c3a5cd83168c12a5e0a7dfcd167ba9aaef8b80ca31dd500",
+    "legacy_cb_pitcher_prior.csv": "41b58f38f5e97d7c2afbc3cfde50e8b1f59f36290fc6982ac50f87f108f43a58",
+    "legacy_cb_batter_prior.csv": "730f624d374b59ee3405afa875c84c7d549ed041eb591c561ae0d95de59c0332"
+  },
+  "native_assets": {
+    "legacy_cb_axis.cbm": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "legacy_cb_axis_spec.json": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "legacy_cb_pitcher_prior.csv": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "legacy_cb_batter_prior.csv": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    }
+  },
+  "native_model_and_state_parity": true,
+  "final_ensemble_doses_excluded_from_model_fit_comparison": {
+    "effect_weight": {
+      "submitted": 0.5534087425546688,
+      "initial_fit": 0.175
+    }
+  },
+  "assembly_annotations_excluded": {
+    "parent_effect_weight": {
+      "submitted": 0.35,
+      "initial_fit": null
+    },
+    "variant_parent": {
+      "submitted": "submit_v8.zip",
+      "initial_fit": null
+    }
+  },
+  "whole_parent_ensemble_fresh_fit": false,
+  "private_score_recomputed": false
+}

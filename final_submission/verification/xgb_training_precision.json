@@ -1,0 +1,695 @@
+{
+  "rows": 1475092,
+  "features": 114,
+  "boundaries": 8666,
+  "matched": 8666,
+  "all_boundaries_present": true,
+  "exact_training_matrix_proven": false,
+  "full_model_fresh_fit_proven": false,
+  "details": [
+    {
+      "feature": "season",
+      "boundaries": 4,
+      "matched": 4,
+      "missing": []
+    },
+    {
+      "feature": "game_month",
+      "boundaries": 6,
+      "matched": 6,
+      "missing": []
+    },
+    {
+      "feature": "game_dayofweek",
+      "boundaries": 5,
+      "matched": 5,
+      "missing": []
+    },
+    {
+      "feature": "inning",
+      "boundaries": 7,
+      "matched": 7,
+      "missing": []
+    },
+    {
+      "feature": "top_bottom",
+      "boundaries": 1,
+      "matched": 1,
+      "missing": []
+    },
+    {
+      "feature": "game_type",
+      "boundaries": 1,
+      "matched": 1,
+      "missing": []
+    },
+    {
+      "feature": "balls_before",
+      "boundaries": 3,
+      "matched": 3,
+      "missing": []
+    },
+    {
+      "feature": "strikes_before",
+      "boundaries": 2,
+      "matched": 2,
+      "missing": []
+    },
+    {
+      "feature": "outs_before",
+      "boundaries": 2,
+      "matched": 2,
+      "missing": []
+    },
+    {
+      "feature": "run_top_before",
+      "boundaries": 6,
+      "matched": 6,
+      "missing": []
+    },
+    {
+      "feature": "run_bot_before",
+      "boundaries": 6,
+      "matched": 6,
+      "missing": []
+    },
+    {
+      "feature": "run_total_before",
+      "boundaries": 9,
+      "matched": 9,
+      "missing": []
+    },
+    {
+      "feature": "score_diff_home",
+      "boundaries": 6,
+      "matched": 6,
+      "missing": []
+    },
+    {
+      "feature": "score_diff_pitcher_team",
+      "boundaries": 4,
+      "matched": 4,
+      "missing": []
+    },
+    {
+      "feature": "runner_on_1b",
+      "boundaries": 1,
+      "matched": 1,
+      "missing": []
+    },
+    {
+      "feature": "runner_on_2b",
+      "boundaries": 1,
+      "matched": 1,
+      "missing": []
+    },
+    {
+      "feature": "runner_on_3b",
+      "boundaries": 1,
+      "matched": 1,
+      "missing": []
+    },
+    {
+      "feature": "num_runners_on",
+      "boundaries": 2,
+      "matched": 2,
+      "missing": []
+    },
+    {
+      "feature": "base_state",
+      "boundaries": 5,
+      "matched": 5,
+      "missing": []
+    },
+    {
+      "feature": "home_win_expectancy",
+      "boundaries": 60,
+      "matched": 60,
+      "missing": []
+    },
+    {
+      "feature": "away_win_expectancy",
+      "boundaries": 59,
+      "matched": 59,
+      "missing": []
+    },
+    {
+      "feature": "li",
+      "boundaries": 59,
+      "matched": 59,
+      "missing": []
+    },
+    {
+      "feature": "pitcher_id",
+      "boundaries": 105,
+      "matched": 105,
+      "missing": []
+    },
+    {
+      "feature": "batter_id",
+      "boundaries": 101,
+      "matched": 101,
+      "missing": []
+    },
+    {
+      "feature": "pitcher_hand",
+      "boundaries": 1,
+      "matched": 1,
+      "missing": []
+    },
+    {
+      "feature": "batter_hand",
+      "boundaries": 1,
+      "matched": 1,
+      "missing": []
+    },
+    {
+      "feature": "pitcher_team_id",
+      "boundaries": 9,
+      "matched": 9,
+      "missing": []
+    },
+    {
+      "feature": "batter_team_id",
+      "boundaries": 9,
+      "matched": 9,
+      "missing": []
+    },
+    {
+      "feature": "asof_pitcher_n",
+      "boundaries": 115,
+      "matched": 115,
+      "missing": []
+    },
+    {
+      "feature": "asof_pitcher_success_rate",
+      "boundaries": 96,
+      "matched": 96,
+      "missing": []
+    },
+    {
+      "feature": "asof_pitcher_reverse_rate",
+      "boundaries": 115,
+      "matched": 115,
+      "missing": []
+    },
+    {
+      "feature": "asof_pitcher_middle_rate",
+      "boundaries": 95,
+      "matched": 95,
+      "missing": []
+    },
+    {
+      "feature": "asof_pitcher_ball_rate",
+      "boundaries": 111,
+      "matched": 111,
+      "missing": []
+    },
+    {
+      "feature": "asof_pitcher_strike_rate",
+      "boundaries": 113,
+      "matched": 113,
+      "missing": []
+    },
+    {
+      "feature": "asof_pitcher_prev1_game_success_rate",
+      "boundaries": 122,
+      "matched": 122,
+      "missing": []
+    },
+    {
+      "feature": "asof_pitcher_prev3_game_success_rate",
+      "boundaries": 124,
+      "matched": 124,
+      "missing": []
+    },
+    {
+      "feature": "asof_pitcher_prev5_game_success_rate",
+      "boundaries": 120,
+      "matched": 120,
+      "missing": []
+    },
+    {
+      "feature": "asof_pitcher_prev1_game_middle_rate",
+      "boundaries": 86,
+      "matched": 86,
+      "missing": []
+    },
+    {
+      "feature": "asof_pitcher_prev3_game_middle_rate",
+      "boundaries": 114,
+      "matched": 114,
+      "missing": []
+    },
+    {
+      "feature": "asof_pitcher_prev5_game_middle_rate",
+      "boundaries": 116,
+      "matched": 116,
+      "missing": []
+    },
+    {
+      "feature": "asof_batter_n",
+      "boundaries": 92,
+      "matched": 92,
+      "missing": []
+    },
+    {
+      "feature": "asof_batter_success_rate",
+      "boundaries": 111,
+      "matched": 111,
+      "missing": []
+    },
+    {
+      "feature": "asof_batter_middle_rate",
+      "boundaries": 95,
+      "matched": 95,
+      "missing": []
+    },
+    {
+      "feature": "asof_pitcher_fastball_rate",
+      "boundaries": 93,
+      "matched": 93,
+      "missing": []
+    },
+    {
+      "feature": "asof_pitcher_breaking_rate",
+      "boundaries": 88,
+      "matched": 88,
+      "missing": []
+    },
+    {
+      "feature": "asof_pitcher_offspeed_rate",
+      "boundaries": 118,
+      "matched": 118,
+      "missing": []
+    },
+    {
+      "feature": "hand_mix",
+      "boundaries": 3,
+      "matched": 3,
+      "missing": []
+    },
+    {
+      "feature": "p_succ_ssn",
+      "boundaries": 97,
+      "matched": 97,
+      "missing": []
+    },
+    {
+      "feature": "p_succ_ssn_vs_car",
+      "boundaries": 81,
+      "matched": 81,
+      "missing": []
+    },
+    {
+      "feature": "p_succ_ssn_n",
+      "boundaries": 113,
+      "matched": 113,
+      "missing": []
+    },
+    {
+      "feature": "p_rev_ssn",
+      "boundaries": 142,
+      "matched": 142,
+      "missing": []
+    },
+    {
+      "feature": "p_rev_ssn_vs_car",
+      "boundaries": 102,
+      "matched": 102,
+      "missing": []
+    },
+    {
+      "feature": "p_mid_ssn",
+      "boundaries": 115,
+      "matched": 115,
+      "missing": []
+    },
+    {
+      "feature": "p_mid_ssn_vs_car",
+      "boundaries": 93,
+      "matched": 93,
+      "missing": []
+    },
+    {
+      "feature": "p_ball_ssn",
+      "boundaries": 105,
+      "matched": 105,
+      "missing": []
+    },
+    {
+      "feature": "p_ball_ssn_vs_car",
+      "boundaries": 105,
+      "matched": 105,
+      "missing": []
+    },
+    {
+      "feature": "p_stk_ssn",
+      "boundaries": 103,
+      "matched": 103,
+      "missing": []
+    },
+    {
+      "feature": "p_stk_ssn_vs_car",
+      "boundaries": 98,
+      "matched": 98,
+      "missing": []
+    },
+    {
+      "feature": "b_succ_ssn",
+      "boundaries": 120,
+      "matched": 120,
+      "missing": []
+    },
+    {
+      "feature": "b_succ_ssn_vs_car",
+      "boundaries": 88,
+      "matched": 88,
+      "missing": []
+    },
+    {
+      "feature": "b_succ_ssn_n",
+      "boundaries": 128,
+      "matched": 128,
+      "missing": []
+    },
+    {
+      "feature": "b_mid_ssn",
+      "boundaries": 131,
+      "matched": 131,
+      "missing": []
+    },
+    {
+      "feature": "b_mid_ssn_vs_car",
+      "boundaries": 106,
+      "matched": 106,
+      "missing": []
+    },
+    {
+      "feature": "p_prev5_vs_car",
+      "boundaries": 138,
+      "matched": 138,
+      "missing": []
+    },
+    {
+      "feature": "p_prev1_vs_prev5",
+      "boundaries": 115,
+      "matched": 115,
+      "missing": []
+    },
+    {
+      "feature": "p_succ_k25",
+      "boundaries": 125,
+      "matched": 125,
+      "missing": []
+    },
+    {
+      "feature": "p_succ_k75",
+      "boundaries": 118,
+      "matched": 118,
+      "missing": []
+    },
+    {
+      "feature": "p_succ_k400",
+      "boundaries": 100,
+      "matched": 100,
+      "missing": []
+    },
+    {
+      "feature": "p_succ_k1000",
+      "boundaries": 94,
+      "matched": 94,
+      "missing": []
+    },
+    {
+      "feature": "b_succ_k25",
+      "boundaries": 137,
+      "matched": 137,
+      "missing": []
+    },
+    {
+      "feature": "b_succ_k75",
+      "boundaries": 132,
+      "matched": 132,
+      "missing": []
+    },
+    {
+      "feature": "b_succ_k400",
+      "boundaries": 113,
+      "matched": 113,
+      "missing": []
+    },
+    {
+      "feature": "b_succ_k1000",
+      "boundaries": 99,
+      "matched": 99,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_3ball",
+      "boundaries": 76,
+      "matched": 76,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_2strk",
+      "boundaries": 57,
+      "matched": 57,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_ahead",
+      "boundaries": 60,
+      "matched": 60,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_behind",
+      "boundaries": 53,
+      "matched": 53,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_risp",
+      "boundaries": 58,
+      "matched": 58,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_on1b",
+      "boundaries": 68,
+      "matched": 68,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_vsL",
+      "boundaries": 69,
+      "matched": 69,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_vsR",
+      "boundaries": 62,
+      "matched": 62,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_late",
+      "boundaries": 58,
+      "matched": 58,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_hiLI",
+      "boundaries": 48,
+      "matched": 48,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_loLI",
+      "boundaries": 52,
+      "matched": 52,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_blowout",
+      "boundaries": 71,
+      "matched": 71,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_overall",
+      "boundaries": 69,
+      "matched": 69,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_3ball_d",
+      "boundaries": 99,
+      "matched": 99,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_2strk_d",
+      "boundaries": 118,
+      "matched": 118,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_ahead_d",
+      "boundaries": 96,
+      "matched": 96,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_behind_d",
+      "boundaries": 82,
+      "matched": 82,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_risp_d",
+      "boundaries": 82,
+      "matched": 82,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_on1b_d",
+      "boundaries": 69,
+      "matched": 69,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_vsL_d",
+      "boundaries": 118,
+      "matched": 118,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_vsR_d",
+      "boundaries": 99,
+      "matched": 99,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_late_d",
+      "boundaries": 73,
+      "matched": 73,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_hiLI_d",
+      "boundaries": 97,
+      "matched": 97,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_loLI_d",
+      "boundaries": 78,
+      "matched": 78,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_blowout_d",
+      "boundaries": 103,
+      "matched": 103,
+      "missing": []
+    },
+    {
+      "feature": "p_sit_matched",
+      "boundaries": 148,
+      "matched": 148,
+      "missing": []
+    },
+    {
+      "feature": "pb_n",
+      "boundaries": 22,
+      "matched": 22,
+      "missing": []
+    },
+    {
+      "feature": "pb_rate",
+      "boundaries": 56,
+      "matched": 56,
+      "missing": []
+    },
+    {
+      "feature": "pb_logn",
+      "boundaries": 12,
+      "matched": 12,
+      "missing": []
+    },
+    {
+      "feature": "p_ppa",
+      "boundaries": 59,
+      "matched": 59,
+      "missing": []
+    },
+    {
+      "feature": "p_est_apps",
+      "boundaries": 128,
+      "matched": 128,
+      "missing": []
+    },
+    {
+      "feature": "p_inning_x_role",
+      "boundaries": 95,
+      "matched": 95,
+      "missing": []
+    },
+    {
+      "feature": "p_ssn_per_month",
+      "boundaries": 134,
+      "matched": 134,
+      "missing": []
+    },
+    {
+      "feature": "tm_rel_speed",
+      "boundaries": 96,
+      "matched": 96,
+      "missing": []
+    },
+    {
+      "feature": "tm_rel_speed_sd",
+      "boundaries": 95,
+      "matched": 95,
+      "missing": []
+    },
+    {
+      "feature": "tm_spin_rate",
+      "boundaries": 94,
+      "matched": 94,
+      "missing": []
+    },
+    {
+      "feature": "tm_induced_vert_break",
+      "boundaries": 123,
+      "matched": 123,
+      "missing": []
+    },
+    {
+      "feature": "tm_horz_break",
+      "boundaries": 95,
+      "matched": 95,
+      "missing": []
+    },
+    {
+      "feature": "tm_extension",
+      "boundaries": 100,
+      "matched": 100,
+      "missing": []
+    },
+    {
+      "feature": "tm_rel_height",
+      "boundaries": 100,
+      "matched": 100,
+      "missing": []
+    },
+    {
+      "feature": "tm_rel_side",
+      "boundaries": 93,
+      "matched": 93,
+      "missing": []
+    }
+  ]
+}

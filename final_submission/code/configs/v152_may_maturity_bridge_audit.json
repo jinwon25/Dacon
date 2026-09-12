@@ -1,0 +1,34 @@
+{
+  "protocol": "V152_MAY_MATURITY_BRIDGE_AUDIT_V1",
+  "hypothesis": "The independently estimated current-command correction is least reliable during May's small-sample transition; preserving the mature v124 parent in May while extending the Public-identified bridge elsewhere can remove a replicated negative month without test aggregation.",
+  "excluded_months": [5],
+  "deployment_weight": 0.85,
+  "bridge_weight_grid": [0.15, 0.5, 0.65, 0.75, 0.8, 0.85, 1.0],
+  "public_calibration": {
+    "v142_score": 1169.6277932822,
+    "v148_score": 1170.3014697177,
+    "v148_weight": 0.15,
+    "local_quadratic_linear": 5.278909,
+    "local_quadratic_curvature": 3.228656,
+    "target_score_min": 1173.0
+  },
+  "source_gate": {
+    "positive_month_fraction_min": 0.75,
+    "worst_month_gain_min_exclusive": -5.0,
+    "active_domain_gain_min": 0.0
+  },
+  "locked_gate": {
+    "gain_vs_v124_min": 9.5,
+    "late_gain_vs_v124_min": 16.0,
+    "positive_month_fraction_min": 0.875,
+    "worst_month_gain_min_exclusive": -3.0
+  },
+  "restrictions": {
+    "external_2025_outcomes_used": false,
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "excluded_month_selected_on_full_2022_source_only": true,
+    "full_2024_reused_only_for_transfer_audit": true,
+    "row_local_inference": true
+  }
+}

@@ -1,0 +1,26 @@
+[학습 코드 개발 환경(OS) 및 라이브러리 버전]
+
+- OS: Windows 11 Home 64-bit (OS build 26200, x86_64)
+- Hardware: Intel Core i5-1340P, RAM 약 16 GB
+- Python: 3.11.2
+- Shell: Windows PowerShell 5.1
+- 기본 학습/재현 환경:
+  NumPy 2.2.6, pandas 2.2.3, SciPy 1.15.3,
+  scikit-learn 1.6.1, joblib 1.5.1, CatBoost 1.2.8,
+  LightGBM 4.6.0, XGBoost 3.2.0, PyTorch 2.7.1,
+  pytest 9.0.3
+- H1 모델 별도 재학습 환경:
+  NumPy 2.2.6, pandas 2.3.3, scikit-learn 1.7.2,
+  joblib 1.5.3, CatBoost 1.2.10
+- fallback XGBoost 학습 설정:
+  XGBoost 3.2.0, tree_method=hist, device=cuda:0
+- 추론 환경과 패키지 버전은 동봉된
+  inference/requirements.txt 및 code/requirements.txt에 고정했습니다.
+
+[동봉 자료]
+
+- 00_RUN_REPRODUCTION.ipynb: Python 재현 진입점 실행 노트북
+- 01_ENVIRONMENT.md: 구성요소별 상세 환경
+- 03_REPRODUCE.md: 전체 재현 명령과 순서
+- code/requirements.txt: 기본 학습 환경
+- verification/: 신규 학습·재빌드·행 독립성·민감도 검증 결과

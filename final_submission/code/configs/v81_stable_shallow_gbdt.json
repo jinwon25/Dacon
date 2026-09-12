@@ -1,0 +1,50 @@
+{
+  "protocol": "V81_STABLE_SHALLOW_GBDT_RESIDUAL_V1",
+  "frozen_before_run": "2026-08-22",
+  "objective": "within-environment centered champion residual",
+  "feature_source": "v78 ID-free 28-feature trajectory/reliability/context family",
+  "stable_selection": {
+    "ridge_alpha": 200.0,
+    "minimum_environment_rows": 1000,
+    "minimum_sign_consistency": 0.75,
+    "minimum_median_abs_standardized_coefficient": 0.0001
+  },
+  "model": {
+    "objective": "regression_l2",
+    "n_estimators": 80,
+    "learning_rate": 0.03,
+    "num_leaves": 4,
+    "max_depth": 2,
+    "min_child_samples": 3000,
+    "subsample": 0.8,
+    "subsample_freq": 1,
+    "colsample_bytree": 0.85,
+    "reg_alpha": 2.0,
+    "reg_lambda": 30.0,
+    "max_bin": 63,
+    "random_state": 8100
+  },
+  "risks": ["uniform", "environment_equal", "worst_third"],
+  "eta_grid": [0.0, 0.25, 0.5, 1.0],
+  "correction_cap": 0.03,
+  "source_selection_gates": {
+    "gain_strictly_positive": true,
+    "minimum_positive_month_fraction": 0.75,
+    "worst_month_gain_strictly_above": -5.0,
+    "minimum_domain_gain": 0.0
+  },
+  "rolling_source_folds": [
+    {"train_month_max": 5, "valid_month_min": 6, "valid_month_max": 7},
+    {"train_month_max": 7, "valid_month_min": 8, "valid_month_max": 12},
+    {"train_month_max": 8, "valid_month_min": 9, "valid_month_max": 9},
+    {"train_month_max": 9, "valid_month_min": 10, "valid_month_max": 12}
+  ],
+  "minimum_fold_rows": 1000,
+  "prohibited": [
+    "player IDs",
+    "test aggregates or order",
+    "current pitch physics/location",
+    "audit labels in source model or recipe selection",
+    "post-run hyperparameter tuning"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "component": "v22_low_variance",
+  "reference_inference_sha256": "d44578dc50220ce84dd4b8489bbae680afdcf93f931ed4236287b5a9e6f5aaaa",
+  "candidate_files_sha256": {
+    "v22_low_variance_spec.json": "77f9b56df3a4b3d5a265759387252f1e1e4c2239ad4e11697bdab2a8aff100db"
+  },
+  "native_assets": {
+    "v22_low_variance_spec.json": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    }
+  },
+  "native_model_and_state_parity": true,
+  "final_ensemble_doses_excluded_from_model_fit_comparison": {
+    "domain_calibration.R_CORE.weight": {
+      "submitted": 0.0245875,
+      "initial_fit": 0.035
+    },
+    "domain_calibration.R_ANCHOR.weight": {
+      "submitted": 0.01405,
+      "initial_fit": 0.02
+    },
+    "domain_calibration.F.weight": {
+      "submitted": 0.01405,
+      "initial_fit": 0.02
+    },
+    "asof_prior.weight": {
+      "submitted": 0.035125,
+      "initial_fit": 0.05
+    }
+  },
+  "assembly_annotations_excluded": {
+    "v124_public_quadratic_stack": {
+      "submitted": {
+        "protocol": "V124_PUBLIC_QUADRATIC_STACK_V1",
+        "axis": "v22_calibration_and_asof",
+        "selected_scale_or_eta": 0.7025,
+        "selection_source": "official sequential Public deltas plus strict-forward 2023-to-2024 OOF Brier curvature; no evaluation-row aggregate",
+        "row_local_inference": true,
+        "test_aggregate_used": false
+      },
+      "initial_fit": null
+    }
+  },
+  "serialization_defaults_excluded": {},
+  "whole_parent_ensemble_fresh_fit": false,
+  "private_score_recomputed": false
+}

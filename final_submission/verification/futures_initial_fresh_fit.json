@@ -1,0 +1,27 @@
+{
+  "component": "futures_initial",
+  "reference_inference_sha256": "d44578dc50220ce84dd4b8489bbae680afdcf93f931ed4236287b5a9e6f5aaaa",
+  "candidate_files_sha256": {
+    "f_catboost_seed42.cbm": "8e2ba847738faf18d19f2993e7187bcaaf05b98387f95843ab8dc0c3cdba506c",
+    "f_catboost_feature_spec.json": "4f2793076b952a87eac70cdf18432fc6b31c2d78314a3f00d94c93d8292aa5cd"
+  },
+  "native_assets": {
+    "f_catboost_seed42.cbm": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "f_catboost_feature_spec.json": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    }
+  },
+  "native_model_and_state_parity": true,
+  "final_ensemble_doses_excluded_from_model_fit_comparison": {},
+  "assembly_annotations_excluded": {},
+  "whole_parent_ensemble_fresh_fit": false,
+  "private_score_recomputed": false
+}

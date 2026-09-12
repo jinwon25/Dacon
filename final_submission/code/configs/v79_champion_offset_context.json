@@ -1,0 +1,34 @@
+{
+  "protocol": "V79_CHAMPION_OFFSET_CONTEXT_GLM_V1",
+  "frozen_before_run": "2026-08-22",
+  "objective": "regularized Bernoulli log loss with frozen champion logit as an offset",
+  "variants": [
+    "context",
+    "composition",
+    "combined"
+  ],
+  "ridge_l2": 0.01,
+  "maximum_iterations": 120,
+  "correction_cap_logit": 0.12,
+  "eta_grid": [
+    0.0,
+    0.25,
+    0.5,
+    1.0
+  ],
+  "source_selection_gates": {
+    "gain_strictly_positive": true,
+    "minimum_positive_month_fraction": 0.75,
+    "worst_month_gain_strictly_above": -5.0,
+    "minimum_domain_gain": 0.0
+  },
+  "source_crossfit": "strict rolling month bands: months<=5 to 6-7; months<=7 to 8-10",
+  "risk": "equal total weight for every domain3 x target-free month band",
+  "centering": "subtract source-only mean logit correction within domain3",
+  "prohibited": [
+    "player or team identity feature",
+    "audit/test aggregate",
+    "current pitch TrackMan physics or location",
+    "audit label based route, eta, feature or hyperparameter change"
+  ]
+}

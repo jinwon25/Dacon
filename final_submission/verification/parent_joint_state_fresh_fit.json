@@ -1,0 +1,112 @@
+{
+  "component": "joint_state_mode",
+  "reference_inference_sha256": "d44578dc50220ce84dd4b8489bbae680afdcf93f931ed4236287b5a9e6f5aaaa",
+  "candidate_files_sha256": {
+    "joint_selected_h05_l15_b075.txt": "55254d43024e4b3ae8e7340870bc0ce97ce0965750c8d8ec6dda65f2f2c1f609",
+    "joint_global_h4_l15_b075.txt": "efc01b5d5d276f9980e0f6df6a0fe9aaad9448f6f91481169a36f6e78ee4608e",
+    "joint_global_h05_l31_b075.txt": "8842969a74d0c0ecd3406487e435f5528e4a54850c0b5a4e6f3aee8f1a8ea5ef",
+    "joint_global_h05_l15_b100.txt": "e6de18deab11a05de852efbde621f7131c5bd43567fb7274a1c9de537da64a50",
+    "joint_global_h05_l15_b050.txt": "3ac0e8ad836f7024b37fed2368f6022f2fd5e9433a6893bf2a57137c4a4cbf45",
+    "joint_domain_h05_l15_b075_R_CORE.txt": "cdaa3292c84dc1091a8a310e3ee00fc384c492846981072c48bde63e53f271a0",
+    "joint_domain_h05_l15_b075_R_ANCHOR.txt": "e2091d7c2ea875d19194858871af914c75bde0ee2f72af2eb64e72c1e39416ac",
+    "joint_domain_h05_l15_b075_F.txt": "21656d3025ddd280b51d74eb29f2a672ff770103ee7ceafa7deab6d3170708a9",
+    "joint_mode_classifier_h0.5.txt": "8976eb43fb57a4cd424e4318ad5745e5f1b82412b4961cbb082d8df051f9055b",
+    "joint_mode_classifier_h2.txt": "4d2fc4eb8a27bcb4b5c8fcc1954696f41bd9973405fd536ccaaea094240ec4d8",
+    "joint_mode_classifier_h4.txt": "e06d4184620cde1036a7404e987183c19a655b6d4570aab8408c43941df5983d",
+    "joint_mode_outcome.txt": "ef78801d9f55078e94a66e533d730b8ce56caab603c29c5939442a107129ac2a",
+    "joint_state_mode_preprocess.joblib": "4e5d0c589bf218ef479e404e33c2745c06d72ad096e49f1fd580ad7811a4cfcb",
+    "joint_state_mode_spec.json": "d0ab3298eb72a4882b61699065672ee6aee1c8b6c602cb324c07aa99c13abe71"
+  },
+  "native_assets": {
+    "joint_selected_h05_l15_b075.txt": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "joint_global_h4_l15_b075.txt": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "joint_global_h05_l31_b075.txt": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "joint_global_h05_l15_b100.txt": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "joint_global_h05_l15_b050.txt": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "joint_domain_h05_l15_b075_R_CORE.txt": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "joint_domain_h05_l15_b075_R_ANCHOR.txt": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "joint_domain_h05_l15_b075_F.txt": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "joint_mode_classifier_h0.5.txt": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "joint_mode_classifier_h2.txt": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "joint_mode_classifier_h4.txt": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "joint_mode_outcome.txt": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "joint_state_mode_preprocess.joblib": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "joint_state_mode_spec.json": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    }
+  },
+  "native_model_and_state_parity": true,
+  "final_ensemble_doses_excluded_from_model_fit_comparison": {},
+  "assembly_annotations_excluded": {},
+  "serialization_defaults_excluded": {},
+  "whole_parent_ensemble_fresh_fit": false,
+  "private_score_recomputed": false
+}

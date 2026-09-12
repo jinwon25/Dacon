@@ -1,0 +1,20 @@
+{
+  "protocol": "V21_CONTEXT_STATE_RECENCY_EB_FINAL_2025_V1",
+  "train_sha256": "D2081186B458B49F60B082BE480C273135833E15BA59A76D033AF28BCF8763FF",
+  "joint_oof_sha256": "D744E7B1F3569E3DAA0B74329C06ED82C3D421DFB53B30AC3E272EFDBF417F96",
+  "source_year": 2024,
+  "source_rows": 253507,
+  "versions": {
+    "numpy": "2.2.6",
+    "pandas": "2.2.3"
+  },
+  "reference_model_read_during_fit": false,
+  "test_values_read_during_fit": false,
+  "private_score_recomputed": false,
+  "artifacts": {
+    "v21_context_state_eb_spec.json": {
+      "size_bytes": 522543,
+      "sha256": "9AF5FAD3C356A73796A42FA8395202C86F7AE41347A9654DA37A232B5E8B29D9"
+    }
+  }
+}

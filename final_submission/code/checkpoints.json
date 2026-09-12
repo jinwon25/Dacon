@@ -1,0 +1,24 @@
+{
+  "files": [
+    {
+      "path": "reproduction_inputs/v343.zip",
+      "sha256": "165c074af6e37c995ec7caeab1aad195eb2c0b03e996036bc96f0be69fd2a7c9",
+      "role": "historical_checkpoint_not_fresh_training"
+    },
+    {
+      "path": "reproduction_inputs/beta_axes.npz",
+      "sha256": "09136d367d9963ab2a177f03889fa2c5e1ce7d1bc44deffca37c3f99342441ce",
+      "role": "historical_checkpoint_not_fresh_training"
+    },
+    {
+      "path": "reproduction_inputs/v345_audit_summary.json",
+      "sha256": "16d953d1cb2ba16188624171b7327e16b77850792ecbbd0606b36f1bee20e787",
+      "role": "historical_checkpoint_not_fresh_training"
+    },
+    {
+      "path": "reproduction_inputs/bridge027.zip",
+      "sha256": "4c924e046091304bfc73b50be51110bdf1351dfd9b577738cc6b65a8dff43c9e",
+      "role": "historical_checkpoint_not_fresh_training"
+    }
+  ]
+}

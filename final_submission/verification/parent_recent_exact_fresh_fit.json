@@ -1,0 +1,49 @@
+{
+  "component": "recent_exact",
+  "reference_inference_sha256": "d44578dc50220ce84dd4b8489bbae680afdcf93f931ed4236287b5a9e6f5aaaa",
+  "candidate_files_sha256": {
+    "recent_exact_lgb.txt": "6b25163e833191fe9028f20096dedb0ee5ebe2cfb5b133f032dae6a1e0b28cf7",
+    "recent_exact_ridge.joblib": "9bb41b4fe2b3a447695855e71dbe3218ba5279994fa575b5da7380397155ce19",
+    "recent_stable_ridge.joblib": "cdf6c338a003a22159091965dff88b90b3bebeb4ab5e5a966cafa5f76c3b3f1c",
+    "recent_exact_preprocess.joblib": "09e81694b7370d4e9e44bf5557d6ba46ae5c0367767e1c1abe0bc9972b4a9c93",
+    "recent_exact_spec.json": "d163609af0dcd77ebda37a94089bf0c91308465af63da0142ed3f3d4fd3fae1e"
+  },
+  "native_assets": {
+    "recent_exact_lgb.txt": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "recent_exact_ridge.joblib": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "recent_stable_ridge.joblib": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "recent_exact_preprocess.joblib": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    },
+    "recent_exact_spec.json": {
+      "within_tolerance": true,
+      "maximum_numeric_abs_difference": 0.0,
+      "mismatch_count": 0,
+      "first_mismatches": []
+    }
+  },
+  "native_model_and_state_parity": true,
+  "final_ensemble_doses_excluded_from_model_fit_comparison": {},
+  "assembly_annotations_excluded": {},
+  "serialization_defaults_excluded": {},
+  "whole_parent_ensemble_fresh_fit": false,
+  "private_score_recomputed": false
+}

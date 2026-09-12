@@ -1,0 +1,12 @@
+{
+    "protocol":  "FINAL_INTEGRATED_PYTEST_V1",
+    "command":  "python -m pytest tests -q (working directory: code/)",
+    "collected":  807,
+    "passed":  780,
+    "failed":  0,
+    "errors":  0,
+    "skipped":  27,
+    "duration_seconds":  26.67,
+    "status":  "pass",
+    "note":  "One sklearn feature-name warning was emitted; no test failed."
+}

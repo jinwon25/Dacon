@@ -1,0 +1,14 @@
+{
+    "protocol":  "REPRODUCTION_ENTRYPOINT_AUDIT_V1",
+    "document":  "03_REPRODUCE.md",
+    "python_command_occurrences":  58,
+    "standard_module_commands":  3,
+    "project_entrypoint_occurrences":  55,
+    "unique_project_entrypoints":  30,
+    "existing_targets":  30,
+    "help_load_passed":  30,
+    "help_load_failed":  0,
+    "absolute_path_commands":  0,
+    "status":  "pass",
+    "scope":  "Loads every unique project script/module referenced by the reproduction guide with --help; does not execute model fitting."
+}

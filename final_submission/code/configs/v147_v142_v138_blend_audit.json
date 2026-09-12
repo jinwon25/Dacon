@@ -1,0 +1,18 @@
+{
+  "protocol": "V147_V142_V138_BLEND_AUDIT_V1",
+  "blend_grid": [0.0, 0.025, 0.05, 0.075, 0.1, 0.15, 0.2, 0.25, 0.35, 0.5, 1.0],
+  "development_gate": {
+    "gain_vs_v124_min": 6.943060261765936,
+    "late_gain_vs_v124_min": 12.533235560030448,
+    "worst_month_gain_min_exclusive": -5.0,
+    "positive_month_fraction_min": 0.75
+  },
+  "restrictions": {
+    "external_2025_outcomes_used": false,
+    "test_csv_read": false,
+    "test_aggregate_used": false,
+    "public_score_used_for_blend_selection": false,
+    "full_2024_reused_as_development": true,
+    "row_local_inference": true
+  }
+}

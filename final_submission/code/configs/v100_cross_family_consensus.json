@@ -1,0 +1,29 @@
+{
+  "protocol": "V100_CROSS_FAMILY_CONSENSUS_V1",
+  "frozen_before_run": "2026-08-22",
+  "parent": "exact v84 champion analogue",
+  "route": "R_CORE",
+  "fm_eta": 0.1,
+  "conditional_eta": 0.1,
+  "fm_policies": [
+    "source_mean",
+    "sign_mean",
+    "sign_min",
+    "disagreement_quarter"
+  ],
+  "consensus": "apply the sum of FM and conditional corrections only when both nonzero corrections have the same sign",
+  "selection_axes": ["v84_full_2022", "v84_late_2023"],
+  "locked_axis": "v84_full_2024",
+  "selection_gate": {
+    "all_axis_gains_positive": true,
+    "minimum_positive_month_fraction": 0.75,
+    "worst_month_gain_strictly_above": -5.0,
+    "minimum_domain_gain": 0.0
+  },
+  "prohibited": [
+    "audit labels in correction fitting",
+    "2024 labels in policy selection",
+    "test aggregates, order, frequency or distribution",
+    "Public-score-derived policy or weight"
+  ]
+}
