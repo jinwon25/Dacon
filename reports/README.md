@@ -1,7 +1,12 @@
 # 보고서 빠른 안내
 
-- [`target1190_v343_transition_workload_candidate_20260831.md`](target1190_v343_transition_workload_candidate_20260831.md): **다음 제출 1순위** — v335 위 선수 전이+3시드 workload, full-2024 `+2.944474`, 7/8개월 개선, v343 런타임 감사
-- [`v335_public_result_20260831.md`](v335_public_result_20260831.md): **현재 공식 챔피언** — Public 1181.7100031613, v290 대비 +4.9529314933, v335 구조·감사·귀속 한계
+- [`v355_public_result_20260901.md`](v355_public_result_20260901.md): **v355 기각** — Public 1177.9105932872, v345 대비 -5.0391037328; TrackMan-PFD+후반기 계층 결합 계열은 분해 제출·공개점수 재튜닝 없이 종료
+- [`target1185_v354_late_hierarchy_candidate_20260901.md`](target1185_v354_late_hierarchy_candidate_20260901.md): **다음 제출 1순위 v354** — v353 + 8월 이후 R_ANCHOR 계층 posterior, 세 시간축 `+3.7582/+7.2679/+4.2106`, 강한 cluster·시간 bootstrap과 재현 ZIP
+- [`target1185_v352_v353_trackman_pfd_candidate_20260831.md`](target1185_v352_v353_trackman_pfd_candidate_20260831.md): **v354 직접 부모** — v345와 거의 직교한 training-only TrackMan-PFD, 두 연속 시간 구간 `+0.9761/+0.9521`, 전체-2024 최종 refit과 재현 ZIP
+- [`v345_public_result_20260831.md`](v345_public_result_20260831.md): **현재 공식 챔피언** — Public 1182.94969702, v335 대비 +1.2396938587, 1185까지 2.05030298
+- [`target1185_v345_candidate_20260831.md`](target1185_v345_candidate_20260831.md): **현 챔피언 재현 근거** — v343 + 고정 Beta 셀, v335 대비 full-2024 `+3.390593`, 재현 SHA·207초 full-scale 감사
+- [`target1190_v343_transition_workload_candidate_20260831.md`](target1190_v343_transition_workload_candidate_20260831.md): **v345 부모 연구** — v335 위 선수 전이+3시드 workload, full-2024 `+2.944474`, 7/8개월 개선, v343 런타임 감사
+- [`v335_public_result_20260831.md`](v335_public_result_20260831.md): **직전 공식 챔피언** — Public 1181.7100031613, v290 대비 +4.9529314933, v335 구조·감사·귀속 한계
 - [`target1185_v328_v335_multiexpert_followup_20260830.md`](target1185_v328_v335_multiexpert_followup_20260830.md): v328~v335 다중 전문가 스크린과 v335 제출 전 근거
 - [`target1180_structural_followup_20260830.md`](target1180_structural_followup_20260830.md): **최신 1180 후속 연구** — v264 배포계약 기각, pseudo-deployment v277 탐색 challenger, 독립 실행 감사
 - [`target1170_v94_v96_multiorigin_20260822.md`](target1170_v94_v96_multiorigin_20260822.md): **최신 multi-origin 감사** — v94 fidelity 계약, v95 context 연도 전이 반전, v96 연중 적응 진단과 공개 자료 재감사

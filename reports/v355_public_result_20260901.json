@@ -1,0 +1,19 @@
+{
+  "submission_id": 79533,
+  "submitted_at": "2026-09-01 02:43:08",
+  "filename": "submit_v355.zip",
+  "public_score": 1177.9105932872,
+  "runtime_seconds": 132,
+  "previous_champion": {
+    "filename": "submit_v345.zip",
+    "public_score": 1182.94969702
+  },
+  "delta_vs_v345": -5.0391037328,
+  "delta_vs_v335": -3.7994098741,
+  "gap_to_1185": 7.0894067128,
+  "local_full_2024_gain_vs_v345": 4.5611493884,
+  "decision": "reject",
+  "promoted": false,
+  "package_sha256": "A872345FE7E52ECEC7532FCF46CA2611DDCBF55AE03B9668A6B162E7321960D3F",
+  "interpretation": "The locally positive combined TrackMan-PFD and late-career-hierarchy transfer was falsified on Public in both direction and magnitude. Since v353 and v354 were not submitted separately, the loss cannot be attributed to either component. The family is closed without decomposition submissions or Public-score retuning."
+}
