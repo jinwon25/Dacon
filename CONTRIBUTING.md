@@ -71,12 +71,10 @@ git commit -m "exp: evaluate core reliability router"
 - 모든 협업자는 동일한 공식 DACON 팀에 등록되어 있어야 합니다.
 - `.env`, API token, 개인 쿠키와 계정정보를 공유하거나 커밋하지 마세요.
 - 인증이 필요한 제출은 지정된 제출 담당자의 로컬 환경에서만 수행해 주세요.
-- 모델, OOF, 제출 ZIP은 원칙적으로 Git에서 제외합니다. 팀 재현·전달용으로 승인되고
-  `scripts/audit_repository.py`에 크기와 SHA-256이 고정된 릴리스만 예외로 허용합니다.
-  현재 예외는 `submissions/releases/v167/`, `submissions/releases/jy_runners_high_li_bridge027/`,
-  `submissions/releases/v335/`, 기존 1161 private Git LFS allowlist와
-  `artifacts/oof_champion_1170/` 번들입니다. 그 외 산출물은 합의된 private artifact
-  저장소를 이용해 주세요.
+- 모델, OOF, 제출 ZIP, lookup, 선수 연결표는 예외 없이 Git에서 제외합니다. 저장소가
+  public이고 이 파일들은 대회 제공 데이터에서 파생됐기 때문입니다. `scripts/audit_repository.py`
+  가 이를 강제하므로, 새 산출물을 추가하기 전에 감사를 통과하는지 확인해 주세요.
+  산출물 전달은 `docs/ARTIFACT_HANDOFF.md`의 팀 전용 경로를 이용해 주세요.
 - artifact를 전달할 때는 반드시 파일명, 크기와 SHA-256을 함께 기록해 주세요.
 
 커밋 전에는 다음 감사를 실행해 주세요.

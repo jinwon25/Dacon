@@ -9,7 +9,7 @@
 - [ ] 초대 권한은 우선 `Write`로 설정합니다.
 - [ ] 두 팀원이 초대를 수락했는지 확인합니다.
 - [ ] 각 팀원의 첫 clone과 CI 테스트 성공을 확인합니다.
-- [ ] 같은 공식 DACON 팀으로 병합된 것을 확인한 뒤 [Google Drive 팀 폴더]([private reference removed])에 팀원 계정을 개별 초대합니다.
+- [ ] 같은 공식 DACON 팀으로 병합된 것을 확인한 뒤 `Google Drive 팀 폴더`에 팀원 계정을 개별 초대합니다.
 - [ ] Drive의 `일반 액세스`가 `제한됨`인지 확인하고 챔피언 ZIP과 최소 모델 artifact를 인계합니다.
 - [ ] 팀원 한 명이 파일을 내려받아 `docs/ARTIFACT_HANDOFF.md`의 SHA-256과 일치하는지 확인합니다.
 - [ ] DACON 제출 담당자 한 명과 백업 담당자 한 명을 정합니다.

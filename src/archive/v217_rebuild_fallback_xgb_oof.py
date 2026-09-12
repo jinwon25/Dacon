@@ -1,6 +1,6 @@
 """Rebuild the Public-1175 fallback XGB strict-forward OOF contract.
 
-The original private helper referenced by the 팀 브랜치 release was not
+The original private helper referenced by the teammate release was not
 committed.  This module makes its 114-feature contract explicit from the
 public Hyunku feature definitions and the frozen runtime assets.  Labels are
 used only from seasons strictly before each audit season.

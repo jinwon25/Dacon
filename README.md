@@ -135,11 +135,13 @@ python -m src.champion.v335_build_anchor_lowrank_package --help
 python -m src.archive.audit_v335_anchor_lowrank --help
 ```
 
-공식 원본 데이터, 인증정보와 일반 대용량 ZIP·OOF는 Git에 올리지 않는다. 다만 PRIVATE
-협업 저장소에서 팀원에게 전달하기 위해 검증된 v167과 과거 JY ZIP, 최신 v335 champion
-ZIP은 해시 고정 예외로 명시 추적한다. clone 후 SHA-256을 대조하고, 기존 1161 LFS 및
-1170 OOF 번들은 문서화된 해시 고정 allowlist로 유지한다. 자세한 인계 규칙은
-[`docs/STANDALONE_CHAMPION.md`](docs/STANDALONE_CHAMPION.md)에 있다.
+공식 원본 데이터, 인증정보, 그리고 대회 데이터에서 파생된 모든 산출물은 Git에 올리지
+않는다. 제출 ZIP·OOF 번들·lookup·선수 연결표가 여기에 해당한다. OOF에는 train target과
+선수 ID가, 제출 ZIP에는 선수별 집계 prior가 들어 있어 공개 배포는 대회 데이터
+재배포에 해당하기 때문이다. 이 산출물들은 공식 DACON 팀원에게만 별도 경로로 전달하며,
+규칙과 해시는 [`docs/ARTIFACT_HANDOFF.md`](docs/ARTIFACT_HANDOFF.md)와
+[`docs/STANDALONE_CHAMPION.md`](docs/STANDALONE_CHAMPION.md)에 있다. 저장소에는 각
+산출물의 manifest만 남겨 무엇이 어디에 있는지 추적할 수 있게 한다.
 
 ## 문제와 평가
 
@@ -322,8 +324,10 @@ JY champion 최종 보고서를 우선한다.
 ## Git·데이터 정책
 
 - 원본 DACON 데이터, 인증정보, 개인 쿠키·키는 Git과 LFS에 올리지 않는다.
-- 모델 ZIP·OOF·임시 cache는 원칙적으로 Git에서 제외한다. PRIVATE 팀 전달용 v167·과거
-  JY·최신 v335 champion ZIP, 문서화된 기존 1161 LFS·1170 OOF 번들만 해시 고정 예외다.
+- 대회 데이터에서 파생된 산출물(모델 ZIP·OOF·lookup·선수 연결표)은 예외 없이 Git에서
+  제외한다. 저장소가 public이므로 해시 고정 예외도 두지 않는다.
+- 이 정책은 `scripts/audit_repository.py`가 강제하며 `tests/test_repository_audit.py`가
+  검증한다. 새 산출물을 추적하려면 먼저 그 파일이 대회 데이터를 담고 있지 않은지 확인한다.
 - `main`은 검증된 기준선으로 유지하고 새 연구는 별도 브랜치에서 수행한다.
 - 챔피언을 덮어쓰지 않고 버전별 새 디렉터리에 패키징한다.
 - DACON 제출은 검증된 단일 ZIP 하나를 지정 담당자가 수행하고 결과를 즉시 원장에 남긴다.

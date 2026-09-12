@@ -1,8 +1,9 @@
 # 산출물 정책
 
-이 디렉터리는 학습 모델, OOF 예측과 실험 캐시를 보관하며 기본적으로 Git에서 제외한다.
-예외적으로 `standalone_champion_1161/`의 확정 ZIP과 manifest,
-`oof_champion_1161/`의 fidelity-labelled evidence만 private Git LFS에 보관한다.
+이 디렉터리는 학습 모델, OOF 예측과 실험 캐시를 보관하며 Git에서 제외한다. 저장소가
+public이므로 예외는 없다. 각 디렉터리의 manifest와 README만 추적해 어떤 산출물이
+어디에 있는지 기록하고, 파일 자체는 `docs/ARTIFACT_HANDOFF.md`의 팀 전용 경로로
+전달한다.
 `standalone_champion_1159/`과 `standalone_champion_1158/`은 과거 챔피언 감사용으로 보존한다.
 `v61_final_gate_oof_20260822_01/`은 후속 후보를 같은 최종 부모에서 비교하기 위한
 로컬 연구 cache이며 전달·실행 의존성은 아니다.
@@ -58,8 +59,7 @@
 
 ## 보관 원칙
 
-- 확정 v167 제출 ZIP: PRIVATE 저장소의 `submissions/releases/v167/submit_v167.zip`
-- 기존 1161 챔피언과 선별 OOF evidence: private Git LFS allowlist
-- v148 full-2024 OOF evidence: 해시 고정 `oof_champion_1170/` 일반 Git 예외
+- 확정 제출 ZIP, 1161 챔피언, 선별 OOF evidence, v148 full-2024 OOF evidence:
+  모두 Git 밖의 팀 전용 경로. 저장소에는 manifest만 남는다.
 - 중간 OOF와 대규모 캐시: 각 실험 담당자 로컬 또는 DVC/object storage
 - 일반 Git에 남길 내용: manifest, 생성 명령, 입력 기준선, SHA-256, 크기, 검증 결과

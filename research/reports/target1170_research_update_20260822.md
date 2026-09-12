@@ -139,9 +139,9 @@ full-2024 seed gain은 `-1.2001/-1.3920/-1.3665`, late-2024는
 
 ## 6. 팀 브랜치·OOF 감사
 
-- `팀 브랜치`의 `1158.07 0819_3` 커밋은 이미 `team/main`에 병합돼 있으며,
+- 1158.07 팀 브랜치 커밋은 이미 `team/main`에 병합돼 있으며,
   현재 champion TrackMan gate의 코드·보고서다.
-- `팀 브랜치`은 GitHub Actions workflow 삭제만 포함하고 모델 차이는 없다.
+- 다른 팀 브랜치는 GitHub Actions workflow 삭제만 포함하고 모델 차이는 없다.
 - 팀 정책상 모델·OOF 바이너리는 Git에 넣지 않으며, 로컬에도 현재 champion과 독립적인
   팀원 final OOF가 없다. 따라서 Public 점수만으로 blend weight를 정하지 않고 exact OOF
   전달 전까지 constrained blend를 보류한다.

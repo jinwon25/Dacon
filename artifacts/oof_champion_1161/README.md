@@ -1,8 +1,8 @@
 # 1161 챔피언 OOF evidence
 
 이 디렉터리는 Public `1161.2020600422` v84 계보의 시점별 예측 evidence를 공식
-DACON 팀원끼리 공유하기 위한 private Git LFS 번들이다. NPZ에는 target과 선수 ID가
-포함되므로 저장소를 공개로 전환하거나 공식 팀원이 아닌 계정을 초대하면 안 된다.
+DACON 팀원끼리 공유하기 위한 번들이다. NPZ에는 train target과 선수 ID가 포함되므로
+저장소에는 이 README와 manifest만 두고, NPZ 자체는 팀 전용 경로로만 전달한다.
 
 ## 중요한 한계
 

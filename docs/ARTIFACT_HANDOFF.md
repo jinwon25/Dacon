@@ -13,9 +13,9 @@
 `artifacts/standalone_champion_1161/standalone_champion_1161.zip`, SHA-256은
 `C033FC38A5F9681E45B0BD2494359B8BD1387EE44E5F318C5B7A5547CFE6C4F7`이다.
 
-현재 1161 모델과 선별 OOF evidence는 private Git LFS에서 관리한다. 아래 팀 전용
-[Google Drive]([private reference removed])는
-v26 이하 과거 계보 전용이다.
+현재 1161 모델과 선별 OOF evidence는 팀 전용 Drive에서 관리한다. 저장소가 public이므로
+Git과 Git LFS에는 어떤 모델·OOF도 올리지 않는다. Drive 폴더 주소는 공식 DACON
+팀원에게 저장소 밖 경로로 전달한다.
 
 ```text
 투구 제구 성공 확률 예측 팀 폴더/
@@ -23,7 +23,7 @@ v26 이하 과거 계보 전용이다.
 └─ v13_과거기준선_1068/
 ```
 
-v19 직접 부모가 필요하면 [v17 보관 폴더]([private reference removed])를 사용한다. [v13 과거 기준선 폴더]([private reference removed])는 v11→v13 계보를 분석하거나 과거 결과를 재현할 때만 사용한다.
+v19 직접 부모가 필요하면 `v17 보관 폴더`를 사용한다. `v13 과거 기준선 폴더`는 v11→v13 계보를 분석하거나 과거 결과를 재현할 때만 사용한다.
 
 ## 딱 이렇게 선택한다
 
@@ -128,10 +128,9 @@ jupyter lab notebooks/experiment_workbench.ipynb
 ## 공유·보안 원칙
 
 - Drive의 `일반 액세스`는 `제한됨`으로 유지하고 공식 DACON 팀원 계정만 개별 초대한다.
-- PRIVATE 팀 전달용 `submissions/releases/v167/submit_v167.zip`, 기존 1161 allowlist와
-  해시가 고정된 `artifacts/oof_champion_1170/` 번들 이외의 모델·OOF·제출 ZIP은 Git
-  commit이나 Git LFS에 넣지 않는다.
-- LFS OOF에는 target과 선수 ID가 있으므로 저장소는 private·공식 팀원 3인으로 유지한다.
+- 모델·OOF·제출 ZIP·lookup·선수 연결표는 예외 없이 Git commit과 Git LFS에서 제외한다.
+- OOF에는 train target과 선수 ID가, 제출 ZIP에는 선수별 집계 prior가 들어 있다. 저장소가
+  public이므로 이 파일들은 Drive에서 공식 DACON 팀원에게만 전달한다.
 - DACON 원본 데이터와 토큰·쿠키·키 같은 인증정보는 Drive에도 올리지 않는다.
 - 파일을 교체할 때 기존 버전을 덮어쓰지 않고 새 버전 폴더와 manifest를 만든다.
 - GitHub Issue와 Pull Request에는 긴 파일 목록 대신 이 문서, 폴더 버전과 SHA-256을 적는다.

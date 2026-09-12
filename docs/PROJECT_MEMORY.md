@@ -73,9 +73,9 @@ standalone 후보 생성 최소 조건:
 - 최종 판단은 `research/reports/`에 수치와 재현 명령으로 남긴다.
 - 실패한 대형 cache, 임시 압축 해제본, 중복 ZIP, `__pycache__`, `.pytest_cache`는 삭제한다.
 - 과거 코드·보고서는 재현 근거가 있으면 지우지 않고 역사 자료로 표시한다.
-- 원본 데이터·개인정보·인증정보는 Git/LFS에 올리지 않는다. 모델·OOF·제출 ZIP은
-  PRIVATE 팀 전달용으로 해시가 고정된 v167·과거 JY·최신 v335 릴리스, 기존 1161 private
-  LFS allowlist와 `artifacts/oof_champion_1170/` 번들만 허용한다.
+- 원본 데이터·개인정보·인증정보는 Git/LFS에 올리지 않는다. 대회 데이터에서 파생된
+  모델·OOF·제출 ZIP·lookup·선수 연결표도 예외 없이 제외한다. 저장소가 public이므로
+  해시 고정 예외를 두지 않으며, 전달은 `ARTIFACT_HANDOFF.md`의 팀 전용 경로를 쓴다.
 
 ## 6. 현재 최우선 연구
 
@@ -95,8 +95,8 @@ standalone 후보 생성 최소 조건:
   consensus `0/240`, full-2024 `+0.0860`, late-2024 `+0.0594`로 기각.
 - v64: 동결한 물리 교사→ID 제거 학생은 full-2022 `-1.2240`, full-2024
   `-1.3183`, late-2024 `-1.5045`; 2024 세 seed 모두 음수로 기각.
-- 팀 브랜치에는 독립 final OOF가 없다. `팀 브랜치`은 직전 1158 champion으로 이미
-  병합됐고 `팀 브랜치`은 workflow 삭제뿐이므로 exact OOF 전달 전 blend를 금지한다.
+- 팀 브랜치에는 독립 final OOF가 없다. 한쪽은 직전 1158 champion으로 이미 병합됐고
+  다른 쪽은 workflow 삭제뿐이므로 exact OOF 전달 전 blend를 금지한다.
 - v44/v64 physical student와 v63 count interaction의 강도·seed·도메인 재탐색을 금지한다.
 - 공개 대회 자료와 최신 문헌 감사는
   `research/reports/target1170_research_update_20260822.md`를 기준으로 한다.
@@ -252,7 +252,7 @@ standalone 후보 생성 최소 조건:
 
 - 공식 champion은 계속 `standalone_champion_1161.zip`, Public `1161.2020600422`,
   SHA-256 `C033FC38A5F9681E45B0BD2494359B8BD1387EE44E5F318C5B7A5547CFE6C4F7`이다.
-- 팀 원격을 다시 fetch했다. `팀 브랜치`은 workflow 삭제뿐이고 `팀 브랜치`은 현재
+- 팀 원격을 다시 fetch했다. 한 팀 브랜치는 workflow 삭제뿐이고 다른 팀 브랜치는 현재
   champion의 역사적 TrackMan-ASOF 부모다. 별도 독립 exact OOF는 없다.
 - 공개 EXP-038~060의 temporal stack, exact TrackMan, workload, pitchmix, calendar,
   arsenal geometry는 모두 2022~2024 최저 연도 gate를 통과하지 못했다.

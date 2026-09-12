@@ -93,7 +93,7 @@ center를 제거했기 때문에 season-level calibration drift를 직접 이월
 
 ### 1순위 — 팀원 모델 exact OOF 결합
 
-`팀 브랜치`, `팀 브랜치`, `팀 브랜치`, `팀 브랜치`의 최고 모델 중 현재
+팀 브랜치들의 최고 모델 중 현재
 챔피언과 다른 예측을 만드는 모델에 대해 full-2023, late-2023, full-2024, late-2024의
 `row_id/target/prediction`을 받는다. ZIP이나 Public 점수만으로 결합하지 않는다.
 
