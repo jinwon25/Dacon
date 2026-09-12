@@ -198,5 +198,6 @@ python -m pytest -q tests/champion/test_v345_build_transition_workload_beta_pack
 | [`src/champion/README.md`](src/champion/README.md) | 제출된 버전으로 이어지는 코드 계보 |
 | [`research/reports/v345_public_result_20260831.md`](research/reports/v345_public_result_20260831.md) | 최종 champion 승격 근거 |
 | [`research/reports/submissions.csv`](research/reports/submissions.csv) | 제출 ID·점수·해시 원장 |
+| [`data_description.md`](data_description.md) | 공식 데이터 컬럼 정의 (재현 코드가 참조) |
 | [`docs/PROJECT_MEMORY.md`](docs/PROJECT_MEMORY.md) | 프로젝트 불변 조건과 연구 원칙 |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | 브랜치·리뷰·커밋 규칙 |
