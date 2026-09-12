@@ -12,7 +12,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
 import re
 import time
 import urllib.error
@@ -27,6 +26,7 @@ import numpy as np
 import pandas as pd
 
 from agent_service.compliance import audit_observation_availability
+from experiments.fetch_kma_um_global import load_api_key
 
 
 ENDPOINT = "https://apihub.kma.go.kr/api/typ01/url/kma_sfctm3.php"
@@ -436,6 +436,11 @@ def main() -> None:
     parser.add_argument("--history-hours", type=int, default=24)
     parser.add_argument("--chunk-days", type=int, default=30)
     parser.add_argument("--api-key-env", default="KMA_API_KEY")
+    parser.add_argument(
+        "--env-file",
+        default=".env.local",
+        help="local dotenv fallback; the secret is read in memory and never persisted",
+    )
     parser.add_argument("--retries", type=int, default=3)
     parser.add_argument(
         "--plan-only",
@@ -497,7 +502,7 @@ def main() -> None:
         print(json.dumps(plan, ensure_ascii=False, indent=2))
         return
 
-    api_key = os.environ.get(args.api_key_env, "").strip()
+    api_key = load_api_key(args.api_key_env, Path(args.env_file))
     if not api_key:
         raise RuntimeError(
             f"Set {args.api_key_env} to a user-issued KMA APIHub key; keys are never "

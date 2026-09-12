@@ -8,22 +8,280 @@ Goal: predict hourly 2025 wind-power generation for three KPX groups from LDAPS/
 
 | submission_id | file | score | 1-NMAE | FICR |
 |---:|---|---:|---:|---:|
-| 1494670 | `blend_best_crossg3_traj_meta_finesweep.csv` | 0.6417471627 | 0.8754733572 | 0.4080209682 |
+| 1508386 | `public_positive_g1w1375_g2w1825_g3frozen_20260802.csv` | **0.6474704399** | **0.8761125755** | **0.4188283043** |
 
-The fine meta-gate sweep improved submission `1494307` by `+0.0000917901`. Most of the gain came
-from FICR (`+0.0001655064`) while 1-NMAE increased by only `+0.0000180738`, confirming that the
-threshold-stable direction transfers but is saturated. Reaching `0.65` still requires
-`+0.0082528373`.
+Submission `1508386` is the latest and strongest logged Public result. Reaching
+`0.65` still requires `+0.0025295601`, while reaching the aggressive `0.660`
+target requires `+0.0125295601`. Sprint-066 `safe_cv_best` was tested as
+submission `1511408` and rejected at `0.6345216694`; its Bayes and diverse
+derivatives are therefore withheld rather than assumed to transfer.
+
+## Final Evaluation Audit
+
+The local arithmetic is not the bottleneck. `src/metrics.py` matches the
+supplied official notebook on the 10% eligibility mask, capacity-normalized
+within-group MAE, actual-generation-weighted FiCR, inclusive 6%/8% settlement
+cliffs, group macro averaging, and final 50:50 component average. Randomized
+and boundary tests pass exactly.
+
+The faulty layer was promotion governance. Full-year positive deltas were able
+to pass even when the exact 40% public-sized and complementary 60%
+private-sized lower tails were negative. For submission `1504383`, 10,000
+local complementary splits put the observed public pair-score delta at the
+0.25th percentile (IID) and 0.32nd percentile (month-stratified). More
+importantly, the simulated public q05 was already negative for score
+(`-0.00013977` IID) and FiCR (`-0.00042350` IID), so a subset-safe gate would
+have rejected it before submission.
+
+Policy `baram-public-v4-subset-safe` now requires non-negative q05 for score,
+1-NMAE, and FiCR on both 40% and complementary 60% samples, in addition to a
+non-negative issue-block bootstrap q05. Re-screening rejected both remaining
+materialized paths: the G1/G2 reconciliation and the pooled G2 weight-0.10
+expansion. No new submission CSV was created; incumbent `1502437` remains
+frozen. See `docs/reports/evaluation_promotion_final_065_2026-07-29.md`.
+
+A final new-core screen replaced independently fitted residual quantiles with
+a pooled, structurally non-crossing conditional quantile MLP for groups 1 and
+2. A follow-up audit found that its first report selected the action around the
+distribution median in 2023 but overlaid that delta on a different incumbent
+baseline in 2024. Because FiCR depends on absolute 6%/8% error-cliff position,
+that asymmetric comparison is invalid as a transfer contract.
+
+The corrected baseline-symmetric run shows that the action itself transfers:
+the affected-pair 2024 internal deltas are `+0.01040158` score,
+`+0.00287221` 1-NMAE, and `+0.01793096` FiCR, with positive IID and
+month-stratified complementary 40/60 q05. July remains negative. More
+decisively, the completed standalone core is far weaker than the exact
+incumbent: `-0.02807739` score, `-0.01581153` 1-NMAE, and `-0.04034326`
+FiCR. The incumbent-delta overlay is now prohibited, the family is rejected
+fail-closed, and no candidate was written. The corrected bottleneck is absolute
+core accuracy relative to the strong ensemble, not year-shifting action
+asymmetry. See
+`docs/reports/noncrossing_baseline_symmetry_audit_2026-07-29.md`.
+
+A final baseline-matched follow-up then modeled the exact incumbent residual
+instead of replacing the incumbent. Its non-crossing distribution model passed
+Q2 selection at coverage `0.05`, weight `0.30`, and score delta
+`+0.0020063333`, but locked H2 FiCR reversed by `-0.0000163270`. The causal
+full-year gain was only `+0.0004267741`, projecting to `0.6465518655` and
+leaving `0.0034481345` to 0.65. A separate direct official-utility value model
+also failed Q2 because April score was negative. This isolates calendar
+transfer of incumbent residual rankings as the remaining bottleneck; neither
+path writes a candidate. The action selector now stays nearest the incumbent
+on expected-utility plateaus, and short monthly slices safely handle farms
+with no eligible rows. See
+`docs/reports/incumbent_residual_decision_followup_2026-07-29.md`.
 
 ## Active Submission Candidate
 
-The only retained manual comparison candidate is
-`submissions/blend_best_g2_component_safe_affine.csv`. It changes group 2 by the
-small affine policy `0.996 * prediction + 50 kWh`, leaves groups 1/3 byte-equivalent,
-and passed Q1/Q2 all-component checks plus the locked H2 score/component checks.
-Its locked group-2 gain is only `+0.0009313` (`~+0.0003104` macro before transfer),
-so it is not evidence of a path to `0.65` and is intentionally not auto-selected:
-all 8,760 group-2 rows change, exceeding the service's 25% coverage guard.
+The selected public incumbent is
+`artifacts_final/candidates/public_positive_g1w1375_g2w1825_g3frozen_20260802.csv`
+(SHA-256 `8056206176d12f21f72fda14fba8fa3b19bcc8a6da7d8a6e389b9e28a40c4902`).
+Its observed Public result is `0.6474704399`, with 1-NMAE `0.8761125755` and
+FICR `0.4188283043`. The matched 2024 lineage OOF is `0.6491632057 /
+0.8827530123 / 0.4155733992`; these local values are validation evidence, not
+an estimate of the Private score. All later broad replacement candidates are
+withheld after submission `1511408` failed both score components.
+
+The zero-sum G1/G2 structure was
+`artifacts_final/candidates/group12_difference_reconciliation_unanimous_w10_20260728.csv`
+(SHA-256 `fab745cbed1a1d60c3d15af15b9590a399fd62f8bf63ec16a6dfa3dd9c4a047a`).
+It predicts only the capacity-normalized G1-G2 difference from paired
+LDAPS/GFS site features, applies a weight-0.10 correction when all three seeds
+agree on its direction, preserves the incumbent G1+G2 sum row by row, and
+keeps G3 exactly unchanged. Its 2024 G1/G2-average deltas are `+0.00065385`
+score, `+0.00014709` 1-NMAE, and `+0.00116062` FICR; Q1, Q2, H2, and every
+seed-period score are positive. A 10,000-draw issue bootstrap has 95.46%
+positive draws and q05 `+0.00001783`. The movement is orthogonal to the
+retained public factors (cosine `0.18679`) and averages only 0.1255% of
+capacity, but just 7/12 months are positive. It was submitted as the isolated
+controlled probe `1504383` and scored `0.6456906139`, with 1-NMAE
+`0.8758649682` and FICR `0.4155162596`. Relative to incumbent `1502437`,
+score fell `-0.0004344775` even though 1-NMAE improved `+0.0000807205`,
+because FICR fell `-0.0009496756`. The implied G1/G2 affected-group mean
+delta is `-0.0006517163`, almost the exact negative of the local
+`+0.0006538534`. Component transfer was asymmetric: the 1-NMAE transfer ratio
+was `+0.8232`, while the FICR transfer ratio was `-1.2274`. Broad G1/G2
+differential post-processing is closed and its weight must not be retuned from
+this public result.
+
+A one-sided selective-gain gate then tried to retain only rows whose predicted
+lower quantile of absolute-error improvement was positive. The 10% and 20%
+lower-quantile models selected no rows; the 30% model selected only a few rows
+with actual positive-gain precision of 26.7% for G1 and 18.2% for G2. No March
+policy passed the preregistered pair/group/coverage/precision gates, Q2/H2
+remained closed, and no CSV was generated. This also closes sparse row
+selection over the same rejected action. See
+`docs/reports/public_factor_and_group12_reconciliation_2026-07-28.md`.
+
+The JMA MSM plateau successor was
+`artifacts_final/candidates/jma_msm_g3_plateau_mean_w040625_20260728.csv`
+(SHA-256 `da0bbb9fba76189be89a95d3b99c6e736403acb8078fbc21747a380f36253900`).
+It keeps incumbent groups 1 and 2 exactly unchanged and applies only the
+Q1-near-best JMA MSM group-3 plateau-mean weight `0.040625`. Group-3 local
+deltas are `+0.00215100` score, `+0.00054100` 1-NMAE, and `+0.00376101`
+FICR; 10/12 months and every seed/split component are positive, while the
+issue bootstrap has 99.1% positive draws and q05 `+0.00063262`. The simple
+full-transfer projection is `0.64684209`. It was initially withheld because
+the plateau rule was proposed after inspecting the earlier 2024 confirmation,
+then used as controlled G3-only submission `1504352`, which
+scored `0.6455966798`, 1-NMAE `0.8757843690`, and FICR `0.4154089906`.
+Relative to incumbent `1502437`, score fell `-0.0005284116`; 1-NMAE was
+essentially unchanged at `+0.0000001213`, while FICR fell `-0.0010569446`.
+The implied full group-3 deltas are score `-0.0015852348`, 1-NMAE
+`+0.0000003639`, and FICR `-0.0031708338`. This publicly rejects the JMA MSM
+plateau and closes JMA external-weather group-3 post-processing; do not retune
+its weight against the public result or combine it with another unconfirmed
+factor.
+See `docs/reports/scenario_analog_and_plateau_breakthrough_2026-07-28.md`.
+
+The isolated JMA GSM group-3 probe was
+`artifacts_final/candidates/public_factor_g1g2_kma_jma_gsm_g3_strict_20260726.csv`
+(SHA-256 `30a1229ecacd083a06bf1ca26593f39c5c473565b4090944728574c500d31ed5`).
+It differs from the incumbent only in G3 and uses the independent KMA+JMA GSM
+pooled expert. Despite a 2024 G3 gain of `+0.0032619155` and passing every
+strict local gate, submission `1502447` scored `0.6449277253`: `-0.0011973661`
+score, `-0.0003654917` 1-NMAE, and `-0.0020292405` FICR versus the incumbent.
+The JMA GSM G3 production family is rejected and must not be blended or retuned.
+The full audit and submission protocol are in
+`docs/reports/public_factor_gsm_breakthrough_2026-07-26.md`.
+
+The exact two-probe directional FiCR experiment was publicly rejected.
+Submission `1503281` (G1 only) scored `0.6441230595`, or `-0.0020020319`
+versus the incumbent, with both 1-NMAE and FiCR lower. Submission `1503282`
+(G2/G3 only) scored `0.6451061773`, or `-0.0010189141`, again with both
+components lower. Group-macro additivity identifies the unsubmitted target
+exactly as `0.6431041454`, 1-NMAE `0.8732865899`, and FiCR `0.4129217008`.
+`public_directional_ficr065_target_20260727.csv` must not be submitted.
+
+The result invalidates aggressive post-hoc settlement calibration despite its
+positive Q1/Q2/H2, monthly, and block-bootstrap diagnostics. The related safe
+G2/G3 control is withheld because it shares the rejected directional family.
+One daily submission slot remains and is intentionally preserved. Full evidence
+is in `docs/reports/public_directional_ficr_2026-07-27.md`.
+
+The expanding-origin 24-hour trajectory TCN probe for group 3 was publicly
+rejected:
+`artifacts_final/candidates/public_probe_issue_tcn_expanding_g3_q65w05_20260727.csv`
+(SHA-256 `0c527afaad8fe67a367c1b1ac252cfab03d373c7a92c846763bd0e4b6f8d19d7`).
+It preserves incumbent groups 1 and 2 exactly and changes only group 3. The
+three-seed q=0.65, weight=0.05 policy improved score, 1-NMAE, and FICR in every
+2024 expanding quarter; its full group-3 deltas were `+0.00293625`,
+`+0.00106516`, and `+0.00480733`. Ten of twelve months were positive and the
+H2 issue-block bootstrap q05 was `+0.00123757` with 99.8% positive draws.
+September and October were negative and the policy was selected after repeated
+inspection of 2024, so this is a controlled exploratory public probe rather
+than a strict promotion. Its simple full-transfer projection is only
+`0.64710384`, not evidence of a 0.65 submission.
+
+Submission `1503349` scored `0.6454576156`, with 1-NMAE `0.8759443235` and
+FiCR `0.4149709077`. Relative to incumbent submission `1502437`, score fell
+`-0.0006674758`: the 1-NMAE gain of `+0.0001600758` was outweighed by a FiCR
+loss of `-0.0014950275`. Because only group 3 changed, the implied full
+group-3 deltas are three times those macro deltas: score `-0.0020024274`,
+1-NMAE `+0.0004802274`, and FiCR `-0.0044850825`. The trajectory TCN family is
+closed and its quantile or blend weight must not be retuned against this public
+result.
+
+The lower-priority public-positive factor control is
+`artifacts_final/candidates/public_positive_pooled_g2_w10_probe_20260727.csv`
+(SHA-256 `139a6d4e93d9eaeec3731352f55c9f5e4b145805a5eb14ff0fdcbf978f6192a2`).
+It doubles only the already-public-positive pooled group-2 movement from model
+weight 0.05 to 0.10 and projects to `0.64634108` under its observed transfer
+ratio. Its incremental issue-bootstrap evidence is weaker, so it remains
+second in the queue and must not be combined with the TCN probe before both
+single factors are publicly confirmed. Full evidence and the submission
+protocol are in `docs/reports/top10_trajectory_followup_2026-07-27.md`.
+
+The G2 weight-0.10 control was deterministically regenerated on 2026-07-28 and
+kept byte-identical. It remains withheld: incremental issue-cycle score is
+`-0.00001063`, FiCR is `-0.00024059`, bootstrap q05 is `-0.00151194`, and only
+49.06% of bootstrap draws are positive. Its projected public gain is too small
+relative to the current top-10 gap to justify treating a failed robustness
+surface as today's primary probe.
+
+Two new structural follow-ups were rejected without a submission. Fitting
+separate KMA/ECMWF/DWD/GEM pooled models and taking their robust median still
+reversed in Q4: group-2 score changed from `+0.0044744` in Q3 to `-0.0022817`
+in Q4, while group 3 changed from `+0.0049079` to `-0.0079622`. This closes the
+joint/median multi-NWP family rather than opening mean aggregation or weight
+micro-tuning.
+
+JMA MSM 2022 H2 was then collected as 4,344 causal forecast hours over the
+same 3x3 stencil, with zero timing violations and a 30-minute minimum
+availability margin. A two-year pooled model trained on 2022 H2 plus 2023 did
+not beat the 2023-only control. Its closest result was group 3: full score
+`+0.0018537`, all Q1/Q2/H2 components and seeds positive, but only 9/12
+positive months and 96.85% positive bootstrap draws. No target passed strict
+promotion and no CSV was generated. See
+`docs/reports/multisource_year_forward_followup_2026-07-28.md`.
+
+The archived manual probe expanded the same fixed group-2 gate from alpha
+`0.10` to `0.20`:
+`submissions/archive/kma_group2_overlay_alpha20_20260725.csv`.
+Relative to submission `1501476`, locked H2 improved score by `+0.0010148836`,
+1-NMAE by `+0.0000901354`, and FICR by `+0.0019396318`; all five locked months
+were positive and issue-block bootstrap q05 was `+0.0002790199`. Incremental
+p95 movement is 0.977% of capacity over 12.89% of target cells. Q2 nevertheless
+preferred alpha `0.10`, but submission `1501483` publicly confirmed the expansion
+with both components improving.
+
+The next bounded manual probe is alpha `0.2375`:
+`artifacts_final/candidates/kma_group2_overlay_alpha2375_20260725.csv`.
+Relative to alpha `0.20`, Q2 score improved `+0.0004403252` and locked H2 score
+improved `+0.0002409091`; locked H2 component deltas were both positive.
+Bootstrap q05 is `-0.0001706419` with 82.8% positive draws, and one locked month
+is weak. Cumulative p95 and maximum movement reach 2.320% and 5.993% of capacity,
+so this is the final expansion retained under the 2.5%/6.0% movement caps.
+
+With the alpha `0.2375` core frozen, the archived sparse probe added only 889
+previously untouched upward-disagreement rows:
+`submissions/archive/kma_group2_alpha2375_up_supplement_20260725.csv`.
+Its Q2 and locked H2 incremental scores are `+0.0001388568` and
+`+0.0003581130`; issue-block bootstrap q05 is `+0.0000746069` with 98.8%
+positive draws. Total target-cell coverage remains 16.27%, while cumulative
+p95/maximum movement stays at the existing 2.320%/5.993% caps.
+Submission `1501731` rejected this probe at `0.6439398345`, a score change of
+`-0.0001599771` versus submission `1501487`; 1-NMAE fell `-0.0000119700` and
+FICR fell `-0.0003079842`. The alpha-0.2375 core remains selected and both
+same-row strength expansion and non-core upward supplementation are closed.
+
+The next group-3 experiment conditioned the publicly successful KMA monotone
+power curve on direction, 10 m--850 hPa shear/alignment, and forecast-cycle
+change. Its sparse direction-sector policy improved locked group-3 score by
+`+0.0006017` and FiCR by `+0.0011979`, but October and November were negative,
+all bootstrap q05 components were negative, and the effect missed the frozen
+minimum. No CSV was created and this regime-curve family is closed. See
+`docs/reports/group3_regime_power_curve_2026-07-26.md`.
+
+Two literature-driven LDAPS spatial families were then tested instead of
+continuing alpha/coverage micro-tuning. A bias-corrected 16-grid neighborhood
+decision model passed Q2 but reversed on locked H2: group-3 score
+`-0.0006798`, 1-NMAE `-0.0001605`, and FICR `-0.0011992`, with only 0.85% of
+issue-block bootstrap draws positive on all components. A physics-guided
+wind-aligned upwind kernel found a 3 km Q2 structure that improved score and
+FICR, but 1-NMAE fell `-0.0004222`, so H2 was not opened. Both families are
+closed and no CSV was created. A causal 2023+2024 incumbent OOF was audited as
+the prerequisite for weather-conditioned wind smoothing; see
+`docs/reports/ldaps_spatial_methods_2026-07-26.md`.
+
+The requested causal 2023 incumbent OOF is not identifiable: group 3 has zero
+labels in 2022, while the current cross-group lineage uses 2023 group-3 labels
+to predict 2024. Back-casting that model would be target leakage. A distinct
+year-forward experiment therefore collected 366 causal 2023 KMA UMRG issues
+(8,760 targets and 1,464 source objects, zero timing violations) and used them
+only to train an independent prior-year expert. Direct history pooling had zero
+Q2 candidates that improved every component. A Q2-selected sparse 4.35%-coverage
+expert blend gained `+0.0003434`, but reversed on locked H2 at `-0.0001844`
+score and `-0.0003459` FICR; only 10.6% of issue-block bootstrap draws improved
+all components. No CSV was created and the active submission remains selected.
+See `docs/reports/kma_year_forward_blend_2026-07-26.md`.
+
+As a separate leakage-safe fallback, the paper-specified within-issue
+`t-1/t/t+1` LDAPS wind moving average was screened on Q2 with separate
+April/May/June gates. None of 48 policies improved score, 1-NMAE, and FICR
+together; H2 stayed closed and no CSV was created. See
+`docs/reports/temporal_smoothing_cleanup_2026-07-26.md`.
 
 Submission `1494986`
 (`blend_best_spatiotemporal_multitask20.csv`) scored `0.6415388286`, or
@@ -32,15 +290,32 @@ FICR fell by `-0.0004963026`; service run 7 is publicly rejected and archived.
 
 The next independent research track is a leakage-safe independent operational
 forecast. NOAA GEFS spread and mean/disagreement screens were rejected before any
-2025 collection. The current priority is KMA UM global N128, because it is an
-independent operational model and its historical 2024 forecasts remain queryable
-from the official KMA APIHub. The collector is implemented and fails closed without
-a user-issued `KMA_API_KEY`; no key is accepted on the command line or written to
-artifacts. No experiment may be promoted until
+2025 collection. A preliminary KMA UM global N128 single-point 10 m screen was also
+rejected: through 2024-09-08 its locked score, 1-NMAE, and FiCR deltas were
+`-0.00028103`, `-0.00013592`, and `-0.00042614`. The active KMA branch therefore
+uses the latest/previous forecast-cycle change plus 850/700 hPa vertical context,
+with a 12 km regional-model pilot only after the global request schema passes. The
+collectors read a user-issued key from the process or ignored `.env.local`; no key
+is accepted on the command line or written to artifacts. No experiment may be promoted until
 the exact run publication time, raw files, checksums, license, and per-row causal
 join pass the external-data manifest guard. Retrospective Open-Meteo history is
 research-only and blocked from submission use. See
-`docs/reports/external_data_pretrained_audit_2026-07-18.md`.
+`docs/reports/external_data_pretrained_audit_2026-07-18.md` and
+`docs/reports/kma_um_context_sprint_2026-07-19.md`.
+
+The completed 12 km UMRG context archive retained 1,468 original responses for
+8,784 forecast hours with zero checksum, coverage, timing, or secret-retention
+violations. The direct residual correction lost `-0.00042926` score, and the KMA
+harm-risk abstention model produced no seed-stable Q2 policy. Those two subfamilies
+are closed. A separate bounded monotone power-curve path did pass: against the exact
+public-best rolling OOF surface its H1-refit locked H2 gain was `+0.00699607` for
+group 3, while the KMA increment beyond an identical GFS-850 control was
+`+0.00233477`. All locked monthly total FiCR deltas were positive, the 2,000-issue
+bootstrap lower 5% KMA increment was positive in score, 1-NMAE, and FiCR, and every
+movement is capped at 5% capacity. This promotes causal 2025 UMRG collection, but no
+submission is written until that archive and its manifest pass validation. See
+`experiments/kma_um_power_curve_gate.py` and
+`docs/reports/kma_um_context_sprint_2026-07-19.md`.
 
 The GEFS operational-archive implementation collected and audited the
 2023–2024 screen period (6,579 source objects, 2.5 GB, zero timing violations) and
@@ -296,7 +571,7 @@ its policy on H2.
 
 - Test-period actual generation and test-period SCADA are not used.
 - All SCADA usage is restricted to train-period proxy modeling.
-- No external weather data is present in an active submission. External-data runs require an operational-source manifest, exact publication-time audit, raw-file checksums, and reproducible license/provenance before promotion.
+- The active KMA UM submission is backed by an operational-source manifest, exact publication-time audit, raw-file checksums, and reproducible license/provenance. Any further external-data run must satisfy the same guard before promotion.
 - Retrospective Open-Meteo historical/previous-run data is explicitly ineligible for submissions unless its original public-availability evidence can be independently established.
 - Pretrained weights must have been officially public by 2026-07-05 and permit use, modification, distribution, redistribution, and commercial use; dynamic inputs must independently satisfy the prediction-time cutoff.
 - No remote inference API is used.

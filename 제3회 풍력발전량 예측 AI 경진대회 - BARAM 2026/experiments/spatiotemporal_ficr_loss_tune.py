@@ -120,7 +120,7 @@ def train_variant(
 ) -> tuple[np.ndarray, dict[str, object]]:
     set_seed(seed)
     model = _make_model(arrays, train_days, hidden)
-    calendar = calendar_tensor(arrays["train_timestamps_ns"])
+    calendar = calendar_tensor(arrays["train_timestamps_ns"], arrays["train_availability_ns"])
     train_loader = DataLoader(
         DayDataset(
             arrays["train_ldaps"], arrays["train_gfs"], calendar,

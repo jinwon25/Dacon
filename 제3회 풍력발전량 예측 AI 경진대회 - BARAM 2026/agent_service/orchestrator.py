@@ -234,6 +234,8 @@ class Orchestrator:
                     "passed deterministic promotion and safety gates",
                     "promotion_policy",
                 )
+        elif decision.outcome == "exploratory":
+            status = "exploratory_candidate"
         else:
             status = "rejected"
         self.store.set_run_status(run_id, status)

@@ -211,15 +211,14 @@ def _screen_family(
                 "delta": _compare(truth, base, seed_candidate, locked)["delta"],
             }
         )
-    monthly = {
-        str(month): _compare(
-            truth,
-            base,
-            candidate,
-            locked & (features.index.month == month),
+    monthly = {}
+    for month in sorted(set(features.index[locked].month)):
+        month_mask = locked & (features.index.month == month)
+        if not np.any(month_mask & (truth >= 0.10 * CAPACITY)):
+            continue
+        monthly[str(month)] = _compare(
+            truth, base, candidate, month_mask
         )["delta"]
-        for month in range(7, 13)
-    }
     return {
         "name": name,
         "feature_count": int(features.shape[1]),

@@ -84,7 +84,7 @@ def train_final_model(
         DayDataset(
             arrays["train_ldaps"],
             arrays["train_gfs"],
-            calendar_tensor(arrays["train_timestamps_ns"]),
+            calendar_tensor(arrays["train_timestamps_ns"], arrays["train_availability_ns"]),
             arrays["train_targets"],
             train_days,
         ),
@@ -133,7 +133,7 @@ def predict_test(
         DayDataset(
             arrays["test_ldaps"],
             arrays["test_gfs"],
-            calendar_tensor(arrays["test_timestamps_ns"]),
+            calendar_tensor(arrays["test_timestamps_ns"], arrays["test_availability_ns"]),
             None,
             test_days,
         ),

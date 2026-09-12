@@ -139,6 +139,188 @@ def test_policy_can_require_nonnegative_worst_month() -> None:
     assert PromotionPolicy(settings).evaluate(Evaluation.from_dict(raw)).outcome == "candidate"
 
 
+def test_policy_can_require_public_private_subset_stress() -> None:
+    settings = {
+        **POLICY,
+        "require_public_private_subset_stress": True,
+        "min_public_private_subset_q05": 0.0,
+    }
+    raw = passing_evaluation().to_dict()
+    decision = PromotionPolicy(settings).evaluate(Evaluation.from_dict(raw))
+    assert decision.outcome == "rejected"
+    assert "40/60 subset public score q05 evidence is missing" in decision.reasons
+
+    for split in ("public", "private"):
+        for component in ("score", "one_minus_nmae", "ficr"):
+            raw[f"subset_{split}_{component}_q05"] = 0.00001
+    decision = PromotionPolicy(settings).evaluate(Evaluation.from_dict(raw))
+    assert decision.outcome == "candidate"
+
+    raw["subset_public_ficr_q05"] = -0.000001
+    decision = PromotionPolicy(settings).evaluate(Evaluation.from_dict(raw))
+    assert decision.outcome == "rejected"
+    assert (
+        "40/60 subset public FICR q05 is below the minimum"
+        in decision.reasons
+    )
+
+
+def test_policy_retains_small_component_tradeoff_as_exploratory() -> None:
+    settings = {
+        **POLICY,
+        "version": "test-tiered",
+        "exploratory_enabled": True,
+        "min_exploratory_locked_score_delta": 0.00015,
+        "min_exploratory_one_minus_nmae_delta": -0.00035,
+        "min_exploratory_ficr_delta": -0.00035,
+        "min_exploratory_expected_macro_score_delta": 0.00005,
+        "min_exploratory_positive_month_fraction": 0.5,
+        "min_exploratory_bootstrap_positive_fraction": 0.8,
+        "min_exploratory_bootstrap_q05": -0.00025,
+        "max_exploratory_changed_ratio": 0.5,
+        "max_exploratory_p95_movement_ratio": 0.025,
+    }
+    raw = passing_evaluation().to_dict()
+    raw["locked_one_minus_nmae_delta"] = -0.00025
+
+    decision = PromotionPolicy(
+        settings,
+        human_submission_required=False,
+    ).evaluate(Evaluation.from_dict(raw))
+
+    assert decision.outcome == "exploratory"
+    assert decision.human_submission_required
+    assert "locked 1-NMAE delta is negative" in decision.reasons
+    assert any("automatic submission is disabled" in reason for reason in decision.reasons)
+
+
+def test_policy_rejects_broad_exploratory_blend() -> None:
+    settings = {
+        **POLICY,
+        "exploratory_enabled": True,
+        "min_exploratory_locked_score_delta": 0.00015,
+        "min_exploratory_one_minus_nmae_delta": -0.00035,
+        "min_exploratory_ficr_delta": -0.00035,
+        "min_exploratory_expected_macro_score_delta": 0.00005,
+        "min_exploratory_positive_month_fraction": 0.5,
+        "min_exploratory_bootstrap_positive_fraction": 0.8,
+        "min_exploratory_bootstrap_q05": -0.00025,
+        "max_exploratory_changed_ratio": 0.5,
+        "max_exploratory_p95_movement_ratio": 0.025,
+    }
+    raw = passing_evaluation().to_dict()
+    raw.update(
+        {
+            "locked_one_minus_nmae_delta": -0.00025,
+            "changed_ratio": 1.0,
+        }
+    )
+
+    decision = PromotionPolicy(settings).evaluate(Evaluation.from_dict(raw))
+
+    assert decision.outcome == "rejected"
+    assert "candidate changes too many rows" in decision.reasons
+    assert (
+        "exploratory gate: candidate changes too many rows even for exploration"
+        in decision.reasons
+    )
+
+
+def test_policy_allows_one_bounded_weak_month_for_exploration() -> None:
+    settings = {
+        **POLICY,
+        "exploratory_enabled": True,
+        "require_worst_month_score_delta": True,
+        "min_worst_month_score_delta": 0.0,
+        "min_exploratory_locked_score_delta": 0.00015,
+        "min_exploratory_one_minus_nmae_delta": -0.00035,
+        "min_exploratory_ficr_delta": -0.00035,
+        "min_exploratory_expected_macro_score_delta": 0.00005,
+        "min_exploratory_positive_month_fraction": 0.75,
+        "min_exploratory_worst_month_score_delta": -0.001,
+        "min_exploratory_bootstrap_positive_fraction": 0.8,
+        "min_exploratory_bootstrap_q05": -0.00025,
+        "max_exploratory_changed_ratio": 0.5,
+        "max_exploratory_p95_movement_ratio": 0.025,
+    }
+    raw = passing_evaluation().to_dict()
+    raw.update(
+        {
+            "positive_months": 5,
+            "total_months": 6,
+            "worst_month_score_delta": -0.0008,
+        }
+    )
+
+    decision = PromotionPolicy(settings).evaluate(Evaluation.from_dict(raw))
+
+    assert decision.outcome == "exploratory"
+
+    raw["worst_month_score_delta"] = -0.0012
+    decision = PromotionPolicy(settings).evaluate(Evaluation.from_dict(raw))
+    assert decision.outcome == "rejected"
+    assert (
+        "exploratory gate: worst-month score loss is too large for exploration"
+        in decision.reasons
+    )
+
+
+def test_exploratory_run_is_retained_but_never_selected(tmp_path: Path) -> None:
+    base_config = make_config(tmp_path)
+    settings = {
+        **POLICY,
+        "exploratory_enabled": True,
+        "min_exploratory_locked_score_delta": 0.00015,
+        "min_exploratory_one_minus_nmae_delta": -0.00035,
+        "min_exploratory_ficr_delta": -0.00035,
+        "min_exploratory_expected_macro_score_delta": 0.00005,
+        "min_exploratory_positive_month_fraction": 0.5,
+        "min_exploratory_bootstrap_positive_fraction": 0.8,
+        "min_exploratory_bootstrap_q05": -0.00025,
+        "max_exploratory_changed_ratio": 0.5,
+        "max_exploratory_p95_movement_ratio": 0.025,
+    }
+    config = ServiceConfig(
+        base_config.project_root,
+        {
+            **base_config.raw,
+            "human_submission_required": False,
+            "policy": settings,
+        },
+    )
+    store = AgentStore(config.database_path)
+    orchestrator = Orchestrator(config, store)
+    orchestrator.initialize()
+    hypothesis_id = orchestrator.propose(
+        Hypothesis.from_dict(
+            {
+                "title": "Bounded exploratory tradeoff",
+                "family": "bounded_exploratory_tradeoff",
+                "rationale": "Retain a small component tradeoff without selecting it.",
+                "expected_signal": "The run remains available for bounded follow-up.",
+            }
+        )
+    )
+    run_id = orchestrator.register_run(
+        RunSpec(
+            hypothesis_id=hypothesis_id,
+            module="experiments.bounded_exploratory_tradeoff",
+            args=(),
+            report_path="artifacts_final/run/report.json",
+            evaluation_path="artifacts_final/run/evaluation.json",
+        )
+    )
+    raw = passing_evaluation("bounded_exploratory_tradeoff").to_dict()
+    raw["locked_one_minus_nmae_delta"] = -0.00025
+
+    decision = orchestrator.evaluate(run_id, Evaluation.from_dict(raw))
+
+    assert decision.outcome == "exploratory"
+    assert store.get_run(run_id)["status"] == "exploratory_candidate"
+    assert store.get_active_selection("baram_2026", "local_best") is None
+    assert store.get_active_selection("baram_2026", "submission_candidate") is None
+
+
 def test_policy_family_override_allows_structural_blend_coverage_only() -> None:
     settings = {
         **POLICY,

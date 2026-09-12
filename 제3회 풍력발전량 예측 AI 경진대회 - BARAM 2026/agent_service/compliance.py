@@ -210,6 +210,7 @@ def validate_external_data_manifest(
     project_root: Path,
     *,
     verify_files: bool = True,
+    require_competition_eligible: bool = True,
 ) -> dict[str, Any]:
     """Validate provenance required before an external-data run can be promoted."""
 
@@ -229,7 +230,7 @@ def validate_external_data_manifest(
     required_text("license")
     required_text("license_url")
     required_text("retrieved_at_utc")
-    if raw.get("competition_eligible") is not True:
+    if require_competition_eligible and raw.get("competition_eligible") is not True:
         errors.append("competition_eligible must be true")
     if raw.get("source_type") not in ALLOWED_SOURCE_TYPES:
         errors.append("source_type is not an allowed operational source")
@@ -294,6 +295,8 @@ def validate_external_data_manifest(
         "manifest": str(path.relative_to(project_root)),
         "provider": raw["provider"],
         "dataset": raw["dataset"],
+        "competition_eligible": raw.get("competition_eligible") is True,
+        "local_raw_files_verified": bool(verify_files),
         "raw_file_count": len(raw_files),
         "checked_file_count": checked_files,
         "minimum_availability_margin_minutes": margin,

@@ -156,6 +156,11 @@ def main() -> None:
         default="artifacts_final/external_weather/kma_um_global_2024/disagreement_screen.json",
     )
     parser.add_argument("--seeds", default="29301,29302,29303")
+    parser.add_argument("--minimum-common-rows", type=int, default=8_000)
+    parser.add_argument(
+        "--preliminary-through",
+        help="Mark an incomplete H2 screen as diagnostic-only through this timestamp.",
+    )
     args = parser.parse_args()
 
     validate_external_data_manifest(Path(args.manifest), Path.cwd().resolve())
@@ -172,8 +177,10 @@ def main() -> None:
         raise ValueError("driver and meta OOF indexes differ")
     common = index.intersection(external.index)
     common = common[(common >= pd.Timestamp("2024-01-01")) & (common < END)]
-    if len(common) < 8_000:
-        raise ValueError("KMA screen requires near-complete 2024 hourly coverage")
+    if len(common) < args.minimum_common_rows:
+        raise ValueError(
+            "KMA screen does not meet the configured minimum hourly coverage"
+        )
     positions = index.get_indexer(common)
     truth = driver[f"{TARGET}__valid_truth"].astype(float)[positions]
     base = meta["valid_candidate"].astype(float)[positions]
@@ -214,37 +221,52 @@ def main() -> None:
             )
             for key in ("score", "one_minus_nmae", "ficr")
         }
+    locked_positive = bool(kma["locked_h2"]) and min(
+        kma["locked_h2"]["delta"].values()
+    ) > 0.0
+    incremental_positive = bool(incremental) and min(incremental.values()) > 0.0
+    seeds_positive = bool(kma["seed_locked_h2"]) and all(
+        min(item["delta"].values()) > 0.0 for item in kma["seed_locked_h2"]
+    )
+    months_positive = bool(kma["monthly_locked_h2_delta"]) and all(
+        value["ficr"] >= 0.0
+        for value in kma["monthly_locked_h2_delta"].values()
+    )
+    submission_eligible = (
+        not bool(args.preliminary_through)
+        and kma["selection_status"] == "passed"
+        and locked_positive
+        and incremental_positive
+        and seeds_positive
+        and months_positive
+    )
     report = {
         "family": "kma_um_gfs_disagreement_group3_residual",
+        "evaluation_status": (
+            "preliminary_diagnostic" if args.preliminary_through else "locked"
+        ),
         "source_manifest": args.manifest,
         "split": {
             "train": "2024 Q1",
             "selection": "2024 Q2 through 2024-07-01 00:00",
-            "locked_h2": "2024-07-01 01:00 through 2024-12-31 23:00",
+            "locked_h2": (
+                f"preliminary 2024-07-01 01:00 through {args.preliminary_through}"
+                if args.preliminary_through
+                else "2024-07-01 01:00 through 2024-12-31 23:00"
+            ),
             "common_rows": int(len(common)),
         },
         "control": control,
         "with_kma": kma,
         "incremental_locked_h2_vs_control": incremental,
         "decision": {
+            "submission_eligible": submission_eligible,
             "selection_status": kma["selection_status"],
             "locked_h2_opened": kma["locked_h2"] is not None,
-            "all_locked_components_positive": bool(kma["locked_h2"])
-            and min(kma["locked_h2"]["delta"].values()) > 0.0,
-            "incremental_all_components_positive": bool(incremental)
-            and min(incremental.values()) > 0.0,
-            "all_seed_components_positive": bool(kma["seed_locked_h2"])
-            and all(
-                min(item["delta"].values()) > 0.0
-                for item in kma["seed_locked_h2"]
-            ),
-            "all_locked_month_ficr_nonnegative": bool(
-                kma["monthly_locked_h2_delta"]
-            )
-            and all(
-                value["ficr"] >= 0.0
-                for value in kma["monthly_locked_h2_delta"].values()
-            ),
+            "all_locked_components_positive": locked_positive,
+            "incremental_all_components_positive": incremental_positive,
+            "all_seed_components_positive": seeds_positive,
+            "all_locked_month_ficr_nonnegative": months_positive,
         },
     }
     output = Path(args.output)

@@ -127,6 +127,10 @@ def calibrate(y_true: np.ndarray, raw_pred: np.ndarray, capacity: float) -> tupl
 
 def main() -> None:
     parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--pipeline", choices=["legacy", "sprint066"], default="legacy",
+        help="Use 'sprint066' for the frozen leakage-safe final-candidate pipeline.",
+    )
     parser.add_argument("--data-dir", default="data")
     parser.add_argument("--artifact-dir", default="artifacts")
     parser.add_argument("--valid-start", default="2024-01-01 00:00:00")
@@ -141,7 +145,33 @@ def main() -> None:
         default="",
         help="Comma-separated targets to evaluate with CatBoost in addition to LightGBM, or '__all__'.",
     )
+    parser.add_argument("--direct-estimators", type=int, default=350)
+    parser.add_argument("--quantile-estimators", type=int, default=300)
+    parser.add_argument(
+        "--include-diverse-member", action="store_true",
+        help="Also train and serialize the frozen two-seed spatial-temporal member.",
+    )
     args = parser.parse_args()
+
+    if args.pipeline == "sprint066":
+        from src.sprint066_pipeline import train_sprint066
+
+        report = train_sprint066(
+            args.data_dir,
+            args.artifact_dir,
+            direct_estimators=args.direct_estimators,
+            quantile_estimators=args.quantile_estimators,
+            include_diverse_member=args.include_diverse_member,
+        )
+        print(json.dumps({
+            "pipeline": report["pipeline"],
+            "feature_count": report["feature_count"],
+            "direct_estimators": report["direct_estimators"],
+            "quantile_estimators": report["quantile_estimators"],
+            "runtime_seconds": report["runtime_seconds"],
+            "artifact_dir": str(Path(args.artifact_dir).resolve()),
+        }, ensure_ascii=False, indent=2), flush=True)
+        return
 
     artifact_dir = Path(args.artifact_dir)
     artifact_dir.mkdir(parents=True, exist_ok=True)

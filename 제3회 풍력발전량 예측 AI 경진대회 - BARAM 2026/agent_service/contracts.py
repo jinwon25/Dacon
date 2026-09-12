@@ -161,6 +161,12 @@ class Evaluation:
     family_group: str | None = None
     direction: str = "unknown"
     worst_month_score_delta: float | None = None
+    subset_public_score_q05: float | None = None
+    subset_public_one_minus_nmae_q05: float | None = None
+    subset_public_ficr_q05: float | None = None
+    subset_private_score_q05: float | None = None
+    subset_private_one_minus_nmae_q05: float | None = None
+    subset_private_ficr_q05: float | None = None
     notes: str = ""
     fold_scores: tuple[float, ...] = field(default_factory=tuple)
     cv_mean: float | None = None
@@ -232,6 +238,24 @@ class Evaluation:
             family_group=family_group,
             direction=direction,
             worst_month_score_delta=optional_finite("worst_month_score_delta"),
+            subset_public_score_q05=optional_finite(
+                "subset_public_score_q05"
+            ),
+            subset_public_one_minus_nmae_q05=optional_finite(
+                "subset_public_one_minus_nmae_q05"
+            ),
+            subset_public_ficr_q05=optional_finite(
+                "subset_public_ficr_q05"
+            ),
+            subset_private_score_q05=optional_finite(
+                "subset_private_score_q05"
+            ),
+            subset_private_one_minus_nmae_q05=optional_finite(
+                "subset_private_one_minus_nmae_q05"
+            ),
+            subset_private_ficr_q05=optional_finite(
+                "subset_private_ficr_q05"
+            ),
             notes=str(raw.get("notes", "")).strip(),
             fold_scores=fold_scores,
             cv_mean=optional_finite("cv_mean"),

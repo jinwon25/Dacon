@@ -12,9 +12,15 @@ class MetricTests(unittest.TestCase):
 
         result = evaluate_group(actual, forecast, capacity=1_000.0)
 
+        error_rate = np.abs(actual - forecast) / 1_000.0
+        unit_price = np.where(error_rate <= 0.06, 4.0, np.where(error_rate <= 0.08, 3.0, 0.0))
+        time_mean_ficr = unit_price.mean() / 4.0
+
         self.assertAlmostEqual(result.nmae, 0.035)
         self.assertAlmostEqual(result.one_minus_nmae, 0.965)
         self.assertAlmostEqual(result.ficr, 0.775)
+        self.assertAlmostEqual(time_mean_ficr, 0.875)
+        self.assertNotAlmostEqual(result.ficr, time_mean_ficr)
         self.assertAlmostEqual(result.score, 0.87)
 
     def test_rows_below_capacity_threshold_are_excluded(self) -> None:
@@ -59,6 +65,21 @@ class MetricTests(unittest.TestCase):
 
         # Exact 6% earns 4, exact 8% earns 3, and just beyond 8% earns 0.
         self.assertAlmostEqual(result.ficr, 7.0 / 12.0)
+
+    def test_nan_actual_is_excluded_but_capacity_boundary_is_included(self) -> None:
+        actual = np.array([np.nan, 99.999, 100.0])
+        forecast = np.array([0.0, 99.999, 100.0])
+        result = evaluate_group(actual, forecast, capacity=1_000.0)
+        self.assertEqual(result.n_samples, 1)
+        self.assertAlmostEqual(result.score, 1.0)
+
+    def test_no_eligible_rows_raises(self) -> None:
+        with self.assertRaisesRegex(ValueError, "No valid evaluation rows"):
+            evaluate_group(
+                np.array([np.nan, 0.0, 99.999]),
+                np.array([0.0, 0.0, 99.999]),
+                capacity=1_000.0,
+            )
 
 
 if __name__ == "__main__":

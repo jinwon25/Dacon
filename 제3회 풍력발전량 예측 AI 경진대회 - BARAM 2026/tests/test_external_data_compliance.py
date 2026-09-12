@@ -108,3 +108,49 @@ def test_external_manifest_requires_causality_and_verifies_checksum(tmp_path: Pa
     path.write_text(json.dumps(manifest), encoding="utf-8")
     with pytest.raises(ValueError, match="zero violations"):
         validate_external_data_manifest(path, tmp_path)
+
+
+def test_external_manifest_supports_non_promotable_provenance_audit(
+    tmp_path: Path,
+) -> None:
+    manifest = {
+        "schema_version": 1,
+        "competition_eligible": False,
+        "provider": "NOAA/NCEP",
+        "dataset": "GEFS operational forecast",
+        "source_type": "operational_forecast_archive",
+        "documentation_url": "https://www.ncei.noaa.gov/",
+        "license": "US government public data",
+        "license_url": "https://www.noaa.gov/disclaimer",
+        "retrieved_at_utc": "2026-07-18T03:00:00+00:00",
+        "availability_evidence": {
+            "method": "provider_schedule_with_conservative_lag",
+            "conservative_delay_minutes": 370,
+        },
+        "causality_audit": {
+            "rows": 24,
+            "violations": 0,
+            "minimum_availability_margin_minutes": 230.0,
+        },
+        "raw_files": [
+            {
+                "path": "pruned.grib2",
+                "source_url": "https://example.test/pruned.grib2",
+                "retrieved_at_utc": "2026-07-18T03:00:00+00:00",
+                "sha256": "a" * 64,
+            }
+        ],
+    }
+    path = tmp_path / "manifest.json"
+    path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    report = validate_external_data_manifest(
+        path,
+        tmp_path,
+        verify_files=False,
+        require_competition_eligible=False,
+    )
+
+    assert report["competition_eligible"] is False
+    assert report["local_raw_files_verified"] is False
+    assert report["checked_file_count"] == 0

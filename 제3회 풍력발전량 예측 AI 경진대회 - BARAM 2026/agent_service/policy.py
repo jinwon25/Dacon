@@ -28,7 +28,13 @@ class PromotionPolicy:
         self.version = str(settings.get("version", "unversioned"))
         self.human_submission_required = human_submission_required
 
-    def _threshold(self, name: str, family: str) -> float:
+    def _threshold(
+        self,
+        name: str,
+        family: str,
+        *,
+        default: float | None = None,
+    ) -> float:
         """Return an explicitly versioned family threshold when configured.
 
         Sparse post-processing corrections and structural model blends have
@@ -38,7 +44,14 @@ class PromotionPolicy:
         """
         overrides = self.settings.get("family_overrides", {})
         family_settings = overrides.get(family, {}) if isinstance(overrides, dict) else {}
-        value = family_settings.get(name, self.settings[name])
+        if name in family_settings:
+            value = family_settings[name]
+        elif name in self.settings:
+            value = self.settings[name]
+        elif default is not None:
+            value = default
+        else:
+            raise KeyError(name)
         return float(value)
 
     def evaluate(
@@ -47,7 +60,7 @@ class PromotionPolicy:
         latest_failed_family_coverage: float | None = None,
         public_failure_evidence: dict[str, Any] | None = None,
     ) -> PolicyDecision:
-        checks = (
+        strict_checks = (
             (
                 evaluation.leakage_risk != "high",
                 "leakage risk is high",
@@ -102,19 +115,46 @@ class PromotionPolicy:
                 "candidate movement is too large",
             ),
         )
-        reasons = [message for passed, message in checks if not passed]
+        strict_reasons = [
+            message for passed, message in strict_checks if not passed
+        ]
         require_worst_month = bool(
             self.settings.get("require_worst_month_score_delta", False)
         )
         minimum_worst_month_raw = self.settings.get("min_worst_month_score_delta")
         if evaluation.worst_month_score_delta is None:
             if require_worst_month:
-                reasons.append("worst-month score evidence is missing")
+                strict_reasons.append("worst-month score evidence is missing")
         elif (
             minimum_worst_month_raw is not None
             and evaluation.worst_month_score_delta < float(minimum_worst_month_raw)
         ):
-            reasons.append("worst-month score delta is negative")
+            strict_reasons.append("worst-month score delta is negative")
+        if bool(self.settings.get("require_public_private_subset_stress", False)):
+            subset_minimum = float(
+                self.settings.get("min_public_private_subset_q05", 0.0)
+            )
+            subset_fields = {
+                "public score": evaluation.subset_public_score_q05,
+                "public 1-NMAE": (
+                    evaluation.subset_public_one_minus_nmae_q05
+                ),
+                "public FICR": evaluation.subset_public_ficr_q05,
+                "private score": evaluation.subset_private_score_q05,
+                "private 1-NMAE": (
+                    evaluation.subset_private_one_minus_nmae_q05
+                ),
+                "private FICR": evaluation.subset_private_ficr_q05,
+            }
+            for label, value in subset_fields.items():
+                if value is None:
+                    strict_reasons.append(
+                        f"40/60 subset {label} q05 evidence is missing"
+                    )
+                elif value < subset_minimum:
+                    strict_reasons.append(
+                        f"40/60 subset {label} q05 is below the minimum"
+                    )
         # Keep the original concrete-family guard for old callers and old DB
         # rows.  Newer callers can pass richer public evidence, allowing a
         # variant in the same method family/group and direction to be gated
@@ -152,6 +192,7 @@ class PromotionPolicy:
                         "a public failure in this method family/direction requires "
                         "a materially smaller row-coverage probe"
                     )
+        public_failure_reason: str | None = None
         if evidence_coverage is not None:
             guard = self.settings.get("public_failure_guard", {})
             fraction = (
@@ -165,13 +206,175 @@ class PromotionPolicy:
                 evidence_coverage * float(fraction)
             )
             if evaluation.changed_ratio > maximum:
-                reasons.append(evidence_reason)
-        outcome = "candidate" if not reasons else "rejected"
+                public_failure_reason = evidence_reason
+                strict_reasons.append(evidence_reason)
+
+        if not strict_reasons:
+            outcome = "candidate"
+            reasons: list[str] = []
+        elif bool(self.settings.get("exploratory_enabled", False)):
+            exploratory_checks = (
+                (
+                    evaluation.leakage_risk != "high",
+                    "leakage risk is high",
+                ),
+                (
+                    evaluation.rule_violation in {"", "none"},
+                    "competition rule violation is present",
+                ),
+                (
+                    evaluation.locked_score_delta
+                    >= self._threshold(
+                        "min_exploratory_locked_score_delta",
+                        evaluation.family,
+                        default=self._threshold(
+                            "min_locked_score_delta", evaluation.family
+                        ),
+                    ),
+                    "locked score delta is below the exploratory minimum",
+                ),
+                (
+                    evaluation.locked_one_minus_nmae_delta
+                    >= self._threshold(
+                        "min_exploratory_one_minus_nmae_delta",
+                        evaluation.family,
+                        default=self._threshold(
+                            "min_locked_one_minus_nmae_delta",
+                            evaluation.family,
+                        ),
+                    ),
+                    "locked 1-NMAE loss is too large for exploration",
+                ),
+                (
+                    evaluation.locked_ficr_delta
+                    >= self._threshold(
+                        "min_exploratory_ficr_delta",
+                        evaluation.family,
+                        default=self._threshold(
+                            "min_locked_ficr_delta", evaluation.family
+                        ),
+                    ),
+                    "locked FICR loss is too large for exploration",
+                ),
+                (
+                    evaluation.expected_macro_score_delta
+                    >= self._threshold(
+                        "min_exploratory_expected_macro_score_delta",
+                        evaluation.family,
+                        default=self._threshold(
+                            "min_expected_macro_score_delta",
+                            evaluation.family,
+                        ),
+                    ),
+                    "expected macro score delta is too small for exploration",
+                ),
+                (
+                    evaluation.positive_month_fraction
+                    >= self._threshold(
+                        "min_exploratory_positive_month_fraction",
+                        evaluation.family,
+                        default=self._threshold(
+                            "min_positive_month_fraction", evaluation.family
+                        ),
+                    ),
+                    "too few locked months improved for exploration",
+                ),
+                (
+                    evaluation.bootstrap_positive_fraction
+                    >= self._threshold(
+                        "min_exploratory_bootstrap_positive_fraction",
+                        evaluation.family,
+                        default=self._threshold(
+                            "min_bootstrap_positive_fraction",
+                            evaluation.family,
+                        ),
+                    ),
+                    "day-bootstrap positive fraction is too low for exploration",
+                ),
+                (
+                    evaluation.bootstrap_q05
+                    >= self._threshold(
+                        "min_exploratory_bootstrap_q05",
+                        evaluation.family,
+                        default=self._threshold(
+                            "min_bootstrap_q05", evaluation.family
+                        ),
+                    ),
+                    "day-bootstrap lower tail is too negative for exploration",
+                ),
+                (
+                    evaluation.changed_ratio
+                    <= self._threshold(
+                        "max_exploratory_changed_ratio",
+                        evaluation.family,
+                        default=self._threshold(
+                            "max_changed_ratio", evaluation.family
+                        ),
+                    ),
+                    "candidate changes too many rows even for exploration",
+                ),
+                (
+                    evaluation.p95_movement_ratio
+                    <= self._threshold(
+                        "max_exploratory_p95_movement_ratio",
+                        evaluation.family,
+                        default=self._threshold(
+                            "max_p95_movement_ratio", evaluation.family
+                        ),
+                    ),
+                    "candidate movement is too large even for exploration",
+                ),
+            )
+            exploratory_reasons = [
+                message for passed, message in exploratory_checks if not passed
+            ]
+            exploratory_worst_month_raw = self.settings.get(
+                "min_exploratory_worst_month_score_delta",
+                minimum_worst_month_raw,
+            )
+            if evaluation.worst_month_score_delta is None:
+                if require_worst_month:
+                    exploratory_reasons.append(
+                        "worst-month score evidence is missing"
+                    )
+            elif (
+                exploratory_worst_month_raw is not None
+                and evaluation.worst_month_score_delta
+                < float(exploratory_worst_month_raw)
+            ):
+                exploratory_reasons.append(
+                    "worst-month score loss is too large for exploration"
+                )
+            if public_failure_reason is not None:
+                exploratory_reasons.append(public_failure_reason)
+
+            if not exploratory_reasons:
+                outcome = "exploratory"
+                reasons = [
+                    *strict_reasons,
+                    "retained for bounded follow-up; automatic submission is disabled",
+                ]
+            else:
+                outcome = "rejected"
+                reasons = [
+                    *strict_reasons,
+                    *(
+                        f"exploratory gate: {reason}"
+                        for reason in exploratory_reasons
+                        if reason not in strict_reasons
+                    ),
+                ]
+        else:
+            outcome = "rejected"
+            reasons = strict_reasons
+
         if outcome == "candidate" and self.human_submission_required:
             reasons.append("external submission requires human approval")
         return PolicyDecision(
             outcome=outcome,
             reasons=tuple(reasons),
             policy_version=self.version,
-            human_submission_required=self.human_submission_required,
+            human_submission_required=(
+                self.human_submission_required or outcome == "exploratory"
+            ),
         )

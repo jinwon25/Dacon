@@ -12,7 +12,13 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader, Dataset
 
-from src.features import META_COLS, TIME_COL, TURBINES_BY_GROUP, _add_wind_features
+from src.features import (
+    META_COLS,
+    TIME_COL,
+    TURBINES_BY_GROUP,
+    _add_wind_features,
+    _select_latest_legal_cycle,
+)
 from src.metrics import CAPACITY_KWH, evaluate_competition, evaluate_group
 
 
@@ -26,9 +32,16 @@ def set_seed(seed: int) -> None:
     torch.manual_seed(seed)
 
 
-def _source_tensor(path: Path, source: str) -> tuple[np.ndarray, pd.DatetimeIndex, list[str], np.ndarray]:
+def _source_tensor(
+    path: Path, source: str,
+) -> tuple[np.ndarray, pd.DatetimeIndex, list[str], np.ndarray, np.ndarray]:
     frame = pd.read_csv(path, encoding="utf-8-sig")
-    frame[TIME_COL] = pd.to_datetime(frame[TIME_COL])
+    frame = _select_latest_legal_cycle(frame)
+    availability = (
+        frame.groupby(TIME_COL, sort=True)["data_available_kst_dtm"]
+        .first()
+        .pipe(pd.to_datetime)
+    )
     frame = _add_wind_features(frame, source)
     value_columns = [column for column in frame.columns if column not in META_COLS]
     frame[value_columns] = frame[value_columns].astype("float32")
@@ -47,7 +60,7 @@ def _source_tensor(path: Path, source: str) -> tuple[np.ndarray, pd.DatetimeInde
     )
     values = ordered[value_columns].to_numpy(dtype=np.float32)
     tensor = values.reshape(len(timestamps), len(nodes), len(value_columns))
-    return tensor, timestamps, value_columns, coordinates
+    return tensor, timestamps, value_columns, coordinates, availability.reindex(timestamps).astype("int64").to_numpy()
 
 
 def build_split_tensor_cache(
@@ -61,14 +74,18 @@ def build_split_tensor_cache(
         raise ValueError(f"Unknown split: {split}")
     output = cache_dir / f"spatiotemporal_{split}_tensors.npz"
     if output.exists() and not rebuild:
-        return output
+        with np.load(output, allow_pickle=True) as cached:
+            if f"{split}_availability_ns" in cached.files:
+                return output
+        # Older caches used a hard-coded lead proxy. Rebuild them so the
+        # production trajectory path derives lead from row-level availability.
     cache_dir.mkdir(parents=True, exist_ok=True)
 
     arrays: dict[str, np.ndarray] = {}
     metadata: dict[str, object] = {}
     split_timestamps: pd.DatetimeIndex | None = None
     for source in ("ldaps", "gfs"):
-        tensor, timestamps, columns, coordinates = _source_tensor(
+        tensor, timestamps, columns, coordinates, availability_ns = _source_tensor(
             data_dir / split / f"{source}_{split}.csv", source
         )
         if split_timestamps is None:
@@ -81,9 +98,13 @@ def build_split_tensor_cache(
             len(timestamps) // 24, 24, tensor.shape[1], tensor.shape[2]
         )
         arrays[f"{source}_coordinates"] = coordinates
+        arrays[f"{split}_{source}_availability_ns"] = availability_ns.reshape(-1, 24)
         metadata[f"{source}_columns"] = columns
     assert split_timestamps is not None
     arrays[f"{split}_timestamps_ns"] = split_timestamps.astype("int64").to_numpy().reshape(-1, 24)
+    arrays[f"{split}_availability_ns"] = np.maximum(
+        arrays[f"{split}_ldaps_availability_ns"], arrays[f"{split}_gfs_availability_ns"]
+    )
 
     if split == "train":
         labels = pd.read_csv(data_dir / "train" / "train_labels.csv", encoding="utf-8-sig")
@@ -280,11 +301,15 @@ class SpatialTemporalMultiTask(nn.Module):
         return 1.05 * torch.sigmoid(self.output(temporal).squeeze(-1))
 
 
-def calendar_tensor(timestamps_ns: np.ndarray) -> np.ndarray:
+def calendar_tensor(timestamps_ns: np.ndarray, availability_ns: np.ndarray) -> np.ndarray:
     timestamps = pd.to_datetime(timestamps_ns.reshape(-1))
+    availability = pd.to_datetime(availability_ns.reshape(-1))
     hour = timestamps.hour.to_numpy()
     day = timestamps.dayofyear.to_numpy()
-    lead = (((hour - 1) % 24) + 12) / 35.0
+    lead_hours = (timestamps - availability).total_seconds().to_numpy() / 3_600.0
+    if not np.isfinite(lead_hours).all() or np.any(lead_hours < 0.0):
+        raise ValueError("Invalid lead derived from NWP data availability")
+    lead = lead_hours / 35.0
     values = np.column_stack(
         [
             np.sin(2 * np.pi * hour / 24),
@@ -390,7 +415,7 @@ def train_validation_model(
         gfs_mean=gfs_mean,
         gfs_std=gfs_std,
     )
-    calendar = calendar_tensor(arrays["train_timestamps_ns"])
+    calendar = calendar_tensor(arrays["train_timestamps_ns"], arrays["train_availability_ns"])
     train_loader = DataLoader(
         DayDataset(
             arrays["train_ldaps"], arrays["train_gfs"], calendar, arrays["train_targets"], train_days

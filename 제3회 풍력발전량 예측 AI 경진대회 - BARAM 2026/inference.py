@@ -14,9 +14,18 @@ from src.metrics import CAPACITY_KWH
 
 def main() -> None:
     parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--pipeline", choices=["legacy", "sprint066"], default="legacy",
+        help="Use 'sprint066' to emit the frozen safe/Bayes/diverse candidates.",
+    )
     parser.add_argument("--data-dir", default="data")
     parser.add_argument("--artifact-dir", default="artifacts")
     parser.add_argument("--output", default="submissions/lgbm_v1.csv")
+    parser.add_argument("--output-dir", default="submissions/sprint066")
+    parser.add_argument(
+        "--diverse-member", default=None,
+        help="Optional leakage-safe spatial-temporal submission member for the diverse candidate.",
+    )
     parser.add_argument(
         "--calibration-strength",
         type=float,
@@ -24,6 +33,18 @@ def main() -> None:
         help="0 disables validation calibration; 1 applies it fully.",
     )
     args = parser.parse_args()
+
+    if args.pipeline == "sprint066":
+        from src.sprint066_pipeline import infer_sprint066
+
+        paths = infer_sprint066(
+            args.data_dir,
+            args.artifact_dir,
+            args.output_dir,
+            diverse_member=args.diverse_member,
+        )
+        print(json.dumps({name: path.as_posix() for name, path in paths.items()}, ensure_ascii=False, indent=2))
+        return
 
     artifact_dir = Path(args.artifact_dir)
     feature_columns = joblib.load(artifact_dir / "feature_columns.joblib")

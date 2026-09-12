@@ -5,11 +5,47 @@ import pytest
 
 from experiments.fetch_kma_um_global import (
     RequestSpec,
+    SeriesRequestSpec,
     build_features,
+    build_series_url,
     build_url,
+    decode_response,
+    download_all,
+    load_api_key,
+    parse_series_response,
     parse_response,
     request_specs,
+    series_request_specs,
 )
+
+
+def test_load_api_key_prefers_environment_and_supports_dotenv(
+    tmp_path, monkeypatch
+) -> None:
+    env_file = tmp_path / ".env.local"
+    env_file.write_text(
+        "# local only\nUNRELATED=x\nKMA_API_KEY='file-secret'\n",
+        encoding="utf-8",
+    )
+    monkeypatch.delenv("KMA_API_KEY", raising=False)
+    assert load_api_key("KMA_API_KEY", env_file) == "file-secret"
+
+    monkeypatch.setenv("KMA_API_KEY", "process-secret")
+    assert load_api_key("KMA_API_KEY", env_file) == "process-secret"
+
+
+def test_decode_response_supports_utf8_and_cp949() -> None:
+    text = "기상청 UM 응답\nVARN=2002 VALUS=1.25"
+    assert decode_response(text.encode("utf-8")) == text
+    assert decode_response(text.encode("cp949")) == text
+
+    with pytest.raises(ValueError, match="neither valid UTF-8 nor CP949"):
+        decode_response(b"\x81")
+
+
+def test_download_all_rejects_nonpositive_workers(tmp_path) -> None:
+    with pytest.raises(ValueError, match="workers must be at least one"):
+        download_all([], "key", tmp_path, retries=0, workers=0)
 
 
 def test_request_specs_use_previous_day_12z_with_twelve_hour_delay() -> None:
@@ -34,6 +70,21 @@ def test_request_specs_use_previous_day_12z_with_twelve_hour_delay() -> None:
     assert margin == pd.Timedelta(hours=4)
 
 
+def test_series_request_specs_batch_complete_issue() -> None:
+    metadata = pd.DataFrame(
+        {
+            "forecast_kst_dtm": pd.date_range(
+                "2024-01-01 01:00:00", periods=24, freq="h"
+            ),
+            "data_available_kst_dtm": pd.Timestamp("2023-12-31 13:00:00"),
+        }
+    )
+    specs, audit = series_request_specs(metadata, ((37.28, 128.96),), 12.0)
+    assert len(specs) == 1
+    assert specs[0].lead_hours == tuple(range(27, 52, 3))
+    assert len(audit) == 1
+
+
 def test_url_redacts_api_key() -> None:
     spec = RequestSpec(
         pd.Timestamp("2023-12-31 13:00:00"),
@@ -52,6 +103,24 @@ def test_url_redacts_api_key() -> None:
     assert "varn=2002%2C2003" in redacted
 
 
+def test_series_url_redacts_key_and_uses_lead_range() -> None:
+    spec = SeriesRequestSpec(
+        pd.Timestamp("2023-12-31 13:00:00"),
+        pd.Timestamp("2023-12-30 12:00:00", tz="UTC"),
+        pd.Timestamp("2023-12-31 00:00:00", tz="UTC"),
+        27,
+        51,
+        3,
+        37.28,
+        128.96,
+        1,
+    )
+    url = build_series_url(spec, "private-key", redact=True)
+    assert "private-key" not in url
+    assert "ef=27%2C51%2C3" in url
+    assert "%3Credacted%3E" in url
+
+
 def test_parse_response_supports_tagged_and_table_formats() -> None:
     tagged = "VARN=2002 LEVEL=10 VALUS=1.25\nVARN=2003 LEVEL=10 VALUS=-2.5"
     assert parse_response(tagged) == {2002: 1.25, 2003: -2.5}
@@ -61,6 +130,19 @@ def test_parse_response_supports_tagged_and_table_formats() -> None:
         "2023123012 2024010118 2003 10 -3.0\n"
     )
     assert parse_response(table) == {2002: 1.5, 2003: -3.0}
+
+
+def test_parse_series_response_returns_complete_valid_times() -> None:
+    table = (
+        "2023123012 2023123115 2002 10 -1.125\n"
+        "2023123012 2023123115 2003 10 -3.9375\n"
+        "2023123012 2023123118 2002 10 -1.0\n"
+        "2023123012 2023123118 2003 10 -2.4375\n"
+    )
+    parsed = parse_series_response(table)
+    assert len(parsed) == 2
+    assert parsed[2002].tolist() == pytest.approx([-1.125, -1.0])
+    assert parsed[2003].tolist() == pytest.approx([-3.9375, -2.4375])
 
 
 def test_parse_response_fails_closed_on_incomplete_data() -> None:
