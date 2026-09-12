@@ -38,6 +38,8 @@ submissions/**/*.zip
 !submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip
 !submissions/releases/v335/
 !submissions/releases/v335/submit_v335_anchor_lowrank_complement.zip
+!submissions/releases/v345/
+!submissions/releases/v345/submit_v345.zip
 *.npy
 *.npz
 *.parquet

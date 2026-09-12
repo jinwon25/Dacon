@@ -1,37 +1,35 @@
 # 투구 제구 성공 확률 예측
 
-LG Aimers 9기 `투구 제구 성공 확률 예측 AI 온라인 해커톤`의 팀 연구 저장소다.
-공식 데이터만 사용해 각 투구의 `P(control_success = 1)`을 예측하며, 시간 순서와
-평가 행 독립성 규칙을 지키는 것을 성능보다 우선한다.
+LG Aimers 9기 `투구 제구 성공 확률 예측 AI 온라인 해커톤`의 3인 팀 연구 저장소다.
+공식 데이터만 사용해 각 투구의 `P(control_success = 1)`을 예측했고, 시간 순서와
+평가 행 독립성 규칙을 지키는 것을 성능보다 우선했다. 대회는 종료됐으며, 이 저장소는
+최종 제출물과 그에 이르기까지의 실험 기록을 보존한다.
 
-## 최종 현황
-
-마지막 갱신: `2026-08-31 00:00 KST`
+## 최종 결과
 
 | 항목 | 값 |
 |---|---:|
-| 공식 Public 챔피언 | **submit_v335 / 1181.7100031613** |
-| 공개 순위 | 제출 이력 기준 확인 |
-| 제출 ID | `76835` |
-| 목표 1180 초과분 | **+1.7100031613** |
-| 직전 v290 대비 | **+4.9529314933** |
-| 1185까지 | **3.2899968387** |
-| 챔피언 파일 | `submissions/releases/v335/submit_v335_anchor_lowrank_complement.zip` |
-| SHA-256 | `A3BCD933DE3F78DEB9565F537DC3199922BDFD219B2840E4150F939CFF144C7A` |
-| ZIP 크기 / 파일 수 | `91,469,892 bytes` / `188` |
-| 현재 CI 기준 검사 | data-free pytest `685 passed, 21 skipped` 로컬 재현 |
+| 최종 Public 챔피언 | **submit_v345 / 1182.94969702** |
+| 제출 ID | `78710` |
+| 제출 시각 | `2026-08-31 22:17:29 KST` |
+| 직전 v335 대비 | **+1.2396938587** |
+| 챔피언 파일 | `submissions/releases/v345/submit_v345.zip` |
+| SHA-256 | `D44578DC50220CE84DD4B8489BBAE680AFDCF93F931ED4236287B5A9E6F5AAAA` |
+| ZIP 크기 | `101,139,163 bytes` |
+| 공식 runtime | `130초` |
+| 전체 테스트 | `741 passed, 20 skipped` |
 
-최신 챔피언은 v290 계보를 기준으로 `F`에 최근 direct expert 20%와 frozen low-rank
-상호작용을 결합하고, `R_ANCHOR`에만 동일한 low-rank 방향을 추가한 row-local 패키지다.
-`R_CORE`는 v290과 동일하게 보존한다. 2026-08-31 00:00:45 KST 제출에서 Public
-`1181.7100031613`을 확인해 목표 1180을 달성했다. 상세 근거와 재현 절차는
-[`research/reports/v335_public_result_20260831.md`](research/reports/v335_public_result_20260831.md)에 있다.
+v345는 v335가 보존하던 `R_CORE`에 선수 전이, 3시드 workload-H1, 고정 Beta 셀을
+추가한 row-local 패키지다. `F`와 `R_ANCHOR`는 v335와 동일하다. 상세 근거와 감사
+결과는 [`research/reports/v345_public_result_20260831.md`](research/reports/v345_public_result_20260831.md)에 있다.
+
+Private Score 재현용 최종 제출 패키지는 [`final_submission/`](final_submission/)에 있다.
 
 ## 가장 먼저 할 일
 
 ```powershell
-git clone https://github.com/Lg-Aimers-chungang/hackathon.git
-cd hackathon
+git clone https://github.com/jinwon25/pitch-control-probability.git
+cd pitch-control-probability
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
@@ -269,18 +267,32 @@ python scripts\audit_jy_next_final.py
 ## 폴더 구조
 
 ```text
-.github/       협업·CI 설정
-research/configs/       동결된 실험 및 패키징 계약
-data/          공식 원본 데이터, Git 제외
-docs/          프로젝트 현황·인계·규칙
-notebooks/     과거 및 탐색 워크벤치
-research/reports/       실험 결과와 제출 원장
-scripts/       저장소 보조 감사
-src/           학습·평가·패키징·추론 구현
-submissions/   제출 계보와 PRIVATE 전달용 확정 ZIP
-tests/         데이터 비의존 및 로컬 통합 테스트
-artifacts/     모델·OOF·패키지 산출물, 원칙적으로 Git 제외
+final_submission/   Private Score 재현용 최종 제출 패키지 (v345)
+  code/             학습 코드와 고정 입력
+  inference/        리더보드에 제출한 추론본
+  verification/     구성요소별 검증 결과
+src/
+  champion/         실제 제출된 버전으로 이어지는 계보
+  core/             축·계약·패키징 공통 코드
+  team_assets/      팀원 고정 자산 (JY fallback XGB)
+  archive/          종료된 실험 모듈
+tests/
+  champion/ core/ archive/   src 구조를 그대로 반영
+research/
+  reports/          실험 결과와 제출 원장
+  configs/          동결된 실험 및 패키징 계약
+submissions/releases/   해시 고정된 확정 제출 ZIP
+docs/               프로젝트 현황·인계·규칙
+notebooks/          탐색 워크벤치와 챔피언 재현 노트북
+scripts/            저장소 보조 감사
+data/               공식 원본 데이터, Git 제외
+artifacts/          모델·OOF·패키지 산출물, 원칙적으로 Git 제외
+.github/            협업·CI 설정
 ```
+
+읽는 순서는 이 README → [`final_submission/README.md`](final_submission/README.md) →
+[`src/champion/README.md`](src/champion/README.md)를 권한다. 앞의 둘이 최종
+결과물이고, 세 번째가 거기에 이르는 코드 계보다.
 
 과거 v11~v167의 상세 실험과 실패 기록은 삭제하지 않고 `research/reports/`와
 [`docs/PROJECT_MEMORY.md`](docs/PROJECT_MEMORY.md)에 보존한다. 현재 판단에는 최신 상태 문서와
@@ -290,8 +302,12 @@ JY champion 최종 보고서를 우선한다.
 
 | 문서 | 용도 |
 |---|---|
-| [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) | 현재 v335 챔피언과 운영 기준 |
-| [`docs/STANDALONE_CHAMPION.md`](docs/STANDALONE_CHAMPION.md) | 최신 단일 ZIP 실행·감사·전달 |
+| [`final_submission/README.md`](final_submission/README.md) | 최종 제출 패키지 구성과 검증 범위 |
+| [`final_submission/03_REPRODUCE.md`](final_submission/03_REPRODUCE.md) | v345 재현 절차 |
+| [`src/champion/README.md`](src/champion/README.md) | 제출된 버전으로 이어지는 코드 계보 |
+| [`research/reports/v345_public_result_20260831.md`](research/reports/v345_public_result_20260831.md) | 최종 챔피언 v345 승격 근거 |
+| [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) | 대회 기간 중 운영 기준 |
+| [`docs/STANDALONE_CHAMPION.md`](docs/STANDALONE_CHAMPION.md) | 단일 ZIP 실행·감사·전달 |
 | [`research/reports/v335_public_result_20260831.md`](research/reports/v335_public_result_20260831.md) | 1180 달성과 v335 승격 근거 |
 | [`research/reports/jy_runners_high_li_bridge027_public_result_20260828.md`](research/reports/jy_runners_high_li_bridge027_public_result_20260828.md) | 1172.137 갱신 근거 |
 | [`research/reports/target1180_v167_public_result_20260825.md`](research/reports/target1180_v167_public_result_20260825.md) | v167 기준선 근거 |
@@ -312,5 +328,5 @@ JY champion 최종 보고서를 우선한다.
 - 챔피언을 덮어쓰지 않고 버전별 새 디렉터리에 패키징한다.
 - DACON 제출은 검증된 단일 ZIP 하나를 지정 담당자가 수행하고 결과를 즉시 원장에 남긴다.
 
-2026-08-31 v335 승격 반영 후 전체 테스트는 로컬에서 `685 passed, 21 skipped`로
-재현됐으며, 현재 공식 기준은 v335 Public **1181.7100031613**이다.
+대회 종료 시점의 공식 기준은 v345 Public **1182.94969702**이며, 저장소 정리 후
+전체 테스트는 로컬에서 `741 passed, 20 skipped`로 재현된다.

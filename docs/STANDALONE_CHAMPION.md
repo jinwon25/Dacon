@@ -98,7 +98,7 @@ v335는 v290 계보의 R_CORE를 보존하고 다음 두 disjoint 보완을 추�
 
 중간 F-only v320은 제출하지 않았으므로 Public `+4.9529314933`을 F와 R_ANCHOR에 분해해
 귀속하지 않는다. 자세한 판단은
-[`../reports/v335_public_result_20260831.md`](../reports/v335_public_result_20260831.md)에 있다.
+[`../research/reports/v335_public_result_20260831.md`](../research/reports/v335_public_result_20260831.md)에 있다.
 
 ## 실행과 재구축의 차이
 
@@ -129,4 +129,4 @@ LFS·1170 OOF allowlist는 역사적 재현 자산으로 보존한다.
 
 1. `submissions/releases/v335/submit_v335_anchor_lowrank_complement.zip`
 2. 위 SHA-256
-3. 이 문서와 [`../reports/v335_public_result_20260831.md`](../reports/v335_public_result_20260831.md)
+3. 이 문서와 [`../research/reports/v335_public_result_20260831.md`](../research/reports/v335_public_result_20260831.md)

@@ -4,11 +4,11 @@
 > `1172.1373858439`이며 전달 파일은 PRIVATE 저장소의
 > `submissions/releases/jy_runners_high_li_bridge027/submit_jy_runners_high_li_bridge027.zip`이다. 아래 v26·v1161 절차는 역사
 > 재현용이다. 새 후보 평가는
-> [`../configs/evaluation_v3.json`](../configs/evaluation_v3.json)과
-> [`../reports/evaluation_reaudit_20260822.md`](../reports/evaluation_reaudit_20260822.md)를
+> [`../research/configs/evaluation_v3.json`](../research/configs/evaluation_v3.json)과
+> [`../research/reports/evaluation_reaudit_20260822.md`](../research/reports/evaluation_reaudit_20260822.md)를
 > 우선한다.
 
-> **2026-08-18 정정**: 이 문서는 이전에 champion을 v27로 기록했으나 공식 DACON 제출 이력 재대조 결과 오류였다. 실제 champion은 `submit_v26.zip`이다(Public `1157.9736407889`, 제출 ID `51773`). 근거와 재현 절차는 [`../reports/target1170_followup_20260817.md`](../reports/target1170_followup_20260817.md) 상단과 [`../notebooks/v26_champion_reproduction.ipynb`](../notebooks/v26_champion_reproduction.ipynb)에 있다.
+> **2026-08-18 정정**: 이 문서는 이전에 champion을 v27로 기록했으나 공식 DACON 제출 이력 재대조 결과 오류였다. 실제 champion은 `submit_v26.zip`이다(Public `1157.9736407889`, 제출 ID `51773`). 근거와 재현 절차는 [`../research/reports/target1170_followup_20260817.md`](../research/reports/target1170_followup_20260817.md) 상단과 [`../notebooks/v26_champion_reproduction.ipynb`](../notebooks/v26_champion_reproduction.ipynb)에 있다.
 
 이 문서는 현재 standalone champion을 고정 incumbent로 두고 새 후보를 평가하는 공통
 절차다. Python 모듈이 계산의 단일 원본이다. v26 재현 노트북과
@@ -26,7 +26,7 @@
 | v26 재패키징 | `submit_v25.zip` + `src/package_v26_anchor_weight_probe.py` (기본값 `--probe-eta 0.15`) |
 | v25 기반모형 재학습 | DACON 원본 데이터 + v22 OOF artifact + v25 활성 학습 코드 |
 
-제출 ZIP은 수동으로 풀거나 다시 압축하지 않는다. v19 이하의 계보와 Drive 구조는 [`ARTIFACT_HANDOFF.md`](ARTIFACT_HANDOFF.md), v26 최종 해시와 공식 결과는 [`../reports/target1170_followup_20260817.md`](../reports/target1170_followup_20260817.md) 상단 정정 안내와 [`../reports/v26_validation.json`](../reports/v26_validation.json)에 있다.
+제출 ZIP은 수동으로 풀거나 다시 압축하지 않는다. v19 이하의 계보와 Drive 구조는 [`ARTIFACT_HANDOFF.md`](ARTIFACT_HANDOFF.md), v26 최종 해시와 공식 결과는 [`../research/reports/target1170_followup_20260817.md`](../research/reports/target1170_followup_20260817.md) 상단 정정 안내와 [`../research/reports/v26_validation.json`](../research/reports/v26_validation.json)에 있다.
 
 Python 스크립트를 실행하는 공식 단일 노트북은 다음 파일이다.
 
@@ -214,4 +214,4 @@ clean transfer 관측 3개 전까지 억제하며, 이후에도 승격 근거로
 - 채택·기각 결정 및 다음 행동
 
 코드는 기능 브랜치에 커밋한다. 모델·OOF·제출 ZIP은 현재 champion LFS allowlist 외에는
-커밋하지 않는다. 제출 결과는 [`../reports/submissions.csv`](../reports/submissions.csv)에 즉시 추가한다.
+커밋하지 않는다. 제출 결과는 [`../research/reports/submissions.csv`](../research/reports/submissions.csv)에 즉시 추가한다.

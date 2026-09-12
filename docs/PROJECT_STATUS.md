@@ -2,7 +2,7 @@
 
 마지막 갱신: `2026-08-31 KST`
 
-최신 공식 결과: [`../reports/v335_public_result_20260831.md`](../reports/v335_public_result_20260831.md).
+최신 공식 결과: [`../research/reports/v335_public_result_20260831.md`](../research/reports/v335_public_result_20260831.md).
 v335는 제출 ID `76835`, Public **1181.7100031613**으로 v290보다 **+4.9529314933**
 개선돼 목표 1180을 달성했다.
 
@@ -74,13 +74,13 @@ standalone으로 만들며, 평가 v3를 통과하기 전에는 champion 파일�
 
 ## 바로 읽을 문서
 
-1. [`../reports/v335_public_result_20260831.md`](../reports/v335_public_result_20260831.md)
-2. [`../reports/target1185_v328_v335_multiexpert_followup_20260830.md`](../reports/target1185_v328_v335_multiexpert_followup_20260830.md)
-3. [`../reports/target1180_v320_futures_portfolio_candidate_20260830.md`](../reports/target1180_v320_futures_portfolio_candidate_20260830.md)
-4. [`../reports/target1180_v290_evaluation_reaudit_20260830.md`](../reports/target1180_v290_evaluation_reaudit_20260830.md)
+1. [`../research/reports/v335_public_result_20260831.md`](../research/reports/v335_public_result_20260831.md)
+2. [`../research/reports/target1185_v328_v335_multiexpert_followup_20260830.md`](../research/reports/target1185_v328_v335_multiexpert_followup_20260830.md)
+3. [`../research/reports/target1180_v320_futures_portfolio_candidate_20260830.md`](../research/reports/target1180_v320_futures_portfolio_candidate_20260830.md)
+4. [`../research/reports/target1180_v290_evaluation_reaudit_20260830.md`](../research/reports/target1180_v290_evaluation_reaudit_20260830.md)
 5. [`STANDALONE_CHAMPION.md`](STANDALONE_CHAMPION.md)
 6. [`PROJECT_MEMORY.md`](PROJECT_MEMORY.md)
-7. [`../reports/submissions.csv`](../reports/submissions.csv)
+7. [`../research/reports/submissions.csv`](../research/reports/submissions.csv)
 
 ## 평가 상태
 
@@ -150,13 +150,13 @@ v84는 고정 v56 레시피의 조건부 full/late gain이 양수라 사용자 �
 - v119: 독립 구현한 투수별 희소 ridge 랜덤 기울기는 early22→late22 `+33.1162`였으나
   full22→late23 `-19.2524`, full-2024 `-6.6432`로 역전했다. direct-spline 미사용 경로도
   late-2024에서 음수였으므로 함께 종료한다. 상세 결과는
-  [`../reports/target1170_v118_v119_post_v116_20260823.md`](../reports/target1170_v118_v119_post_v116_20260823.md)에 보존한다.
+  [`../research/reports/target1170_v118_v119_post_v116_20260823.md`](../research/reports/target1170_v118_v119_post_v116_20260823.md)에 보존한다.
 - v120: recent-game 행별 중심 spread는 source `+15.6201/+16.7467`이었지만 full-2024
   `-2.0130`으로 반전해 기각했다.
 - v121: target-free 투수×카운트·타자 손 조건부 TrackMan arsenal ridge는 early22→late22
   `+60.0134`였으나 full22→late23 `-18.0876`으로 source에서 무너졌다. full/late-2024의
   `+3.6321/+2.4958`은 월·최악월 gate와 1170 증분에 미달한다. 상세 결과는
-  [`../reports/target1170_v120_v121_post_v116_20260823.md`](../reports/target1170_v120_v121_post_v116_20260823.md)에 보존한다.
+  [`../research/reports/target1170_v120_v121_post_v116_20260823.md`](../research/reports/target1170_v120_v121_post_v116_20260823.md)에 보존한다.
 - 1180 목표 신규 가설 스크리닝(2026-08-23): `base_state` 세분화, win_expectancy 비대칭
   (`win_expectancy_gap`/`ctx_win_gap`), `asof_batter_*` 주신호화, `game_dayofweek` 패턴,
   구종 다양성/엔트로피 5개를 검토했다. 챔피언 계열 `feature_spec.json`을 직접 확인한 결과
@@ -166,7 +166,7 @@ v84는 고정 v56 레시피의 조건부 full/late gain이 양수라 사용자 �
   `ctx_win_gap`은 변수명까지 일치, 양쪽 축 eta 0) 이미 반대 방향으로 판정(v107 타자 ASOF
   제거가 오히려 이득)됐다. 심화 검증 단계에 도달한 가설이 없어 1180 상당 후보를 확보하지
   못했다. 현재 3개 데이터 파일 기준으로는 추가 신규 가설이 사실상 소진됐다고 판단한다.
-  상세 근거는 [`../reports/target1180_negative_screen_20260823.md`](../reports/target1180_negative_screen_20260823.md)에 있다.
+  상세 근거는 [`../research/reports/target1180_negative_screen_20260823.md`](../research/reports/target1180_negative_screen_20260823.md)에 있다.
 - v152/v154 (사후 확정): v142→v138 브릿지 가중치를 0.15(v148)에서 0.85로 올리고 5월만
   v124로 되돌리는 May maturity 가설을 실측했다. 제출 이력 ID `61440`, Public
   `1168.4038526829`로 v148 대비 `-1.8976170348`, v142 대비 `-1.2239405993`이며 사전
@@ -176,7 +176,7 @@ v84는 고정 v56 레시피의 조건부 full/late gain이 양수라 사용자 �
   거리에서 신뢰할 수 없다고 결론짓는다. v142→v148 구간의 실측 기울기는 양수였으므로,
   이 축의 진짜 최적점이 0.15 근방보다 약간 위(예: 0.2~0.35)에 있을 가능성은 다음
   제출권을 위한 가설 메모로만 남기고 지금 패키징하지 않는다. 상세 근거는
-  [`../reports/target1173_v149_v154_final_submission_20260823.md`](../reports/target1173_v149_v154_final_submission_20260823.md)의
+  [`../research/reports/target1173_v149_v154_final_submission_20260823.md`](../research/reports/target1173_v149_v154_final_submission_20260823.md)의
   "실측 결과 갱신" 절에 있다.
 - 로컬→Public 전이 메타 감사: 실제 Public 점수를 받은 제출 약 24건 전체를 표로 재구성했다.
   핵심 발견은 (a) 후보 자신의 weight/route를 고르는 데 쓰인 것과 같은 축의 큰 로컬
@@ -191,7 +191,7 @@ v84는 고정 v56 레시피의 조건부 full/late gain이 양수라 사용자 �
   LGB(8월 초 incumbent 기준, fold별 best_iteration 7~52로 불안정)와 TabM-mini(v45,
   full-2024 `-8.271`, OOF 미보존) 재검토도 재기준화·재학습 비용이 이번 라운드 예산을
   초과해 시도하지 않고 기각 기록만 남겼다. 상세 근거는
-  [`../reports/target1180_transfer_meta_audit_20260823.md`](../reports/target1180_transfer_meta_audit_20260823.md)에
+  [`../research/reports/target1180_transfer_meta_audit_20260823.md`](../research/reports/target1180_transfer_meta_audit_20260823.md)에
   있다.
 - v148-flat: 챔피언 ZIP의 5세대 중첩(최대 경로 깊이 6, `main()` 6개, 동적
   `spec_from_file_location` 4곳, `requirements.txt` 3벌)을 단일 세대 평탄 구조
@@ -207,7 +207,7 @@ v84는 고정 v56 레시피의 조건부 full/late gain이 양수라 사용자 �
   같은 이름의 `parent_script.py` 두 개가 실제로는 v84/v82 서로 다른 계층이라는 점,
   중첩 `requirements.txt`가 루트와 버전 충돌(scikit-learn 1.7.2 대 1.6.1 등)해
   합집합을 만들면 검증된 실행 환경이 바뀐다는 점을 기록했다. 상세는
-  [`../reports/v148_flat_refactor_20260823.md`](../reports/v148_flat_refactor_20260823.md)에 있다.
+  [`../research/reports/v148_flat_refactor_20260823.md`](../research/reports/v148_flat_refactor_20260823.md)에 있다.
 
 실패 cache는 삭제하고 코드·테스트·compact 보고서만 보존한다.
 
