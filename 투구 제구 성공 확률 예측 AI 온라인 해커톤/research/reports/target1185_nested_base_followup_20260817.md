@@ -50,7 +50,7 @@ batter, pitcher×batter bootstrap의 2024 개선확률도 `0.308~0.3365`에 불�
 - Git branch에는 코드·문서만 있고 OOF/test prediction은 추적되지 않았다.
 - Drive 인수인계 문서의 v13/v17 asset은 현재 champion의 선조 계보이므로 독립
   모델이 아니다.
-- 로컬 `wave0`는 2020~2024 strict prior-season LightGBM/RF OOF이고 v30의 106개
+- 로컬 `wave0`는 2020–2024 strict prior-season LightGBM/RF OOF이고 v30의 106개
   signal bank에는 포함되지 않았다.
 
 ### late-2023 선택 후 frozen 2024 감사
@@ -60,7 +60,7 @@ batter, pitcher×batter bootstrap의 2024 개선확률도 `0.308~0.3365`에 불�
 | wave0 | `lgb_raw`, ALL, 10% | +81.8575 | **-7.3113** | +3.4915 | 기각 |
 | nested gap | `nested-v19`, ALL, -20% | +77.9596 | +0.0693 | **-3.4455** | 기각 |
 
-`wave0`는 2024 8~10월에는 양수였지만 full-2024의 3~7월 중 다수에서 반전했고
+`wave0`는 2024 8–10월에는 양수였지만 full-2024의 3–7월 중 다수에서 반전했고
 R_CORE도 `-9.9274`였다. 후반기만 보고 경로를 다시 고르는 것은 외부 감사 라벨의
 사후 사용이므로 하지 않았다. nested gap은 full-2024 평균이 거의 0이었고
 late-2024의 세 달이 모두 음수였다.

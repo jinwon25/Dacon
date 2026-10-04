@@ -33,18 +33,18 @@
 
 ### Train vs Test 분포
 - speed_last: train 0.639 vs test 0.606 (test가 살짝 slow)
-- ks proxy 0.001~0.104 → 분포 차이 미세. **TTA 거의 효과 없음 예상**.
+- ks proxy 0.001–0.104 → 분포 차이 미세. **TTA 거의 효과 없음 예상**.
 
 ## 다음 우선순위 카드
 
 | 우선 | 카드 | 시간 | 잠재 LB lift |
 |---|---|---|---|
-| **1** | **v120 n_steps=2/4 multi-step RK4** | CPU 30min/Colab 10min | +0.001~+0.004 |
-| **2** | **v120 latent=128/hidden=128 big** | Colab 15min | +0.001~+0.003 |
-| **3** | **v126 FFT feature (rfft mag/phase)** | Colab 15min | +0.001~+0.004 |
-| 4 | Neural CDE (torchcde, kidger 2020) | 1-2일 | +0.002~+0.005 |
-| 5 | Frenet-frame coordinate transformation | 1-2일 | +0.001~+0.003 |
-| 6 | per-axis (x/y/z 분리) v120 변종 | 1일 | +0.001~+0.003 |
+| **1** | **v120 n_steps=2/4 multi-step RK4** | CPU 30min/Colab 10min | +0.001–+0.004 |
+| **2** | **v120 latent=128/hidden=128 big** | Colab 15min | +0.001–+0.003 |
+| **3** | **v126 FFT feature (rfft mag/phase)** | Colab 15min | +0.001–+0.004 |
+| 4 | Neural CDE (torchcde, kidger 2020) | 1-2일 | +0.002–+0.005 |
+| 5 | Frenet-frame coordinate transformation | 1-2일 | +0.001–+0.003 |
+| 6 | per-axis (x/y/z 분리) v120 변종 | 1일 | +0.001–+0.003 |
 | ❌ | meta-only selector (v125) | - | dead, AUC 0.5562 |
 
 ## 추천 sprint plan
@@ -54,7 +54,7 @@
 2. v120 latent=128 full → cache/v120_big_full_state.npz  
 3. v126 FFT full → cache/v126_full_state.npz
 4. v110_de_ensemble.py pool에 추가 (8 멤버 → 11 멤버) → DE 재계산 → v122d
-5. 예상 OOF 0.6790~0.6810, LB 변환 +0.0143 → **0.6933~0.6953**
+5. 예상 OOF 0.6790–0.6810, LB 변환 +0.0143 → **0.6933–0.6953**
 
 **Plan B — Neural CDE (1-2일)**:
 1. `pip install torchcde` 
@@ -86,7 +86,7 @@
 - open/_archive_submissions/ (68M, 115 files)
 - archive/legacy_versions/, archive/v10/v13/v16 (옛 cache)
 - logs/ (옛 텍스트 로그)
-- outputs/01_best_public, 02_boundary_oof, 03~08 (5 subfolders + 90_archive + selector_full) → 161M → 5M
+- outputs/01_best_public, 02_boundary_oof, 03–08 (5 subfolders + 90_archive + selector_full) → 161M → 5M
 
 ## 사용자 메모 (2026-05-26)
 - D-day 마감일 = 2026-06-01 10:00 (5일 남음)

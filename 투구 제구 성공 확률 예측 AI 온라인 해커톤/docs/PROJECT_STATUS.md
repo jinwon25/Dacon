@@ -40,7 +40,7 @@ v154와 그 exact 버전인 v152(`research/configs/v152_may_maturity_bridge_audi
 곡률 + 단일 관측 델타(v142→v148, weight 0→0.15)로 weight 0.85까지 외삽하는 calibration
 방법론 자체가 이 정도 외삽 거리에서는 신뢰할 수 없다는 뜻이다. 반면 v142(weight 0)에서
 v148(weight 0.15)까지는 실측 기울기가 양수였다 — 즉 이 축의 진짜 최적점은 0.15보다
-약간 위, 예컨대 0.2~0.35 부근 어딘가에 있을 가능성이 높다는 가설을 다음 세션·다음
+약간 위, 예컨대 0.2–0.35 부근 어딘가에 있을 가능성이 높다는 가설을 다음 세션·다음
 제출권을 위한 메모로만 남긴다. 아직 코드로 만들거나 패키징하지 않는다.
 과거 문서의 “champion” 표현은 작성 당시 기록으로만 읽는다.
 
@@ -102,8 +102,8 @@ v84는 고정 v56 레시피의 조건부 full/late gain이 양수라 사용자 �
 
 - v61: 최종 TrackMan gate exact OOF 재현. full-2024 `+0.0138`, late-2024
   `-0.1612`; 확대 금지.
-- v62~v64: ExtraTrees, count interaction, physical-teacher student 모두 기각.
-- v65~v74: TrackMan 1,793,078행 전수조사. 현재 투구 물리·위치·의도 부재와 시간 전이
+- v62–v64: ExtraTrees, count interaction, physical-teacher student 모두 기각.
+- v65–v74: TrackMan 1,793,078행 전수조사. 현재 투구 물리·위치·의도 부재와 시간 전이
   실패로 IVB·고차원 profile·구종 학생 계열 기각.
 - v75: full-2024 전역 calibration은 이미 양호. source-only additive/affine 보정은 게이트 실패.
 - v76: domain×count source-only contrast가 exact late23→full24에서 `-45.486`; 기각.
@@ -127,23 +127,23 @@ v84는 고정 v56 레시피의 조건부 full/late gain이 양수라 사용자 �
 - v84: 고정 v56을 full-2023+late-2024 source로 재학습하고 NumPy-only FM으로 내보냈다.
   standalone 245,789행 `68.218초`, 수식 오차 `5.55e-17`, shuffle/partition `0`을 통과했다.
   Public `1161.2020600422`, v82 대비 `+1.8668360921`로 새 champion이다.
-- v94: common wave0 full-2020~2024와 exact-v84 full22/late23/full24를 fidelity label,
+- v94: common wave0 full-2020–2024와 exact-v84 full22/late23/full24를 fidelity label,
   raw-index·target·parent hash와 함께 분리했다. common evidence를 exact champion gain으로
   오해하지 않는 multi-origin 계약을 완성했다.
 - v95: 2020→2021·2021→2022만으로 선택한 `count/R_CORE+F/alpha5000/eta1`은 exact
   full22→late23 `+7.6946`이었지만 late23→full24 `-7.4283`, late24 `-4.4207`로 반전해 기각했다.
-- v96: 같은 recipe의 common early→late gain은 2020~2024 모두 양수였으나 exact v84는
+- v96: 같은 recipe의 common early→late gain은 2020–2024 모두 양수였으나 exact v84는
   2022 `-3.4258`, 2024 `+2.3382`로 부호가 달랐다. 2025 hidden label로 같은 시즌 residual을
   fit할 수 없으므로 diagnostic으로만 보존하고 패키징하지 않는다.
 - v110: 동결된 v105 LGBM·MLP 합의 보정을 Public-1162 v104 exact parent 위에 재기준화했다.
   source alpha는 `0.87235`였지만 full/late-2024 gain이 `-0.6714/-3.7676`으로 반전해 기각했다.
-- v111: 같은 보정을 v104 `majority_two` mask 비활성 행 5.96%~7.60%에만 적용했다.
+- v111: 같은 보정을 v104 `majority_two` mask 비활성 행 5.96%–7.60%에만 적용했다.
   source alpha는 상한 `1.0`이었으나 late-2023 `-0.0822`, full/late-2024
   `+0.0477/+0.2543`에 그쳤고 모든 point·robust gate가 실패했다. v105 correction의
   전체/비활성 route와 강도 미세탐색을 종료한다.
 - v116: 2022↔late-2023 교차 ridge로 동결한 세 가지 역사적 실패유형 prior가 exact v104 OOF에서
   full/late-2024 `+5.4305/+6.2139`였지만 Public `1161.5978`, v104 대비 `-1.0325`로
-  반전했다. v104를 유지하고 v113~v116 계열을 Public 재튜닝 없이 종료한다.
+  반전했다. v104를 유지하고 v113–v116 계열을 Public 재튜닝 없이 종료한다.
 - v118: 2020 Futures ABS 도입을 Regular 대조군과 비교한 정책 DID는 2021·2022 source에서
   `+12.2145/+5.0297`이었지만 동결 late-2024에서 `-8.0050`으로 반전했다. ABS·시즌
   regime 보정 계열을 종료한다.
@@ -174,7 +174,7 @@ v84는 고정 v56 레시피의 조건부 full/late gain이 양수라 사용자 �
   weight 0.85)도 같은 신호를 쓰므로 함께 기각한다. 로컬 quadratic 곡률 + 단일 실측
   델타(v142→v148, weight 0→0.15)로 weight 0.85까지 외삽하는 calibration 방법론은 이
   거리에서 신뢰할 수 없다고 결론짓는다. v142→v148 구간의 실측 기울기는 양수였으므로,
-  이 축의 진짜 최적점이 0.15 근방보다 약간 위(예: 0.2~0.35)에 있을 가능성은 다음
+  이 축의 진짜 최적점이 0.15 근방보다 약간 위(예: 0.2–0.35)에 있을 가능성은 다음
   제출권을 위한 가설 메모로만 남기고 지금 패키징하지 않는다. 상세 근거는
   [`../research/reports/target1173_v149_v154_final_submission_20260823.md`](../research/reports/target1173_v149_v154_final_submission_20260823.md)의
   "실측 결과 갱신" 절에 있다.
@@ -182,13 +182,13 @@ v84는 고정 v56 레시피의 조건부 full/late gain이 양수라 사용자 �
   핵심 발견은 (a) 후보 자신의 weight/route를 고르는 데 쓰인 것과 같은 축의 큰 로컬
   숫자(v21 `+10.77`→실전이 `+0.04`, v25 selection `+31.49`→전이율 8.9%, v154
   `+11.4~17.6`→`-1.90`)는 체계적으로 과대평가되거나 반전됐고, 완전히 독립 구현된 모델의
-  온건한 gain(v82, v142)은 44~100%로 신뢰성 있게 전이했다는 것, (b) v104/v116은 둘 다
+  온건한 gain(v82, v142)은 44–100%로 신뢰성 있게 전이했다는 것, (b) v104/v116은 둘 다
   4개 독립 시간축 전부 양수였지만 v116만 사전에 "pitcher/crossed robust bootstrap p05
   negative" 경고가 있었고 그대로 반전했다 — 즉 축 개수보다 cluster bootstrap 하한이
   실제 반전을 더 정확히 예측했다. 이 감사를 근거로 GroupDRO 재검토를 시도했으나, 8/22
   P1 계획("ERM/environment-balanced/worst-group penalty 비교")이 이미 v78로 실행돼
   세 변형 모두 source eta 0으로 종료된 상태임을 확인해 재개하지 않았다. domain-profile
-  LGB(8월 초 incumbent 기준, fold별 best_iteration 7~52로 불안정)와 TabM-mini(v45,
+  LGB(8월 초 incumbent 기준, fold별 best_iteration 7–52로 불안정)와 TabM-mini(v45,
   full-2024 `-8.271`, OOF 미보존) 재검토도 재기준화·재학습 비용이 이번 라운드 예산을
   초과해 시도하지 않고 기각 기록만 남겼다. 상세 근거는
   [`../research/reports/target1180_transfer_meta_audit_20260823.md`](../research/reports/target1180_transfer_meta_audit_20260823.md)에
@@ -199,7 +199,7 @@ v84는 고정 v56 레시피의 조건부 full/late gain이 양수라 사용자 �
   모델 가중치 78개는 바이트 그대로 복사해 SHA-256 1:1 대조에서 불일치 0건이고,
   예측 수식·상수도 그대로다. 117,434행 동등성 감사에서 최대 절대차는 `3.33e-16`이며
   이는 **원본을 두 번 실행했을 때의 차이와 같은 값**이라 평탄화가 기여한 수치 차이는
-  0이다. 세 도메인·데뷔 cold-start 2,000행·2019~2024 표본·3~10월을 모두 덮었고,
+  0이다. 세 도메인·데뷔 cold-start 2,000행·2019–2024 표본·3–10월을 모두 덮었고,
   shuffle/partition은 `3.33e-16`, 245,789행 런타임은 같은 세션 연속 측정에서
   원본 97.057초 대비 95.889초(0.988배)다. **공식 전달본은 계속 원본
   `submit_v148.zip`이며 평탄화본은 새 champion이 아니다** — 1170.3014697177은
@@ -233,7 +233,7 @@ import하지 않는다. hoo H1/C3 사슬, 공유 pairwise FM, post-break GAM·se
 → v148(weight 0.15, Public `1170.3014697177`)까지는 v142→v138 브릿지 가중치에 대해
 실측 기울기가 양수였지만, weight 0.85(v152/v154)에서는 `-1.8976170348`로 크게
 반전했다. 두 실측점(0, 0.15)만으로는 곡률을 특정할 수 없으므로, 이 축의 진짜 최적
-가중치가 0.15보다 약간 위(예: 0.2~0.35 부근)에 있을 가능성과, 0.15 자체가 이미 국소
+가중치가 0.15보다 약간 위(예: 0.2–0.35 부근)에 있을 가능성과, 0.15 자체가 이미 국소
 최적점 근처였을 가능성이 공존한다. 다음 제출권이 열리면 이 구간 안에서 단일 신중한
 탐침(예: weight≈0.25)으로 세 번째 실측점을 확보하는 것이 무작정 0.85로 재도전하는
 것보다 정보 가치가 크다. 지금 코드나 패키지를 만들지 않는다.

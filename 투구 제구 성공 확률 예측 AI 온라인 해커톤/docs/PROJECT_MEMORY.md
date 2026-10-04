@@ -118,7 +118,7 @@ standalone 후보 생성 최소 조건:
   TrackMan-label 학생(v73)을 모두 기각했다. 같은 family의 차원·weight 미세 탐색을 금지한다.
 - v72에서 TrackMan 3분류 구종과 ASOF 재구성 label의 일치율은 93.3251%였다. TrackMan
   label 재학습은 분류 정확도를 약 1%p 높였지만 outcome Brier는 세 시간축 모두 악화됐다.
-- v70은 과거 평균 IVB 한 개, ALL, 4~9월만 쓰며 late23→full24 `+0.3602`,
+- v70은 과거 평균 IVB 한 개, ALL, 4–9월만 쓰며 late23→full24 `+0.3602`,
   early24→late24 `+2.8048`이었다. 그러나 recipe를 고정한 v74의 early22→late22와
   full22→full23에서 source-only eta가 모두 `0`, gain도 모두 `0`이었다. full23→full24
   확인축도 월·domain gate를 실패했다. **v70 최종 기각, 패키징·Public probe 금지**다.
@@ -143,7 +143,7 @@ standalone 후보 생성 최소 조건:
 - v75 same-axis domain×count oracle `+19.941`은 답을 본 진단이다. 이를 source-only로
   고정한 v76은 late23→full24 exact 부모에서 `-45.486`이므로 lookup 재탐색을 금지한다.
 - 공식 전체 추론 제한은 600초다. 120초는 전달 여유를 위한 내부 soft guard로 유지한다.
-- 이 재감사 당시 1158 champion, standalone 경로와 SHA-256은 변함없었다. v58~v76 중 새 Public probe
+- 이 재감사 당시 1158 champion, standalone 경로와 SHA-256은 변함없었다. v58–v76 중 새 Public probe
   자격을 얻은 후보는 없다.
 
 상세 수치와 다음 실행 설계는 `research/reports/evaluation_reaudit_20260822.md`를 기준으로 한다.
@@ -166,18 +166,18 @@ standalone 후보 생성 최소 조건:
 
 상세 근거는 `research/reports/target1170_v77_v78_followup_20260822.md`를 기준으로 한다.
 
-## 10. v79~v81 불변 결론 — 2026-08-22
+## 10. v79–v81 불변 결론 — 2026-08-22
 
 - v79 champion-offset context/composition GLM은 primary 두 축 모두 source eta `0`이라
   기각한다. 같은 interaction·ridge·eta 미세탐색을 금지한다.
 - v80은 late-2023 source에서 v26 shift 25%가 `+110.3945`였지만 full-2024에서
   `-0.7267`로 반전했다. early-2024 source는 여섯 후보 모두 weight `0`이었다.
 - 기존 후보의 same-axis oracle 최대 gain은 full-2024 `+2.4566`, late-2024 `+0.6418`이고,
-  대표 후보의 champion 대비 오차 상관은 `0.999986~0.999997`이다. 기존 v17~v57 후보의
+  대표 후보의 champion 대비 오차 상관은 `0.999986~0.999997`이다. 기존 v17–v57 후보의
   blend weight 재탐색을 금지한다.
 - v81 stable shallow GBDT는 primary 두 축 모두 eta `0`; full23→full24 historical에서
   `-11.5698`로 반전했다. feature threshold, 환경 risk, depth/tree/seed 재탐색을 금지한다.
-- v79~v81은 test CSV·test 집계·Public 기반 weight를 사용하지 않았고 ZIP/Public probe를
+- v79–v81은 test CSV·test 집계·Public 기반 weight를 사용하지 않았고 ZIP/Public probe를
   만들지 않았다. 대형 rejected prediction cache는 삭제하고 compact 판단만 보존한다.
 - 다음 유효 입력은 v77 계약의 독립 팀원 exact OOF, 운영진이 명시적으로 허용한 새로운
   정보원, 또는 새 locked shadow다. 그 전에는 현재 standalone 1158.0746을 유지한다.
@@ -248,14 +248,14 @@ standalone 후보 생성 최소 조건:
 
 상세 근거는 `research/reports/target1170_v84_public_result_20260822.md`를 기준으로 한다.
 
-## 14. v85~v91 후속 검증 — 2026-08-22
+## 14. v85–v91 후속 검증 — 2026-08-22
 
 - 공식 champion은 계속 `standalone_champion_1161.zip`, Public `1161.2020600422`,
   SHA-256 `C033FC38A5F9681E45B0BD2494359B8BD1387EE44E5F318C5B7A5547CFE6C4F7`이다.
 - 팀 원격을 다시 fetch했다. 한 팀 브랜치는 workflow 삭제뿐이고 다른 팀 브랜치는 현재
   champion의 역사적 TrackMan-ASOF 부모다. 별도 독립 exact OOF는 없다.
-- 공개 EXP-038~060의 temporal stack, exact TrackMan, workload, pitchmix, calendar,
-  arsenal geometry는 모두 2022~2024 최저 연도 gate를 통과하지 못했다.
+- 공개 EXP-038–060의 temporal stack, exact TrackMan, workload, pitchmix, calendar,
+  arsenal geometry는 모두 2022–2024 최저 연도 gate를 통과하지 못했다.
 - v85 저랭크 source 정책 교체는 식별 가능한 pre-2024 정책축이 하나뿐이고 full-2024 월 양성
   50%라 기각했다.
 - v86 R FM 신뢰도 gate는 full/late gain `+2.000/+3.028`이지만 월 양성 `50%/33%`,
@@ -267,7 +267,7 @@ standalone 후보 생성 최소 조건:
   재탐색을 중단한다.
 - v91 8월 이후 strict 증량은 source 두 축에서 강했지만 full/late-2024
   `-0.312/-1.030`으로 반전했다.
-- v85~v91은 모두 test CSV·test 집계·Public 기반 recipe 선택 없이 row-local OOF로 평가했다.
+- v85–v91은 모두 test CSV·test 집계·Public 기반 recipe 선택 없이 row-local OOF로 평가했다.
   point gate를 통과한 후보가 없어 ZIP 생성과 DACON 제출을 하지 않았다.
 - 이후에도 모든 배포 후보는 과거 ZIP 의존성 없는 단일 실행 ZIP으로만 만든다.
 - 다음 새 family는 완전 nested temporal runner 안의 다중 실패유형 구조 모델이다. 기존 FM,
@@ -275,7 +275,7 @@ standalone 후보 생성 최소 조건:
 
 상세 근거는 `research/reports/target1170_v85_v91_followup_20260822.md`를 기준으로 한다.
 
-## 15. 데이터·파이프라인 재감사와 v92~v93 — 2026-08-22
+## 15. 데이터·파이프라인 재감사와 v92–v93 — 2026-08-22
 
 - 공식 champion은 계속 `standalone_champion_1161.zip`, Public `1161.2020600422`,
   SHA-256 `C033FC38A5F9681E45B0BD2494359B8BD1387EE44E5F318C5B7A5547CFE6C4F7`다.
@@ -286,7 +286,7 @@ standalone 후보 생성 최소 조건:
   `-5.5383`으로 point gate를 통과하지 못했다.
 - v87 5,000회 cluster bootstrap의 개선 비율은 full pitcher `78.84%`, late pitcher
   `72.18%`이며 모든 95% Brier-delta 구간이 0을 포함했다. v87/v93 Public probe를 금지한다.
-- 현재 가장 큰 병목은 새 알고리즘 부족보다 full-2020~2024 exact champion analogue를
+- 현재 가장 큰 병목은 새 알고리즘 부족보다 full-2020–2024 exact champion analogue를
   반복 생성하는 multi-origin nested runner의 부재다. 이를 P0으로 완성하기 전 같은 FM,
   TrackMan profile, scalar calibration의 강도·seed·threshold 미세탐색을 재개하지 않는다.
 - TrackMan은 current-pitch 위치·구종·물리량이나 직접 pitch key가 없으므로 train-only
@@ -297,9 +297,9 @@ standalone 후보 생성 최소 조건:
 
 상세 근거는 `research/reports/target1170_v92_v93_pipeline_audit_20260822.md`를 기준으로 한다.
 
-## 16. v94~v96 multi-origin 계약·context 전이 — 2026-08-22
+## 16. v94–v96 multi-origin 계약·context 전이 — 2026-08-22
 
-- v94는 common wave0 full-2020~2024와 exact v84 full-2022/late-2023/full-2024를
+- v94는 common wave0 full-2020–2024와 exact v84 full-2022/late-2023/full-2024를
   fidelity label, raw-index·row-id·target·parent SHA-256과 함께 분리했다. common tier는
   메커니즘 안정성, exact tier는 champion marginal gain에만 사용한다.
 - common 부모 평균 잔차는 2020 `-0.02373`, 2021 `+0.03305`, 2022 `+0.01806`,
@@ -309,7 +309,7 @@ standalone 후보 생성 최소 조건:
   동결 선택 `count/R_CORE+F/alpha5000/eta1`은 exact full22→late23 `+7.6946`이었지만
   late23→full24 `-7.4283`, late24 `-4.4207`로 반전했다. count/context lookup의
   alpha·eta·bin·route 재탐색과 Public probe를 금지한다.
-- v96에서 같은 recipe의 common early→late gain은 2020~2024 모두 양수였으나 exact v84는
+- v96에서 같은 recipe의 common early→late gain은 2020–2024 모두 양수였으나 exact v84는
   2022 `-3.4258`, 2024 `+2.3382`였다. 2025 hidden label로 early-season residual을 fit할 수
   없고 test 행 집계도 금지되므로 이 신호는 diagnostic으로만 보존한다.
 - 2026-08-22 공식 코드공유·토크와 공개 GitHub 구현을 재감사했다. recent-ASOF,
@@ -321,7 +321,7 @@ standalone 후보 생성 최소 조건:
 
 상세 근거는 `research/reports/target1170_v94_v96_multiorigin_20260822.md`를 기준으로 한다.
 
-## 17. v142~v148 목표 1170 달성 — 2026-08-23
+## 17. v142–v148 목표 1170 달성 — 2026-08-23
 
 - v142는 v124 위 R_CORE에 독립 H1 15%와 네 과거 창의 부호가 모두 일치하는 C3 보정을
   결합했다. Public `1169.6277932822`, 제출 ID `1544738`, 당시 10위를 기록했다.
@@ -337,7 +337,7 @@ standalone 후보 생성 최소 조건:
 
 상세 근거는 `research/reports/target1170_v142_v148_public_result_20260823.md`를 기준으로 한다.
 
-## 18. v149~v154 마지막 1173 목표 연구 — 2026-08-23
+## 18. v149–v154 마지막 1173 목표 연구 — 2026-08-23
 
 - v149 공동 H1/C3 반응면, v150 계절감쇠·투수/타자 레벨 효과, v151 calibration은
   source/forward 위험 때문에 기각했다.

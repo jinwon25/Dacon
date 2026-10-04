@@ -35,7 +35,7 @@ Score = max(0, 100000 * (1 - Brier / (r * (1-r))))
 않는다.
 
 [공식 대회 설명](https://dacon.io/en/competitions/official/236743/overview/description)에 따르면
-245,789행 전체 추론 제한은 **10분(600초)**이고 환경은 Ubuntu 22.04.5, Python 3.11.15,
+245,789행 전체 추론 제한은 **10분(600초)이고** 환경은 Ubuntu 22.04.5, Python 3.11.15,
 6 vCPU, 28GB RAM, L4 22.4GiB다. 저장소의 120초 기준은 공식 제한이 아니라 여유를 둔
 내부 soft guard로 유지한다.
 

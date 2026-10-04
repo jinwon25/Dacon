@@ -3,7 +3,7 @@
 ## 1줄 결론
 
 **v122c는 weighted blend로서 거의 최적 (0.6769 OOF / 0.6912 LB)**. plateau 돌파의 진짜 카드는:
-1. **v120 paradigm pool 확장** (multi-step RK4, hidden capacity 2x) → OOF +0.002~+0.004 잠재
+1. **v120 paradigm pool 확장** (multi-step RK4, hidden capacity 2x) → OOF +0.002–+0.004 잠재
 2. **Disagreement-based selector** (메타특징 단독은 acc 55-60% 손해, but |v112-v120| 차이 + 메타 합치면 70%+ 가능)
 3. **Neural CDE / FFT feature** — neither subset 공략 (30% 영역, mean d=26mm)
 
@@ -44,7 +44,7 @@
 | accel_m | -0.017 |
 | jerk_m | +0.007 |
 
-→ 두 그룹 메타특징 거의 동일. **|v112-v120| disagreement feature + per-axis residual feature 필수**.
+→ 두 그룹 메타특징 거의 동일. **`|v112-v120|` disagreement feature + per-axis residual feature 필수**.
 
 ### Boundary subset (v122c 0.8-1.5cm miss, n=2535)
 - v112 hit 0.4047
@@ -78,7 +78,7 @@
 → test는 train보다 살짝 slow/static. **TTA로 활용 가능성 낮음**. 분포 차이 미세.
 
 ### Test prediction 다양성 (paradigm 진정성 지표)
-| 쌍 | mean |v_a - v_b| (mm) | q90 |
+| 쌍 | mean \|v_a - v_b\| (mm) | q90 |
 |---|---:|---:|
 | v122c - v112 | 0.509 | 0.958 |
 | v112 - v106 | 0.154 | 0.297 |
@@ -90,15 +90,15 @@
 
 | 우선 | 카드 | 시간 | OOF lift | LB lift (변환률 +0.0143 가정) |
 |---|---|---|---|---|
-| **1** | **v120 multi-step RK4 (n_steps=2,3,4)** | 1-2h × 3 | +0.001~+0.003 | +0.0010~+0.0040 |
-| **2** | **v124 — v120 hidden=128/latent=128 (capacity 2x)** | 2-3h | +0.001~+0.003 | +0.0010~+0.0040 |
-| **3** | **v125 disagreement selector** ( |v112-v120| + meta → MLP) | 3-4h | +0.001~+0.004 | +0.0010~+0.0060 |
-| 4 | v126 Neural CDE (torchcde) | 1-2일 | +0.002~+0.005 | +0.0030~+0.0070 |
-| 5 | v127 FFT feature (last 6 step magnitude/phase) | 1일 | +0.001~+0.003 | +0.0010~+0.0040 |
-| 6 | per-axis (x/y/z 분리) v120 변종 | 1일 | +0.001~+0.003 | +0.0010~+0.0040 |
-| 7 | Frenet-frame coordinate transformation | 1-2일 | +0.001~+0.003 | +0.0010~+0.0040 |
+| **1** | **v120 multi-step RK4 (n_steps=2,3,4)** | 1-2h × 3 | +0.001–+0.003 | +0.0010–+0.0040 |
+| **2** | **v124 — v120 hidden=128/latent=128 (capacity 2x)** | 2-3h | +0.001–+0.003 | +0.0010–+0.0040 |
+| **3** | **v125 disagreement selector** ( |v112-v120| + meta → MLP) | 3-4h | +0.001–+0.004 | +0.0010–+0.0060 |
+| 4 | v126 Neural CDE (torchcde) | 1-2일 | +0.002–+0.005 | +0.0030–+0.0070 |
+| 5 | v127 FFT feature (last 6 step magnitude/phase) | 1일 | +0.001–+0.003 | +0.0010–+0.0040 |
+| 6 | per-axis (x/y/z 분리) v120 변종 | 1일 | +0.001–+0.003 | +0.0010–+0.0040 |
+| 7 | Frenet-frame coordinate transformation | 1-2일 | +0.001–+0.003 | +0.0010–+0.0040 |
 
-**합산 목표**: 카드 1+2+3 합치면 OOF 0.6790~0.6810 → LB 0.6940~0.6960.
+**합산 목표**: 카드 1+2+3 합치면 OOF 0.6790–0.6810 → LB 0.6940–0.6960.
 
 ## 즉시 시작 카드: v123_v120_multistep + v124_v120_big
 

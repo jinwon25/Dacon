@@ -2,7 +2,7 @@
 
 ## 핵심 발견
 
-- `game_type=R`은 시즌당 약 21.1~22.3만 행, `F`는 약 2.3~3.0만 행이다. 2026-08-12 공식 FAQ 답변으로 `R=Regular(1군 정규시즌)`, `F=Futures(퓨처스리그/2군)`가 확정됐다. 모델의 기존 strata 분리는 이 공식 의미와도 일치한다.
+- `game_type=R`은 시즌당 약 21.1–22.3만 행, `F`는 약 2.3–3.0만 행이다. 2026-08-12 공식 FAQ 답변으로 `R=Regular(1군 정규시즌)`, `F=Futures(퓨처스리그/2군)`가 확정됐다. 모델의 기존 strata 분리는 이 공식 의미와도 일치한다.
 - F 성공률은 2022 0.708749에서 2023 0.472904로 -0.235846 변했지만 R은 같은 기간 0.503691에서 0.503118로 -0.000573만 변했다. 2023 전체 calibration 붕괴의 주된 구조적 원인이다.
 - 2024 incumbent는 F에서 raw blend보다 Brier를 크게 줄였고 R에서도 소폭 개선했다. 따라서 전역 drift를 제거하는 대신, 검출된 game-type regime residual만 추가하는 방향이 안전하다.
 - `asof_pitcher_success_rate`와 `asof_pitcher_strike_rate`는 동일하지 않으며 최대 절대차는 1.000000이다. reverse/middle/ball/strike 비율도 단순히 합 1인 상호배타 범주가 아니므로 임의로 실패확률로 합치지 않는다.

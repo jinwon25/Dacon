@@ -30,7 +30,7 @@ distillation을 순서대로 검증했다. v38 TrackMan 학생만 독립 late-20
 |---|---|---:|---:|---|
 | v35 | 2022 family prefilter → late-2023 pair 선택 → 2024 감사 | `+160.5170` | full `-18.1131`, late `-17.4751` | 기각 |
 | v36 | 2022와 late-2023에서 동일 recipe·부호 합의 → 2024 감사 | `+55.2813`, `+9.2812` | full `-7.4490`, late `-4.8838` | 기각 |
-| v37 | 2024 3~5월 CatBoost 잔차 → 6~7월 선택 → 8~10월 감사 | `+0.9296` | `-0.4424`, 3 seeds 모두 음수 | 기각 |
+| v37 | 2024 3–5월 CatBoost 잔차 → 6–7월 선택 → 8–10월 감사 | `+0.9296` | `-0.4424`, 3 seeds 모두 음수 | 기각 |
 | v38 | 같은 월 분할의 TrackMan teacher / 안전 student 증류 | `+1.0327` | `+0.6842`, 최악 월 `-0.0292` | 보존·미승격 |
 
 ### v35 — family-balanced three-stage bank
@@ -52,18 +52,18 @@ full-2024 R_CORE는 `-10.5745`, late-2024는 `-6.9752`였다. 부분 OOF의 두 
 
 ### v37 — latest-season CatBoost residual
 
-2024년 3~5월 `target-v27` 잔차를 안전한 행별 피처로 학습하고, 6~7월에
+2024년 3–5월 `target-v27` 잔차를 안전한 행별 피처로 학습하고, 6–7월에
 feature variant·route·eta를 선택했다. 선택된 player-ID/R_ANCHOR/0.1 recipe는
-두 선택 월 모두 양수였지만 8~9월 감사 평균 `-0.4424`, 세 seed gain은
+두 선택 월 모두 양수였지만 8–9월 감사 평균 `-0.4424`, 세 seed gain은
 `-0.3632`, `-0.5261`, `-0.4870`이었다. 최신 시즌 직접 잔차 GBDT를 추가
 튜닝하지 않는다.
 
 ### v38 — latest-season TrackMan privileged distillation
 
-TrackMan 시퀀스 정렬 2024 행 216,555개 중 3~5월을 사용해 game-group 3-fold
+TrackMan 시퀀스 정렬 2024 행 216,555개 중 3–5월을 사용해 game-group 3-fold
 safe/full teacher를 만들었다. 학생은 현재 투구의 구종·구속·회전·무브먼트를
 보지 않고 공식 추론 안전 피처만으로 `full OOF - safe OOF`를 학습했다.
-6~7월 선택은 ID 없는 학생을 R_ANCHOR에 0.4 적용하는 recipe였다.
+6–7월 선택은 ID 없는 학생을 R_ANCHOR에 0.4 적용하는 recipe였다.
 
 - teacher privileged gain: 선택 학습 `+398.3587`, 재학습 `+354.9876`
 - late-2024 평균 gain: `+0.6842`; R_ANCHOR active gain `+3.9130`
