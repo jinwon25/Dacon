@@ -1,5 +1,7 @@
 # Dacon | 데이터 분석·예측 대회 기록
 
+![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white) [![코드 라이선스: MIT](https://img.shields.io/badge/License-MIT-3DA639)](LICENSE) [![검증](https://github.com/jinwon25/Dacon/actions/workflows/portfolio-ci.yml/badge.svg?branch=main)](https://github.com/jinwon25/Dacon/actions/workflows/portfolio-ci.yml)
+
 데이터의 변화와 평가 지표를 이해하고, 가설을 검증해 예측을 개선한 프로젝트 모음입니다.
 프로젝트마다 문제 정의, 실험 결과, 실패한 접근, 실행 방법을 기록했습니다.
 작성자: [@jinwon25](https://github.com/jinwon25)
