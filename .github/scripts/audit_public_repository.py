@@ -1,4 +1,4 @@
-"""Audit public Git files and every reachable historical tree, without dependencies."""
+"""외부 의존성 없이 공개 파일과 도달 가능한 모든 Git 이력을 검사합니다."""
 from __future__ import annotations
 
 import argparse
@@ -9,7 +9,7 @@ import re
 import subprocess
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 BINARY = set('.csv .tsv .npz .npy .parquet .feather .pkl .pickle .joblib .pt .pth .ckpt .cbm .onnx .h5 .bin .zip .tar .gz .7z .whl .xlsx .xls .pem .key'.split())
 IDENTIFIERS = {'row_id', 'pitcher_id', 'batter_id', 'player_id', 'pitcher_trackman_id', 'batter_trackman_id', 'trackman_game_id', 'game_id', 'control_success'}
 PATTERNS = {

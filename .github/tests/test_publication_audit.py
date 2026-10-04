@@ -1,4 +1,4 @@
-"""Publication regressions that the previous suffix-only scanner missed."""
+"""기존 확장자 검사에서 놓쳤던 공개 정책 위반의 회귀 검사."""
 import importlib.util
 from pathlib import Path
 import unittest

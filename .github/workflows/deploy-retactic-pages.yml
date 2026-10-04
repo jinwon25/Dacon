@@ -1,4 +1,4 @@
-name: Deploy RE:TACTIC to GitHub Pages
+name: RE:TACTIC GitHub Pages 배포
 
 on:
   push:

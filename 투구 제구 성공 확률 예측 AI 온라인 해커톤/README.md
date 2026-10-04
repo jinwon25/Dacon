@@ -170,7 +170,7 @@ python -m pytest -q tests/champion/test_v345_build_transition_workload_beta_pack
 
 ## 대회 규정 검토
 
-대회와 코드 검증은 종료됐습니다. 코드 공개와 데이터 재배포를 구분해 검토한 [공개 판단·근거](../docs/PUBLICATION_REVIEW.md)를 확인하세요.
+대회와 코드 검증은 종료됐습니다. 코드 공개와 데이터 재배포를 구분해 검토한 [공개 판단·근거](../.github/PUBLICATION.md)를 확인하세요.
 
 최종 추론은 **평가 행 하나의 투구 직전 정보와 공식 학습 데이터에서 동결한 artifact**를 사용하는 구조다. 아래 항목은 코드 구조와 기존 감사 기록의 범위이며 숨겨진 평가 실행을 새로 인증한 것은 아니다.
 
@@ -192,7 +192,7 @@ python -m pytest -q tests/champion/test_v345_build_transition_workload_beta_pack
   OOF의 정답·선수 ID와 제출 ZIP의 선수별 집계 prior를 공개하지 않기 위한 보수적인 정책이다. 모든 학습 모델의 공개가 규정상 일률 금지라고 단정하지 않는다.
 - 저장소에는 각 산출물의 manifest만 남겨 무엇이 어디에 있는지 추적한다. 전달 규칙은
   [`docs/ARTIFACT_HANDOFF.md`](docs/ARTIFACT_HANDOFF.md)에 있다.
-- 현재 프로젝트 정책은 `scripts/audit_repository.py`와 `tests/test_repository_audit.py`에서 검사합니다. 전체 과거 이력·JSON 모델·CSV 내용은 루트 `scripts/audit_public_repository.py --history`로 추가 검사합니다.
+- 현재 프로젝트 정책은 `scripts/audit_repository.py`와 `tests/test_repository_audit.py`에서 검사합니다. 전체 과거 이력·JSON 모델·CSV 내용은 루트 `.github/scripts/audit_public_repository.py --history`로 추가 검사합니다.
 
 ## 주요 문서
 

@@ -34,7 +34,7 @@
 2. `src/`, `sql/`, `notebooks/`에서 분석과 구현을 확인합니다.
 3. `docs/`, `research/reports/`에서 세부 실험과 선택 근거를 확인합니다. 과거 로그의 “현재”는 작성 당시를 뜻합니다.
 
-데이터 분석 직무 관점의 읽기 경로는 [포트폴리오 가이드](docs/PORTFOLIO_GUIDE.md)에 정리했습니다.
+**SQL·EDA**는 K리그, **시즌 변화와 검증 설계**는 투구, **오차 분석과 지표 해석**은 모기·식음업장 프로젝트에서 확인할 수 있습니다.
 
 ## 공개 범위와 실행
 
@@ -45,11 +45,15 @@
 ```bash
 git clone https://github.com/jinwon25/Dacon.git
 cd Dacon
-python scripts/audit_public_repository.py --history
-python -m unittest discover -s tests -v
+python .github/scripts/audit_public_repository.py --history
+python -m unittest discover -s .github/tests -v
 ```
 
 위 검사는 Python 표준 라이브러리만 사용합니다. 모델 학습은 각 프로젝트의 별도 의존성과 데이터가 필요합니다.
 특히 투구의 원 제출과 동일한 재조립에는 공개하지 않은 체크포인트가 필요하며, 공개 clone만으로 전체 점수 재현을 보장하지 않습니다.
 
-[공개 검토 기록](docs/PUBLICATION_REVIEW.md) · [규정·구성 참고 자료](docs/REFERENCES.md)
+공개 판단·규정·검증 결과는 [공개 검토 기록](.github/PUBLICATION.md)에 모았습니다. `.github/scripts/`·`.github/tests/`는 공개 파일 검사를 위한 보조 도구이고, 분석 코드는 각 프로젝트 안에 있습니다.
+
+## 함께 볼 분석 프로젝트
+
+대회 솔루션 외에 의사결정과 해석 중심 사례는 [이커머스 고객 세분화](https://github.com/jinwon25/ecommerce-customer-segmentation), [KBO 투수 피로도](https://github.com/jinwon25/KBO-pitcher-fatigue), [취업 준비 텍스트 마이닝](https://github.com/jinwon25/employment-readiness-text-mining)에서 확인할 수 있습니다.
