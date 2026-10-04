@@ -82,3 +82,14 @@ tmp/
 
 # ---- Claude Code workspace ----
 .claude/
+
+# Publication safeguards
+.pytest_cache/
+*.cbm
+*.pickle
+*.xlsx
+*.xls
+*.tsv
+**/fallback_xgb.json
+**/data_description.md
+!**/.env.example

@@ -67,6 +67,10 @@ def forbidden_path_reason(path: str) -> str | None:
         return None
     if lower == ".env" or lower.startswith(".env."):
         return "environment credential file"
+    if Path(lower).name in {"fallback_xgb.json", "player_mapping_by_origin.csv", "alignment_game_candidates.csv", "data_description.md"}:
+        return "excluded trained model, identity mapping or official data description"
+    if lower.endswith(".csv") and not ("/reports/" in "/" + lower):
+        return "row-level prediction or data table"
     if lower.startswith(("model/", "output/")):
         return "generated model or output directory"
     if lower.startswith("data/"):
@@ -80,6 +84,8 @@ def forbidden_path_reason(path: str) -> str | None:
 
 def secret_findings(path: str, data: bytes) -> list[dict[str, object]]:
     findings: list[dict[str, object]] = []
+    if path.lower().endswith(".json") and b'"learner"' in data and b'"gradient_booster"' in data:
+        findings.append({"path": path, "pattern": "trained_xgboost_json"})
     for name, pattern in SECRET_PATTERNS.items():
         if pattern.search(data):
             findings.append({"path": path, "pattern": name})

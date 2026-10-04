@@ -1,3 +1,5 @@
+> Historical lineage note: the final selected version is **v345 (1182.9497)**. The v148 instructions below describe the earlier stage and require excluded private artifacts.
+
 # Champion lineage
 
 Modules reachable from a version that was actually submitted. Everything here
@@ -11,7 +13,7 @@ Concluded one-off experiments live in `src/archive/`.
 
 | Version | Public | Role |
 |---|---:|---|
-| v148 | **1170.3014697177** | current champion, conservative v142→v138 bridge |
+| v148 | **1170.3014697177** | historical champion (2026-08-23), conservative v142→v138 bridge |
 | v142 | 1169.6277932822 | independent H1 + sign-stable C3 |
 | v124 | 1164.2949203402 | multi-axis public quadratic stack |
 | v104 | 1162.6302840289 | source-stability majority-two mask |
@@ -22,7 +24,7 @@ Concluded one-off experiments live in `src/archive/`.
 
 ## Running the champion
 
-`submit_v148.zip` is the official deliverable and is already standalone: the
+`submit_v148.zip` was the deliverable at that stage and is already standalone: the
 evaluation server unpacks it and runs its own `script.py`. Nothing in this
 repository is needed at evaluation time.
 

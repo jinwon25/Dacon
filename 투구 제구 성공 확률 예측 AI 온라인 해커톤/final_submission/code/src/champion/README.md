@@ -1,3 +1,5 @@
+> Historical lineage note: the final selected version is **v345 (1182.9497)**. The v148 instructions below describe the earlier stage and require excluded private artifacts.
+
 # 배포 계보 모듈
 
 이 디렉터리는 최종 v345 계보에서 사용된 초기·중간 세대의 패키지 조립 모듈을

@@ -64,6 +64,13 @@ def test_repository_path_policy_still_allows_artifact_manifests():
     )
 
 
+def test_repository_audit_catches_json_model_and_linkage_tables():
+    assert forbidden_path_reason("src/team_assets/fallback_xgb.json") is not None
+    assert forbidden_path_reason("research/reports/player_mapping_by_origin.csv") is not None
+    assert forbidden_path_reason("research/reports/alignment_game_candidates.csv") is not None
+    assert secret_findings("unknown.json", b'{"learner":{"gradient_booster":{}}}')
+
+
 def test_secret_scanner_accepts_blank_template_and_rejects_tokens():
     assert secret_findings(".env.example", b"DACON_API_TOKEN=\n") == []
     github_token = b"gho_" + b"A" * 30

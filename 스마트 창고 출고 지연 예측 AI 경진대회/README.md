@@ -170,8 +170,11 @@ python src/train_seq_gru_mixup.py --seed 7 --output-dir models/seqgru_mixup_seed
 
 ### 5. 최종 블렌드
 
+최종 설명의 SLSQP를 재현하려면 `--method global_slsqp`로 고정합니다. 기본 `auto`는 비교 후보 중 OOF MAE가 가장 낮은 방법을 선택하므로 다른 결과가 나올 수 있습니다. 원본 데이터와 19개 로컬 예측 입력을 먼저 생성해야 하며 제출 CSV는 공개하지 않습니다.
+
 ```bash
 python src/blend_safe.py \
+    --method global_slsqp \
     --model-dirs \
         models/lgb_log_l1_v2_seed42 models/lgb_log_l1_seed2026 models/lgb_log_l1_seed7 \
         models/lgb_tweedie_seed42 models/lgb_tweedie17_seed42 \

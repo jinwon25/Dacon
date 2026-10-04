@@ -77,6 +77,7 @@ def power_mean(P, p=0.5):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--model-dirs", nargs="+", required=True)
+    parser.add_argument("--method", choices=["auto", "global_slsqp", "equal", "geometric", "power_0.5", "rank_avg"], default="auto", help="auto selects the lowest OOF MAE; pin a method to reproduce a chosen recipe")
     parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "models/blend_safe"))
     args = parser.parse_args()
 
@@ -141,7 +142,7 @@ def main():
     print(f"rank_avg: {mae:.6f}")
 
     # 베스트 & 폴백 (global SLSQP)
-    best_name = min(results.keys(), key=lambda k: results[k]["oof_mae"])
+    best_name = min(results.keys(), key=lambda k: results[k]["oof_mae"]) if args.method == "auto" else args.method
     best = results[best_name]
     print(f"\n=== BEST: {best_name} OOF MAE {best['oof_mae']:.6f} ===")
 
@@ -164,6 +165,7 @@ def main():
     metadata = {
         "model_dirs": [str(p) for p in dirs],
         "best_method": best_name,
+        "selection_mode": args.method,
         "all_results": {k: {"oof_mae": v["oof_mae"], "weights": v.get("weights")} for k, v in results.items()},
     }
     with open(out_dir / "blend_metadata.json", "w", encoding="utf-8") as f:

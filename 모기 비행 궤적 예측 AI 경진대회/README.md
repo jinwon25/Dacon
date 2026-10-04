@@ -88,7 +88,6 @@
 │   ├── v120_neural_ode.py        # Neural ODE backbone (RK4)
 │   ├── v131_paradigm_variants.py # Frenet/GRU-encoder ODE
 │   ├── v135_control_head.py      # control-head analytic-integrator
-│   ├── v148_cree_xy2.py          # CREE 회전물리 멤버 (공개 baseline 포팅)
 │   ├── v148_reblend.py           # DE 블렌드 (base 생성)
 │   ├── v157_final_submission.py  # 최종 제출 생성 (base + 3-CREE → v157)
 │   └── legacy/                   # 옛 실험/탐색 스크립트
@@ -114,7 +113,7 @@
 ```
 
 커밋 기준:
-- 포함: 코드(`src/`), README, `docs/`, requirements, `submissions/` 전체(최종 제출 + 재현 입력)
+- 포함: 코드(`src/`), README, `docs/`, requirements, 재현 스크립트·체크섬 기록. 최종 예측 CSV와 재현 입력은 공개하지 않습니다.
 - 제외: `data/`(대회 원본 데이터·캐시), `outputs/`(로그) — 재생성 가능하거나 라이선스 이슈
 
 ---
@@ -127,7 +126,9 @@
 pip install -r requirements.txt
 ```
 
-### 1. 빠른 재현 — 최종 제출 검증 (권장, <1초, GPU 불필요)
+### 1. 조건부 빠른 재현 — 비공개 예측 입력 필요
+
+`submissions/inputs/`의 행별 예측 CSV와 원 제출 CSV는 공개본에서 제외했습니다. 아래 명령은 허가된 로컬 입력을 별도로 갖춘 경우에만 실행할 수 있으며 clone 직후의 실행 경로가 아닙니다.
 
 `submissions/inputs/` 의 frozen 예측(base + 3-CREE)만으로 최종 제출 2개를 재생성하고 원본과 일치(오차 < 0.001mm)를 검증한다.
 
@@ -144,7 +145,9 @@ v157_a040 = 0.60 * base + 0.40 * cree_ens3                    # Public 0.7022
 v157_a045 = 0.55 * base + 0.45 * cree_ens3                    # Public 0.7022
 ```
 
-### 2. 전체 재현 — 학습부터 (CPU/GPU, 멤버당 15~30분)
+### 2. 학습 절차 기록 — 공개본에서 전체 재현 불가
+
+아래는 기존 대회 실행 절차입니다. 삭제된 코드 공유 글의 재배포 라이선스를 확인할 수 없어 `v148_cree_xy2.py`는 공개 이력에서 제외했습니다. 회전물리 모델 소스와 비공개 예측 입력 없이 최종 점수를 완전히 재현할 수 없습니다. 나머지 자체 학습·블렌드 코드는 연구 검토용으로 공개합니다.
 
 대회 데이터를 `data/` 에 배치 (`data/train/`, `data/test/`, `data/train_labels.csv`, `data/sample_submission.csv`).
 
@@ -181,18 +184,18 @@ DE 블렌드(`scipy.differential_evolution`)와 멤버 학습은 모두 seed 고
 | base 블렌드만 (`v148_reblend.py`, 캐시 사용) | CPU 16-thread | ~5–15분 |
 | 전체 재학습 (멤버 ~40개) | CPU 16-thread 또는 Colab T4/L4 | 약 15–20시간 (멤버당 15–30분, 순차) |
 
-> **공식 재현 코드** = 위 "재현 방법"에 문서화된 명령(`submissions/rebuild.py` 및 `src/v157_final_submission.py`·`v148_reblend.py`·멤버 학습 스크립트)이며, 모두 오류 없이 실행됨을 확인했다. `src/legacy/` 는 대회 중 탐색했던 보조·폐기 스크립트(연구 과정 보존용)로 공식 재현 경로에 포함되지 않는다.
+> **공식 재현 코드** = 위 "재현 방법"에 문서화된 명령(`submissions/rebuild.py` 및 `src/v157_final_submission.py`·`v148_reblend.py`·멤버 학습 스크립트)이며, 기존 실험 환경에서 실행한 기록입니다. 이번 공개 검토에서 비공개 데이터로 전체 학습을 다시 수행하지 않았습니다. `src/legacy/` 는 대회 중 탐색했던 보조·폐기 스크립트(연구 과정 보존용)로 공식 재현 경로에 포함되지 않는다.
 
 ---
 
 ## 대회 규칙 준수
 
 - **사전학습 모델**: 별도 사전학습 가중치 미사용. 모든 모델을 본 대회 train으로 from-scratch 학습. ✓
-- **회전물리 멤버 출처** (내부 코드네임 `CREE`, **동명의 본 대회 참가자와 무관**): 대회 기간 중 Dacon **코드 공유 게시판에 공개되었던** 한 회전물리 baseline(HyperPhysics 계열)의 모델 구조를 참고(규칙 8조 B항 공개 코드 공유 허용). 해당 게시물은 **현재 삭제되어 링크 제시 불가**하나, 메커니즘은 교과서적 물리(Rodrigues 회전 + EMA 필터). **공개 모델 구조 코드를 포팅(구조 보존)** 해 우리 CV·데이터에 연결, **가중치 차용 없이 train만으로 from-scratch 학습**. 앙상블·주입·전체 파이프라인은 독자 기여. ✓
+- **회전물리 멤버 출처** (내부 코드네임 `CREE`, **동명의 본 대회 참가자와 무관**): 대회 기간 중 Dacon **코드 공유 게시판에 공개되었던** 한 회전물리 baseline(HyperPhysics 계열)의 모델 구조를 참고(규칙 8조 B항 공개 코드 공유 허용). 해당 게시물은 **현재 삭제되어 링크 제시 불가**하나, 메커니즘은 교과서적 물리(Rodrigues 회전 + EMA 필터). **대회 당시 공개 모델 구조 코드를 포팅(구조 보존)** 해 우리 CV·데이터에 연결했으나 재배포 허가를 현재 확인할 수 없어 해당 포팅 소스는 공개본에서 제외했습니다. **가중치 차용 없이 train만으로 from-scratch 학습**. 앙상블·주입·전체 파이프라인은 독자 기여. ✓
 - **원격 API 모델** (OpenAI, Gemini 등): 미사용. 모두 로컬 실행. ✓
 - **test 데이터 학습 금지**: 학습 fit에 test 미포함, pseudo-label 미사용 (실험 후 폐기). ✓
 - **외부 데이터**: 미사용. ✓
-- **시드 고정 재현 가능**: 멤버 학습 + DE 블렌드 + 최종 주입 전부 결정론적. ✓
+- **재현 조건**: 시드를 고정했지만 하드웨어·라이브러리 환경에 따른 수치 차이가 가능하며 신규 학습 전체의 바이트 동일성을 보장하지 않습니다. ✓
 
 ---
 
