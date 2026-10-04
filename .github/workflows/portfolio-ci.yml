@@ -1,4 +1,4 @@
-name: 포트폴리오 검증
+name: 코드·공개 범위 검증
 on:
   push:
     branches: [main]
