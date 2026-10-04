@@ -6,7 +6,7 @@
 
 ## 1. 문제 정의
 
-- **입력**: 40ms 간격으로 관측된 11개 시점의 3D 좌표 `(x, y, z)` (총 −400ms ~ 0ms 구간).
+- **입력**: 40ms 간격으로 관측된 11개 시점의 3D 좌표 `(x, y, z)` (총 −400ms \~ 0ms 구간).
 - **출력**: 마지막 관측 시점 **+80ms** 의 3D 좌표 `(x, y, z)`.
 - **평가 지표**: **R-Hit@1cm** — 예측과 정답의 유클리드 거리가 **1cm 이내**인 샘플의 비율.
 - **데이터 규모**: train 10,000 / test 10,000 궤적.
@@ -32,7 +32,7 @@
 
 이 대회의 본질적 난점은 **데이터 천장**이었다. 단일 모델 계열을 아무리 정교화해도 LB 0.6888 부근에서 막혔다. 진단 결과 원인은 명확했다:
 
-> 우리가 쌓은 40여 개 모델이 전부 **같은 baseline(Kalman 잔차)** 위에서 학습돼, 서로의 예측이 **상관계수 ~0.99** 로 묶여 있었다. 앙상블의 이득은 멤버 간 **직교성(다양성)** 에서 나오는데, 같은 메커니즘의 변종들은 아무리 많아도 새 정보를 주지 못한다.
+> 우리가 쌓은 40여 개 모델이 전부 **같은 baseline(Kalman 잔차)** 위에서 학습돼, 서로의 예측이 **상관계수 약 0.99** 로 묶여 있었다. 앙상블의 이득은 멤버 간 **직교성(다양성)** 에서 나오는데, 같은 메커니즘의 변종들은 아무리 많아도 새 정보를 주지 못한다.
 
 따라서 점수를 움직인 모든 돌파는 **근본적으로 다른 예측 메커니즘(paradigm)을 새로 도입**한 순간이었다. 최종 솔루션은 **서로 직교하는 물리/학습 메커니즘들의 보수적 앙상블 + 직교 멤버의 수동 주입**이다.
 
@@ -55,12 +55,12 @@
 - 마지막 속도 벡터로 yaw 정렬한 **canonical local frame** 에서, **Kalman 잔차**를 타깃으로 학습.
 - 백본: BiGRU, TCN, Transformer, MDN-WTA(K-way Winner-Take-All).
 - yaw 회전 + y-mirror 증강으로 회전 불변성 확보.
-- **한계**: 멤버 간 상관 ~0.99 → 이 풀만으로는 LB 0.6888 천장.
+- **한계**: 멤버 간 상관 약 0.99 → 이 풀만으로는 LB 0.6888 천장.
 
 ### 4.2 Pool B — Neural ODE (1차 돌파, LB 0.6912)
 - 타깃을 Kalman과 무관한 `y − last_obs` 로 바꿔 **완전히 다른 base**.
 - **6D 상태(위치, 속도) + 학습된 감쇠 + neural acceleration field**, 80ms 구간을 **RK4 4-eval** 로 적분.
-- 단독 OOF는 낮지만(0.66), base 풀과 **L2 ~2.2mm 직교** → DE 블렌더가 ~40% 가중치 부여 → plateau 0.6888 → **0.6912** 돌파.
+- 단독 OOF는 낮지만(0.66), base 풀과 **L2–2.2mm 직교** → DE 블렌더가 약 40% 가중치 부여 → plateau 0.6888 → **0.6912** 돌파.
 
 ### 4.3 Pool C — Frenet 프레임 / control-head (2차 돌파, LB 0.697)
 - **Frenet 3D 프레임**: tangent(속도) · normal(가속도) · binormal 으로 만든 완전 3D 직교 프레임. yaw(xy)만 회전하는 v120과 달리 **z 처리가 근본적으로 달라** decorrelation 최대.
@@ -121,7 +121,7 @@ submission_v157_ens3a0.45 = 0.55·base + 0.45·cree_ens3     (Public 0.7022)
 |---|---|
 | Disagreement selector (per-sample 모델 선택) | DEAD — route-acc 0.17 ≈ 무작위. 1cm 경계 불일치의 정답쪽은 피처로 예측 불가한 노이즈 |
 | Mode-seeking / geometric-median 집계 | Δ ≤ 0 — active 멤버가 동질 군집이라 mode ≈ mean |
-| IMM / analytic Constant-Turn 필터 | 0.24~0.55 < naive linear 0.58 — turn 신호 노이즈 취약 |
+| IMM / analytic Constant-Turn 필터 | 0.24–0.55 < naive linear 0.58 — turn 신호 노이즈 취약 |
 | Neural CDE (torchcde) | DEAD — OOF 0.2768, 학습 자체 실패 |
 | Flow/SONODE 추가 주입 (4-mechanism) | Public 0.6994 < 순수 CREE 0.7022 — 해로움 확인, 폐기 |
 | pseudo-label | OOF 과적합, LB 변환률 붕괴 |

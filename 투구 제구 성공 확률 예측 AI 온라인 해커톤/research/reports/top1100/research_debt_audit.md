@@ -1,4 +1,10 @@
-# Research debt audit
+# 초기 검증의 완료·미완료 항목
+
+엄격한 OOF 실행·기존 모델 처리·연결 증거 등 아직 해결되지 않은 항목과 통과한 항목을 구분합니다. 개별 감사의 PASS가 전체 모델 검증 통과를 뜻하지 않습니다.
+
+이 문서는 연구 당시의 기록입니다. 최종 결과와 용어·공개 실행 범위는 [문서 안내](../../../docs/README.md)를 우선합니다. 아래 수치·판정·명령과 원문은 당시 근거로 보존했습니다.
+
+원제: Research debt audit
 
 - **FAIL** `exact V2 row-level component OOF`: strict fixed-fit nested OOF was not completed; frozen cache is diagnostic only.
 - **FAIL** `outer early stopping removed and executed`: implementation exists, but full four-fold execution exceeded the local runtime window.

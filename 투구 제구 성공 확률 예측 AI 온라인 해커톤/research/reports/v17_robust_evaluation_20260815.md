@@ -1,4 +1,10 @@
-# Multi-season empirical-Bayes robust evaluation
+# v17 강건성·선택 편향 점검
+
+투수·타자·손잡이·압박 상태 보정의 최종 후보군 검증입니다. 제한된 후보군의 유의성이 전체 탐색 편향 제거 또는 독립 확증을 뜻하지 않습니다.
+
+이 문서는 연구 당시의 기록입니다. 최종 결과와 용어·공개 실행 범위는 [문서 안내](../../docs/README.md)를 우선합니다. 아래 수치·판정·명령과 원문은 당시 근거로 보존했습니다.
+
+원제: Multi-season empirical-Bayes robust evaluation
 
 - Selected recipe: `multi_pitcher_batter_hand_pressure_d1_a3200_w1.5`
 - Correction group: `pitcher × batter × hand × pressure`; R_CORE fit/apply only.

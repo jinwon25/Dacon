@@ -1,3 +1,5 @@
+> **과거 기록 안내:** 이 문서는 과거 연구 산출물 보관에 관한 작성 당시 기록입니다. 최종 선택은 v345, Public `1182.94969702`입니다. [문서 안내](../docs/README.md)와 프로젝트의 최종 재현 안내를 우선합니다. 원본 데이터·모델·OOF·제출 ZIP은 공개본에 없으며 아래 경로가 다운로드 가능하다는 뜻은 아닙니다.
+
 # 산출물 정책
 
 이 디렉터리는 학습 모델, OOF 예측과 실험 캐시를 보관하며 Git에서 제외한다. 저장소가
@@ -33,26 +35,26 @@ public이므로 예외는 없다. 각 디렉터리의 manifest와 README만 추�
 - `v61_final_gate_oof_20260822_01/`: 2025 TrackMan profile exact 재현과
   2023/2024 최종 gate OOF. 다음 직교 후보의 고정 부모로 사용한다.
 - v62 ExtraTrees 예측 cache는 기각 후 삭제했다. 결과는
-  [`../reports/target1170_research_update_20260822.md`](../reports/target1170_research_update_20260822.md)에
+  [`../research/reports/target1170_research_update_20260822.md`](../research/reports/target1170_research_update_20260822.md)에
   남아 있다.
 - v63 count interaction과 v64 physical-teacher student의 예측·학습 모델 cache도
   기각 후 삭제했다. 코드·테스트·정확한 결과는 같은 최신 연구 보고서에 남아 있다.
 - v66/v68/v69/v70/v71/v73/v74 cache는 기각 후 삭제한다. v70은 2024 재사용 축에서
   양수였지만 고정 recipe 과거축 v74에서 source eta가 모두 0이라 최종 기각했다.
   원시 TrackMan census와 정확한 성능은
-  [`../reports/trackman_deep_dive_20260822.md`](../reports/trackman_deep_dive_20260822.md),
+  [`../research/reports/trackman_deep_dive_20260822.md`](../research/reports/trackman_deep_dive_20260822.md),
   코드와 테스트에 보존한다.
 - v75 calibration/headroom과 v76 domain×count contrast cache도 판단 확정 후 삭제한다.
   compact 수치와 결론은
-  [`../reports/evaluation_reaudit_20260822.md`](../reports/evaluation_reaudit_20260822.md)에
+  [`../research/reports/evaluation_reaudit_20260822.md`](../research/reports/evaluation_reaudit_20260822.md)에
   보존한다.
 - v78 환경 안정 잔차의 predictions NPZ와 상세 JSON도 기각 후 삭제한다. compact 결과는
-  [`../reports/v78_environment_stable_residual_metrics.csv`](../reports/v78_environment_stable_residual_metrics.csv),
-  판단은 [`../reports/target1170_v77_v78_followup_20260822.md`](../reports/target1170_v77_v78_followup_20260822.md)에
+  [`../research/reports/v78_environment_stable_residual_metrics.csv`](../research/reports/v78_environment_stable_residual_metrics.csv),
+  판단은 [`../research/reports/target1170_v77_v78_followup_20260822.md`](../research/reports/target1170_v77_v78_followup_20260822.md)에
   보존한다.
 - v79 champion-offset GLM과 v81 stable shallow GBDT의 대형 predictions NPZ는 기각 후
   삭제한다. v80은 compact 공분산·headroom CSV만 보존한다. 세 실험의 정확한 판단은
-  [`../reports/target1170_v79_v81_followup_20260822.md`](../reports/target1170_v79_v81_followup_20260822.md)에
+  [`../research/reports/target1170_v79_v81_followup_20260822.md`](../research/reports/target1170_v79_v81_followup_20260822.md)에
   보존한다.
 
 나머지 날짜별 폴더는 과거 실험 재현 자료다. 공간 확보를 위해 삭제할 때는 먼저 연결된 `reports/` 문서와 manifest가 있는지 확인한다.

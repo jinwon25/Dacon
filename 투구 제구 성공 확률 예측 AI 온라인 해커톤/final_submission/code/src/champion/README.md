@@ -1,4 +1,4 @@
-> Historical lineage note: the final selected version is **v345 (1182.9497)**. The v148 instructions below describe the earlier stage and require excluded private artifacts.
+> 최종 선택은 **v345 (1182.9497)입니다.** 초기·중간 세대 모듈의 기록과 최종 실행 안내를 구분합니다. 공개하지 않은 모델·ZIP은 별도로 필요합니다.
 
 # 배포 계보 모듈
 

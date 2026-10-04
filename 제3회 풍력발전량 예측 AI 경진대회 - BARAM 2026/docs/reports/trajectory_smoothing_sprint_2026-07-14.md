@@ -1,4 +1,10 @@
-# Cross-group trajectory smoothing sprint - 2026-07-14
+# 궤적 평활화의 작은 공개 개선
+
+시간 흐름을 매끄럽게 만드는 보정은 공개 점수에서 작은 양의 변화만 보였습니다. 같은 후처리 경로가 정체됐다는 판단의 근거입니다.
+
+이 문서는 연구 당시의 기록입니다. 최종 결과와 용어·공개 실행 범위는 [문서 안내](../README.md)를 우선합니다. 아래 수치·판정·명령과 원문은 당시 근거로 보존했습니다.
+
+원제: Cross-group trajectory smoothing sprint - 2026-07-14
 
 ## Decision
 

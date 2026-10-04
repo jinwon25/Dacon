@@ -56,7 +56,7 @@ JupyterLab은 노트북을 열 때만 필요한 선택 의존성이다. CI는 �
 |---|---|---|
 | 데이터 비의존 테스트 | 저장소 코드만 | 포함 |
 | v14/v15 로컬 평가 | `data/train.csv`, v13/v14 OOF cache | 제외 |
-| pressure EB screen | `data/train.csv`, 2022~2024 부모 OOF cache | 제외 |
+| pressure EB screen | `data/train.csv`, 2022–2024 부모 OOF cache | 제외 |
 | v17 residual 학습 | 위 입력과 선택된 recipe | 결과 제외 |
 | ZIP 재패키징 | 검증된 부모 ZIP, residual spec | ZIP은 저장소에 두지 않음 |
 | 제출 검증 | 후보·부모 ZIP, `data/train.csv`, `data/test.csv` | 데이터·후보 제외 |
@@ -191,7 +191,7 @@ python -m src.archive.validate_v16_residual `
 9. 오프라인, 행 독립성, 메모리, 공식 600초와 내부 soft guard 120초를 통과한다.
 10. 팀 리뷰 후 지정된 제출 담당자만 DACON에 올린다.
 
-`src/evaluation_contract.py`가 2~7번을 기계적으로 판정한다. local→Public projection은
+`src/evaluation_contract.py`가 2–7번을 기계적으로 판정한다. local→Public projection은
 clean transfer 관측 3개 전까지 억제하며, 이후에도 승격 근거로 사용하지 않는다. Public
 결과는 모델 선택 규칙이나 blend weight를 사후 미세조정하는 학습 데이터로 쓰지 않는다.
 

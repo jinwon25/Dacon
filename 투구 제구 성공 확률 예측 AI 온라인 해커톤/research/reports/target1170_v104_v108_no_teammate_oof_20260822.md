@@ -1,4 +1,4 @@
-# 1170 후속 연구 — 독립 팀원 OOF 부재 가정 (v104~v108)
+# 1170 후속 연구 — 독립 팀원 OOF 부재 가정 (v104–v108)
 
 > **2026-08-22 Public 후속 확인**: 사용자가 명시적으로 승인한 v104 1회 probe는 제출 ID
 > `60626`, Public **1162.6302840289**를 기록해 v84 대비 **+1.4282239867** 상승했다.
@@ -13,12 +13,12 @@
 source 안정성 mask, 교차 아키텍처 합의, raw player-ID paired ablation, batter-ASOF 제거,
 pitcher-balanced 학습을 추가 검증했지만 **1170 이상을 기대할 승격 후보는 확보되지 않았다**.
 
-현재 제출 추천은 계속 Public `1161.2020600422`의 standalone champion ZIP이다. v104~v108은
+현재 제출 추천은 계속 Public `1161.2020600422`의 standalone champion ZIP이다. v104–v108은
 모두 연구 산출물이며 package와 submission을 만들지 않았다.
 
 ## 평가 계약
 
-- recipe 선택: 2020~2021 common-forward 또는 사전 고정된 full-2022 + late-2023 source만 사용
+- recipe 선택: 2020–2021 common-forward 또는 사전 고정된 full-2022 + late-2023 source만 사용
 - 감사: exact-v84 full-2022, late-2023, full-2024와 late-2024
 - point gate: 모든 축 gain 양수, 양수 월 비율 75% 이상, 최악 월 `>-5`, 최소 domain gain 0 이상
 - robust gate: pitcher, crossed pitcher×batter, chronological-block bootstrap p05가 모두 양수이고
@@ -45,7 +45,7 @@ v104는 기존 최선 연구축 v103의 count, pitcher-history, platoon별 sourc
 보장하지 않았고, full/late-2024의 월·bootstrap gate도 통과하지 못했다. 2024 평균 `+3.22`는
 현재 1170 gap `8.79794`를 설명하기에도 부족하다.
 
-### v106~v108이 닫은 경로
+### v106–v108이 닫은 경로
 
 - raw ID 단독 모델의 약함이 아니라, 동일 rows/weights/seed/hyperparameters에서 ID 다섯 열만
   더한 **순수 증분**이 source에서 0 dose를 선택했다. ID 모델 용량·seed 미세조정은 재개하지 않는다.
@@ -87,6 +87,6 @@ python -m pytest tests/test_v104_source_stability_mask.py `
   tests/test_v108_pitcher_balanced_weighting.py -q
 ```
 
-수치 산출물은 각각 `artifacts/v104_*`~`artifacts/v108_*` 아래에 있으며 git 추적 대상이 아니다.
+수치 산출물은 각각 `artifacts/v104_*`\~`artifacts/v108_*` 아래에 있으며 git 추적 대상이 아니다.
 추천 행동은 **새 제출 없음, 1161.2021 champion 보존**이다. 추가적인 유의미한 승격 검증에는
 새로운 독립 exact OOF/2025 예측 또는 아직 보지 않은 shadow labels가 필요하다.

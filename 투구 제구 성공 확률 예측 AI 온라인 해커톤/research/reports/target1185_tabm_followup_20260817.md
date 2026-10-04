@@ -1,6 +1,6 @@
 # 1185 목표 TabM-mini 독립 구조 감사 — 2026-08-17
 
-> **2026-08-18 정정**: 이 보고서는 `submit_v27.zip`을 champion(frozen baseline)으로 가정하지만, 공식 DACON 제출 이력 재대조 결과 실제 champion은 `submit_v26.zip`이다(Public `1157.9736407889`, 제출 ID `51773`; v27은 `1156.6153781694`로 champion보다 낮다). 이 보고서의 v27 대비 gain 비교는 champion(v26) 기준으로 다시 확인하기 전까지 그대로 인용하지 않는다. 근거: [`target1170_followup_20260817.md`](target1170_followup_20260817.md) 상단, [`../notebooks/v26_champion_reproduction.ipynb`](../notebooks/v26_champion_reproduction.ipynb).
+> **2026-08-18 정정**: 이 보고서는 `submit_v27.zip`을 champion(frozen baseline)으로 가정하지만, 공식 DACON 제출 이력 재대조 결과 실제 champion은 `submit_v26.zip`이다(Public `1157.9736407889`, 제출 ID `51773`; v27은 `1156.6153781694`로 champion보다 낮다). 이 보고서의 v27 대비 gain 비교는 champion(v26) 기준으로 다시 확인하기 전까지 그대로 인용하지 않는다. 근거: [`target1170_followup_20260817.md`](target1170_followup_20260817.md) 상단, [`../../notebooks/v26_champion_reproduction.ipynb`](../../notebooks/v26_champion_reproduction.ipynb).
 
 ## 결론
 
@@ -26,7 +26,7 @@ ICLR 2025 TabM 논문과 공식 구현의 핵심 원칙을 현재 CPU/제출 환
 - 기존 PyTorch 외 추가 패키지 없음
 - 2023 예측은 2021·2022만, 2024 예측은 2022·2023만 학습
 - architecture와 2-season window는 고정하고 late-2023에서 epoch/route/eta만 선택
-- v27 위 1~15% convex blend, row-local domain routing만 사용
+- v27 위 1–15% convex blend, row-local domain routing만 사용
 
 retrieval 계열 TabR도 검토했지만 147만 source 행 후보 검색, hidden 24.5만 행 추론,
 제출 runtime·memory 제약에 비해 위험이 컸다. TabM 공식 연구도 단순 공유 MLP

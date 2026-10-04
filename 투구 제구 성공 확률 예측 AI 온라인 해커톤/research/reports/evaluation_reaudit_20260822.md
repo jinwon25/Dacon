@@ -3,7 +3,7 @@
 ## 결론
 
 공식 점수 계산 코드는 맞다. 현재 가장 큰 병목은 모델 용량이 아니라 **후보 선택 편향과
-불완전한 비교 기준**이다. 2024 label은 v23~v76의 설계와 기각에 반복 사용됐으므로 더 이상
+불완전한 비교 기준**이다. 2024 label은 v23–v76의 설계와 기각에 반복 사용됐으므로 더 이상
 독립 holdout이 아니다. 2024에서 좋아 보이는 후보를 다시 2024로 승인하는 절차는 중단한다.
 
 현재 champion은 Public `1158.0745556751`이며 단일 실행 파일과 SHA-256은 변하지 않는다.
@@ -56,7 +56,7 @@ test 행은 현재 행, 공식 train, train에서 미리 동결한 artifact만 �
 | incumbent | 일부 scorecard가 `gain_vs_v13`에 고정 | `gain_vs_incumbent`로 일반화, legacy만 호환 |
 | 2024 독립성 | 반복 열람·모델 설계에 사용 | `development_contaminated`, 진단만 허용 |
 | local→Public 환산 | 정의가 다른 한 관측으로 projection 가능 | clean transfer 3개 미만이면 출력 억제 |
-| 후보 다중 탐색 | v58~v76 point gate 중심 | family 전체 ledger + White Reality Check 필수 |
+| 후보 다중 탐색 | v58–v76 point gate 중심 | family 전체 ledger + White Reality Check 필수 |
 | 불확실성 | 월·domain point estimate만으로 통과 가능 | pitcher, crossed pitcher×batter, 연속 block p05 모두 양수 |
 | 부모 일치 | 역사 부모와 최종 부모 결과 혼용 가능 | exact parent parity를 각 축에서 필수화 |
 | 시간 제한 | 120초를 공식 제한처럼 기록 | 공식 600초 / 내부 120초로 분리 |
@@ -127,7 +127,7 @@ weight, 일부 count만 다시 고르는 것은 2024 사후 탐색이므로 금�
 7. 통과 후보만 처음부터 standalone ZIP으로 만들고 공식 600초·내부 120초, 메모리,
    오프라인, 행 독립성을 검증한다.
 
-현재 v58~v76 중 이 계약으로 Public probe 자격을 얻는 후보는 없다. 이는 실패가 아니라
+현재 v58–v76 중 이 계약으로 Public probe 자격을 얻는 후보는 없다. 이는 실패가 아니라
 추가 leaderboard 과적합을 막는 필요한 중단선이다.
 
 ## 6. 1170을 위한 우선순위 포트폴리오
@@ -141,7 +141,7 @@ weight, 일부 count만 다시 고르는 것은 2024 사후 탐색이므로 금�
 | P1 | 모델별 오류 공분산 기반 environment bagging | 평균 점수보다 champion과 다른 오차가 목표에 직접 연결 | 축별 `E[(p_j-y)(p_k-y)]`, 최악 group 제약 | OOF 확보 후 |
 | P2 | 새 base model 뒤 교차적합 beta/logit calibration | 서로 다른 모델의 결합 calibration은 아직 열림 | 모든 calibration을 inner fold에서만 fit | 마지막 단계 |
 | 보류 | TrackMan 신규 경로 | 과거 profile은 이미 전수조사, 현재 투구 물리·위치 없음 | 합법적인 현재행 pre-pitch 신호가 새로 생길 때만 | 현재 재탐색 금지 |
-| 종료 | scalar 보정, count lookup, IVB/물리 profile, 물리 학생 | v59/v60, v76, v66~v74에서 시간 전이 실패 | 없음 | 재튜닝 금지 |
+| 종료 | scalar 보정, count lookup, IVB/물리 profile, 물리 학생 | v59/v60, v76, v66–v74에서 시간 전이 실패 | 없음 | 재튜닝 금지 |
 | 종료 | full-data TabPFN/TabR, TabM 크기·seed 재탐색 | 147만 행 부적합 또는 v45/v55 외부축 실패 | 완전히 다른 독립 소스가 없는 한 없음 | 후순위/종료 |
 
 ### P0-1. 팀원 OOF 전달 계약
@@ -172,7 +172,7 @@ family trial count와 Reality Check를 다시 계산한다.
 3. outer를 한 번 예측하고 calibration도 inner에서 선택한 값만 사용한다.
 4. 모든 candidate/trial 예측을 보존해 Reality Check 범위를 숨기지 않는다.
 
-이미 사람이 본 2022~2024를 완전한 virgin holdout이라고 부르지는 않는다. nested replay와
+이미 사람이 본 2022–2024를 완전한 virgin holdout이라고 부르지는 않는다. nested replay와
 전체 trial 보정으로 알고리즘 선택 편향을 줄이고, 새 locked shadow가 있다면 최종 1회만 연다.
 
 ### P1-1. 환경 안정 residual의 사전등록안

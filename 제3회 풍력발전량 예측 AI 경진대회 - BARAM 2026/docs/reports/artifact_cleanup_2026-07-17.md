@@ -1,4 +1,10 @@
-# Artifact consolidation - 2026-07-17
+# 산출물 정리와 보존 기준
+
+기각 실험의 대형 캐시를 정리하고, 재생성 비용이 큰 특징 캐시와 작은 계보·감사 근거를 보존한 기록입니다. 공개 저장소에 모델·행별 예측을 포함한다는 뜻은 아닙니다.
+
+이 문서는 연구 당시의 기록입니다. 최종 결과와 용어·공개 실행 범위는 [문서 안내](../README.md)를 우선합니다. 아래 수치·판정·명령과 원문은 당시 근거로 보존했습니다.
+
+원제: Artifact consolidation - 2026-07-17
 
 All retained generated files are consolidated under `artifacts_final/`.
 

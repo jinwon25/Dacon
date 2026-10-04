@@ -1,4 +1,4 @@
-# 1170 후속 데이터·파이프라인 전수 점검과 v92~v93 결과 — 2026-08-22
+# 1170 후속 데이터·파이프라인 전수 점검과 v92–v93 결과 — 2026-08-22
 
 ## 결론
 
@@ -46,7 +46,7 @@ holdout AUC가 아니라 엄격한 미래 연도 paired Brier 차이를 판단 �
 
 ### 공식 train
 
-- 1,475,092행, 2019~2024, 49열
+- 1,475,092행, 2019–2024, 49열
 - 2024: 253,507행, 성공률 `0.4861049`
 - 연도별 성공률은 2019 `0.564670`, 2020 `0.532712`, 2021 `0.532762`,
   2022 `0.528920`, 2023 `0.499957`, 2024 `0.486105`
@@ -56,11 +56,11 @@ holdout AUC가 아니라 엄격한 미래 연도 paired Brier 차이를 판단 �
 
 ### TrackMan history
 
-- 1,793,078행, 2019~2024, 30열
+- 1,793,078행, 2019–2024, 30열
 - 현재 평가 투구와 직접 연결되는 pitch key가 없고, current-pitch 물리량도 추론 입력에
   없다. 합법적인 주 용도는 동결된 과거 pitcher/pitch-type/시즌 profile이다.
 - 현재 행의 `asof_pitcher_*`, pitcher ID 및 pitch-mix가 이미 물리 profile의 상당 부분을
-  대리한다. v65~v74에서 평균, 반복성, IVB, 잠재 구종, 구종 student, calendar gate를
+  대리한다. v65–v74에서 평균, 반복성, IVB, 잠재 구종, 구종 student, calendar gate를
   검증했으나 미래 연도 방향이 유지되지 않았다.
 - 야구 도메인상 제구는 “의도한 위치와 실제 위치의 거리”가 핵심이다. xCTRL 계열처럼
   개인별 intent를 추정하려면 현재 투구 위치와 충분한 투수×구종×손잡이 표본이 필요하다.
@@ -88,7 +88,7 @@ holdout AUC가 아니라 엄격한 미래 연도 paired Brier 차이를 판단 �
    - 2024는 사실상 development-contaminated 확인축이다. 같은 축에서 소폭 양수인
      후보를 계속 고르면 winner's curse가 커진다.
 3. **독립 모델보다 동일 FM 변형이 많음**
-   - v86~v88, v93은 평균 headroom은 보였지만 같은 상호작용 방향을 공유해 실패 월을
+   - v86–v88, v93은 평균 headroom은 보였지만 같은 상호작용 방향을 공유해 실패 월을
      안정적으로 상쇄하지 못했다.
 4. **과거 exact champion analogue 부족**
    - full-2024와 late-2023은 exact하게 복원되지만, 더 오래된 연도의 최종 champion
@@ -181,7 +181,7 @@ locked confirmation은 뒤의 두 축처럼 역할을 명시한다. 이것이 �
 
 동일 FM의 gate가 아니라 다음 세 모델의 strict temporal OOF를 만든다.
 
-1. 최근 2~3시즌 CatBoost ordered boosting: ID/category interaction과 결측 자체를 처리
+1. 최근 2–3시즌 CatBoost ordered boosting: ID/category interaction과 결측 자체를 처리
 2. season/domain 균형 LightGBM: Brier 목적, 얕은 leaf, 다중 seed 평균
 3. full TabM 또는 2026 대규모 tabular low-rank ensemble: 수치·저카디널 category 중심
 

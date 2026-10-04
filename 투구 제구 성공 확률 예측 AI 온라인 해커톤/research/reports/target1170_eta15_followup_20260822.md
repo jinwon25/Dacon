@@ -28,7 +28,7 @@
 ## 기준선 계보 감사
 
 팀 `main`의 실제 최종 payload에서 `model/v25_postbreak_anchor_spec.json`의
-`blend_eta`는 **0.15**다. 반면 v29~v57 후속 실험은 대부분
+`blend_eta`는 **0.15**다. 반면 v29–v57 후속 실험은 대부분
 `v27_parent`의 eta **0.10**을 기준으로 후보를 평가했다. 따라서 당시의 양수 local
 gain은 1158 모델 위의 증분으로 해석할 수 없다.
 
@@ -45,7 +45,7 @@ TrackMan profile과 ASOF prior는 공식 train으로 미리 동결되어 있다.
 
 ## 새 감사와 실험
 
-### v58 — 기존 v31~v57의 eta=0.15 재기준화
+### v58 — 기존 v31–v57의 eta=0.15 재기준화
 
 기존 후보가 만든 확률 이동량 `candidate - eta0.10_parent`를 그대로 보존해
 eta=0.15 부모 위에 더했다. 2024 정답으로 재튜닝하지 않았다. 20개 중 통과 0개다.
@@ -80,7 +80,7 @@ R_ANCHOR 직접모형의 규제 `C={0.01, 0.1, 1}` 예측을 확률·logit 공�
 
 공개 구현에서 보고된 fixed-center spread scaling을 현재 부모에 이식했다. 중심은
 평가 데이터 평균이 아니라 각 source train의 target 평균으로만 고정했고,
-linear/logit, alpha 0.95~1.15, ALL/R_CORE/R_ANCHOR/F를 비교했다. 선택 결과는
+linear/logit, alpha 0.95–1.15, ALL/R_CORE/R_ANCHOR/F를 비교했다. 선택 결과는
 F에 대한 linear alpha `0.95`였다.
 
 | 축 | gain | 양수 월 비율 | 최악 월 | F gain |
@@ -105,7 +105,7 @@ F에 대한 linear alpha `0.95`였다.
 
 단일 패키지 정적 감사는 `groupby`, `rolling`, `expanding`, `ewm`, `shift`,
 `diff`, `rank`, `quantile`, `value_counts`, 누적 연산 등 고위험 호출을 거부한다.
-현재 payload는 정적·동적 검사를 모두 통과했다. v58~v60도 test 집계 없이 한 행의
+현재 payload는 정적·동적 검사를 모두 통과했다. v58–v60도 test 집계 없이 한 행의
 기존 확률과 train 고정 상수만 사용하는 row-local 변환이다.
 
 ## 1170을 위한 우선순위
@@ -168,5 +168,5 @@ python -m src.package_standalone_champion `
   --smoke-test-csv data/test.csv
 ```
 
-v58~v60의 대형 cache는 최종 판단을 이 보고서에 고정한 뒤 삭제할 수 있다. 코드와
+v58–v60의 대형 cache는 최종 판단을 이 보고서에 고정한 뒤 삭제할 수 있다. 코드와
 테스트가 동일 결과를 재생성하며, 현재 릴리스 실행에는 해당 cache가 필요하지 않다.

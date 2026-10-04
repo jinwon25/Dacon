@@ -29,7 +29,7 @@ v335는 v290의 R_CORE 예측을 그대로 보존하면서 두 개의 고정된 
 
 중간 후보 v320은 제출하지 않았으므로 Public `+4.9529314933`을 F와 R_ANCHOR에 각각
 분해해 귀속하지 않는다. 상세 검증과 제한은
-[`../../../reports/v335_public_result_20260831.md`](../../../reports/v335_public_result_20260831.md)에 있다.
+[`../../../research/reports/v335_public_result_20260831.md`](../../../research/reports/v335_public_result_20260831.md)에 있다.
 
 ## 실행
 

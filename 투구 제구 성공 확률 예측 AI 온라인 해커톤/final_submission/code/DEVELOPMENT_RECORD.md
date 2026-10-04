@@ -16,7 +16,7 @@
 ## 배포 계보
 
 - v124: 다축 quadratic stack 기준 예측
-- v142~v148: H1, C3 및 bridge 보정
+- v142–v148: H1, C3 및 bridge 보정
 - bridge027·v244: 압박 상황 경로와 fallback XGBoost 혼합
 - v290·v320: Futures 전용 모델과 저차원 보정
 - v334·v343: anchor, 선수 전이 및 workload-H1 보정

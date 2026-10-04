@@ -58,10 +58,10 @@
 
 | 우선 | 카드 | 잠재 R-Hit lift |
 |---|---|---:|
-| **1** | **TASK 2: SavGol + CA 외삽 + CA Kalman + IMM** | 고가속/고속도 subset 잡으면 +0.005~+0.020 |
-| 2 | TASK 4: LightGBM 메타러너 (메타특징 라우팅) | +0.002~+0.005 |
-| 3 | TASK 4: geometric median | +0.001~+0.003 |
-| 4 | TASK 3: MDN mode 선택 (고turn subset만) | +0.001~+0.003 |
+| **1** | **TASK 2: SavGol + CA 외삽 + CA Kalman + IMM** | 고가속/고속도 subset 잡으면 +0.005–+0.020 |
+| 2 | TASK 4: LightGBM 메타러너 (메타특징 라우팅) | +0.002–+0.005 |
+| 3 | TASK 4: geometric median | +0.001–+0.003 |
+| 4 | TASK 3: MDN mode 선택 (고turn subset만) | +0.001–+0.003 |
 
 ## 산출물
 - `cache/meta_features.npz`: 11개 메타특징 + d + ids

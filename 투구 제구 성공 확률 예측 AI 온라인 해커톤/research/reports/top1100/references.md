@@ -1,4 +1,10 @@
-# External methodology references
+# 초기 구조 연구의 방법론 출처
+
+문헌은 실험 가설을 고른 근거이며 이 대회에서 개선됐다는 증거가 아닙니다. 참고 문서의 CatBoost “screen rejected”는 제출 승격이 보류됐다는 의미로 읽으며, 탐색 점수 해석은 CatBoost 상태 기록을 우선합니다.
+
+이 문서는 연구 당시의 기록입니다. 최종 결과와 용어·공개 실행 범위는 [문서 안내](../../../docs/README.md)를 우선합니다. 아래 수치·판정·명령과 원문은 당시 근거로 보존했습니다.
+
+원제: External methodology references
 
 These references were used as hypotheses, not as evidence that a method improves this competition.
 

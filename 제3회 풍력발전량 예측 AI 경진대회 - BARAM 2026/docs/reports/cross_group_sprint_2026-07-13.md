@@ -1,4 +1,10 @@
-# Cross-group transfer sprint — 2026-07-13
+# 그룹 간 결합과 특징 캐시
+
+그룹 3의 단순 터빈 조정은 오차를 줄여도 정산 지표를 악화시켰습니다. 반복 전처리를 줄이는 캐시와 그룹 간 결합 실험의 근거를 기록합니다.
+
+이 문서는 연구 당시의 기록입니다. 최종 결과와 용어·공개 실행 범위는 [문서 안내](../README.md)를 우선합니다. 아래 수치·판정·명령과 원문은 당시 근거로 보존했습니다.
+
+원제: Cross-group transfer sprint — 2026-07-13
 
 ## Public feedback that changed the direction
 

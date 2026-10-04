@@ -1,6 +1,6 @@
 # Submission audit 2026-08-09
 
-`reports/submissions.csv`의 v3~v5 행에는 v2의 전체 walk-forward Brier `0.2476249274184975`가 반복 기록되어 있었다. 이는 각 후보를 동일한 기준으로 재평가한 candidate-specific local Brier가 아니므로 이번 사이클에서 빈 값으로 교정한다. Public score와 ZIP SHA는 원래 기록을 보존한다.
+`reports/submissions.csv`의 v3–v5 행에는 v2의 전체 walk-forward Brier `0.2476249274184975`가 반복 기록되어 있었다. 이는 각 후보를 동일한 기준으로 재평가한 candidate-specific local Brier가 아니므로 이번 사이클에서 빈 값으로 교정한다. Public score와 ZIP SHA는 원래 기록을 보존한다.
 
 | version | prior local_brier | corrected local_brier | reason |
 |---|---:|---:|---|

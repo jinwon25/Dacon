@@ -1,38 +1,37 @@
-# P0 Leakage and data-availability audit
+# 데이터 누출·가용 시점 감사
 
-Timestamps are stored without timezone offsets but are documented and interpreted as Asia/Seoul (KST).
-The forecast day is the 24-hour block from 01:00 through next-day 00:00; its legal cutoff is the prior day at 14:00 KST.
+시간 값에는 시간대 오프셋이 없지만 Asia/Seoul(KST)로 해석합니다. 예측 대상 하루는 01:00부터 다음 날 00:00까지이며, 사용할 수 있는 정보의 마감은 전날 14:00 KST입니다. 표는 당시 제공 자료의 시간·결측·단위 정합성을 점검한 결과입니다. [문서 안내](README.md)에서 최종 결과와 용어를 확인합니다.
 
-## Weather availability
+## 기상 예보 가용 시점
 
-| Source | Split | Rows | Forecast range | Availability range | Grids | Exact duplicates | Multi-cycle pairs | Post-cutoff rows | Lead hours | Margin h |
+| 자료 | 구분 | 행 수 | 예보 대상 기간 | 자료 가용 기간 | 격자 수 | 완전 중복 | 복수 발행주기 쌍 | 마감 후 행 수 | 예측 선행 시간 | 마감 여유 시간 |
 |---|---|---:|---|---|---:|---:|---:|---:|---|---|
 | ldaps | train | 420,864 | 2022-01-01 01:00:00 – 2025-01-01 00:00:00 | 2021-12-31 13:00:00 – 2024-12-30 13:00:00 | 16 | 0 | 0 | 0 | 12–35 | 1–1 |
 | gfs | train | 236,736 | 2022-01-01 01:00:00 – 2025-01-01 00:00:00 | 2021-12-31 13:00:00 – 2024-12-30 13:00:00 | 9 | 0 | 0 | 0 | 12–35 | 1–1 |
 | ldaps | test | 140,160 | 2025-01-01 01:00:00 – 2026-01-01 00:00:00 | 2024-12-31 13:00:00 – 2025-12-30 13:00:00 | 16 | 0 | 0 | 0 | 12–35 | 1–1 |
 | gfs | test | 78,840 | 2025-01-01 01:00:00 – 2026-01-01 00:00:00 | 2024-12-31 13:00:00 – 2025-12-30 13:00:00 | 9 | 0 | 0 | 0 | 12–35 | 1–1 |
 
-## Labels
+## 발전량 정답의 제공 범위
 
-| Group | Provided range | Provided | Missing | Eligible >=10% | Eligible rate | Negative | Above capacity |
+| 그룹 | 정답 제공 기간 | 제공 수 | 결측 수 | 용량 10% 이상 수 | 평가 대상 비율 | 음수 수 | 용량 초과 수 |
 |---|---|---:|---:|---:|---:|---:|---:|
 | kpx_group_1 | 2022-01-01 01:00:00 – 2025-01-01 00:00:00 | 26,200 | 104 | 15,915 | 60.74% | 0 | 0 |
 | kpx_group_2 | 2022-01-01 01:00:00 – 2025-01-01 00:00:00 | 26,201 | 103 | 15,891 | 60.65% | 0 | 0 |
 | kpx_group_3 | 2023-01-01 01:00:00 – 2025-01-01 00:00:00 | 17,538 | 8,766 | 9,414 | 53.68% | 0 | 38 |
 
-## Turbine mapping
+## 터빈 구성과 설비용량
 
-| Group | Manufacturer/model | Turbines | Capacity sum MW | Declared MW |
+| 그룹 | 제조사·모델 | 터빈 수 | 용량 합계 MW | 선언 용량 MW |
 |---:|---|---:|---:|---:|
 | 1 | VESTAS / V126 | 6 | 21.6 | 21.6 |
 | 2 | VESTAS / V126 | 6 | 21.6 | 21.6 |
 | 3 | UNISON / U136 | 5 | 21 | 21 |
 
-## SCADA alignment
+## SCADA 시간·단위 정합성
 
-`sum` means summing six 10-minute per-turbine values into hourly energy. `kw_to_kwh` is the competing divide-by-six interpretation.
+`sum`은 터빈별 10분 값 여섯 개를 더해 시간당 에너지로 해석합니다. `kw_to_kwh`는 여섯 개의 합을 6으로 나누는 다른 단위 해석 후보입니다. 상관과 절대 오차를 함께 비교했으며, 높은 상관만으로 시간·단위 일치를 확정하지 않습니다.
 
-| Group | Best correlation candidate | Lag h | Corr | Best absolute-scale candidate | Lag h | NMAE | Bias kWh | Stop/curtail candidates |
+| 그룹 | 상관 최고 후보 | 시간차 h | 상관 | 절대 오차 최고 후보 | 시간차 h | NMAE | 편향 kWh | 정지·출력제한 후보 |
 |---|---|---:|---:|---|---:|---:|---:|---:|
 | kpx_group_1 | ceil:sum | 0 | 0.999731 | ceil:sum | 0 | 0.007887 | 135.3 | 38,526 (4.07%) |
 | kpx_group_2 | ceil:sum | 0 | 0.999708 | ceil:sum | 0 | 0.007212 | 111.2 | 34,722 (3.67%) |

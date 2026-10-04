@@ -1,6 +1,6 @@
 # 1185 목표 후속 연구 결과 — 2026-08-17
 
-> **2026-08-18 정정**: 이 보고서는 `submit_v27.zip`을 champion(frozen baseline)으로 가정하지만, 공식 DACON 제출 이력 재대조 결과 실제 champion은 `submit_v26.zip`이다(Public `1157.9736407889`, 제출 ID `51773`; v27은 `1156.6153781694`로 champion보다 낮다). 이 보고서의 v27 대비 gain 비교는 champion(v26) 기준으로 다시 확인하기 전까지 그대로 인용하지 않는다. 근거: [`target1170_followup_20260817.md`](target1170_followup_20260817.md) 상단, [`../notebooks/v26_champion_reproduction.ipynb`](../notebooks/v26_champion_reproduction.ipynb).
+> **2026-08-18 정정**: 이 보고서는 `submit_v27.zip`을 champion(frozen baseline)으로 가정하지만, 공식 DACON 제출 이력 재대조 결과 실제 champion은 `submit_v26.zip`이다(Public `1157.9736407889`, 제출 ID `51773`; v27은 `1156.6153781694`로 champion보다 낮다). 이 보고서의 v27 대비 gain 비교는 champion(v26) 기준으로 다시 확인하기 전까지 그대로 인용하지 않는다. 근거: [`target1170_followup_20260817.md`](target1170_followup_20260817.md) 상단, [`../../notebooks/v26_champion_reproduction.ipynb`](../../notebooks/v26_champion_reproduction.ipynb).
 
 ## 결론
 
@@ -87,7 +87,7 @@ v27은 v22의 저분산 domain/ASOF prior 위에 v25 R_ANCHOR post-break 직접�
   학습하고 이후 구간에 고정 적용했다.
 - 평가 행의 target, 평가 행 집계, 다른 평가 행의 빈도·순서·그룹 정보는
   사용하지 않았다.
-- v30~v33은 late-2023에서만 선택하고 2024 감사를 후보 선택에 사용하지
+- v30–v33은 late-2023에서만 선택하고 2024 감사를 후보 선택에 사용하지
   않았다. v34는 late-2023 fit → early-2024 selection → late-2024 audit의
   세 단계로 분리했다.
 - 신규 Public 제출은 하지 않았고 v27/v25 가중치를 Public에 맞춰 조정하지

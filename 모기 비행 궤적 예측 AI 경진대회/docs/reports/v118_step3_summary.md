@@ -1,7 +1,7 @@
 # STEP 3 결과 종합 — v118 aug+hit+band (D-7 sprint)
 
 날짜: 2026-05-25
-실행 환경: Win11 CPU (per-fold ~3-5분, batch=256, ep≤150 patience=25)
+실행 환경: Win11 CPU (per-fold 약 3-5분, batch=256, ep≤150 patience=25)
 
 ## 진행 요약
 
@@ -21,12 +21,12 @@
 |---|---|---|---|---|---|---|---|
 | #1 v118 aug+band | ✅ | ✅(×2.5) | A | 0.6495 | 0.9885 | 0.250 | 5.2m |
 | #2 control noaug-noband | ❌ | ❌ | A | 0.6630 | 0.9920 | 0.250 | 2.8m |
-| #3 control noaug-noband | ❌ | ❌ | B | 0.6655 | 0.9919 | 0.350 | ~3m |
-| **#4 aug-only** | ✅ | ❌ | B | **0.6715** | 0.9922 | 0.250 | ~5m |
+| #3 control noaug-noband | ❌ | ❌ | B | 0.6655 | 0.9919 | 0.350 | 약 3m |
+| **#4 aug-only** | ✅ | ❌ | B | **0.6715** | 0.9922 | 0.250 | 약 5m |
 
 게이트 조건:
 - OOF ≥ 0.665 ✅ (실험 #3, #4)
-- residual corr_3d_mag (v112_v107_diverse) < 0.93 ❌ (전부 0.988~0.992)
+- residual corr_3d_mag (v112_v107_diverse) < 0.93 ❌ (전부 0.988–0.992)
 - AND 필요 → 4개 실험 모두 FAIL.
 
 ## 핵심 통찰
@@ -41,7 +41,7 @@
 - canonical frame이 이미 yaw alignment 했지만, **추가 random yaw는 rotation equivariance 강화**해 OOF 약상승.
 - 하지만 residual corr는 0.9919 → 0.9922 (변화 미미). 같은 sample들에서 같은 에러 패턴.
 
-### 3) residual correlation ~0.99는 framework 구조적 floor
+### 3) residual correlation 약 0.99는 framework 구조적 floor
 - Pool 멤버 전부 **kalman residual + canonical + GRU/Transformer/MDN** 공통 구조.
 - base prediction은 동일한 kalman; NN은 잔차만 학습.
 - → 어떤 NN 변종이 학습하든 (kalman residual 자체 에러)에서 자유롭지 못함.
@@ -60,14 +60,14 @@
 
 - 현 best LB 실측: **v106 = LB 0.6888 (OOF 0.6770, 변환률 +0.0118)**
 - v110_v3 = LB 0.6884 (OOF 0.6775, 변환률 +0.0109) — over-fit 시그널
-- v118 aug-only (실험 #4) 가정: 5-fold full → standalone OOF ~0.67 추정, 블렌드 lift 거의 0 (corr=0.99).
+- v118 aug-only (실험 #4) 가정: 5-fold full → standalone OOF 약 0.67 추정, 블렌드 lift 거의 0 (corr=0.99).
 - 게이트 통과 못 했으므로 **블렌드에 넣어도 LB 변화 미미**.
 
 ## 최종 권고 (D-7)
 
 1. **다음 슬롯 제출**: `final_candidates/submission_v112_v107_diverse_oof0.6768.csv`
    - 보수 blend (cap 0.30), paradigm 강제 다양화 (v107 deep Trans boundary 포함)
-   - 변환률 +0.0118~+0.0125 안정 기대 → LB 예상 0.6886~0.6893 (0.69 가능)
+   - 변환률 +0.0118–+0.0125 안정 기대 → LB 예상 0.6886–0.6893 (0.69 가능)
 2. **보수 백업**: `final_candidates/submission_v106_DE15w_oof0.6770.csv` (LB 0.6888 실측)
 3. **STEP 3 cache 보존**: cache/v118_aug_hit_*.npz 4개 → 향후 base 변경 paradigm 시도 시 비교용
 4. **시도하지 말 것**:

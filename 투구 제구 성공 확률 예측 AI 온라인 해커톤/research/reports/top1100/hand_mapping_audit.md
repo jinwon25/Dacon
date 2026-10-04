@@ -1,4 +1,10 @@
-# Target-free hand mapping audit
+# 정답 없는 손잡이 표기의 집계 대조
+
+시즌별 손잡이 비중으로 두 표기 해석을 비교한 결과입니다. 집계 수준의 일치가 선수별 연결 정확도를 입증하거나 물리 특징의 승격을 허용하지는 않습니다.
+
+이 문서는 연구 당시의 기록입니다. 최종 결과와 용어·공개 실행 범위는 [문서 안내](../../../docs/README.md)를 우선합니다. 아래 수치·판정·명령과 원문은 당시 근거로 보존했습니다.
+
+원제: Target-free hand mapping audit
 
 This compares only season-level pitcher-hand shares; no outcome or target-derived statistic is used.
 

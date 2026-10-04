@@ -9,7 +9,7 @@ origin 전에 동결해 행별 ID에 붙이는 경로만 배포 가능하다. �
 무너졌다.
 
 2024 재사용 축에서 유일하게 반복 양수였던 후보는 투수의 과거 평균 induced vertical
-break(IVB) 한 개를 4~9월에만 쓰는 v70이었다. 이후 recipe를 그대로 고정한 v74 과거축
+break(IVB) 한 개를 4–9월에만 쓰는 v70이었다. 이후 recipe를 그대로 고정한 v74 과거축
 검증에서 2022 source OOF가 보정 eta를 두 번 모두 `0`으로 선택했다. v70은 최근 시즌
 특화 사후 가설로 최종 기각하며 Public probe나 standalone 패키지를 만들지 않는다.
 
@@ -17,8 +17,8 @@ break(IVB) 한 개를 4~9월에만 쓰는 v70이었다. 이후 recipe를 그대�
 
 | 항목 | 확인 결과 |
 |---|---:|
-| 공식 train | 1,475,092행 × 49열, 2019~2024 |
-| TrackMan | 1,793,078행 × 30열, 2019~2024 |
+| 공식 train | 1,475,092행 × 49열, 2019–2024 |
+| TrackMan | 1,793,078행 × 30열, 2019–2024 |
 | TrackMan 경기 / 투수 | 5,980 / 906 |
 | target을 쓰지 않은 구조 정렬 | 1,217,598행, train의 82.5439% |
 | 경기별 정렬 Dice 최소 / 중앙값 | 0.9500 / 1.0000 |
@@ -91,7 +91,7 @@ feature와 여러 domain을 동시에 본 다중 탐색이므로, 상관만으�
 | v66 | 직접 ID map으로 기존 gate 교체 | +0.0687 | -0.0155 | -0.1527 | 기각 |
 | v68 | R_ANCHOR 저용량 profile Ridge | IVB 0 | IVB 0 | IVB +1.933 | 불안정·기각 |
 | v69 | profile Ridge domain 확대 | IVB +1.729 | IVB +1.852 | 포함 | 월 최악 -12.112, 기각 |
-| v70 | IVB 1개, ALL, 4~9월 | +0.360¹ | +0.360¹ | +2.805² | v74에서 기각 |
+| v70 | IVB 1개, ALL, 4–9월 | +0.360¹ | +0.360¹ | +2.805² | v74에서 기각 |
 | v71 | 기존 latent pitch type shift 재결합 | +26.010 | -1.420 | -1.060 | 기각 |
 | v73 | TrackMan label로 pitch type 학생 재학습 | -0.924 | -2.778 | -1.749 | 기각 |
 | v74 | 고정 v70의 2022 과거축 반증 | 0³ | 0⁴ | 확인축 +2.777 | **v70 기각** |
@@ -110,14 +110,14 @@ feature와 여러 domain을 동시에 본 다중 탐색이므로, 상관만으�
 
 v70은 한 feature만 사용하고 Ridge alpha와 blend eta를 source OOF에서만 정한다.
 
-- late-2023 → full-2024: `+0.3602`, 4~9월 6개월 모두 양수, 최악 월 `+0.1652`,
+- late-2023 → full-2024: `+0.3602`, 4–9월 6개월 모두 양수, 최악 월 `+0.1652`,
   최소 domain `+0.2442`
-- early-2024 → late-2024: `+2.8048`, 8~9월 모두 양수, 최악 월 `+2.7063`,
+- early-2024 → late-2024: `+2.8048`, 8–9월 모두 양수, 최악 월 `+2.7063`,
   최소 domain `+0.8319`
 - 평균 절대 보정량: 각각 `0.000099`, `0.001282`
 - 현재 행의 ID만 사용하고 다른 test 행·test 분포는 사용하지 않는다.
 
-통계 모양은 가장 좋지만 3월·10월 손실을 본 뒤 4~9월 gate를 정의했다. 이를 반증하기
+통계 모양은 가장 좋지만 3월·10월 손실을 본 뒤 4–9월 gate를 정의했다. 이를 반증하기
 위해 v74는 feature·domain·월·source-only 선택 규칙을 모두 고정한 뒤 과거축을 열었다.
 
 - early-2022 → late-2022: source eta `0`, gain `0`
@@ -173,7 +173,7 @@ gain은 모든 주요 시간축에서 음수였다. 이후에는 pitch type 학�
 [417157](https://dacon.io/competitions/official/236743/talkboard/417157)은 Phase 3에서 학습
 데이터, 전체 학습·추론 과정, feature와 상수의 도출 근거까지 소명 대상이라고 명시한다.
 
-v65~v73은 test CSV를 읽지 않은 OOF 연구이며, 모든 TrackMan profile은 audit origin보다
+v65–v73은 test CSV를 읽지 않은 OOF 연구이며, 모든 TrackMan profile은 audit origin보다
 이전 시즌에서만 계산했다. 현재 champion 단일 ZIP은 singleton/full/shuffle/partition
 행 독립성 검사를 통과했고 과거 ZIP이나 저장소 코드에 의존하지 않는다.
 

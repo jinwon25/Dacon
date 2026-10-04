@@ -1,3 +1,5 @@
+> **과거 기록 안내:** 이 문서는 v335까지의 제출·보관에 관한 작성 당시 기록입니다. 최종 선택은 v345, Public `1182.94969702`입니다. [문서 안내](../docs/README.md)와 프로젝트의 최종 재현 안내를 우선합니다. 원본 데이터·모델·OOF·제출 ZIP은 공개본에 없으며 아래 경로가 다운로드 가능하다는 뜻은 아닙니다.
+
 # 제출 파일 보관 규칙
 
 마지막 갱신: `2026-08-31 KST`
@@ -22,7 +24,7 @@
 `submit_v335.zip`은 v290 계보 위에 F direct+low-rank 포트폴리오와 R_ANCHOR low-rank
 보완을 결합한 후보다. R_CORE는 v290과 동일하다. 2026-08-31 00:00:45 KST 제출에서
 Public `1181.7100031613`을 확인했고 v290 대비 `+4.9529314933`이라 챔피언으로 승격했다.
-상세 판단은 [`../reports/v335_public_result_20260831.md`](../reports/v335_public_result_20260831.md)에 있다.
+상세 판단은 [`../research/reports/v335_public_result_20260831.md`](../research/reports/v335_public_result_20260831.md)에 있다.
 
 ## 주요 Public 계보
 
@@ -53,7 +55,7 @@ Public `1181.7100031613`을 확인했고 v290 대비 `+4.9529314933`이라 챔�
 | `submit_v13_fixed.zip` | 1068.4365711741 | `1532352` | exact-ASOF 기준선 |
 
 공식 제출 ID, 전체 해시, 가설, 실행시간과 판정의 단일 원장은
-[`../reports/submissions.csv`](../reports/submissions.csv)다. 과거 문서의 “현재 champion”은
+[`../research/reports/submissions.csv`](../research/reports/submissions.csv)다. 과거 문서의 “현재 champion”은
 작성 당시 기록으로만 해석한다.
 
 ## 폴더 역할

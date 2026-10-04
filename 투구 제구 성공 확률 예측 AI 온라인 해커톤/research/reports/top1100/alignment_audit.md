@@ -1,4 +1,10 @@
-# P0-B target-free structural alignment audit
+# 정답을 사용하지 않은 경기 구조 연결
+
+경기 구조로 연결 후보를 만들었지만 투구·선수 신원을 확정한 결과는 아닙니다. 날짜·경기 ID 부족과 무작위 대조 분리의 한계 때문에 낮은 신뢰도의 행은 초기 기준 예측을 유지했습니다.
+
+이 문서는 연구 당시의 기록입니다. 최종 결과와 용어·공개 실행 범위는 [문서 안내](../../../docs/README.md)를 우선합니다. 아래 수치·판정·명령과 원문은 당시 근거로 보존했습니다.
+
+원제: P0-B target-free structural alignment audit
 
 The aligner uses only season/month/day-of-week, legal count/out/inning transitions, game length, half distribution and hand tokens. `control_success`, target encodings and target-derived statistics are prohibited by an explicit whitelist assertion. Main does not contain game_date or game_id, so this is a game-candidate structural alignment rather than a final pitch-level identity proof.
 

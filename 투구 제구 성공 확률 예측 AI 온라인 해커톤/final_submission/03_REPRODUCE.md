@@ -105,7 +105,7 @@ wave0 OOF를 캐시 없이 새로 학습하려면 다음을 실행한다.
 python train_wave0_fresh.py --data-dir data --output-dir artifacts/wave0_fresh_01
 ```
 
-2020~2024 각 검증 연도보다 앞선 시즌으로 LGB/RF를 학습한다.
+2020–2024 각 검증 연도보다 앞선 시즌으로 LGB/RF를 학습한다.
 LightGBM의 조기 종료에는 해당 검증 연도 라벨을 사용하므로,
 모델 선택까지 독립된 성능 평가로 해석하지 않는다. 모든 행은 공식 train 소속이다.
 결과는 `artifacts/wave0_fresh_01/artifacts/followup/oof/`에 생성된다.
@@ -170,7 +170,7 @@ seed 42, 43, 44로 공식 학습 행 전체를 학습한다.
 python train_c3_fresh.py --data-dir data --reference-zip ORIGINAL_SUBMITTED_V345.zip --output-dir artifacts/c3_01
 ```
 
-CatBoost 1.2.8, 고정 v131 depth 6 설정으로 2020~2024 각 연도보다 앞선
+CatBoost 1.2.8, 고정 v131 depth 6 설정으로 2020–2024 각 연도보다 앞선
 공식 학습 행에서 H1 OOF를 새로 생성한다. 배포 H1의 depth 8 설정과 구분한다.
 이 OOF로 최근 1·2·3년 및 확장 창의 C3 테이블을 다시 계산한다.
 테이블 설정은 실제 배포 계보의 v148 설정을 사용한다.

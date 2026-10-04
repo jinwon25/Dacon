@@ -27,9 +27,9 @@ phi=0.5와 0.8은 실행 전 이산 후보로 명시됐지만, 0.8의 최종 보
 
 CatBoost, hierarchical prior, direct-L2 GBDT, XGBoost와 RF 변형은 2024에서 모두 약했다. post-hoc 2024 convex blend에서도 이 모델들의 최적 weight는 0이었다.
 
-후속 도메인 EDA에서 game_type F의 2022→2023 성공률이 0.708749→0.472904로 구조적으로 바뀌고 2024에도 전체 시즌 대비 음의 residual이 지속된 것을 확인했다. 고정 change-point 규칙은 2021~2023을 incumbent와 동일하게 유지하면서 2024 Brier를 -0.000125059 개선해 기존 제출 게이트를 모두 통과했다. 최종 2025 artifact는 F에 -0.1079835303 logit offset, R에 0을 적용한다.
+후속 도메인 EDA에서 game_type F의 2022→2023 성공률이 0.708749→0.472904로 구조적으로 바뀌고 2024에도 전체 시즌 대비 음의 residual이 지속된 것을 확인했다. 고정 change-point 규칙은 2021–2023을 incumbent와 동일하게 유지하면서 2024 Brier를 -0.000125059 개선해 기존 제출 게이트를 모두 통과했다. 최종 2025 artifact는 F에 -0.1079835303 logit offset, R에 0을 적용한다.
 
-`submit_gt_v1.zip`을 submission2로 한 번 제출한 결과 Public Score는 704.1257475401로 incumbent보다 45.3992015564 낮았다. 따라서 2023~2024의 F residual을 2025로 그대로 이월하는 가설은 배포 관점에서 기각한다. offset의 크기나 threshold를 이 결과에 맞춰 조정하지 않으며, 동일 계열 후보를 다시 제출하지 않는다.
+`submit_gt_v1.zip`을 submission2로 한 번 제출한 결과 Public Score는 704.1257475401로 incumbent보다 45.3992015564 낮았다. 따라서 2023–2024의 F residual을 2025로 그대로 이월하는 가설은 배포 관점에서 기각한다. offset의 크기나 threshold를 이 결과에 맞춰 조정하지 않으며, 동일 계열 후보를 다시 제출하지 않는다.
 
 이 결과는 game-type regime 보정이 실제 평가 기간으로 전이되지 않았다는 강한 분포 변화 증거다. 반대로 `submit_v2.zip`의 공개 점수 상승은 Trackman+recency hybrid 방향을 후속 탐색할 근거를 제공한다. `submit_v3.zip`의 공개 결과가 나오기 전까지는 v2를 안전한 기준점으로 보존한다.
 

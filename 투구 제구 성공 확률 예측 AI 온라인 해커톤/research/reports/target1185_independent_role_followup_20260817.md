@@ -40,7 +40,7 @@ GitHub connector 계정은 private 원격 `jinwon25/pitch-control-probability`�
 - 75개 row-local numeric/ASOF 상태
 - 선수, 팀, 카운트, 손잡이, domain, 이닝, 주자·점수·LI 및 명시적
   선수×카운트/손잡이/리그 상호작용 one-hot
-- category 최소 빈도 25, 13.8k~14.4k 총 피처
+- category 최소 빈도 25, 13.8k\~14.4k 총 피처
 - 2022와 late-2023에서 완전히 같은 route·weight만 선택 가능
 - full/late-2024는 recipe 동결 뒤 단 한 번 감사
 

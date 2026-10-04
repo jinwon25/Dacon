@@ -5,18 +5,35 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import pytest
 
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "artifacts_final" / "structural_20260718" / "structural_report.json"
 
 
+@pytest.mark.skipif(
+    not REPORT.is_file(),
+    reason="공개본에서 제외한 연구 보고서 캐시가 필요합니다.",
+)
 def test_finesweep_reference_parity() -> None:
     report = json.loads(REPORT.read_text(encoding="utf-8"))
     assert abs(report["baseline_parity"]["test_finesweep_changed_ratio_vs_reference"] - 0.11929223744292237) < 1e-6
     assert abs(report["baseline_parity"]["test_finesweep_mae_kwh_vs_reference"] - 13.749979248804843) < 0.01
 
 
+@pytest.mark.skipif(
+    not all(
+        path.is_file()
+        for path in (
+            REPORT,
+            REPORT.parent / "agent_evaluation.json",
+            REPORT.parent / "locked_predictions.npz",
+            ROOT / "artifacts_final" / "meta_gate" / "meta_gate_cache.npz",
+        )
+    ),
+    reason="공개본에서 제외한 연구 보고서와 행별 예측 캐시가 필요합니다.",
+)
 def test_h2_rolling_fine_is_not_reference_cache() -> None:
     report = json.loads(REPORT.read_text(encoding="utf-8"))
     evaluation = json.loads(

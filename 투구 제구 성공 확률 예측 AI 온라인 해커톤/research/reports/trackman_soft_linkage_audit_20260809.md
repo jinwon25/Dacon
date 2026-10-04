@@ -1,4 +1,10 @@
-# Trackman soft-linkage audit
+# 프로필 연결의 불확실성 감사
+
+연결 거리·순위·안정성이 선수 신원 확정과 같지 않음을 설명합니다. 손잡이 매핑과 누적 구종 수의 해석이 불명확한 경우 새 보정을 승격하지 않았습니다.
+
+이 문서는 연구 당시의 기록입니다. 최종 결과와 용어·공개 실행 범위는 [문서 안내](../../docs/README.md)를 우선합니다. 아래 수치·판정·명령과 원문은 당시 근거로 보존했습니다.
+
+원제: Trackman soft-linkage audit
 
 The existing linkage report provides target-free distance, assignment rank, margin, common-origin stability and confidence. The two hand mappings (1→Left/2→Right and its reverse) are not identifiable from the aggregate report alone; the full annual-fingerprint rerun is therefore marked ambiguous and no new correction is promoted. A reusable 200-repeat Dirichlet-perturbed Hungarian routine was executed as a smoke test on the cached candidate cost submatrix.
 

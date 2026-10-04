@@ -65,7 +65,7 @@ CatBoost, XGBoost, HistGradientBoosting 추가:
 |---|---:|---:|---|
 | per-bin (3 bins) SLSQP | 8.574 | 10.0547 (악화) | OOF에 fitting → LB 일반화 안 됨 |
 | Isotonic calibration | 8.976 | - | 즉시 OOF 악화 |
-| Adversarial weighting (p/(1-p)) | - | - | AUC=1.0 → 가중치 모두 ~1e-7 |
+| Adversarial weighting (p/(1-p)) | - | - | AUC=1.0 → 가중치 모두 약 1e-7 |
 | Quantile matching post-process | 8.62 | - | underprediction은 L1 최적이라 수정하면 손해 |
 | Layout cluster encoding (KMeans K=20) | 8.71 | - | cluster_mean_y target encoding 효과 없음 |
 | Drop layout features | 8.80 | - | OOF 단독 악화, 블렌드 가중 0 |
@@ -125,7 +125,7 @@ Sequence 모델의 다양성 확장:
 ### Phase 5: SOTA 권고 적용 (LB 9.87 → 9.866)
 
 OOF/LB 정체 진단 후 SOTA 문헌 권고를 실행:
-1. **Manifold Mixup** (Verma et al. ICML 2019) — input + manifold mixup, lam ~ Beta(0.4, 0.4)
+1. **Manifold Mixup** (Verma et al. ICML 2019) — input + manifold mixup, lam \~ Beta(0.4, 0.4)
 2. **SwapNoise** (Jahrer 2017 Porto Seguro winner) — 15% 피처 swap + reconstruction loss aux
 3. **SmoothL1 loss** (β=1.0) — heavy-tail에서 pure L1보다 안정 (Barron 2019 권고)
 4. **C-Mixup** (Yao et al. 2022) — regression-specific mixup
@@ -159,7 +159,7 @@ def forward(self, x, mixup_lam, mixup_idx, manifold=False):
 | Family | 가중치 합계 |
 |---|---:|
 | LightGBM (3 seeds + 2 Tweedie) | 0.27 |
-| CatBoost + XGBoost | ~0 (signal 중복) |
+| CatBoost + XGBoost | 약 0 (signal 중복) |
 | Vanilla SeqCNN (3 seeds + big) | 0.27 |
 | BiGRU (3 seeds) | 0.27 |
 | Mixup SeqCNN (3 seeds) | 0.13 |
@@ -207,12 +207,12 @@ def forward(self, x, mixup_lam, mixup_idx, manifold=False):
 | 5 | 2026-05-03 00:18 | 8.6006 | 10.0416 | 6-모델 LightGBM only |
 | 6 | 2026-05-03 16:27 | 8.5741 | 10.0547 | 9-모델 + per-bin (악화) |
 | 7 | 2026-05-03 16:55 | 8.5905 | 10.0397 | 6-모델 + CAT + XGB global SLSQP |
-| 8 | 2026-05-03 ~21 | 8.4930 | **9.9235** | 8-모델 + Sequence CNN (51위 진입) |
+| 8 | 2026-05-03–21 | 8.4930 | **9.9235** | 8-모델 + Sequence CNN (51위 진입) |
 | 9 | 2026-05-04 00:17 | 8.4477 | 9.8838 | + BiGRU 시드 |
 | 10 | 2026-05-04 00:49 | 8.4426 | 9.8841 | + Mixup BiGRU |
-| 11 | 2026-05-04 ~01 | 8.4235 | 9.8729 | + Tweedie 1.7 |
-| 12 | 2026-05-04 ~02 | 8.4171 | **9.866** | + Mixup BiGRU 17-모델 |
-| 13 | 2026-05-04 ~10 | 8.4129 | **9.86576** | 최종 19-모델 mega-blend |
+| 11 | 2026-05-04–01 | 8.4235 | 9.8729 | + Tweedie 1.7 |
+| 12 | 2026-05-04–02 | 8.4171 | **9.866** | + Mixup BiGRU 17-모델 |
+| 13 | 2026-05-04–10 | 8.4129 | **9.86576** | 최종 19-모델 mega-blend |
 
 ## 대회 규칙 준수
 
@@ -230,4 +230,4 @@ def forward(self, x, mixup_lam, mixup_idx, manifold=False):
 - pandas 2.2.3, numpy 2.2.6, scipy 1.15.3
 - PyTorch 2.7.1+cpu (GPU 미사용)
 - OS: Windows 10
-- 전체 학습 시간 (CPU): ~5-7시간 (순차)
+- 전체 학습 시간 (CPU): 약 5-7시간 (순차)

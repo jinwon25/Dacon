@@ -79,10 +79,10 @@ base: v112 OOF hit = **0.6768**.  Gate: +0.0008.
 
 | 평가 | 결과 |
 |---|---|
-| 시간 비용 | 5-fold full 학습–6-10h |
+| 시간 비용 | 5-fold full 학습 약 6–10h |
 | 게이트 통과 가능성 | 매우 낮음 |
 | 이유 1 | v118 같은 framework 변종 모두 corr 0.99 floor (이미 검증) |
-| 이유 2 | hard subset n=96 (좁음). +0.02 R-Hit 위해서는–2 hits flip — 노이즈 수준 |
+| 이유 2 | hard subset n=96 (좁음). +0.02 R-Hit 위해서는 약 2 hits flip — 노이즈 수준 |
 | 이유 3 | fast+turn v112=0.271 vs oracle=0.177 → NN이 이미 +9%p, 추가 +2%p 헤드룸 좁음 |
 
 → **STEP D skip** 결정. 메모리의 사후 분석용 방향(Neural CDE, frequency domain, per-axis 분리)에 부합.

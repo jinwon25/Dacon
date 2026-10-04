@@ -1,4 +1,10 @@
-# Competition Scientist bottleneck sprint - 2026-07-17
+# 점수 병목과 후보 판정
+
+후속 후보가 안정적인 개선 기준을 충족하지 못해 당시 선택된 제출을 유지한 기록입니다. 목표 점수와의 차이만큼 검증된 개선이 있었는지를 확인합니다.
+
+이 문서는 연구 당시의 기록입니다. 최종 결과와 용어·공개 실행 범위는 [문서 안내](../README.md)를 우선합니다. 아래 수치·판정·명령과 원문은 당시 근거로 보존했습니다.
+
+원제: Competition Scientist bottleneck sprint - 2026-07-17
 
 ## Decision
 

@@ -1,4 +1,10 @@
-# Spatiotemporal multitask structural-model promotion
+# 시공간 다중 과제 후보의 당시 승격
+
+개발 구간에서 정책을 선택하고 후반기 검증을 한 당시 후보 기록입니다. 이후 공개 전이 실패는 외부 자료 감사 보고서와 프로젝트 README에서 함께 확인해야 합니다.
+
+이 문서는 연구 당시의 기록입니다. 최종 결과와 용어·공개 실행 범위는 [문서 안내](../README.md)를 우선합니다. 아래 수치·판정·명령과 원문은 당시 근거로 보존했습니다.
+
+원제: Spatiotemporal multitask structural-model promotion
 
 ## Decision
 

@@ -1,34 +1,29 @@
-> Historical lineage note: the final selected version is **v345 (1182.9497)**. The v148 instructions below describe the earlier stage and require excluded private artifacts.
+> 최종 선택은 **v345 (1182.9497)입니다.** 아래 v148 안내는 과거 계보 기록이며 공개하지 않은 모델·ZIP이 필요합니다. 최종 결과와 실행 범위는 [문서 안내](../../docs/README.md)를 따릅니다.
 
-# Champion lineage
+# 실제 제출 버전의 코드 계보
 
-Modules reachable from a version that was actually submitted. Everything here
-imports only `src/core/` and other `src/champion/` modules, never
-`src/archive/`, so a version can be read and run without loading unrelated
-generations.
+실제 제출된 버전으로 이어지는 모듈을 모았습니다. 이 폴더는 `src/core/`와 다른 `src/champion/` 모듈만 불러오며 `src/archive/`를 불러오지 않습니다. 관련 없는 세대를 함께 읽지 않아도 해당 계보를 이해할 수 있습니다. 실행에는 별도로 제외된 입력 자산이 필요합니다.
 
-Concluded one-off experiments live in `src/archive/`.
+종료된 개별 비교 실험은 `src/archive/`에 보관합니다.
 
-## Deployed versions
+## 실제 제출한 과거 버전
 
-| Version | Public | Role |
+| 버전 | Public | 계보상 역할 |
 |---|---:|---|
-| v148 | **1170.3014697177** | historical champion (2026-08-23), conservative v142→v138 bridge |
-| v142 | 1169.6277932822 | independent H1 + sign-stable C3 |
-| v124 | 1164.2949203402 | multi-axis public quadratic stack |
-| v104 | 1162.6302840289 | source-stability majority-two mask |
-| v84 | 1161.2020600422 | fixed v56 shared FM, F route |
-| v26 | 1157.9736407889 | frozen signal weight 15% |
-| v25 | 1155.8293405409 | post-break R_ANCHOR direct probability |
-| v22 | 1153.0436023798 | low-variance domain calibration + row-local ASOF |
+| v148 | **1170.3014697177** | 2026-08-23 당시 기준 모델, 보수적인 v142→v138 결합 |
+| v142 | 1169.6277932822 | 독립 H1 + 부호가 안정된 C3 |
+| v124 | 1164.2949203402 | 여러 축의 공개 결과 기반 이차식 결합 |
+| v104 | 1162.6302840289 | 자료원 안정성의 다수 조건 마스크 |
+| v84 | 1161.2020600422 | 고정 v56 공유 FM, F 경로 |
+| v26 | 1157.9736407889 | 신호 가중치 15% 고정 |
+| v25 | 1155.8293405409 | 변화점 이후 R_ANCHOR 직접 확률 |
+| v22 | 1153.0436023798 | 낮은 분산의 도메인 보정 + 행별 ASOF |
 
-## Running the champion
+## 과거 v148 실행·재조립 기록
 
-`submit_v148.zip` was the deliverable at that stage and is already standalone: the
-evaluation server unpacks it and runs its own `script.py`. Nothing in this
-repository is needed at evaluation time.
+`submit_v148.zip`은 당시 전달한 독립 실행 패키지입니다. 평가 서버는 ZIP을 풀어 내부 `script.py`를 실행했고, 평가 시 저장소 코드 자체는 필요하지 않았습니다. ZIP은 현재 공개본에 포함하지 않습니다.
 
-To rebuild the flattened package from the original archive:
+원래 ZIP에서 단일 구조 패키지를 다시 만드는 당시 명령입니다.
 
 ```bash
 python -m src.champion.v148_flat_build_package \
@@ -37,13 +32,9 @@ python -m src.champion.v148_flat_build_package \
   --output-dir artifacts/v148_flat_20260823_01
 ```
 
-`v148_flat_runtime_script.py` is the standalone runtime that ships inside the
-flattened package. It has a single `main()` and static imports, replacing the
-six-level chain of dynamically loaded parent scripts in the original build.
-Its predictions match the original bit for bit within float noise; see
-`research/reports/v148_flat_refactor_20260823.md`.
+`v148_flat_runtime_script.py`는 단일 구조 패키지의 실행 코드입니다. 하나의 `main()`과 정적 import를 사용해 원래의 여섯 단계 동적 부모 스크립트 호출을 대체합니다. 예측은 부동소수점 오차 범위에서 원본과 일치했으며 [당시 비교 보고서](../../research/reports/v148_flat_refactor_20260823.md)에 근거가 있습니다.
 
-To verify parity yourself:
+별도 자산을 확보한 경우 다음 명령으로 예측 일치를 확인합니다.
 
 ```bash
 python -m src.champion.v148_flat_parity_audit \
@@ -52,10 +43,9 @@ python -m src.champion.v148_flat_parity_audit \
   --train-csv data/train.csv --rows 100000
 ```
 
-## Rebuilding earlier generations
+## 이전 세대 재조립
 
-Each build script takes its inputs explicitly on the command line, so no
-script reaches back into a previous version's working directory.
+각 빌더는 입력을 명령행에서 명시적으로 받습니다. 이전 버전의 작업 폴더를 자동 참조하지 않습니다.
 
 ```bash
 # v142 — independent H1 and sign-stable C3
@@ -79,16 +69,10 @@ python -m src.champion.v104_source_stability_mask \
   --output-dir artifacts/<run>
 ```
 
-The `<...>` inputs are frozen artifacts, not repository files. They are kept
-out of Git and shared through the approved private team channel with their
-SHA-256, as described in `docs/PROJECT_STATUS.md`.
+`<...>` 입력은 고정된 외부 산출물이며 저장소 파일이 아닙니다. Git에서 제외한 자산의 당시 전달 절차는 [과거 현황 기록](../../docs/PROJECT_STATUS.md)에 남아 있습니다. 해시를 확인한 별도 자산이 있어야 재조립할 수 있습니다.
 
-## Rules
+## 코드·자산 관리 기준
 
-- Never overwrite a champion artifact in place. Build into a new
-  `artifacts/<name>_<date>_NN/` directory.
-- A new candidate must pass `research/configs/evaluation_v3.json` before it is
-  packaged, and the champion pointer only moves after a Public result
-  confirms it.
-- Do not add an `src/archive/` import here. If a champion module needs
-  something from an archived experiment, that symbol belongs in `src/core/`.
+- 선택된 기준 자산을 덮어쓰지 않습니다. 새 `artifacts/<name>_<date>_NN/`에 빌드합니다.
+- 당시 새 후보는 패키징 전 `research/configs/evaluation_v3.json`을 통과하고, 공개 결과를 확인한 뒤 기준 버전을 바꿨습니다.
+- 이 폴더에 `src/archive/` import를 추가하지 않습니다. 종료 실험의 기능을 재사용해야 하면 공통 구현을 `src/core/`에 둡니다.

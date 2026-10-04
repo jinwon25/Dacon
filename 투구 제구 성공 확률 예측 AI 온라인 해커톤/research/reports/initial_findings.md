@@ -1,12 +1,12 @@
 # 초기 분석 및 실험 결과
 
-모든 아래 성능은 동일한 primary validation인 2019~2023 학습 / 2024 검증에서 실제 실행한 값이다. 서로 다른 split의 점수를 직접 비교하지 않았다.
+모든 아래 성능은 동일한 primary validation인 2019–2023 학습 / 2024 검증에서 실제 실행한 값이다. 서로 다른 split의 점수를 직접 비교하지 않았다.
 
 ## 검증 선택
 
 - 비공개 평가는 2025년이고 학습의 최신 시즌은 2024년이므로 1년 forward holdout을 선택했다.
 - 메인 데이터에 경기 ID와 정확한 날짜가 없어 game-group split은 구성할 수 없다. season 경계가 같은 경기 혼입을 차단한다.
-- Platt/isotonic/base-rate shrinkage와 첫 3-way blend는 2019~2022 학습 모델의 2023 OOF 예측에서 학습하고 2024에 고정 적용했다. 후속 season-trend blend의 작은 가중치 grid는 2024 OOF에서 선택했으므로 해당 점수에 선택 편향 위험이 있다.
+- Platt/isotonic/base-rate shrinkage와 첫 3-way blend는 2019–2022 학습 모델의 2023 OOF 예측에서 학습하고 2024에 고정 적용했다. 후속 season-trend blend의 작은 가중치 grid는 2024 OOF에서 선택했으므로 해당 점수에 선택 편향 위험이 있다.
 - 모든 범주 사전과 base rate는 fold train에서만 학습했다. test 행 간 집계는 없다.
 
 ## Primary 모델 비교

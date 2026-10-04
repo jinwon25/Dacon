@@ -3,7 +3,7 @@
 날짜: 2026-05-25 (D-7 sprint, v118 FAIL 직후 ceiling 진단)
 
 ## 0. 정의
-- 매끈 subset(smooth20) = accel_mean 하위 20% (~2000 샘플)
+- 매끈 subset(smooth20) = accel_mean 하위 20% (약 2000 샘플)
 - accel_mean = 각 샘플의 9개 timestep 가속도 norm 평균 (m/s²)
 - accel_mean quantile: q20=1.445, q50=2.676, q80=4.798 m/s²
 - fast+turn subset (hard) = sp_last>1.0 AND turn_cos<0.5,  n=96
@@ -46,7 +46,7 @@
 | fast+turn | kalman | 96 | 24.450 | 32.669 | 13.938 | 43.042 | 64.768 | 0.094 |
 
 ### A.1b oracle envelope (per-sample 최소 over 6 geom predictors)
-'어떤 단순 외삽 (CV/CA/poly1~3)도 못 막은 잔차' = label/관측노이즈 + saccade 비결정성 lower bound
+'어떤 단순 외삽 (CV/CA/poly1–3)도 못 막은 잔차' = label/관측노이즈 + saccade 비결정성 lower bound
 
 | subset | median_mm | mean_mm | hit1cm |
 |---|---:|---:|---:|

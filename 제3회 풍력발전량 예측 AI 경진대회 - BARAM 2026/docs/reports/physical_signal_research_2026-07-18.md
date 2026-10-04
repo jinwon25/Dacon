@@ -1,4 +1,10 @@
-# BARAM physical-signal research sprint (2026-07-18)
+# 물리·예보 불확실성 신호 연구
+
+서로 다른 기상 예보의 차이와 물리적 특징을 새 정보축으로 검토합니다. 논문 조사와 실제 데이터 기반 실험·승격 여부를 구분합니다.
+
+이 문서는 연구 당시의 기록입니다. 최종 결과와 용어·공개 실행 범위는 [문서 안내](../README.md)를 우선합니다. 아래 수치·판정·명령과 원문은 당시 근거로 보존했습니다.
+
+원제: BARAM physical-signal research sprint (2026-07-18)
 
 ## Scope and data contract
 

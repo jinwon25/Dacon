@@ -1,4 +1,10 @@
-# Local evaluation v2 — dependence and selection aware
+# 로컬 평가·선택 편향 점검
+
+반복 재사용한 2024 자료는 개발에 오염된 평가 구간입니다. 제한된 최종 후보군에 대한 선택 편향 점검과 전체 탐색의 남은 한계를 구분합니다.
+
+이 문서는 연구 당시의 기록입니다. 최종 결과와 용어·공개 실행 범위는 [문서 안내](../../docs/README.md)를 우선합니다. 아래 수치·판정·명령과 원문은 당시 근거로 보존했습니다.
+
+원제: Local evaluation v2 — dependence and selection aware
 
 ## Fold evidence
 

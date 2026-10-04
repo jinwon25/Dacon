@@ -2,6 +2,10 @@
 
 데이콘에서 주최한 [**제3회 풍력발전량 예측 AI 경진대회**](https://dacon.io/competitions/official/236727/overview/description) 솔루션.
 
+## 문서 읽기 안내
+
+[상세 문서 안내](docs/README.md)에서 읽는 순서·용어·과거 연구 기록의 범위를 확인할 수 있습니다.
+
 ## 최종 결과
 
 > **최종 291위 / 985팀** · **Public 0.6474704399** (제출 `1508386`)
@@ -76,7 +80,7 @@ src/metrics.py              공식 지표(1-NMAE/FiCR) 로컬 구현
 experiments/                실험 스크립트 (블렌드·OOF·게이트·외부데이터)
 agent_service/              승격 정책·규정 준수 검사
 docs/reports/               실험별 보고서와 판정 근거
-tests/                      지표·정책·외부데이터 규정 테스트 (373 passed)
+tests/                      지표·정책·외부데이터 규정 테스트
 data/, artifacts/, submissions/   gitignore
 ```
 
@@ -87,11 +91,13 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
 
-python -m pytest -q        # 데이터 없이 373개 통과
+python -m pytest -q        # 공개본: 371개 통과, 연구 캐시 의존 2개 skip
 ```
 
+2026-10-04 공개 clone 검증에서는 371개가 통과했습니다. 공개하지 않은 과거 보고서·행별 예측 캐시를 비교하는 2개 검사는 자산이 없을 때 skip합니다. 해당 캐시가 있으면 기존 단언을 그대로 실행합니다. 이 결과는 전체 학습·최종 점수 재현을 뜻하지 않습니다.
+
 공식 데이터를 `data/`에 배치한 뒤 `train.py` → `inference.py` 순서로 실행한다.
-자세한 명령은 아래 **Main Commands**를 참고한다.
+실행 경로와 과거 명령은 [문서 안내](docs/README.md)와 [연구 이력의 명령 부분](docs/RESEARCH_HISTORY.md#main-commands)을 참고한다. 비공개 데이터·모델·캐시를 요구하는 명령은 공개 clone만으로 실행할 수 없다.
 
 ## 대회 규정 준수
 

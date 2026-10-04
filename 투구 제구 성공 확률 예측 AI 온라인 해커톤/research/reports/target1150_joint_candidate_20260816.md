@@ -7,7 +7,7 @@
 핵심은 두 신호의 결합이다.
 
 1. **다년도 row-local 상태 모델**: 현재 행의 공식 `asof_*` 값에서 2025 시즌 내 투수·타자 상태를 복원하고, 이전 시즌을 지수 감쇠해 학습한 얕은 LightGBM 잔차를 더한다.
-2. **잠재 실패유형 모델**: 학습 범위에서 다음 누적 ASOF snapshot으로 현재 투구의 `bad_location / ball_only / strike_only / other` 라벨을 복원한다. 최종 추론에서는 현재 투구 라벨이나 다른 test 행을 보지 않고, 2019~2024로 학습한 네 클래스 확률만 사용한다.
+2. **잠재 실패유형 모델**: 학습 범위에서 다음 누적 ASOF snapshot으로 현재 투구의 `bad_location / ball_only / strike_only / other` 라벨을 복원한다. 최종 추론에서는 현재 투구 라벨이나 다른 test 행을 보지 않고, 2019–2024로 학습한 네 클래스 확률만 사용한다.
 
 2024는 반복적으로 본 개발 데이터이므로 이 결과는 독립적인 1150 보장이 아니다. 다만 고정 프로토콜의 모든 수치 문턱, 월별 안정성, 세 가지 군집 bootstrap, 코드 패키지 검증을 모두 통과한 최초의 **1150 근접 제출 후보**다.
 
@@ -59,7 +59,7 @@ bootstrap은 개발 과정의 후보 선택 편향을 제거하지 못한다. �
 | 크기 | 30.789 MB |
 | 공식 5행 smoke | 통과, 4.80초, peak 272 MB |
 | 대표 245,789행 | 통과, **58.05초**, peak **1.423 GB** |
-| 예측 범위 | 0.356162 ~ 0.653832 |
+| 예측 범위 | 0.356162–0.653832 |
 | 전체/분할 배치 최대 차이 | `1.11e-16` |
 | 네트워크 사용 | 없음 |
 | test 집계/순서 사용 | 없음 |
@@ -72,7 +72,7 @@ bootstrap은 개발 과정의 후보 선택 편향을 제거하지 못한다. �
 2026-08-16 재검색 기준, 공개 Talk/코드공유/일반 웹에서 상위권 참가자의 구체적인 점수 개선 레시피나 공개 솔루션은 찾지 못했다. 코드공유에는 공식 RandomForest 베이스라인 계열만 확인됐다. 따라서 참가자 팁을 모방하기보다 공식 FAQ가 허용한 정보 범위를 모델 설계에 반영했다.
 
 - [대회 FAQ](https://dacon.io/competitions/official/236743/talkboard/417082): 과거 TrackMan을 이용한 ID 추정·프로파일, 학습 범위의 현재 투구 TrackMan을 teacher/soft label로 쓰는 것, 학습 범위 안의 미래 행을 이용한 학습 라벨 보강이 허용된다는 답변을 확인했다.
-- [평가 행 독립 추론 공지](https://dacon.io/competitions/official/236743/talkboard/417123): 다른 test 행의 분포·빈도·순서를 사용하지 않아야 한다. v19는 각 행의 공식 ASOF와 동결된 2019~2024 아티팩트만 사용한다.
+- [평가 행 독립 추론 공지](https://dacon.io/competitions/official/236743/talkboard/417123): 다른 test 행의 분포·빈도·순서를 사용하지 않아야 한다. v19는 각 행의 공식 ASOF와 동결된 2019–2024 아티팩트만 사용한다.
 - [주요 규칙 공지](https://dacon.io/competitions/official/236743/talkboard/417094) 및 [대회 규칙](https://dacon.io/competitions/official/236743/overview/rules): 외부 데이터 금지, 코드 재현성, 누수 금지를 지켰다.
 - [코드공유](https://dacon.io/competitions/official/236743/codeshare): 공개 참가자 고득점 해법은 확인되지 않았다.
 
@@ -86,7 +86,7 @@ bootstrap은 개발 과정의 후보 선택 편향을 제거하지 못한다. �
 
 - 현재 투구 TrackMan oracle은 컸지만 표준 PFD student는 2024에서 약 0 또는 음수였다.
 - 과거 TrackMan 물리 프로파일 직접 입력은 2023/2024 모두 약 -20점이었다.
-- actual 투수×타자 matchup EB, 고정 context 잔차, 전역 calibration은 0~수 점 또는 음수였다.
+- actual 투수×타자 matchup EB, 고정 context 잔차, 전역 calibration은 0\~수 점 또는 음수였다.
 - 구종 잠재혼합은 실제 구종 oracle이 2024 +201.5였으나 예측 가능한 구종 확률의 최대 이득은 +9.52에 그쳤다.
 - 다년도 상태 모델 단독은 최신 +27.15, 실패유형 단독은 +20.53이었고, 공동 도메인 라우팅에서만 +46.40에 도달했다.
 

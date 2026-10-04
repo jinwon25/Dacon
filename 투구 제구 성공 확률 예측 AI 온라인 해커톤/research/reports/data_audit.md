@@ -188,7 +188,7 @@
 - 메인에는 `season`, 월, 요일만 있고 정확한 `game_date`, 경기 ID, 경기 내 투구 번호가 없다. 따라서 같은 경기 분리를 정확히 보장하는 game-group split은 구현할 수 없다.
 - Trackman에만 `game_date`, `trackman_game_id`, `pitch_no`, `pitch_of_pa`가 있다. 두 테이블은 행 단위 대응 관계가 아니다.
 - `row_id` 숫자 부분은 파일 순서와 함께 증가하지만, 식별자/순서를 피처로 쓰지 않는다. 실제 test 행은 독립 예측하며 다른 test 행을 참조하지 않는다.
-- 실제 평가가 2025년이고 학습 최종 시즌이 2024년이므로, **2019~2023 train / 2024 validation**을 primary split으로 선택한다.
+- 실제 평가가 2025년이고 학습 최종 시즌이 2024년이므로, **2019–2023 train / 2024 validation**을 primary split으로 선택한다.
 
 ## 엔터티·Trackman 조인 감사
 

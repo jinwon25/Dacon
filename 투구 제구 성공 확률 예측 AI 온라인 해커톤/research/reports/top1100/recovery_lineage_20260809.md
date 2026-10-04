@@ -1,4 +1,10 @@
-# Aimers lineage recovery — 2026-08-09
+# 초기 작업 계보 복원 기록
+
+원래 작업 트리의 변경을 유지한 채 별도 계보에서 코드·테스트·감사 문서를 정리한 당시 기록입니다. 과거 임시 경로가 현재 존재하거나 현재도 유지된다는 뜻은 아닙니다.
+
+이 문서는 연구 당시의 기록입니다. 최종 결과와 용어·공개 실행 범위는 [문서 안내](../../../docs/README.md)를 우선합니다. 아래 수치·판정·명령과 원문은 당시 근거로 보존했습니다.
+
+원제: Aimers lineage recovery — 2026-08-09
 
 - Dirty working tree was **not reset, checkout, or cleaned**.
 - Original branch: `codex/baram-2026`.

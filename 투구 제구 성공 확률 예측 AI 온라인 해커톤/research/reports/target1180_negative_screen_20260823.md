@@ -26,7 +26,7 @@
   `situation_state` 같은 파생 교차 카테고리까지 이미 들어 있다. 즉 원본 3개 데이터 파일의
   "raw feature" 차원에서는 새로 추가할 여지가 사실상 없다.
 
-## 2~3단계: 신규 가설과 기존 증거 대조
+## 2–3단계: 신규 가설과 기존 증거 대조
 
 | 가설 | 대응하는 기존 구현/평가 | 상태 |
 |---|---|---|
@@ -34,7 +34,7 @@
 | `home_win_expectancy`/`away_win_expectancy` 비대칭도 | `configs/v78_environment_stable_residual.json`의 `win_expectancy_gap`, `src/archive/v79_champion_offset_context.py`의 `ctx_win_gap = home_win_expectancy - away_win_expectancy` — 변수명까지 동일. PROJECT_STATUS: "v78 ... primary 두 축 모두 source eta 0", "v79 ... primary 두 축 모두 eta 0; 기각" | 이미 시도·기각 (eta=0, 양쪽 축 모두) |
 | `asof_batter_*`를 주 신호로 쓰는 축 | `src/archive/v107_batter_asof_ablation.py` "Strict-forward paired removal of batter cumulative ASOF summaries" — 가설 자체가 "타자 누적 요약을 제거하면 비이식 노이즈가 줄어든다"로, 타자 축이 이미 순신호가 아니라 잡음으로 판정됨 | 이미 시도·기각 (역방향 확인: 강화가 아니라 제거가 이득) |
 | `game_dayofweek` 패턴 | 챔피언 `categorical_columns`에 처음부터 포함, `v10`/`v14`/`v20`/`v23`/`v24`/`v37`/`v62`/`v97`/`v109` 등 다수 스크립트에서 이미 표준 카테고리로 사용 | 이미 base feature, 별도 신규 축 아님 |
-| `asof_pitcher_pitchmix_n`/fastball·breaking·offspeed rate의 다양성(엔트로피) 축 | `src/champion/v26_exact_diversity_screen.py`, `src/archive/v30_diverse_covariance_screen.py`, `src/trackman_domain.py` — PROJECT_STATUS v65~v74 "TrackMan 1,793,078행 전수조사"에 구종/다양성 계열 포함, 기각 | 이미 시도·기각 |
+| `asof_pitcher_pitchmix_n`/fastball·breaking·offspeed rate의 다양성(엔트로피) 축 | `src/champion/v26_exact_diversity_screen.py`, `src/archive/v30_diverse_covariance_screen.py`, `src/trackman_domain.py` — PROJECT_STATUS v65–v74 "TrackMan 1,793,078행 전수조사"에 구종/다양성 계열 포함, 기각 | 이미 시도·기각 |
 
 5개 전부 1차 스크리닝 이전에 "이미 시도됨"으로 확정돼 실행 자체를 생략했다 (문서·코드 증거가
 명확해 중복 계산으로 컴퓨팅을 낭비하지 않기 위함).
@@ -62,7 +62,7 @@
    신규 가설은 전부 기존 코드·결과와 동일하거나(변수명 일치 포함) 이미 반대 방향으로
    판정(타자 축)됐다.
 2. **local→Public 전이율의 근본적 불확실성**: 설령 위 제약이 없었다 해도, 오늘 v152/v154가
-   `locked_gate_passed=true`·다년도 축 전부 양수(+11.4~+17.6)였는데 실제 Public은
+   `locked_gate_passed=true`·다년도 축 전부 양수(+11.4–+17.6)였는데 실제 Public은
    **음의 방향(-1.898)으로** 반전한 사례가 이미 나왔다. 로컬 검증만으로 "1180 상당"을
    자체 판단하는 것 자체가 이 프로젝트의 실측 데이터로 이미 반증된 방법론이다.
 
@@ -72,5 +72,5 @@
 후속 연구가 의미를 가지려면 `docs/PROJECT_STATUS.md`의 종료 조건 1번(팀원 모델의 독립 OOF)
 또는 대회 규정상 허용되는 완전히 새로운 외부 데이터 확보가 선행돼야 한다. 그마저도 없다면,
 남은 유일한 저위험 레버는 이미 실측된 v142(0)→v148(0.15) 양의 기울기 구간 안에서
-중간값(예: 0.2~0.35)을 다음 제출권으로 값싸게 탐침해 3번째 실측 앵커를 확보하는 것뿐이며,
+중간값(예: 0.2–0.35)을 다음 제출권으로 값싸게 탐침해 3번째 실측 앵커를 확보하는 것뿐이며,
 이는 새 가설이 아니라 기존 v142→v148 축의 보정 개선이다.

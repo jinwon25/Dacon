@@ -2,7 +2,7 @@
 
 연구 사이클과 검증을 완료했으나 사전 정의한 통계 게이트를 모두 통과한 신규 후보는 없었다. Damped base-rate 후보는 다년 통합 성능과 모든 fold에서 개선됐지만, 2024년 최소 개선 기준에 미달해 승격하지 않았다. 따라서 신규 ZIP은 생성하지 않고 기존 submit.zip을 incumbent로 유지했다.
 
-실행 기간: 2026-08-05~2026-08-06
+실행 기간: 2026-08-05–2026-08-06
 incumbent: 제출 35748, submission1, Public 749.5249490965
 
 ## 1. incumbent 보존과 제출 기록
@@ -29,10 +29,10 @@ incumbent: 제출 35748, submission1, Public 749.5249490965
 
 primary outer fold는 고정된 다음 네 개다.
 
-1. train 2019~2020 → validate 2021
-2. train 2019~2021 → validate 2022
-3. train 2019~2022 → validate 2023
-4. train 2019~2023 → validate 2024
+1. train 2019–2020 → validate 2021
+2. train 2019–2021 → validate 2022
+3. train 2019–2022 → validate 2023
+4. train 2019–2023 → validate 2024
 
 2019 → 2020은 nested calibration/blend용 진단 fold로만 사용했다. exact game ID가 없으므로 game split을 했다고 주장하지 않는다. 모든 category map, entity 통계, annual rate, calibration 계수와 ensemble weight는 outer validation보다 앞선 데이터에서만 생성했다.
 
@@ -51,7 +51,7 @@ incumbent의 4-fold 평균 Brier는 0.247678209, recency-weighted Brier는 0.248
 
 - 3-season logit trend는 raw blend 대비 2021 +0.001074604, 2022 +0.000296563으로 악화했다.
 - 2023에는 -0.000060510, 2024에는 -0.000225219 개선했다.
-- RF/LGB 상관은 연도별 0.679~0.887로 크게 변했다.
+- RF/LGB 상관은 연도별 0.679–0.887로 크게 변했다.
 - 2024 post-hoc 최적 LGB weight는 0.35였지만 2021, 2022, 2023은 각각 trend 기준 0.11, 0.47, 0.62였다.
 - 2023 target rate는 0.499957, prediction mean은 0.524515였다. 이 fold의 local Skill은 0이었다.
 
@@ -73,7 +73,7 @@ calibration slope가 시즌마다 크게 달라 하나의 전역 map을 다음 �
 ### Base-rate forecast
 
 - raw/last는 2021과 2022에서 각각 0.001074604, 0.000296563 개선했다.
-- damped trend 3-season, phi=0.8은 사용 가능한 2022~2024에서 모두 개선했다.
+- damped trend 3-season, phi=0.8은 사용 가능한 2022–2024에서 모두 개선했다.
 - 2021 raw fallback을 포함한 후보의 recency-weighted delta는 -0.000158763이었다.
 - 그러나 2024 개선은 -0.000005043으로 사전 기준 -0.000010000에 미달했다.
 - damping 미세조정 구간은 2024 pitcher-season bootstrap 개선확률이 약 78%여서 사용하지 않았다.
@@ -97,7 +97,7 @@ calibration slope가 시즌마다 크게 달라 하나의 전역 map을 다음 �
 | leaf 100 / parent 200 | 0.247978707 | 0.246971373 | 0.251303208 | 0.251440704 |
 | leaf 200 / parent 500 | 0.247992604 | 0.247062565 | 0.251196841 | 0.251356480 |
 
-모든 standalone prior가 모든 fold에서 약했다. 평균 incumbent 상관은 0.70~0.72였지만 2024 constrained blend 최적 weight는 모두 0이었다. official as-of history가 entity signal 대부분을 이미 담고 있는 것으로 해석한다.
+모든 standalone prior가 모든 fold에서 약했다. 평균 incumbent 상관은 0.70–0.72였지만 2024 constrained blend 최적 weight는 모두 0이었다. official as-of history가 entity signal 대부분을 이미 담고 있는 것으로 해석한다.
 
 ## 8. Wave 3: CatBoost native categorical
 
@@ -107,7 +107,7 @@ calibration slope가 시즌마다 크게 달라 하나의 전역 map을 다음 �
 | depth 7, stronger reg | 0.249895795 | +0.001434834 | 4 | 526.274 | 5451.7 |
 | depth 8 | 0.249842550 | +0.001381589 | 14 | 699.434 | 5845.4 |
 
-세 설정 모두 극초반에 best iteration이 형성됐다. incumbent 상관은 0.57~0.58이었으나 convex blend 최적 weight가 0이므로 전체 연도와 seed 확장을 중단했다.
+세 설정 모두 극초반에 best iteration이 형성됐다. incumbent 상관은 0.57–0.58이었으나 convex blend 최적 weight가 0이므로 전체 연도와 seed 확장을 중단했다.
 
 ## 9. Wave 4: Brier-aligned objective와 RF
 
@@ -133,7 +133,7 @@ calibration slope가 시즌마다 크게 달라 하나의 전역 map을 다음 �
 | nested trend, L2=0.01 | -0.000010 | +0.000011 | -0.0000037 | +0.0000150 | +0.0000060 | +0.0000150 | 0.066 | fail |
 | nested logit stack, C=0.001 | +0.000907 | +0.000707 | +0.000359 | +0.000273 | +0.000449 | +0.000907 | 0.000 | fail |
 
-규제 logit stacking은 calibration drift를 다시 학습해 악화했다. convex weight도 2021~2022 raw 우세에 끌려 2024 trend 이득을 충분히 보존하지 못했다. 표의 P는 2,000회 bootstrap resample에서 delta가 음수였던 비율이지 실제 개선 확률 100%를 뜻하지 않는다.
+규제 logit stacking은 calibration drift를 다시 학습해 악화했다. convex weight도 2021–2022 raw 우세에 끌려 2024 trend 이득을 충분히 보존하지 못했다. 표의 P는 2,000회 bootstrap resample에서 delta가 음수였던 비율이지 실제 개선 확률 100%를 뜻하지 않는다.
 
 ### Damped 후보 bootstrap 재감사
 
@@ -143,8 +143,8 @@ calibration slope가 시즌마다 크게 달라 하나의 전역 map을 다음 �
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | 2024 | pitcher-season | -0.000005043 | [-0.000013, +0.000002] | 9,167 / 10,000 | 0.9167 | [0.9111, 0.9220] |
 | 2024 | pitcher | -0.000005043 | [-0.000013, +0.000002] | 9,167 / 10,000 | 0.9167 | [0.9111, 0.9220] |
-| 2021~2024 | pitcher-season | -0.000328261 | [-0.000405, -0.000255] | 10,000 / 10,000 | 1.0000 | [0.9996, 1.0000] |
-| 2021~2024 | pitcher | -0.000328261 | [-0.000402, -0.000257] | 10,000 / 10,000 | 1.0000 | [0.9996, 1.0000] |
+| 2021–2024 | pitcher-season | -0.000328261 | [-0.000405, -0.000255] | 10,000 / 10,000 | 1.0000 | [0.9996, 1.0000] |
+| 2021–2024 | pitcher | -0.000328261 | [-0.000402, -0.000257] | 10,000 / 10,000 | 1.0000 | [0.9996, 1.0000] |
 
 단일 연도에서는 pitcher-season이 pitcher와 같은 군집이므로 2024 두 행이 동일한 것이 정상이다. 결합 연도에서는 1,549 pitcher-season과 670 pitcher로 결과가 모두 개선 방향이지만, 2024 delta CI가 0을 포함해 최신 연도의 효과 크기는 불확실하다. 게임 식별자가 없어 경기 단위 상관은 반영하지 못했다. 세부 수치는 reports/damped_bootstrap_audit.csv에 보존했다.
 

@@ -1,4 +1,10 @@
-# JMA MSM causal previous-run breakthrough — 2026-07-26
+# JMA·KMA 예보 결합 후보
+
+새 예보 전문가를 그룹 1·3에 제한적으로 결합한 후보와 무결성 검사를 기록합니다. 로컬 개선이 이전될 때의 예상 점수는 실제 공개 점수와 다릅니다.
+
+이 문서는 연구 당시의 기록입니다. 최종 결과와 용어·공개 실행 범위는 [문서 안내](../README.md)를 우선합니다. 아래 수치·판정·명령과 원문은 당시 근거로 보존했습니다.
+
+원제: JMA MSM causal previous-run breakthrough — 2026-07-26
 
 ## Outcome
 

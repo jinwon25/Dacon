@@ -7,8 +7,8 @@
 - 시사: **남은 미사용 decorrelated 카드(v126 FFT, v120 multi-step RK4, latent=128 big)를 더 추가하면 추가 LB 상승 가능성** — 천장은 OOF 축에서만 binding, LB 축에선 아님. 단, v141을 final-selection floor로 유지하면 추가 시도는 downside 0.
 
 ## TL;DR
-- 병목: 기존 40+ pool이 전부 kalman-residual 기반 corr~0.99. LB를 움직이는 건 **새 decorrelated base paradigm**뿐 (과거 0.6888→0.6912는 Neural ODE에서 나옴).
-- 이번 스프린트: **Frenet 3D-frame ODE + GRU-encoder ODE + control-head analytic-integrator** 5개 신규 base 멤버를 로컬 CPU로 학습. 모두 v120/v122c와 ~2mm L2 decorrelated (OOF-vs-TEST 일관성 검증 완료).
+- 병목: 기존 40+ pool이 전부 kalman-residual 기반 corr\~0.99. LB를 움직이는 건 **새 decorrelated base paradigm**뿐 (과거 0.6888→0.6912는 Neural ODE에서 나옴).
+- 이번 스프린트: **Frenet 3D-frame ODE + GRU-encoder ODE + control-head analytic-integrator** 5개 신규 base 멤버를 로컬 CPU로 학습. 모두 v120/v122c와 약 2mm L2 decorrelated (OOF-vs-TEST 일관성 검증 완료).
 - **conservative 블렌드 OOF 0.6807** (v122c 0.6769 대비 +0.0038), DE가 신규 멤버에 **58% weight** 배정 — plateau 돌파 패턴 재현.
 - 정직한 nested-CV 결과: honest 0.6762(+0.0007 vs OLD) → **실측 LB 0.697** (예측 대폭 상회, 위 ★ 섹션 참조)
 
@@ -17,7 +17,7 @@
 |---|---|
 | Disagreement selector (per-axis residual 포함) | DEAD — route-acc 0.17≈무작위. 1cm 경계 불일치의 정답쪽은 예측 불가 노이즈 |
 | Mode-seeking / geometric-median 집계 | 현재 pool에서 Δ≤0 (active 멤버 동질 군집) |
-| IMM / analytic Constant-Turn 필터 | 0.24~0.55 < naive linear 0.58. turn 신호 노이즈 취약 |
+| IMM / analytic Constant-Turn 필터 | 0.24–0.55 < naive linear 0.58. turn 신호 노이즈 취약 |
 | Roto-temporal 증강 | 원본 궤적 정확히 11점 → N/A |
 
 ## 신규 decorrelated 멤버 (CPU 학습)
@@ -49,7 +49,7 @@ OOF **0.6807** / active 7 / 신규멤버 weight 0.583
 
 - in-sample +0.0031의 상당부분은 DE가 신규 멤버 OOF에 과적합한 것(gap +0.0043). **진짜 lift = +0.0007**.
 - fold별 NEW−OLD: −0.0005, +0.0030, +0.0015, −0.0015, +0.0010 (평균 +0.0007, 노이즈 큼).
-- **결론**: Frenet paradigm은 정직하게 도움이 되지만(+0.0007), STEP A 데이터 천장 진단대로 lift가 작다. honest CV 기준 예상 LB ≈ **0.6919** (v122c 0.6912 + 0.0007). 단, v122c식 +0.0143 변환률이 유지되면 in-sample 0.6805 → LB ~0.6948 상방 가능성도 존재(불확실).
+- **결론**: Frenet paradigm은 정직하게 도움이 되지만(+0.0007), STEP A 데이터 천장 진단대로 lift가 작다. honest CV 기준 예상 LB ≈ **0.6919** (v122c 0.6912 + 0.0007). 단, v122c식 +0.0143 변환률이 유지되면 in-sample 0.6805 → LB 약 0.6948 상방 가능성도 존재(불확실).
 - v141 후보는 v122c와 L2 mean 0.66mm / median 0.46mm — 1cm 경계 샘플을 flip하는 진짜 차이.
 
 ## 제출 권고 (Dacon 2슬롯 헷지)
@@ -59,7 +59,7 @@ OOF **0.6807** / active 7 / 신규멤버 weight 0.583
 → 두 개 모두 선택하면 floor 0.6912 보장 + 상방 노림. 1개만 가능하면 v141(EV 우위) 권장하되, 보수적이면 v122c.
 
 ## 추가 paradigm 시도 (천장 확인)
-- **Neural CDE (torchcde) = DEAD**: full 137분 완주(5fold/2seed/80ep), **OOF 0.2768** — 모델이 학습 자체 실패(constant-velocity 0.58보다 한참 아래). decorr OOF/TEST 둘 다 ~19mm 일관(버그 아님, 예측이 그냥 나쁨). v127 CDE 구현이 이 task에 안 맞음 + CPU 19min/fold라 디버깅 비현실적. 폐기.
+- **Neural CDE (torchcde) = DEAD**: full 137분 완주(5fold/2seed/80ep), **OOF 0.2768** — 모델이 학습 자체 실패(constant-velocity 0.58보다 한참 아래). decorr OOF/TEST 둘 다 약 19mm 일관(버그 아님, 예측이 그냥 나쁨). v127 CDE 구현이 이 task에 안 맞음 + CPU 19min/fold라 디버깅 비현실적. 폐기.
 - 추가 멤버(C-Mixup 등)는 nested-CV 노이즈(±0.0017)에 묻히는 diminishing returns로 판단 — 중단.
 - **모든 paradigm 카드 소진 → 천장 모든 각도에서 확정.**
 

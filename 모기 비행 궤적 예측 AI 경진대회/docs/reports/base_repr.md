@@ -56,7 +56,7 @@ sc_scal = StandardScaler().fit(scal_arr[tr])
 **미시도**:
 - random yaw [0, 2π) 풀 증강 (epoch마다)
 - input jitter (관측 노이즈 σ 추정)
-- hit-aware sample weight (1-3cm 밴드 ×2~3)
+- hit-aware sample weight (1-3cm 밴드 ×2–3)
 - soft_hit τ-schedule (0.01 → 0.003)
 
 ## 결론

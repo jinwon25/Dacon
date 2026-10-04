@@ -1,4 +1,10 @@
-# Hybrid recency/Trackman candidate
+# 혼합 후보의 검증 결과
+
+당시 고정 후보의 연도별 비교와 재추출 통과 조건을 기록합니다. 후보 선택에 사용한 정보가 있어, 통과 표시만으로 완전히 독립된 확증 결과라고 읽지 않습니다.
+
+이 문서는 연구 당시의 기록입니다. 최종 결과와 용어·공개 실행 범위는 [문서 안내](../../docs/README.md)를 우선합니다. 아래 수치·판정·명령과 원문은 당시 근거로 보존했습니다.
+
+원제: Hybrid recency/Trackman candidate
 
 - Frozen recipe: incumbent with half-life-1 RF substituted only for `game_type=R`, then 5% rolling-damped Trackman LGB.
 - Trackman linkage and profiles use only seasons before each forecast origin.

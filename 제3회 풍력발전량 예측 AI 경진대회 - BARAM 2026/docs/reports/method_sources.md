@@ -1,4 +1,10 @@
-# Method Sources
+# 방법론과 규정 참고자료
+
+평가 산식·정보 가용 시점·풍력 예측 방법을 선택할 때 참고한 자료입니다. 대회 당시의 참고 기록이며 현재 규정이나 운영 승인을 새로 확인한 문서는 아닙니다.
+
+이 문서는 연구 당시의 기록입니다. 최종 결과와 용어·공개 실행 범위는 [문서 안내](../README.md)를 우선합니다. 아래 수치·판정·명령과 원문은 당시 근거로 보존했습니다.
+
+원제: Method Sources
 
 The next experiments are guided by competition practice and wind-power forecasting literature.
 

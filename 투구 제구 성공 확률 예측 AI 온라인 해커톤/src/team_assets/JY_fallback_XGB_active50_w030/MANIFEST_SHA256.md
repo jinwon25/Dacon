@@ -1,18 +1,18 @@
-# SHA-256 manifest
+# 제출 자산 SHA-256 기록
 
-Public result: user-confirmed `1175` class score.
+당시 공개 결과는 사용자가 확인한 `1175`점대입니다. 아래 값은 자산 무결성·재빌드 비교 기록이며 모델·ZIP 자체는 공개본에서 제외했습니다.
 
-| Artifact | SHA-256 |
+| 당시 자산 이름 | SHA-256 |
 |---|---|
 | `submit_jy_fallback_xgb_active50_w030_public1175.zip` | `A7BF242D5D4003CAF0B19857C83441CFD49838E353826AF29435AC0C3763A8C7` |
 | `parent/submit_jy_runners_high_li_bridge027_public1172.zip` | `4C924E046091304BFC73B50BE51110BDF1351DFD9B577738CC6B65A8DFF43C9E` |
 
-Rebuild audit on 2026-08-29 KST:
+2026-08-29 KST 재빌드 감사:
 
-- Submitted release ZIP entries: `177`
-- Rebuilt ZIP entries: `177`
-- Entry names: identical
-- Entry contents: identical for all 177 files
-- Both ZIP CRC checks: passed
+- 제출 ZIP 내부 파일 수: `177`
+- 재빌드 ZIP 내부 파일 수: `177`
+- 내부 파일명: 일치
+- 내부 파일 내용: 177개 모두 일치
+- 두 ZIP의 CRC 무결성 검사: 통과
 
-ZIP timestamps can change the container SHA after rebuilding. Compare every entry's uncompressed SHA/content rather than requiring the rebuilt container hash to match.
+ZIP 내부 시간 값이 바뀌면 재빌드 후 ZIP 전체 해시가 달라질 수 있습니다. 전체 컨테이너 해시만 비교하지 말고 각 내부 파일의 압축 해제 후 SHA와 내용을 비교합니다.

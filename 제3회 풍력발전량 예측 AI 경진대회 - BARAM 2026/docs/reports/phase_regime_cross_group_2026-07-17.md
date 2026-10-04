@@ -1,4 +1,10 @@
-# Lead-phase and weather-regime cross-group sprint - 2026-07-17
+# 운전 국면별 결합의 공개 전이 실패
+
+위상·운전 국면을 이용한 결합은 로컬에서 양수였지만 공개 점수의 정산 지표가 하락해 기각됐습니다. 로컬 이득보다 실제 제출 결과를 우선한 판단입니다.
+
+이 문서는 연구 당시의 기록입니다. 최종 결과와 용어·공개 실행 범위는 [문서 안내](../README.md)를 우선합니다. 아래 수치·판정·명령과 원문은 당시 근거로 보존했습니다.
+
+원제: Lead-phase and weather-regime cross-group sprint - 2026-07-17
 
 ## Decision
 

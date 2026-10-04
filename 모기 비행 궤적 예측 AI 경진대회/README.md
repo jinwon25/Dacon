@@ -9,7 +9,7 @@
 | | OOF | LB | 비고 |
 |---|---:|---:|---|
 | 시작 베이스라인 (candidate-selection) | - | 0.6306 | 첫 제출 |
-| Kalman 잔차 NN 풀 (BiGRU 등) | 0.6770 | 0.6888 | plateau (멤버 corr ~0.99) |
+| Kalman 잔차 NN 풀 (BiGRU 등) | 0.6770 | 0.6888 | plateau (멤버 corr 약 0.99) |
 | Neural ODE 도입 | 0.6769 | 0.6912 | 1차 돌파 |
 | Frenet/control-head paradigm | 0.6805 | 0.697 | 2차 돌파 |
 | CREE 회전물리 멤버 주입 | 0.6808 | 0.7016 | 3차 돌파 |
@@ -23,7 +23,7 @@
 
 ## 문제 정의
 
-- **입력**: 40ms 간격 11개 시점의 3D 좌표 `(x, y, z)` (구간 −400ms ~ 0ms).
+- **입력**: 40ms 간격 11개 시점의 3D 좌표 `(x, y, z)` (구간 −400ms \~ 0ms).
 - **출력**: 마지막 관측 시점 **+80ms** 의 3D 좌표 `(x, y, z)`.
 - **데이터**: `data/train/` 10,000 궤적 + `data/train_labels.csv`, `data/test/` 10,000 궤적.
 - **지표**: R-Hit@1cm — 1cm 이내 hit 비율.
@@ -35,7 +35,7 @@
 
 ### 직교 메커니즘 다양성의 앙상블
 
-이 대회의 본질적 난점은 **데이터 천장**이었다. 40여 개 모델이 전부 같은 **Kalman 잔차 base** 위에서 학습돼 서로의 예측이 **상관 ~0.99** 로 묶였고, LB 0.6888에서 막혔다. 점수를 움직인 모든 돌파는 **근본적으로 다른 예측 메커니즘(paradigm)을 새로 도입**한 순간이었다.
+이 대회의 본질적 난점은 **데이터 천장**이었다. 40여 개 모델이 전부 같은 **Kalman 잔차 base** 위에서 학습돼 서로의 예측이 **상관 약 0.99** 로 묶였고, LB 0.6888에서 막혔다. 점수를 움직인 모든 돌파는 **근본적으로 다른 예측 메커니즘(paradigm)을 새로 도입**한 순간이었다.
 
 ```
                   ┌─ Pool A: Kalman 잔차 프레임 (BiGRU/TCN/Transformer/MDN)
@@ -50,8 +50,8 @@
 
 ### 핵심 설계 결정
 
-1. **paradigm diversity가 LB를 움직인다.** 같은 base의 변종은 corr ~0.99로 새 정보 없음. Kalman→ODE→Frenet→회전물리 순으로 **직교한 base를 추가**할 때마다 plateau를 넘었다.
-2. **Neural ODE (1차 돌파).** 타깃을 Kalman 무관 `y − last_obs`로 바꾸고 6D 상태(위치·속도)를 RK4로 적분 → base 풀과 L2 ~2.2mm 직교 → 0.6888 → 0.6912.
+1. **paradigm diversity가 LB를 움직인다.** 같은 base의 변종은 corr 약 0.99로 새 정보 없음. Kalman→ODE→Frenet→회전물리 순으로 **직교한 base를 추가**할 때마다 plateau를 넘었다.
+2. **Neural ODE (1차 돌파).** 타깃을 Kalman 무관 `y − last_obs`로 바꾸고 6D 상태(위치·속도)를 RK4로 적분 → base 풀과 L2–2.2mm 직교 → 0.6888 → 0.6912.
 3. **Frenet 3D-프레임 (2차 돌파).** tangent(속도)·normal(가속도)·binormal 직교 프레임에서 예측 → z 처리가 근본적으로 달라 decorrelation 최대 → 0.697.
 4. **CREE 회전물리 + 수동 α 주입 (3차 돌파).** 공개 Dacon baseline(HyperPhysics 회전물리)을 decorrelated 멤버로 포팅. DE가 OOF-greedy라 직교 멤버를 과소평가하므로, **수동 α로 over-convert** → 0.7016 → 0.7022.
 
@@ -67,7 +67,7 @@
 |---|---|
 | Disagreement selector (per-sample 모델 선택) | DEAD — route-acc 0.17 ≈ 무작위 |
 | Mode-seeking / geometric-median 집계 | Δ ≤ 0 (active 멤버 동질 군집) |
-| IMM / analytic Constant-Turn 필터 | 0.24~0.55 < naive linear 0.58 |
+| IMM / analytic Constant-Turn 필터 | 0.24–0.55 < naive linear 0.58 |
 | Neural CDE (torchcde) | DEAD — OOF 0.2768, 학습 실패 |
 | Flow/SONODE 추가 주입 (4-mechanism) | Public 0.6994 < 순수 CREE 0.7022, 폐기 |
 | 같은 frenet 프레임 encoder 변종 (Transformer/LRU/TCN) | DE weight 0 (포화) |
@@ -181,8 +181,8 @@ DE 블렌드(`scipy.differential_evolution`)와 멤버 학습은 모두 seed 고
 | 경로 | 자원 | 시간 |
 |---|---|---|
 | 빠른 재현 (`submissions/rebuild.py`) | CPU, RAM 2GB | < 1초 |
-| base 블렌드만 (`v148_reblend.py`, 캐시 사용) | CPU 16-thread | ~5–15분 |
-| 전체 재학습 (멤버 ~40개) | CPU 16-thread 또는 Colab T4/L4 | 약 15–20시간 (멤버당 15–30분, 순차) |
+| base 블렌드만 (`v148_reblend.py`, 캐시 사용) | CPU 16-thread | 약 5–15분 |
+| 전체 재학습 (멤버 약 40개) | CPU 16-thread 또는 Colab T4/L4 | 약 15–20시간 (멤버당 15–30분, 순차) |
 
 > **공식 재현 코드** = 위 "재현 방법"에 문서화된 명령(`submissions/rebuild.py` 및 `src/v157_final_submission.py`·`v148_reblend.py`·멤버 학습 스크립트)이며, 기존 실험 환경에서 실행한 기록입니다. 이번 공개 검토에서 비공개 데이터로 전체 학습을 다시 수행하지 않았습니다. `src/legacy/` 는 대회 중 탐색했던 보조·폐기 스크립트(연구 과정 보존용)로 공식 재현 경로에 포함되지 않는다.
 

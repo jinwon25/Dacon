@@ -1,4 +1,10 @@
-# Issue-time / season blocked rolling validation
+# 시간 블록 검증과 보정의 한계
+
+공개 점수 개선이 있었던 작은 보정도 반복 확대할 만큼 강건하지 않았다는 기록입니다. 같은 경로의 강도 조정보다 새로운 예측 신호가 필요하다고 판단했습니다.
+
+이 문서는 연구 당시의 기록입니다. 최종 결과와 용어·공개 실행 범위는 [문서 안내](../README.md)를 우선합니다. 아래 수치·판정·명령과 원문은 당시 근거로 보존했습니다.
+
+원제: Issue-time / season blocked rolling validation
 
 ## Outcome
 

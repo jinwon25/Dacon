@@ -1,4 +1,10 @@
-# Incumbent-matched residual decision follow-up
+# 기준 모델 잔차의 의사결정 보정
+
+기준 모델에 맞춘 잔차 분포·효용 모델을 검증했지만 개발 이득이 후반기로 충분히 이어지지 않았습니다. 두 경로 모두 승격하지 않고 제출 파일도 만들지 않았습니다.
+
+이 문서는 연구 당시의 기록입니다. 최종 결과와 용어·공개 실행 범위는 [문서 안내](../README.md)를 우선합니다. 아래 수치·판정·명령과 원문은 당시 근거로 보존했습니다.
+
+원제: Incumbent-matched residual decision follow-up
 
 Date: 2026-07-29
 

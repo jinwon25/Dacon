@@ -26,7 +26,7 @@
 - **분포 이동 (핵심 어려움)**:
   - test의 layout_id 100개 중 50개만 train과 공유 (나머지 50개는 disjoint)
   - adversarial validation AUC = 1.0 (분류기가 train/test를 완벽 분리)
-  - 결과: OOF와 LB 사이 ~1.43의 일관된 gap
+  - 결과: OOF와 LB 사이 약 1.43의 일관된 gap
 
 ---
 
@@ -56,7 +56,7 @@
 ### 핵심 설계 결정
 
 1. **log1p 타겟**: 우측으로 치우친 분포 (mean 19, p99 121, max 716)에서 일관된 OOF 개선 (-0.06).
-2. **Sequence 모델 도입 (돌파구)**: GBDT만 쓰면 천장 ~OOF 8.44. 25 slot scenario를 1D CNN/GRU로 처리하니 OOF 8.49로 -0.05, LB 10.04→9.92 (-0.12). 본 대회의 결정적 점프.
+2. **Sequence 모델 도입 (돌파구)**: GBDT만 쓰면 천장 \~OOF 8.44. 25 slot scenario를 1D CNN/GRU로 처리하니 OOF 8.49로 -0.05, LB 10.04→9.92 (-0.12). 본 대회의 결정적 점프.
 3. **Mixup + SwapNoise + SmoothL1**: Verma 2019 Manifold Mixup + Jahrer 2017 SwapNoise + SmoothL1 (β=1.0). NN의 마지막 짜내기. Mixup SeqCNN은 단독 OOF 8.58 (vs vanilla 8.70).
 4. **Global SLSQP 블렌드**: per-bin/isotonic 후처리는 LB 악화 (분포 이동 하 OOF 과적합). 단순 SLSQP(비음수 합=1) 가중치가 최선.
 
@@ -66,7 +66,7 @@
 |---|---|
 | per-bin SLSQP (3 bins) | OOF -0.015, LB +0.013 (악화) |
 | Isotonic calibration | OOF +0.4 즉시 악화 |
-| Adversarial sample weighting | AUC=1.0 → 가중치 모두 ~1e-7 (rank로 변환해도 무효) |
+| Adversarial sample weighting | AUC=1.0 → 가중치 모두 약 1e-7 (rank로 변환해도 무효) |
 | Layout cluster encoding (KMeans K=20) | OOF +0.02 |
 | Drop layout features | 단독 OOF +0.15, 블렌드 가중 0 |
 | Quantile matching post-process | OOF +0.03 |
@@ -195,12 +195,12 @@ cp models/blend_final/submission.csv submissions/submission.csv
 
 1. **시계열 구조의 데이터에서 sequence NN은 GBDT를 보완할 수 있다**
    - 25-slot scenario의 시간 패턴을 GBDT는 lag 피처로만 보지만, 1D CNN/GRU는 시퀀스 전체를 본다
-   - 단독 성능이 GBDT보다 약간 떨어져도 (8.7 vs 8.6) 블렌드에서 큰 가중치 (개별 NN ~0.2 weight)
+   - 단독 성능이 GBDT보다 약간 떨어져도 (8.7 vs 8.6) 블렌드에서 큰 가중치 (개별 NN 약 0.2 weight)
 
 2. **분포 이동 하 OOF/LB 괴리**
    - adversarial AUC=1.0이면 OOF에 강하게 fitting되는 후처리(per-bin, isotonic, stacking)는 LB 악화
    - 단순 평균 또는 global SLSQP만 사용하는 것이 안전
-   - LB-OOF gap ~1.43은 일관됨 → OOF 개선 폭은 LB로 거의 그대로 전이
+   - LB-OOF gap 약 1.43은 일관됨 → OOF 개선 폭은 LB로 거의 그대로 전이
 
 3. **Mixup의 효과 (regression on tabular sequences)**
    - Manifold Mixup (Verma 2019) + C-Mixup (Yao 2022)으로 SeqCNN OOF 8.70 → 8.58 (-0.12)
@@ -262,4 +262,4 @@ cp models/blend_final/submission.csv submissions/submission.csv
 - Python: 3.11.2
 - OS: Windows 10 (Linux/Mac 호환)
 - CPU 전용 (GPU 미사용)
-- 전체 학습 시간: ~5-7시간 (순차 실행 기준)
+- 전체 학습 시간: 약 5-7시간 (순차 실행 기준)

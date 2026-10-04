@@ -19,7 +19,7 @@
 
 - G1: incumbent와 완전히 동일
 - G2: incumbent와 완전히 동일
-- G3: 2022~2024 pooled KMA UMRG 학습의 2025 예측만 교체
+- G3: 2022–2024 pooled KMA UMRG 학습의 2025 예측만 교체
 - alpha: `0.8`
 - G3 blend weight: `0.05`
 

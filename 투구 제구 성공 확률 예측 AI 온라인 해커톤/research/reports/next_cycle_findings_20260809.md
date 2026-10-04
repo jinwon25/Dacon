@@ -26,7 +26,7 @@
 
 ## 제출 이력·문서 정합성
 
-v3~v5의 `local_brier`가 v2 값을 반복하고 있어 후보별 값으로 간주할 수 없었다. 세 행은 NA로 교정하고 Public 점수/SHA는 보존했다. 다음 사용 가능한 파일명은 40자 이내 `submit_v6.zip`으로 문서화했다. 상세 변경은 `reports/submission_audit_20260809.md`에 남겼다.
+v3–v5의 `local_brier`가 v2 값을 반복하고 있어 후보별 값으로 간주할 수 없었다. 세 행은 NA로 교정하고 Public 점수/SHA는 보존했다. 다음 사용 가능한 파일명은 40자 이내 `submit_v6.zip`으로 문서화했다. 상세 변경은 `reports/submission_audit_20260809.md`에 남겼다.
 
 ## 검증 설계
 
